@@ -32,7 +32,7 @@ This codebase tolerates `PLACEHOLDER_*` values for every external integration â€
 
 ### API + Worker â€” Render (recommended) or Fly
 
-**Render:** apply `infra/render.yaml` via Blueprints. Two services come up: `levelup-api` (web) and `levelup-worker` (worker). Set the `sync: false` env vars after first deploy.
+**Render:** apply `render.yaml` (at repo root) via Blueprints. Two services come up: `levelup-api` (web) and `levelup-worker` (worker). Set the `sync: false` env vars after first deploy.
 
 **Fly:** `infra/fly.api.toml` and `infra/fly.worker.toml` plus `Dockerfile.api` / `Dockerfile.worker`. From the repo root:
 
