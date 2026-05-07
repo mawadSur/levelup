@@ -1,0 +1,39 @@
+{
+  "lessonSlug": "response-drafting",
+  "title": "Drafting Support Replies with AI",
+  "questions": [
+    {
+      "prompt": "Which of the following is the correct order for the four-part reply structure taught in this lesson?",
+      "choices": [
+        "Answer, next step, acknowledge, check in",
+        "Acknowledge, answer, next step, check in",
+        "Check in, acknowledge, answer, next step",
+        "Next step, answer, acknowledge, check in"
+      ],
+      "correctIndex": 1,
+      "explanation": "The pattern is: acknowledge the customer's specific problem first, answer it in plain language, state the next step clearly, then close with a check-in question to confirm the reply landed."
+    },
+    {
+      "prompt": "A colleague pastes a customer's full name, billing address, and account number into a public AI chatbot to draft a response faster. What is the primary problem with this approach?",
+      "choices": [
+        "The AI will produce a less accurate draft because it has too much information",
+        "It violates customer data privacy and may breach company policy on approved tools",
+        "Public AI tools cannot process billing-related content",
+        "The response will be too long if PII is included in the prompt"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pasting customer PII into a public AI tool is a data privacy risk and likely violates company policy. Use your company's approved internal AI tool for any prompt that includes real customer data."
+    },
+    {
+      "prompt": "You receive an AI-drafted reply that ends with: 'Please do not hesitate to reach out if you need anything further. I hope this helps!' What should you do before sending?",
+      "choices": [
+        "Send it as-is — the closing is a professional standard",
+        "Replace the filler phrases with a specific check-in question",
+        "Add more detail to the opening to balance the weak closing",
+        "Ask AI to make the closing longer so it sounds more thorough"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic closings like 'please do not hesitate' and 'I hope this helps' communicate almost nothing. Replace them with a specific check-in question that proves you read the ticket and gives the customer a clear action."
+    }
+  ]
+}

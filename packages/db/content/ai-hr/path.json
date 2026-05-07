@@ -1,0 +1,9 @@
+{
+  "slug": "ai-hr",
+  "title": "AI for HR",
+  "description": "AI workflows for HR — job descriptions, interviewing, policy comms, onboarding, employee messaging — without leaking sensitive employee data.",
+  "targetRole": "HR",
+  "targetLevel": "PRACTITIONER",
+  "isPublished": true,
+  "orderIndex": 4
+}

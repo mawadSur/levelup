@@ -1,0 +1,41 @@
+{
+  "title": "Headline and Copy Iteration Quiz",
+  "questions": [
+    {
+      "prompt": "A copywriter uses AI to generate 12 headline variants and selects the first one that sounds strong, then ships it. What step did they skip that the lesson identifies as the core of good iteration?",
+      "choices": [
+        "They did not run the output through a grammar checker before publishing",
+        "They did not run a second round of iteration on the strongest candidates to push further",
+        "They did not ask the CEO to approve the headline before publishing",
+        "They did not generate at least 30 variants before selecting one"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson describes a two-round process: generate 12, identify the two or three most interesting, then prompt AI again to push those further with a direction for more specificity or an unexpected angle. Stopping at round one means settling for an early-iteration idea rather than what a full iteration process would surface.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of the following headlines best follows the lesson's guidance on what a strong copy prompt should produce?",
+      "choices": [
+        "Transforming How Modern Teams Leverage Customer Data",
+        "Your Pipeline Reviews Take 3 Hours. Ours Take 20 Minutes.",
+        "The Seamless, Best-in-Class Revenue Intelligence Platform",
+        "Supercharge Your Sales Team with AI-Powered Insights"
+      ],
+      "correctIndex": 1,
+      "explanation": "This headline names a specific customer pain (3-hour pipeline reviews) and a specific desired state (20 minutes), with no marketing clichés. The other options use language the lesson explicitly flags to delete: 'transforming,' 'leverage,' 'seamless,' 'best-in-class,' 'supercharge,' and 'AI-powered insights' is the product, not the customer's outcome.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A marketer applies the 'five grandmother test' to a new product headline. Two out of five non-marketers describe the product correctly; three describe something adjacent but not quite right. What should the marketer conclude?",
+      "choices": [
+        "The test failed because non-marketers are not the target audience anyway",
+        "A 40% failure rate on the test means the headline is underperforming — it is doing interpretive work the reader should not have to do",
+        "The headline passed because the majority got it right",
+        "The test is inconclusive and should be repeated with a larger sample before drawing conclusions"
+      ],
+      "correctIndex": 1,
+      "explanation": "The five grandmother test requires the headline to communicate clearly to all five people, not most of them. Three out of five getting it wrong means the headline relies on assumptions the reader is not making. The lesson frames this as the headline forcing the reader to do interpretive work that the copywriter should have done instead.",
+      "orderIndex": 3
+    }
+  ]
+}

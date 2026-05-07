@@ -1,0 +1,41 @@
+{
+  "title": "Launch Narrative Stress-Test Quiz",
+  "questions": [
+    {
+      "prompt": "Which prompt approach would most effectively surface the counter-positioning weaknesses in a new product launch?",
+      "choices": [
+        "Ask AI to write the ideal press release, then review it for quality",
+        "Ask AI to steelman the case that the launch lands flat, identifying the most likely failure modes and the specific buyer who finds the announcement underwhelming",
+        "Ask AI to compare your positioning to your three main competitors and identify where you have parity",
+        "Ask AI to generate 10 potential customer objections and prepare responses to each"
+      ],
+      "correctIndex": 1,
+      "explanation": "The failure mode scan works because it asks AI to argue against the launch from the buyer's perspective — naming specific reasons the positioning fails, the buyer who finds it underwhelming, and the claim a competitor could make with equal credibility. This surfaces the soft spots in the narrative that the team has internalized and stopped hearing.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A product marketing manager runs the journalist stress-test prompt on a launch narrative. The AI-generated article identifies one claim in the launch as the claim a journalist would probe hardest. The PMM's instinct is to dismiss it because the team has answered that question internally. What does the lesson suggest about this reaction?",
+      "choices": [
+        "The dismissal is appropriate — internal alignment means the team has resolved the issue",
+        "The dismissal is a warning sign — the places where AI's critique stings are often the places the team has been hoping to get past without anyone noticing",
+        "The PMM should run the prompt again with more context to get a different output",
+        "The PMM should share the journalist test with legal to determine if the claim creates liability"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson explicitly addresses this: 'Resist the instinct to dismiss it. The places where AI's critique stings are usually the places you already know are soft and have been hoping to get past without anyone noticing.' An internal answer to an objection is not the same as a buyer answer or a press answer. Both are harder.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "After running the failure mode scan and journalist test on a launch, a team has a list of eight gaps. The launch is two weeks away. What does the lesson recommend?",
+      "choices": [
+        "Address all eight gaps before launch, even if it requires delaying the date",
+        "Ignore the gaps and proceed — all launches have imperfections",
+        "Prioritize the gaps that, if left unaddressed, would most prevent the target buyer from acting — and defer the rest",
+        "Run the prompts again until the output identifies fewer than three gaps"
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson is specific: 'Do not try to fix all of them. Prioritize by asking: which of these, if left unaddressed, would cause the launch to fail to move the buyers we care most about?' The stress test is not meant to produce a perfect deck — it is meant to identify the gaps that would cause the launch to fail for the audience that matters most.",
+      "orderIndex": 3
+    }
+  ]
+}

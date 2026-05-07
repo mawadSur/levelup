@@ -1,0 +1,452 @@
+[
+  {
+    "slug": "sales-cold-email-rewriter",
+    "title": "Rewrite a cold outreach email",
+    "category": "sales",
+    "promptText": "You are a B2B sales expert who specializes in writing concise, buyer-centric outbound emails.\n\nRewrite the following cold email so that it:\n- Opens with a specific, relevant observation about {{prospect_company}} (use what I provide, do not fabricate)\n- Focuses on one business problem, not a list of features\n- Has a single, low-friction call to action (a question or a short calendar link ask)\n- Stays under 120 words in the body\n- Sounds like a human wrote it on a Tuesday morning, not a template\n\nOriginal email:\n{{original_email}}\n\nContext about the prospect:\n- Company: {{prospect_company}}\n- Role/title of recipient: {{recipient_title}}\n- Known pain point or trigger event: {{trigger_event}}\n\nOutput: the rewritten email only — subject line, then body. No commentary.",
+    "tags": ["outbound", "email", "prospecting"],
+    "use_when": "You have a draft cold email that feels generic or too long and want a sharper, more personalized version before sending.",
+    "anti_pattern": "Do not use this to generate cold emails from scratch with no prospect research — the output will be as generic as the input."
+  },
+  {
+    "slug": "sales-discovery-call-prep",
+    "title": "Build a discovery call prep brief",
+    "category": "sales",
+    "promptText": "You are a senior account executive preparing for a discovery call. Create a structured prep brief I can review in 5 minutes before the call.\n\nProspect details:\n- Company: {{company_name}}\n- Industry: {{industry}}\n- Recipient name and title: {{contact_name}}, {{contact_title}}\n- What I know about their situation: {{known_context}}\n- Our product/solution: {{our_solution}}\n\nThe brief should include:\n1. Hypothesized top business priority (2–3 sentences)\n2. Five discovery questions — one warm opener, three problem-depth questions, one future-state/vision question\n3. Three likely objections and a one-line response to each\n4. One internal metric or story I should have ready\n5. Desired outcome of this call in one sentence\n\nBe specific. No filler questions like 'Tell me about your business.'",
+    "tags": ["discovery", "call-prep", "pipeline"],
+    "use_when": "You have a scheduled discovery call in the next 24 hours and want to walk in with a focused plan rather than a generic question list.",
+    "anti_pattern": "Do not skip filling in known context — a blank {{known_context}} produces shallow questions that waste the prospect's time."
+  },
+  {
+    "slug": "sales-objection-handling-matrix",
+    "title": "Map objections to handling responses",
+    "category": "sales",
+    "promptText": "You are a sales enablement coach with deep experience in B2B deals.\n\nI need a structured objection-handling guide for the following sales scenario:\n- Product/service: {{product_name}}\n- Typical deal size: {{deal_size}}\n- Sales stage this usually comes up in: {{sales_stage}}\n- List of objections to address:\n{{objection_list}}\n\nFor each objection, provide:\n1. The emotional core behind the objection (what the buyer is really worried about)\n2. An acknowledgment phrase (1 sentence — validates without agreeing)\n3. A reframe or response (2–4 sentences)\n4. A clarifying question to test if the objection is resolved\n\nFormat as a table with columns: Objection | Emotional Core | Acknowledgment | Response | Check Question.",
+    "tags": ["objection-handling", "enablement", "deal-review"],
+    "use_when": "You are building deal coaching material, preparing a rep for a tough conversation, or debriefing a stalled deal.",
+    "anti_pattern": "Do not treat objections as scripts to memorize — use these as starting points that reps adapt to each conversation."
+  },
+  {
+    "slug": "sales-crm-note-summarizer",
+    "title": "Summarize CRM notes into a deal brief",
+    "category": "sales",
+    "promptText": "You are a revenue operations analyst. Summarize the following raw CRM activity notes into a clean deal brief a sales manager can read in 90 seconds.\n\nRaw CRM notes:\n{{crm_notes}}\n\nDeal context:\n- Account: {{account_name}}\n- Current stage: {{deal_stage}}\n- Expected close date: {{close_date}}\n- Deal value: {{deal_value}}\n\nSummarize into these sections:\n1. Situation (2–3 sentences): what we know, who is involved, what problem they are solving\n2. Progress (bullet list): key milestones reached\n3. Open items (bullet list): blockers, unanswered questions, next steps\n4. Risk flag (1 sentence): the single biggest threat to this deal closing on time\n\nUse plain language. Do not invent information not present in the notes.",
+    "tags": ["crm", "deal-review", "pipeline", "summarization"],
+    "use_when": "You need to quickly onboard a manager or colleague to a deal's status, or prepare a pipeline review without re-reading every activity log.",
+    "anti_pattern": "Do not paste notes that contain customer PII or confidential contract terms into a non-enterprise AI tool."
+  },
+  {
+    "slug": "sales-proposal-outline",
+    "title": "Draft a proposal outline from a brief",
+    "category": "sales",
+    "promptText": "You are a senior B2B sales professional who writes proposals that win. Create a structured proposal outline based on the brief below.\n\nDeal brief:\n- Customer: {{customer_name}}\n- Problem they are solving: {{problem_statement}}\n- Our proposed solution: {{solution_summary}}\n- Key stakeholders and their priorities: {{stakeholder_priorities}}\n- Competitive context: {{competitive_context}}\n- Commercial terms: {{commercial_summary}}\n\nProduce a section-by-section outline with:\n- Section heading\n- 2–3 bullet points of what goes in each section\n- The job that section does (e.g., 'builds credibility', 'quantifies ROI', 'de-risks the decision')\n\nSections to include: Executive Summary, Situation & Goals, Proposed Solution, Implementation Plan, Investment & ROI, Why Us, Next Steps.\n\nDo not write full prose — this is a skeleton the author will flesh out.",
+    "tags": ["proposal", "deal-close", "writing"],
+    "use_when": "You are kicking off a formal proposal and want a structure aligned to the customer's stated priorities before writing begins.",
+    "anti_pattern": "Do not use this outline as the final proposal — a skeleton without the customer's own words and specific evidence rarely wins."
+  },
+  {
+    "slug": "sales-win-loss-interview-questions",
+    "title": "Generate win/loss interview questions",
+    "category": "sales",
+    "promptText": "You are a sales effectiveness consultant. Generate a structured set of win/loss interview questions for the following deal.\n\nDeal context:\n- Outcome: {{won_or_lost}}\n- Our product: {{product_name}}\n- Customer industry: {{customer_industry}}\n- Stated reason for decision: {{stated_reason}}\n- Deal size: {{deal_size}}\n\nGenerate 12 questions organized into 4 groups:\n1. Decision process (3 questions): who decided, how they decided, what criteria they used\n2. Competitive evaluation (3 questions): which alternatives were considered, how we compared\n3. Value perception (3 questions): what problem they ultimately hired the winner to solve\n4. Relationship and experience (3 questions): how the buying experience felt, what we could have done differently\n\nEach question should be open-ended and non-leading. Flag two questions in each group as 'must ask' if time is short.",
+    "tags": ["win-loss", "deal-review", "voice-of-customer"],
+    "use_when": "You are scheduling a post-decision debrief with a buyer and need questions that surface honest, actionable intelligence rather than polite feedback.",
+    "anti_pattern": "Do not conduct a win/loss interview with the rep who owned the deal in the room — their presence biases the customer's answers."
+  },
+  {
+    "slug": "sales-deal-review-brief",
+    "title": "Prepare a deal review brief for leadership",
+    "category": "sales",
+    "promptText": "You are a sales operations analyst preparing a deal review for a VP of Sales.\n\nUsing the information below, write a structured deal review brief:\n- Account: {{account_name}}\n- Deal value: {{deal_value}}\n- Expected close: {{close_date}}\n- Sales cycle to date: {{cycle_summary}}\n- Buyer committee members: {{buyer_committee}}\n- Economic buyer identified: {{economic_buyer}}\n- Champion strength: {{champion_assessment}}\n- Key risks: {{key_risks}}\n\nStructure the brief in these sections:\n1. Deal snapshot (4–6 lines)\n2. Buying committee map with each member's stance (Supporter / Neutral / Blocker)\n3. MEDDIC/MEDDPICC gap analysis — list each element and rate it Red / Amber / Green with a one-line note\n4. Recommended next 3 actions with an owner and a due date\n5. Forecast call (Commit / Best Case / Upside) with one-sentence justification\n\nBe direct. If the deal is at risk, say so.",
+    "tags": ["pipeline", "forecast", "deal-review", "leadership"],
+    "use_when": "A deal is in late stage and you need a crisp, leadership-ready summary before a pipeline review meeting.",
+    "anti_pattern": "Do not soften the risk assessment to look optimistic — leadership needs accurate information, not comfort."
+  },
+  {
+    "slug": "sales-champion-coaching-email",
+    "title": "Write a champion coaching email",
+    "category": "sales",
+    "promptText": "You are a strategic B2B seller helping your internal champion make the case for your solution.\n\nWrite an email from me to my champion at {{account_name}} that helps them present our solution internally. The email should:\n- Acknowledge the work they have done to move this forward\n- Provide 2–3 concise talking points they can use with {{internal_audience}} (written in that audience's language, not ours)\n- Offer to prepare a one-page internal summary or a short slide if useful\n- Close with a specific ask for next-step coordination\n\nContext:\n- Champion name: {{champion_name}}\n- Their title: {{champion_title}}\n- Internal audience they need to persuade: {{internal_audience}}\n- Core business case: {{business_case}}\n- Biggest internal objection expected: {{expected_objection}}\n\nTone: collaborative, peer-to-peer. Not salesy.",
+    "tags": ["champion", "internal-selling", "deal-close"],
+    "use_when": "Your champion needs to sell the deal internally and you want to arm them with talking points without putting them in an awkward position.",
+    "anti_pattern": "Do not make this email read like a vendor briefing — it should feel like two colleagues coordinating, not a sales tactic."
+  },
+  {
+    "slug": "support-empathetic-reply-rewriter",
+    "title": "Rewrite a support reply with empathy",
+    "category": "support",
+    "promptText": "You are a customer experience editor reviewing support replies before they are sent.\n\nRewrite the following draft support reply so that it:\n1. Opens by acknowledging the customer's frustration or situation in one genuine sentence (no 'I apologize for the inconvenience')\n2. States clearly what you are doing or what happened\n3. Provides the resolution or next step in plain, numbered steps if there is more than one action\n4. Closes warmly without being sycophantic\n\nConstraints:\n- Do not add hollow phrases ('I totally understand', 'That's a great question')\n- Do not make promises about timelines unless they are already in the draft\n- Keep the reply under 150 words unless technical detail requires more\n- Match the register of the customer's message: if they were professional, be professional; if casual, be human\n\nDraft reply:\n{{draft_reply}}\n\nCustomer message (for context):\n{{customer_message}}\n\nOutput the rewritten reply only.",
+    "tags": ["customer-service", "tone", "writing"],
+    "use_when": "A support rep's draft reply is technically correct but reads as cold, defensive, or overly formal for the situation.",
+    "anti_pattern": "Do not over-empathize to the point of removing factual content — empathy without resolution does not help the customer."
+  },
+  {
+    "slug": "support-escalation-detector",
+    "title": "Assess escalation risk in a support ticket",
+    "category": "support",
+    "promptText": "You are a support quality analyst. Review the following support ticket thread and assess escalation risk.\n\nTicket content:\n{{ticket_thread}}\n\nCustomer context (if known):\n- Account tier: {{account_tier}}\n- Days since original submission: {{days_open}}\n- Number of previous tickets in last 90 days: {{prior_ticket_count}}\n\nProvide:\n1. Escalation risk: Low / Medium / High — with one sentence of reasoning\n2. Sentiment trajectory: Getting better / Stable / Deteriorating\n3. Unaddressed issue(s): list any customer concern not yet responded to in the thread\n4. Recommended action: specific next step (e.g., 'assign to senior agent', 'proactive outreach from CSM', 'resolve within 4 hours')\n5. Suggested opening line if a human follows up\n\nBe direct. Do not hedge excessively.",
+    "tags": ["escalation", "triage", "quality"],
+    "use_when": "A ticket is getting long, the customer seems frustrated, or a manager wants a fast second opinion before deciding whether to escalate.",
+    "anti_pattern": "Do not use this to replace human judgment on sensitive legal or compliance complaints — those require a specialist review."
+  },
+  {
+    "slug": "support-kb-article-from-tickets",
+    "title": "Draft a KB article from a ticket cluster",
+    "category": "support",
+    "promptText": "You are a technical writer who turns support ticket patterns into clear knowledge base articles.\n\nI am providing a set of support tickets about the same issue. Write a KB article that will deflect this ticket type in the future.\n\nTicket summaries:\n{{ticket_summaries}}\n\nProduct area: {{product_area}}\nAudience: {{audience_description}}\n\nStructure the article as:\n1. Title (plain language, starts with a verb or a question the user would search)\n2. Problem description (2–3 sentences — describe the symptom, not the cause)\n3. Cause (optional, 1–2 sentences — only include if it helps the user)\n4. Solution (numbered steps, imperative mood, one action per step)\n5. If it still does not work (2–3 bullets for common variations or follow-up steps)\n6. Related articles (3 placeholder titles)\n\nConstraints: no jargon without definition, active voice throughout, steps should be completable by {{audience_description}}.",
+    "tags": ["knowledge-base", "documentation", "deflection"],
+    "use_when": "Three or more tickets have come in for the same issue and you want to write a self-serve article before the next wave hits.",
+    "anti_pattern": "Do not publish the article without a product SME reviewing the solution steps — ticket patterns show symptoms, not always root causes."
+  },
+  {
+    "slug": "support-macro-tone-matcher",
+    "title": "Rewrite a macro to match customer tone",
+    "category": "support",
+    "promptText": "You are a support quality specialist. Rewrite the following canned response (macro) into three tone variants:\n\nOriginal macro:\n{{original_macro}}\n\nContext:\n- Issue type: {{issue_type}}\n- Product: {{product_name}}\n\nVariant 1 — Formal/Professional: appropriate for enterprise or B2B customers who write formally.\nVariant 2 — Friendly/Conversational: appropriate for a consumer product or a customer who wrote casually.\nVariant 3 — Urgent/Empathetic: appropriate when the customer is clearly frustrated or has been waiting.\n\nFor each variant:\n- Keep the same core information as the original\n- Adjust opening, word choice, and closing\n- Do not add information not in the original unless clearly labeled as a placeholder\n- Stay under 120 words per variant\n\nOutput: all three variants labeled clearly.",
+    "tags": ["macros", "tone", "enablement"],
+    "use_when": "Your team uses macros but the one-size tone is causing mismatches with different customer personas or emotional states.",
+    "anti_pattern": "Do not replace all macros with tone variants — only do this for high-volume ticket types where tone genuinely affects satisfaction."
+  },
+  {
+    "slug": "support-csat-decline-analysis",
+    "title": "Analyze a CSAT decline and draft a team memo",
+    "category": "support",
+    "promptText": "You are a support operations manager. Analyze the following CSAT data summary and draft an internal team memo.\n\nData summary:\n{{csat_data_summary}}\n\nTime period: {{time_period}}\nPrevious period CSAT: {{previous_csat}}\nCurrent period CSAT: {{current_csat}}\nTop verbatim themes from detractor responses: {{verbatim_themes}}\n\nProduce:\n1. 3-bullet summary of what the data shows\n2. 2–3 root cause hypotheses (be explicit that these are hypotheses, not conclusions)\n3. 2–3 recommended actions to test, with a success metric for each\n4. A one-paragraph team memo written in a direct, non-blame tone that shares the finding and the plan\n\nDo not speculate beyond what the data supports. Flag where more data is needed.",
+    "tags": ["csat", "quality", "operations", "data-analysis"],
+    "use_when": "CSAT has dropped measurably and you need a fast, honest analysis before a team meeting or leadership update.",
+    "anti_pattern": "Do not skip qualitative review of actual tickets — CSAT numbers and verbatims alone may miss the real pattern."
+  },
+  {
+    "slug": "support-sla-breach-response",
+    "title": "Draft a proactive SLA breach notification",
+    "category": "support",
+    "promptText": "You are a customer success manager drafting a proactive outreach message for a ticket that is about to breach or has just breached its SLA.\n\nDetails:\n- Customer name: {{customer_name}}\n- Account tier: {{account_tier}}\n- Issue summary (no PII): {{issue_summary}}\n- Original SLA commitment: {{sla_commitment}}\n- Current status: {{current_status}}\n- Estimated resolution time: {{eta}}\n\nWrite a message that:\n1. Acknowledges the delay in the first sentence without using the word 'apologize' more than once\n2. States exactly what is being done right now\n3. Gives the best current ETA without over-promising\n4. Offers one concrete action the customer can take if their situation is urgent\n5. Names a specific person (use {{csm_name}}) they can contact directly\n\nTone: accountable, calm, not defensive. Under 150 words.",
+    "tags": ["sla", "proactive-communication", "escalation"],
+    "use_when": "A ticket is approaching or has crossed an SLA deadline and you want to reach out before the customer does.",
+    "anti_pattern": "Do not send this message without verifying the ETA with the engineering or ops team first — committing to a wrong deadline compounds the breach."
+  },
+  {
+    "slug": "hr-job-description-bias-scrub",
+    "title": "Scrub a job description for biased language",
+    "category": "hr",
+    "promptText": "You are a talent acquisition specialist trained in inclusive hiring practices.\n\nReview the following job description and:\n1. Identify words or phrases that research shows skew the applicant pool (e.g., gendered adjectives, requirement inflation, culture-fit language, ageist phrasing)\n2. Suggest a neutral replacement for each flagged item\n3. Flag any 'nice to have' requirements that are listed as 'required' — these may be filtering out qualified candidates\n4. Rewrite the 'About the role' and 'What you will do' sections using inclusive language\n\nJob description:\n{{job_description}}\n\nRole level: {{role_level}}\nDepartment: {{department}}\n\nOutput format:\n- Flagged items table: Original phrase | Issue | Suggested replacement\n- Rewritten sections (clearly labeled)\n- 2–3 sentence summary of overall inclusivity assessment\n\nDo not change the actual requirements — only the language used to describe them.",
+    "tags": ["recruiting", "dei", "job-descriptions"],
+    "use_when": "You have a draft JD and want a structured review before posting to reduce unintentional applicant pool narrowing.",
+    "anti_pattern": "Do not treat this as a complete DEI audit — language is one lever; sourcing strategy and interview process matter equally."
+  },
+  {
+    "slug": "hr-interview-question-generator",
+    "title": "Generate structured interview questions by competency",
+    "category": "hr",
+    "promptText": "You are a talent acquisition specialist experienced in structured, competency-based interviewing.\n\nGenerate a structured interview question set for the following role:\n- Role: {{role_title}}\n- Level: {{role_level}}\n- Key competencies to assess: {{competency_list}}\n- Interview type: {{interview_type}} (e.g., behavioral, technical screen, case, executive)\n\nFor each competency, write:\n1. One behavioral question (STAR-format eliciting: past situation, action, result)\n2. One follow-up probe question\n3. What a strong answer looks like (2–3 bullet points)\n4. A red flag to listen for (1 bullet)\n\nConstraints:\n- Questions must be legally compliant for {{jurisdiction}} (avoid protected-class topics)\n- No leading questions\n- Each question answerable in 3–5 minutes\n- Behavioral questions should use 'Tell me about a time...' or 'Describe a situation where...'\n\nOutput as a structured guide the interviewer can print and use.",
+    "tags": ["interviewing", "structured-hiring", "competency"],
+    "use_when": "You are building or refreshing an interview guide and want questions that consistently reveal relevant signals across all candidates.",
+    "anti_pattern": "Do not use the same question set for all roles — tailor it even if only one competency changes between similar roles."
+  },
+  {
+    "slug": "hr-30-60-90-plan",
+    "title": "Build a 30-60-90 day onboarding plan",
+    "category": "hr",
+    "promptText": "You are an HR business partner building a structured onboarding plan for a new hire.\n\nNew hire details:\n- Role: {{role_title}}\n- Department: {{department}}\n- Start date: {{start_date}}\n- Manager: {{manager_name}}\n- Key stakeholders they will work with: {{stakeholder_list}}\n- Top 3 priorities for this role in the first quarter: {{q1_priorities}}\n\nCreate a 30-60-90 day plan with three phases:\n- Days 1–30 (Learn): key meetings, systems access, documents to read, relationships to build\n- Days 31–60 (Contribute): first deliverables, projects to join, decisions they should be involved in\n- Days 61–90 (Own): projects to lead, metrics to own, 90-day checkpoint goal\n\nFor each phase include: 3–5 specific actions, 1–2 success criteria, and one question the new hire should be able to answer by the end of the phase.\n\nFormat as a table or structured checklist.",
+    "tags": ["onboarding", "new-hire", "manager-tool"],
+    "use_when": "A new hire is starting within two weeks and the manager needs a structured, role-specific plan rather than a generic checklist.",
+    "anti_pattern": "Do not treat the 30-60-90 as fixed — review it at each milestone and update based on what you have actually learned."
+  },
+  {
+    "slug": "hr-performance-review-scaffold",
+    "title": "Scaffold a performance review draft",
+    "category": "hr",
+    "promptText": "You are an experienced people manager. Help me draft a structured performance review.\n\nEmployee context:\n- Role: {{role_title}}\n- Review period: {{review_period}}\n- Key goals set at start of period: {{goals_set}}\n- Notable accomplishments: {{accomplishments}}\n- Areas where performance fell short of expectations: {{gaps}}\n- Feedback themes from peers (summarized): {{peer_themes}}\n- My overall assessment: {{overall_assessment}}\n\nDraft the review in these sections:\n1. Overall performance summary (3–5 sentences, balanced and specific)\n2. Goal-by-goal assessment (table: Goal | Result | Rating)\n3. Strengths demonstrated (2–3 specific examples with business impact)\n4. Development areas (2–3 specific, forward-looking — not a list of failures)\n5. Goals for next period (3–5 SMART goals)\n\nConstraints: use direct language, avoid vague praise ('good team player'), anchor every observation to a specific behavior or outcome. This draft is for the manager to edit, not send directly.",
+    "tags": ["performance-management", "reviews", "feedback"],
+    "use_when": "You have gathered all your notes and feedback but need help structuring it into a coherent, fair, legally defensible review draft.",
+    "anti_pattern": "Do not rely on this draft without reading it carefully — AI cannot know nuance that only you observed in the working relationship."
+  },
+  {
+    "slug": "hr-internal-communication-tone-check",
+    "title": "Tone-check an internal HR communication",
+    "category": "hr",
+    "promptText": "You are an internal communications specialist with experience in HR messaging.\n\nReview the following HR communication draft and assess its tone and effectiveness:\n\nDraft:\n{{draft_communication}}\n\nContext:\n- Audience: {{audience}}\n- Topic sensitivity: {{sensitivity_level}} (e.g., policy change, layoff, compensation update, culture initiative)\n- Intended reaction: {{intended_reaction}}\n\nProvide:\n1. Tone assessment: how will this land? (3–4 sentences, be honest)\n2. Flagged phrases: list any sentences likely to cause confusion, anxiety, or cynicism, with brief reasoning\n3. Structural gaps: is there a missing section (e.g., no FAQ, no 'what happens next', no named contact)?\n4. Revised version of the most problematic paragraph\n5. One-line overall verdict: 'Ready to send', 'Send with minor edits', or 'Needs significant revision'\n\nBe direct. HR communications that obscure information erode trust.",
+    "tags": ["communications", "tone", "policy", "change-management"],
+    "use_when": "You have a draft of a sensitive HR communication and want an honest read before it goes to employees.",
+    "anti_pattern": "Do not use this to soften a message that should be direct — employees can usually tell when something is being obscured."
+  },
+  {
+    "slug": "hr-offer-letter-talking-points",
+    "title": "Generate offer conversation talking points",
+    "category": "hr",
+    "promptText": "You are a talent acquisition manager preparing a recruiter or hiring manager to deliver a verbal offer.\n\nPrepare talking points for the offer conversation:\n- Candidate name: {{candidate_name}}\n- Role: {{role_title}}\n- Base salary: {{base_salary}}\n- Variable/bonus: {{variable_comp}}\n- Equity (if any): {{equity_details}}\n- Benefits highlights: {{benefits_summary}}\n- Start date: {{proposed_start}}\n- Known competing offer or concern: {{candidate_concern}}\n\nStructure the talking points as:\n1. Opening (set the tone, signal enthusiasm, not just transactional)\n2. Presenting the package (how to walk through each element without it sounding like a list)\n3. Handling the top likely objection: {{candidate_concern}}\n4. Closing ask (how to get to a yes or a timeline without pressure)\n5. Follow-up plan if they need time\n\nDo not fabricate compensation data. Use only what is provided.",
+    "tags": ["recruiting", "offers", "compensation"],
+    "use_when": "A recruiter or manager is about to deliver a verbal offer and wants to feel prepared for the conversation rather than improvising.",
+    "anti_pattern": "Do not use these talking points to pressure a candidate — the goal is to inform and invite, not manipulate."
+  },
+  {
+    "slug": "hr-exit-interview-questions",
+    "title": "Prepare exit interview questions",
+    "category": "hr",
+    "promptText": "You are an HR business partner conducting an exit interview. Generate a structured question guide.\n\nEmployee context:\n- Role: {{role_title}}\n- Department: {{department}}\n- Tenure: {{tenure}}\n- Departure type: {{departure_type}} (voluntary / involuntary / retirement)\n- Known reason for leaving (if any): {{known_reason}}\n\nGenerate 10 questions in 4 groups:\n1. Decision to leave (3 questions): when the decision was made, contributing factors, tipping point\n2. Experience at the company (3 questions): what worked well, what they would change, team dynamics\n3. Role-specific factors (2 questions): support, clarity, growth opportunity\n4. Improvements and recommendations (2 questions): one thing we should stop doing, one we should start\n\nFor each question: the question itself, why we ask it (internal note only), and what a useful answer sounds like.\n\nNote: if departure type is involuntary, limit questions to experience and improvements only — do not ask about the decision to leave.",
+    "tags": ["exit-interview", "retention", "feedback"],
+    "use_when": "You are scheduling an exit interview and want questions that generate actionable retention intelligence rather than polite generic feedback.",
+    "anti_pattern": "Do not conduct exit interviews in a way that feels like data harvesting — the tone should be genuinely curious and non-defensive."
+  },
+  {
+    "slug": "hr-policy-plain-language-rewrite",
+    "title": "Rewrite a policy document in plain language",
+    "category": "hr",
+    "promptText": "You are a workplace communications specialist who makes policy documents readable by normal humans.\n\nRewrite the following policy section in plain language suitable for all employees, including those who are not native English speakers or who do not have a legal background.\n\nOriginal policy text:\n{{policy_text}}\n\nPolicy type: {{policy_type}}\nAudience: all employees\n\nRewrite guidelines:\n- Use second person ('you') throughout\n- Replace legal or HR jargon with everyday words (table at end with original vs. replacement terms)\n- Use numbered lists for processes, bullet lists for options\n- Maximum sentence length: 25 words\n- Include a 'What this means for you' summary box at the start (3 bullets, plain language)\n- Preserve all legal requirements — do not simplify away anything that changes the meaning\n\nOutput: plain-language version + jargon replacement table.",
+    "tags": ["policy", "plain-language", "communications"],
+    "use_when": "An HR policy reads like a legal contract and employees either ignore it or need a lawyer to understand it.",
+    "anti_pattern": "Do not finalize the plain-language version without legal review — simplifying language must not alter legal obligations."
+  },
+  {
+    "slug": "manager-meeting-summary",
+    "title": "Summarize a meeting into a structured action log",
+    "category": "manager",
+    "promptText": "You are a chief of staff helping a manager follow through on meeting outcomes.\n\nConvert the following meeting notes or transcript into a structured summary:\n\nRaw notes or transcript:\n{{meeting_notes}}\n\nMeeting context:\n- Meeting name: {{meeting_name}}\n- Date: {{meeting_date}}\n- Attendees: {{attendee_list}}\n\nProduce:\n1. One-sentence meeting objective and whether it was achieved\n2. Key decisions made (bullet list — decisions only, not discussions)\n3. Action items table: Action | Owner | Due date | Dependencies\n4. Open questions not resolved (bullet list)\n5. What the manager should do in the next 24 hours (1–3 specific items)\n\nDo not include discussion threads that did not result in a decision or action. Strip filler. Be specific.",
+    "tags": ["meetings", "follow-through", "operations"],
+    "use_when": "After a meeting with multiple decisions and owners, you need a clean record that actually drives follow-through.",
+    "anti_pattern": "Do not send this summary to participants without reviewing it — transcription errors or misattributions need a human check."
+  },
+  {
+    "slug": "manager-decision-premortem",
+    "title": "Run a decision pre-mortem",
+    "category": "manager",
+    "promptText": "You are a strategic advisor helping a manager stress-test an important decision before committing.\n\nDecision being evaluated:\n{{decision_description}}\n\nContext:\n- Stakes: {{stakes}}\n- Timeline to decide: {{decision_timeline}}\n- Who is affected: {{affected_parties}}\n- Information already considered: {{information_considered}}\n\nConduct a structured pre-mortem:\n1. Assume it failed 12 months from now — generate the 5 most plausible failure reasons (be specific, not vague)\n2. For each failure reason: likelihood (H/M/L) and one mitigation action\n3. Identify the 1–2 assumptions this decision most depends on — are they testable before committing?\n4. List any stakeholder whose support is assumed but not yet confirmed\n5. Recommend: proceed / proceed with modifications / delay for more information — with one-paragraph rationale\n\nBe direct about weaknesses. The goal is a better decision, not validation.",
+    "tags": ["decision-making", "strategy", "risk"],
+    "use_when": "You are about to make or recommend a significant decision and want structured adversarial thinking before you commit.",
+    "anti_pattern": "Do not use a pre-mortem to endlessly delay a decision — set a deadline for the analysis and honor it."
+  },
+  {
+    "slug": "manager-team-norms-generator",
+    "title": "Draft working norms for a new team",
+    "category": "manager",
+    "promptText": "You are an organizational effectiveness consultant. Help a manager draft a working norms document for a team.\n\nTeam context:\n- Team size: {{team_size}}\n- Work model: {{work_model}} (e.g., remote-first, hybrid 2 days, fully on-site)\n- Team function: {{team_function}}\n- Common friction points the manager wants to address: {{friction_points}}\n- Values the manager wants to reinforce: {{values}}\n\nDraft working norms in these categories:\n1. Communication (response times, channels, async vs. sync)\n2. Meetings (standing meetings, prep expectations, no-meeting windows)\n3. Decision-making (who decides what, how disagreements are handled)\n4. Deep work (focus time, interruption norms)\n5. Feedback and recognition (how we give feedback, how we celebrate)\n\nFor each norm: write it as a positive, active statement ('We do X') not a rule ('Do not do Y'). Include the reasoning in one sentence per norm so the team understands the why.\n\nTotal: 12–18 norms. Flag 3 as 'team to ratify together' to encourage co-ownership.",
+    "tags": ["team-effectiveness", "norms", "culture"],
+    "use_when": "A new team is forming or an existing team needs to reset its working agreement after a structural or personnel change.",
+    "anti_pattern": "Do not impose norms without team input — draft them, then run a session where the team amends and commits to them."
+  },
+  {
+    "slug": "manager-skip-level-questions",
+    "title": "Prepare skip-level meeting questions",
+    "category": "manager",
+    "promptText": "You are an experienced people leader preparing for skip-level 1:1 meetings with employees who report to your direct reports.\n\nContext:\n- Your role: {{your_role}}\n- Employee role: {{employee_role}}\n- Their manager: {{manager_name}}\n- Relationship history: {{relationship_history}} (e.g., first skip-level, quarterly check-in, post-reorg)\n- Any context you have about current team climate: {{team_climate}}\n\nGenerate:\n1. Three opening questions that signal you are there to listen, not audit their manager\n2. Three questions about the employee's work experience, growth, and clarity on direction\n3. Two questions that surface potential team-level issues without putting the employee in a difficult position\n4. One closing question that invites the employee to ask you something\n\nFor each question: a brief note on what you are listening for.\n\nConstraints: no questions that ask employees to evaluate their manager by name. Frame around the employee's experience, not the manager's performance.",
+    "tags": ["skip-level", "one-on-ones", "team-health"],
+    "use_when": "You are preparing for skip-level 1:1s and want questions that build trust and surface signal without damaging the manager-employee relationship.",
+    "anti_pattern": "Do not share your skip-level notes with the employee's direct manager without the employee's knowledge — that breaks trust quickly."
+  },
+  {
+    "slug": "manager-feedback-delivery-prep",
+    "title": "Prepare to deliver difficult feedback",
+    "category": "manager",
+    "promptText": "You are an executive coach helping a manager prepare to deliver a difficult performance conversation.\n\nSituation:\n- Employee role: {{employee_role}}\n- The specific behavior or performance issue: {{issue_description}}\n- Business impact of the issue: {{business_impact}}\n- Previous feedback given (if any): {{prior_feedback}}\n- Desired outcome of this conversation: {{desired_outcome}}\n\nHelp me prepare:\n1. A clear, factual opening statement (2–3 sentences) that describes the behavior without labeling the person\n2. Two clarifying questions to ask before explaining impact — to ensure I have the full picture\n3. The impact statement (how this affected the team, project, or customer)\n4. A change request: what I am specifically asking them to do differently\n5. How to close constructively and agree on a follow-up checkpoint\n6. One thing I should be careful not to say in this conversation\n\nTone: direct, fair, growth-oriented. Not punitive.",
+    "tags": ["feedback", "performance-management", "coaching"],
+    "use_when": "You are preparing for a feedback conversation that you have been avoiding, or that feels high-stakes and you want to walk in with structure.",
+    "anti_pattern": "Do not script every word — use this to prepare your thinking, then have the conversation naturally."
+  },
+  {
+    "slug": "manager-one-on-one-agenda",
+    "title": "Build a standing 1:1 agenda structure",
+    "category": "manager",
+    "promptText": "You are a management coach. Help me design a standing 1:1 agenda for a direct report.\n\nContext:\n- Direct report role: {{direct_report_role}}\n- Meeting cadence: {{meeting_cadence}} (e.g., weekly 30 min, biweekly 45 min)\n- Current focus areas: {{current_priorities}}\n- What I know about what motivates this person: {{motivation_context}}\n- Any current challenges or tensions: {{current_challenges}}\n\nDesign a standing agenda template with:\n1. A rotating opening question (give me 5 options that vary: mood check / priority check / energy check)\n2. Employee-first section (15 min): their updates, blocks, and asks — no manager agenda\n3. Manager section (10 min if 30-min meeting): one topic I need to cover, no more\n4. Growth/development question (2 min): a rotating prompt to discuss once per month\n5. Closing: what does success look like before we meet again?\n\nAlso write 3 'override prompts' — questions to drop the agenda for in specific situations (performance concern, major win, something seems off).",
+    "tags": ["one-on-ones", "management", "meeting-design"],
+    "use_when": "You want to stop improvising 1:1s and have a consistent structure that puts the employee first without being rigid.",
+    "anti_pattern": "Do not run through the agenda as a checklist — it is a structure to fall back on, not a script to follow."
+  },
+  {
+    "slug": "manager-project-kickoff-brief",
+    "title": "Draft a project kickoff brief",
+    "category": "manager",
+    "promptText": "You are a program manager drafting a project kickoff brief.\n\nProject details:\n- Project name: {{project_name}}\n- Business objective: {{business_objective}}\n- Key stakeholders: {{stakeholder_list}}\n- Team members and roles: {{team_members}}\n- Timeline: {{timeline}}\n- Budget or resource constraints: {{constraints}}\n- Known risks: {{known_risks}}\n- Definition of done: {{definition_of_done}}\n\nWrite a kickoff brief with these sections:\n1. Why we are doing this (1 paragraph — the business case in plain language)\n2. What we are delivering and what we are not (scope and explicit out-of-scope list)\n3. Who is on the team and their decision rights (RACI-style table: Responsible, Accountable, Consulted, Informed)\n4. Timeline with milestones (table)\n5. Risks and how we are managing them (table)\n6. How we will communicate (cadence, channel, format)\n7. What does success look like? (3–5 measurable criteria)\n\nKeep each section tight. This is a brief, not a spec.",
+    "tags": ["project-management", "kickoff", "planning"],
+    "use_when": "A new project is starting and you need a shared document that aligns the team on goals, roles, and constraints before work begins.",
+    "anti_pattern": "Do not treat the kickoff brief as a contract — it is a starting alignment document that should be updated as the project evolves."
+  },
+  {
+    "slug": "manager-performance-pip-draft",
+    "title": "Draft a performance improvement plan outline",
+    "category": "manager",
+    "promptText": "You are an HR business partner helping a manager structure a performance improvement plan (PIP).\n\nEmployee context:\n- Role: {{role_title}}\n- Specific performance gaps (be precise, not general): {{performance_gaps}}\n- Duration of issue: {{issue_duration}}\n- Previous feedback and support provided: {{prior_support}}\n- Business impact: {{business_impact}}\n\nDraft a PIP structure with:\n1. Statement of expectations: what specific, measurable performance is required\n2. Gap description: where current performance falls short (factual, non-judgmental language)\n3. Improvement goals: 3–5 SMART goals with measurement criteria and timeline\n4. Support and resources: what the company will provide (training, coaching, tools)\n5. Check-in schedule: weekly touchpoints and what is reviewed at each\n6. Consequences section: clear statement of outcomes if goals are met and if they are not\n7. Employee acknowledgment section (placeholder)\n\nNote: this is a structural draft. Have HR and legal review the final document before use.",
+    "tags": ["performance-management", "pip", "hr-tool"],
+    "use_when": "A manager and HRBP are ready to formalize a performance improvement process and need a starting structure that is specific and legally grounded.",
+    "anti_pattern": "Do not use a PIP as a documentation trail to fire someone you have already decided to let go — that creates legal liability and destroys trust."
+  },
+  {
+    "slug": "marketing-positioning-sharpener",
+    "title": "Sharpen a product positioning statement",
+    "category": "marketing",
+    "promptText": "You are a product marketing strategist. Help me sharpen a positioning statement.\n\nCurrent positioning statement:\n{{current_positioning}}\n\nContext:\n- Product: {{product_name}}\n- Target customer: {{target_customer}}\n- Primary competitor(s): {{competitors}}\n- What we do uniquely well: {{differentiators}}\n- What customers say they hire us to do (jobs to be done): {{jobs_to_be_done}}\n\nProvide:\n1. Analysis of the current statement: what is working, what is vague, what is generic\n2. Three alternative positioning statements — each taking a different strategic angle (category creation, head-to-head, niche dominance)\n3. For the strongest of the three: a one-paragraph 'why this works' explanation\n4. A version of the strongest statement at three lengths: 10 words, 25 words, 75 words\n5. One question to test whether the positioning actually resonates with a real customer\n\nDo not use the words 'innovative', 'seamless', or 'powerful'.",
+    "tags": ["positioning", "messaging", "strategy"],
+    "use_when": "Your current positioning feels generic, is not differentiating from competitors, or has not been revisited since the product evolved.",
+    "anti_pattern": "Do not finalize positioning based on this output alone — test the top option in customer conversations before it goes into materials."
+  },
+  {
+    "slug": "marketing-headline-ab-variants",
+    "title": "Generate headline A/B test variants",
+    "category": "marketing",
+    "promptText": "You are a direct-response copywriter who specializes in headlines that drive click-through and conversions.\n\nContext:\n- Product or offer: {{product_or_offer}}\n- Landing page goal: {{conversion_goal}}\n- Target audience: {{target_audience}}\n- Current headline: {{current_headline}}\n- Current conversion rate (if known): {{current_cr}}\n\nGenerate 8 headline variants grouped by approach:\n1. Benefit-first (2 variants): lead with the specific outcome\n2. Problem-first (2 variants): name the pain before the solution\n3. Curiosity or contrarian (2 variants): challenge a belief or create a question\n4. Social proof (2 variants): anchor to evidence or adoption\n\nFor each variant:\n- The headline (under 12 words)\n- A subheadline that supports it (under 20 words)\n- The psychological lever it pulls\n- The audience segment it is most likely to resonate with\n\nFlag the two you would test first and why.",
+    "tags": ["copywriting", "ab-testing", "conversion"],
+    "use_when": "Your landing page headline is underperforming and you want a structured set of test variants grounded in different copywriting frameworks.",
+    "anti_pattern": "Do not run all 8 variants simultaneously — pick 1–2 to test at a time so you accumulate clean learnings."
+  },
+  {
+    "slug": "marketing-persona-from-data",
+    "title": "Build a customer persona from behavioral data",
+    "category": "marketing",
+    "promptText": "You are a market research analyst. Build a customer persona from the behavioral and qualitative data below.\n\nData inputs:\n- Top customer segment by revenue: {{segment_description}}\n- CRM demographic data summary: {{crm_data}}\n- Support ticket themes for this segment: {{ticket_themes}}\n- Sales call themes (objections, questions, use cases): {{sales_call_themes}}\n- Product usage data highlights: {{usage_data}}\n- 3 direct customer quotes: {{customer_quotes}}\n\nBuild a persona that includes:\n1. Name, role, and demographic sketch (1 short paragraph — clearly labeled as representative, not a real person)\n2. Job context: what does a typical week look like? What are they responsible for?\n3. Goals: top 3 professional goals in the next 12 months\n4. Pains: top 3 frustrations relevant to your product category\n5. How they evaluate solutions: who influences the decision, what criteria matter, what makes them say no\n6. Messaging guide: 3 phrases to use, 3 phrases to avoid\n\nBase everything on the data provided. Where you are inferring, say so explicitly.",
+    "tags": ["persona", "research", "messaging"],
+    "use_when": "You have a useful segment in your CRM but no structured persona, and you want one that is grounded in real data rather than assumptions.",
+    "anti_pattern": "Do not create a persona without real data inputs — a persona built on assumptions reinforces existing biases rather than challenging them."
+  },
+  {
+    "slug": "marketing-launch-email-sequence",
+    "title": "Draft a product launch email sequence",
+    "category": "marketing",
+    "promptText": "You are a B2B email marketing strategist. Draft a 4-email launch sequence for a new product or feature.\n\nLaunch context:\n- Product/feature name: {{product_name}}\n- What it does: {{product_description}}\n- Core benefit in one sentence: {{core_benefit}}\n- Target audience for this campaign: {{target_audience}}\n- Launch date: {{launch_date}}\n- Primary CTA: {{primary_cta}}\n- Social proof available: {{social_proof}}\n\nEmail schedule:\n- Email 1 (sent T-7 days): teaser — build curiosity without full reveal\n- Email 2 (sent T-1 day): announcement — what it is, who it is for, why now\n- Email 3 (sent launch day): detail — how it works, the benefit in concrete terms, CTA\n- Email 4 (sent T+5 days): follow-up — social proof, use case story, second CTA\n\nFor each email: subject line, preview text, body (under 150 words), CTA button text.\n\nTone: direct, confident, not hype-heavy. Avoid exclamation points.",
+    "tags": ["email-marketing", "product-launch", "campaigns"],
+    "use_when": "You are launching a new product or major feature and need a sequenced email campaign that builds momentum without burning out your list.",
+    "anti_pattern": "Do not send all four emails to your entire list — segment by relevance and suppress recent purchasers or uninvolved segments."
+  },
+  {
+    "slug": "marketing-case-study-outline",
+    "title": "Outline a customer case study",
+    "category": "marketing",
+    "promptText": "You are a B2B content strategist. Build an outline for a customer case study.\n\nCustomer context:\n- Customer name: {{customer_name}} (or use {{anonymized_name}} if anonymous)\n- Industry: {{industry}}\n- Company size: {{company_size}}\n- Problem they had before your product: {{problem_description}}\n- Solution: {{solution_description}}\n- Measurable outcomes: {{outcomes}}\n- Customer quote (if approved): {{customer_quote}}\n\nProduce a case study outline with:\n1. Suggested title (two options: outcome-first and problem-first)\n2. Executive summary (3 sentences: who, what problem, what result)\n3. Challenge section outline (3 bullets — what was breaking and why it mattered)\n4. Solution section outline (3 bullets — what they did, how quickly, who was involved)\n5. Results section outline (3–5 metrics or outcomes to highlight, with context)\n6. Quote placement recommendations (headline, pull quote, closing)\n7. A list of 3 questions to ask the customer in the interview to fill in gaps\n\nThis is an outline only — the author will write the full text.",
+    "tags": ["case-study", "content-marketing", "social-proof"],
+    "use_when": "You have a strong customer result and an approval to write it up, and you want a structured outline to brief a writer or approach the customer interview.",
+    "anti_pattern": "Do not publish a case study without final customer approval on all quotes and specific metrics — legal and PR risk is real."
+  },
+  {
+    "slug": "marketing-competitive-battle-card",
+    "title": "Build a competitive battle card",
+    "category": "marketing",
+    "promptText": "You are a competitive intelligence analyst. Build a one-page battle card for use by the sales team.\n\nCompetitor: {{competitor_name}}\nYour product: {{your_product}}\n\nInformation to work from:\n- What you know about their product: {{competitor_product_summary}}\n- Their typical customer profile: {{competitor_ideal_customer}}\n- How deals typically come down to us vs. them: {{competitive_scenario}}\n- Our strengths vs. them: {{our_strengths}}\n- Their genuine strengths: {{their_strengths}}\n- Common objections when they are in a deal: {{common_objections}}\n\nBuild the battle card with:\n1. Header: competitor name, their tagline, their ICP in one line\n2. When you win / when you lose (2 columns, honest)\n3. Their top 3 strengths (acknowledge them — reps need to know what they are up against)\n4. Our top 3 differentiators vs. them (concrete, not generic)\n5. Landmines: 2 questions to ask the prospect that make our strengths visible without bashing the competitor\n6. Objection handling: top 3 objections with a response for each\n7. Trap questions they may plant in deals — and how to handle them\n\nTone: factual, strategic, no trash-talking.",
+    "tags": ["competitive-intelligence", "sales-enablement", "battle-card"],
+    "use_when": "A competitor is showing up regularly in your deals and your reps need a factual, usable resource — not a marketing brochure.",
+    "anti_pattern": "Do not base a battle card on assumptions or your own marketing materials — use actual competitive intelligence and update it quarterly."
+  },
+  {
+    "slug": "engineering-pr-description",
+    "title": "Generate a pull request description",
+    "category": "engineering",
+    "promptText": "You are a software engineer writing a clear, reviewer-friendly pull request description.\n\nPR context:\n- What this PR does (brief): {{pr_summary}}\n- Ticket or issue link: {{ticket_link}}\n- Type of change: {{change_type}} (e.g., bug fix, feature, refactor, dependency update, hotfix)\n- Files changed (list key ones): {{key_files}}\n- Testing done: {{testing_done}}\n- Any deployment notes or flags: {{deployment_notes}}\n\nWrite a PR description with these sections:\n## What\n(2–4 sentences: the change in plain language, what problem it solves)\n\n## Why\n(2–3 sentences: the motivation — link to ticket if helpful)\n\n## How\n(bullet list: the approach taken and any significant decisions made)\n\n## Testing\n(bullet list: what was tested, how, and what edge cases were considered)\n\n## Deployment / Rollout Notes\n(any flags, config changes, migration steps, or rollback considerations)\n\n## Screenshots (if UI change)\n(placeholder — note what screenshots to attach)\n\nDo not include secrets, tokens, or internal usernames in the description.",
+    "tags": ["code-review", "pull-request", "documentation"],
+    "use_when": "You have finished a change and want a structured PR description that gives reviewers context without making them read the entire diff first.",
+    "anti_pattern": "Do not skip the 'Why' section — reviewers need to understand intent to judge whether the implementation is correct."
+  },
+  {
+    "slug": "engineering-code-review-checklist",
+    "title": "Generate a code review checklist for a feature",
+    "category": "engineering",
+    "promptText": "You are a senior software engineer building a code review checklist for a specific type of change.\n\nChange context:\n- Feature or area: {{feature_description}}\n- Language/framework: {{language_framework}}\n- Risk level: {{risk_level}} (low / medium / high — e.g., payment path = high)\n- Reviewer expertise level: {{reviewer_level}} (junior / mid / senior)\n\nGenerate a layered code review checklist organized into:\n1. Correctness (does it do what it says?): 4–6 questions\n2. Readability and maintainability: 3–5 questions\n3. Performance: 2–4 questions (calibrated to risk level — do not over-engineer for low-risk changes)\n4. Security: 3–5 questions, scaled to risk level\n5. Testing: 3–4 questions\n6. Deployment and operations: 2–3 questions\n\nFor high-risk changes, add a section:\n7. Escalation triggers: conditions under which the reviewer should block merge and escalate\n\nEach item should be a yes/no question or an imperative ('Verify that...'), not a vague instruction.",
+    "tags": ["code-review", "quality", "security", "engineering-process"],
+    "use_when": "Your team's code review process is inconsistent and you want a repeatable checklist that raises the floor without slowing reviewers down.",
+    "anti_pattern": "Do not apply a one-size checklist to all changes — a two-line config fix and a new payment flow need different levels of scrutiny."
+  },
+  {
+    "slug": "engineering-incident-timeline",
+    "title": "Summarize an incident timeline for a postmortem",
+    "category": "engineering",
+    "promptText": "You are a site reliability engineer compiling an incident timeline for a blameless postmortem.\n\nRaw incident data:\n{{raw_incident_data}}\n\nIncident metadata:\n- Incident ID: {{incident_id}}\n- Severity: {{severity}}\n- Service affected: {{affected_service}}\n- Duration: {{incident_duration}}\n- Impact summary: {{impact_summary}}\n\nProduce:\n1. A chronological timeline table: Timestamp | Event | Who/What | Status\n2. A detection-to-resolution narrative (3–5 sentences): when it was detected, how, how long to diagnose, how it was resolved\n3. Contributing factors (bullet list) — not root causes (those come from deeper analysis)\n4. What went well (bullet list — blameless culture, acknowledge what worked)\n5. Open action items to investigate further (table: Item | Owner | Due date)\n\nConstraints: no blame language, no individual names in the timeline unless explicitly provided. Use system names and roles. This is a starting point for the postmortem meeting, not the final document.",
+    "tags": ["incident-management", "postmortem", "sre", "reliability"],
+    "use_when": "An incident has been resolved and you need to rapidly compile a coherent timeline from fragmented chat logs, alerts, and notes before the postmortem.",
+    "anti_pattern": "Do not treat this summary as the complete postmortem — it is the input to the investigation, not the output."
+  },
+  {
+    "slug": "engineering-rfc-outline",
+    "title": "Draft an RFC outline for a technical proposal",
+    "category": "engineering",
+    "promptText": "You are a senior engineer drafting a Request for Comments (RFC) document for a technical proposal.\n\nProposal context:\n- Title: {{rfc_title}}\n- Author: {{author_name}}\n- Problem being solved: {{problem_description}}\n- Proposed solution in one paragraph: {{solution_summary}}\n- Alternatives considered: {{alternatives}}\n- Key stakeholders / reviewers: {{reviewers}}\n- Implementation complexity: {{complexity_estimate}}\n\nWrite a complete RFC outline with the following sections and bullet points for each:\n1. Summary (2–3 sentences)\n2. Motivation and problem statement\n3. Detailed design (approach, key components, interfaces, data flows)\n4. Drawbacks and risks\n5. Alternatives considered and why this was chosen\n6. Unresolved questions (things to answer before or during implementation)\n7. Implementation plan (phases, milestones, rollout strategy)\n8. Success metrics\n\nDo not write full prose for each section — write 3–5 bullets per section that the author will expand. Flag any section where the provided context is insufficient.",
+    "tags": ["rfc", "design-doc", "engineering-process", "architecture"],
+    "use_when": "You are proposing a meaningful technical change and need a structured document that invites good feedback before implementation begins.",
+    "anti_pattern": "Do not write an RFC for changes that are clearly the right approach with no real alternatives — an RFC is for decisions with genuine trade-offs."
+  },
+  {
+    "slug": "engineering-tech-debt-prioritization",
+    "title": "Prioritize a technical debt backlog",
+    "category": "engineering",
+    "promptText": "You are a senior engineering manager helping a team prioritize its technical debt backlog.\n\nDebt items:\n{{debt_backlog}}\n\nContext:\n- Team size: {{team_size}}\n- Upcoming product commitments (next 90 days): {{product_commitments}}\n- Known reliability or security issues: {{reliability_concerns}}\n- Business growth trajectory: {{growth_context}}\n\nFor each debt item, assess:\n1. Impact if not addressed (High / Medium / Low) with one-sentence reasoning\n2. Effort to address (T-shirt size: S / M / L / XL)\n3. Urgency (Urgent / Normal / Backlog)\n4. Dependency risk: does this block or slow other work?\n\nThen produce:\n- A prioritized top-5 list with brief rationale for each ranking\n- One item that could be addressed in a single sprint with high impact\n- One item to defer and why\n- A recommendation for how much of the next quarter to allocate to debt vs. features (expressed as a percentage)\n\nBe honest about trade-offs. Technical debt is a legitimate business concern, not just a team preference.",
+    "tags": ["technical-debt", "backlog", "engineering-management"],
+    "use_when": "Your team has a growing debt backlog and needs a structured way to communicate trade-offs to product and business stakeholders.",
+    "anti_pattern": "Do not use this prioritization to avoid product work indefinitely — the goal is sustainable pace, not perfect code."
+  },
+  {
+    "slug": "engineering-on-call-runbook",
+    "title": "Draft an on-call runbook for a service",
+    "category": "engineering",
+    "promptText": "You are a reliability engineer writing an on-call runbook for an engineering service.\n\nService context:\n- Service name: {{service_name}}\n- What it does: {{service_description}}\n- Owner team: {{owner_team}}\n- Key dependencies: {{dependencies}}\n- Common alert types: {{common_alerts}}\n- Known failure modes: {{failure_modes}}\n\nWrite a runbook template with these sections:\n1. Service overview (3–5 sentences: purpose, criticality, business impact if down)\n2. Architecture quick reference (bullet list of key components and their roles)\n3. Alert response guide: for each alert in {{common_alerts}}, provide:\n   - What it means\n   - First diagnostic step\n   - Common resolution\n   - Escalation path if not resolved in 15 min\n4. Diagnostic commands (placeholder table: Command | What it checks | Expected output vs. abnormal)\n5. Escalation contacts (placeholder table)\n6. Rollback procedure (numbered steps, generic — fill in actual commands)\n7. Post-incident checklist\n\nThis is a template structure — the team fills in the actual commands and contacts.",
+    "tags": ["on-call", "runbook", "operations", "reliability"],
+    "use_when": "A service lacks a runbook and engineers are on-call without a structured guide for the most common failure scenarios.",
+    "anti_pattern": "Do not publish a runbook without a live walkthrough with the team — a runbook no one has practiced is barely better than none."
+  },
+  {
+    "slug": "exec-board-narrative-tester",
+    "title": "Stress-test a board update narrative",
+    "category": "exec",
+    "promptText": "You are an experienced board director reviewing a company update before it is presented.\n\nBoard update draft:\n{{board_update_draft}}\n\nCompany context:\n- Stage: {{company_stage}}\n- Key metrics this period: {{key_metrics}}\n- Major decisions being asked of the board: {{board_asks}}\n\nReview the narrative and provide:\n1. Clarity check: are there any claims that are vague, unsupported, or that a director would immediately question?\n2. Logic gaps: does the narrative connect the data to the conclusions? Where does the logic break?\n3. Missing context: what does a board member need to know that is not in this draft?\n4. The 3 questions a critical board member will ask during the presentation\n5. A suggested revision for the executive summary — tighter, more direct, acknowledges challenges without spinning them\n\nTone: honest, board-level. Do not sugarcoat weaknesses in the draft.",
+    "tags": ["board", "executive-communication", "narrative"],
+    "use_when": "You are finalizing a board deck and want an adversarial read that surfaces the questions you will get before you are in the room.",
+    "anti_pattern": "Do not use this review to remove all difficult information — boards lose trust when bad news is buried or minimized."
+  },
+  {
+    "slug": "exec-all-hands-script-editor",
+    "title": "Edit an all-hands script for clarity and impact",
+    "category": "exec",
+    "promptText": "You are an executive communications coach. Review and edit the following all-hands script for a company meeting.\n\nScript draft:\n{{script_draft}}\n\nContext:\n- Company size: {{company_size}}\n- Meeting type: {{meeting_type}} (e.g., quarterly all-hands, post-announcement, crisis communication)\n- Key message the CEO wants employees to leave with: {{key_message}}\n- Current employee mood/concerns (if known): {{employee_concerns}}\n\nProvide:\n1. Opening assessment: does the script open with energy and purpose? If not, rewrite the first 60 seconds.\n2. Message clarity: is the key message {{key_message}} clearly stated and memorable? Where does it land?\n3. Emotional tone: does the script acknowledge what employees are feeling before moving to what leadership wants to say?\n4. Credibility risks: any phrases that sound corporate, evasive, or that will generate eye-rolls\n5. Revised version of the most problematic section\n6. Suggested interactive element or question to include to avoid a one-way broadcast feeling\n\nDo not rewrite the entire script — focus on the sections that most need attention.",
+    "tags": ["executive-communication", "all-hands", "internal-comms"],
+    "use_when": "A leadership team is preparing for an all-hands that addresses something significant (a change, a challenging period, or a major announcement).",
+    "anti_pattern": "Do not over-produce an all-hands script to the point where the speaker sounds rehearsed and inauthentic — some natural variation is good."
+  },
+  {
+    "slug": "exec-decision-memo",
+    "title": "Write a decision memo for leadership",
+    "category": "exec",
+    "promptText": "You are a chief of staff drafting a decision memo for senior leadership.\n\nDecision context:\n- Decision to be made: {{decision_description}}\n- Decision owner: {{decision_owner}}\n- Decision deadline: {{decision_deadline}}\n- Background summary: {{background}}\n- Options considered: {{options}}\n- Recommended option and rationale: {{recommendation}}\n- Risks of recommendation: {{risks}}\n- Resources required: {{resources}}\n- Stakeholders affected: {{stakeholders}}\n\nWrite a decision memo in this structure:\n1. BLUF (Bottom Line Up Front): the recommendation in 2 sentences\n2. Context (1 short paragraph): the situation and why a decision is needed now\n3. Options evaluated (table: Option | Pros | Cons | Resource cost)\n4. Recommendation and rationale (1–2 paragraphs)\n5. Risks and mitigations (bullet list)\n6. What we need from leadership (specific ask: approval, resources, escalation)\n7. Next steps if approved (numbered, with owners and dates)\n\nLength: 400–600 words. Optimized for a 5-minute read.",
+    "tags": ["decision-making", "executive-communication", "strategy"],
+    "use_when": "You need to bring a decision to leadership with a structured case rather than walking through it verbally in a meeting without preparation.",
+    "anti_pattern": "Do not write a decision memo for decisions that are already made — use it for genuine choices where leadership input is needed."
+  },
+  {
+    "slug": "general-monday-morning-planner",
+    "title": "Plan your week on Monday morning",
+    "category": "general",
+    "promptText": "You are a productivity coach helping me start the week with clarity and intention.\n\nMy context this week:\n- Role: {{my_role}}\n- Top 3 outcomes I need to produce this week: {{weekly_outcomes}}\n- Meetings already on the calendar: {{calendar_summary}}\n- Unfinished items from last week: {{carryover_items}}\n- One thing I am most worried about this week: {{top_concern}}\n\nHelp me build a weekly plan:\n1. Priority stack: rank the top outcomes in order of importance and urgency, with one sentence on why\n2. Time audit: based on the calendar, how many hours of deep work do I realistically have?\n3. One thing to reschedule or decline to protect focus time (suggest based on calendar)\n4. The single most important thing to do before noon on Monday\n5. A 'done by Friday' checklist — 5–7 items, specific and completable\n6. The one thing that, if done this week, would make everything else easier\n\nBe direct. Do not pad the plan with generic productivity advice.",
+    "tags": ["productivity", "planning", "weekly-review"],
+    "use_when": "You are starting a week that feels busy and unclear, and you want a structured way to prioritize before reacting to your inbox.",
+    "anti_pattern": "Do not over-plan — a plan with 20 items is not a plan, it is a wish list. Keep this list to things that actually matter this week."
+  },
+  {
+    "slug": "general-weekly-review",
+    "title": "Run a structured weekly review",
+    "category": "general",
+    "promptText": "You are a productivity coach helping me run a structured weekly review.\n\nThis week's context:\n- Role: {{my_role}}\n- What I planned to accomplish: {{planned_outcomes}}\n- What I actually accomplished: {{actual_accomplishments}}\n- What I did not finish and why: {{unfinished_items}}\n- One thing that went better than expected: {{positive_surprise}}\n- One thing that went worse than expected: {{negative_surprise}}\n\nGuide me through a 15-minute review:\n1. Wins (3 bullets): specific accomplishments worth acknowledging\n2. Gaps (2 bullets): honest assessment of what fell short and a one-sentence hypothesis about why\n3. Learning: one thing I should do differently next week based on this week\n4. Unfinished items triage: for each item in {{unfinished_items}}, suggest: carry forward / reschedule / drop\n5. Energy check: on a scale of 1–10, how sustainable was this week's workload? One sentence on what drove that rating.\n6. One commitment for next week (specific, not aspirational)\n\nBe honest in the assessment. The goal is learning, not self-criticism.",
+    "tags": ["productivity", "reflection", "weekly-review"],
+    "use_when": "It is Friday afternoon or Monday morning and you want to close the loop on the week rather than just rolling into the next one.",
+    "anti_pattern": "Do not turn the weekly review into a guilt session — the goal is insight and intention, not a performance report."
+  },
+  {
+    "slug": "general-explain-like-smart-non-expert",
+    "title": "Rewrite technical content for a smart non-expert",
+    "category": "general",
+    "promptText": "You are a skilled explainer who can take dense, technical content and make it clear to a smart person who is not a specialist in this field.\n\nOriginal content:\n{{original_content}}\n\nContext:\n- Original audience (specialists): {{original_audience}}\n- New target audience: {{target_audience}}\n- Purpose of the explanation: {{explanation_purpose}}\n\nRewrite the content so that:\n1. Every piece of jargon is either eliminated or briefly defined on first use\n2. Complex ideas are anchored to an analogy or concrete example the target audience would recognize\n3. The 'so what' — why this matters — is clear within the first paragraph\n4. Any precision lost in simplification is explicitly noted ('this is a simplification; the full detail is...')\n5. Length is reduced to what is necessary for the target audience's purpose\n\nDo not dumb it down — aim for clarity, not simplicity. The audience is intelligent, just not expert in this domain.",
+    "tags": ["communication", "simplification", "writing"],
+    "use_when": "You have a technical document, analysis, or explanation that needs to be shared with an audience who does not have the background to follow the original.",
+    "anti_pattern": "Do not strip out so much nuance that the explanation becomes misleading — clarity and accuracy must coexist."
+  },
+  {
+    "slug": "support-onboarding-welcome-sequence",
+    "title": "Draft a post-purchase onboarding message sequence",
+    "category": "support",
+    "promptText": "You are a customer success writer. Draft a 3-message onboarding sequence for a new customer who just purchased {{product_name}}.\n\nProduct context:\n- What it does: {{product_description}}\n- Typical time to first value: {{time_to_value}}\n- Top 2–3 actions that predict retention: {{key_actions}}\n- Common early sticking point: {{common_obstacle}}\n\nMessage 1 (send immediately at purchase):\n- Welcome, set expectations, one clear action to start\n\nMessage 2 (send at {{day_2_trigger}} or Day 3 if no engagement):\n- Check in, surface the most common obstacle, offer help\n\nMessage 3 (send at Day 7):\n- Celebrate early progress or re-engage, introduce next feature or use case\n\nConstraints: each message under 100 words, plain subject line, no marketing language, single CTA per message.",
+    "tags": ["onboarding", "retention", "email"],
+    "use_when": "You are setting up or refreshing a post-purchase onboarding sequence and want drafts grounded in product reality, not generic welcome emails.",
+    "anti_pattern": "Do not send all three messages on day one — spacing matters more than volume for early customer experience."
+  },
+  {
+    "slug": "support-ticket-triage-categorization",
+    "title": "Triage and categorize a batch of support tickets",
+    "category": "support",
+    "promptText": "You are a support operations analyst. Review the following batch of support ticket summaries and categorize each one for routing and prioritization.\n\nTicket batch:\n{{ticket_batch}}\n\nProduct context:\n- Product name: {{product_name}}\n- Support tiers: {{support_tiers}} (e.g., Tier 1: billing/account, Tier 2: technical, Tier 3: engineering escalation)\n- Current team capacity: {{team_capacity}}\n\nFor each ticket produce a one-row entry in a table:\nTicket ID | Category | Priority (P1–P4) | Recommended tier | Key reason | Suggested owner type\n\nPriority definitions:\n- P1: Customer is blocked from core functionality\n- P2: Significant degradation, workaround exists\n- P3: Non-urgent functional issue or question\n- P4: Feature request, low urgency\n\nAfter the table, provide:\n1. Volume by category (summary)\n2. Any tickets that appear to be duplicates\n3. The single highest-priority action for the support lead right now\n\nDo not guess at technical causes — categorize based on the symptom described.",
+    "tags": ["triage", "operations", "queue-management"],
+    "use_when": "You have a queue backlog or a morning ticket pile and need a structured way to route and prioritize before the team starts working.",
+    "anti_pattern": "Do not use this categorization as the final routing decision without a human reviewing P1 tickets — AI can misread urgency signals."
+  }
+]

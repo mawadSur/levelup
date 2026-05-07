@@ -1,0 +1,41 @@
+{
+  "title": "Positioning and Messaging Quiz",
+  "questions": [
+    {
+      "prompt": "According to the lesson, what is the single most important element a positioning statement must include that most statements leave out?",
+      "choices": [
+        "A memorable tagline that captures brand personality",
+        "The name of the competing alternative the buyer is currently using or considering",
+        "A quantified performance claim backed by customer data",
+        "The company's founding story to establish credibility"
+      ],
+      "correctIndex": 1,
+      "explanation": "Positioning only becomes actionable when it names the alternative. A buyer always has another option — a competitor, a spreadsheet, doing nothing. Positioning that does not name what it is replacing cannot give the buyer a reason to switch, because it has not acknowledged that a switch is required.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A marketer runs the positioning prompt and gets back a statement that reads: 'The most comprehensive platform built for modern revenue teams.' What is wrong with this output?",
+      "choices": [
+        "It is too short to communicate the full value of the product",
+        "It uses the word 'platform,' which is too technical for most buyers",
+        "It names no alternative and makes no specific claim that a competitor could not make with equal credibility",
+        "It does not include a call to action for the homepage"
+      ],
+      "correctIndex": 2,
+      "explanation": "This statement has the shape of positioning without the substance. It names no alternative, makes a claim ('most comprehensive') that is unverifiable, and could describe any product in the category. Good positioning would name what the buyer is rejecting and specify the differentiation that makes this the obvious upgrade.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You want to use AI to generate alternative positioning statements for a product that competes directly with a named competitor. Which approach best follows the lesson guidance?",
+      "choices": [
+        "Paste the competitor's pricing page into the prompt so AI can identify specific vulnerabilities to attack",
+        "Include any competitive intelligence documents your company has received from win/loss analysis",
+        "Use only your own product description and describe the category of competing alternative, not a specific competitor's confidential information",
+        "Ask AI to search the web for recent customer complaints about the competitor before generating positioning"
+      ],
+      "correctIndex": 2,
+      "explanation": "The prompt uses your product description and names the type of competing alternative — not confidential competitive intelligence or documents that may be protected. Pasting competitor materials your company received under NDA or in confidential contexts into a public model is a data handling violation.",
+      "orderIndex": 3
+    }
+  ]
+}

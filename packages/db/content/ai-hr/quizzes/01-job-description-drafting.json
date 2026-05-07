@@ -1,0 +1,41 @@
+{
+  "title": "Job Description Drafting — Check",
+  "questions": [
+    {
+      "prompt": "When drafting a job description with AI, what input produces the most useful output?",
+      "choices": [
+        "The job title and a list of responsibilities copied from the previous holder's LinkedIn",
+        "The role's expected outcomes at 6 months, plus must-have versus nice-to-have skills",
+        "A brief description of the team culture and preferred personality type",
+        "The internal compensation band and leveling criteria for the role"
+      ],
+      "correctIndex": 1,
+      "explanation": "Outcome-based inputs — what the person needs to achieve and the real skills bar — give AI the specifics it needs to write something useful. Job titles pull toward boilerplate; internal comp data should never go into a public model.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An AI bias review flags the phrase 'we move fast and break things' in a job description. What is the most likely concern?",
+      "choices": [
+        "The phrase is trademarked and cannot be used without permission",
+        "It implies a pace that may discourage applicants with caregiving responsibilities or disabilities",
+        "It is too informal and will make the company look unprofessional to senior candidates",
+        "It describes an illegal practice under most employment laws"
+      ],
+      "correctIndex": 1,
+      "explanation": "Culture-coded phrases like 'move fast and break things' often signal a specific archetype — typically young, unencumbered, high-hours — that can discourage applicants with caregiving responsibilities, health considerations, or simply different working styles. It is a common inclusion-narrowing signal.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which piece of information should you NOT paste into a public AI model when drafting a job description?",
+      "choices": [
+        "The outcomes you expect from the role in the first six months",
+        "A list of tools and technologies the role uses",
+        "Your company's internal salary bands and leveling criteria",
+        "A description of the team the role will join"
+      ],
+      "correctIndex": 2,
+      "explanation": "Internal salary bands and leveling guides are confidential. Pasting them into a public model risks exposing compensation strategy. You can describe the level functionally — years of experience, scope of responsibilities — without sharing the internal document.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "lessonSlug": "escalation-detection",
+  "title": "Using AI to Detect Escalation Signals",
+  "questions": [
+    {
+      "prompt": "A customer's latest reply says only: 'Fine. Whatever.' They had previously sent detailed, engaged messages across six previous replies. What type of escalation signal is this, and can AI reliably detect it?",
+      "choices": [
+        "Explicit anger language — AI can detect it because the words are in the text",
+        "A shift from chatty to terse across message history — AI typically misses this without cross-message comparison",
+        "Cancellation language — AI would flag 'whatever' as a potential churn signal",
+        "Not an escalation signal — short replies indicate the issue is resolved"
+      ],
+      "correctIndex": 1,
+      "explanation": "A sudden shift to terse replies from a previously engaged customer is a meaningful escalation signal, but AI reads messages individually. Without access to and comparison of historical message length and tone, the model will not register the change."
+    },
+    {
+      "prompt": "When using the escalation detection prompt, why should you ask AI to 'list specific phrases' rather than simply asking 'should this ticket be escalated?'",
+      "choices": [
+        "AI is not permitted to make recommendations, only observations",
+        "Asking for specific phrases grounds the assessment in the actual text and prevents vague or overconfident general impressions",
+        "Listing phrases produces a shorter output, which is faster to read",
+        "Asking for a yes/no answer causes the model to always recommend escalation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Asking for specific phrases forces the model to cite evidence from the text rather than producing an unsupported conclusion. It also makes it easier for you to evaluate whether the flagged signals are actually significant."
+    },
+    {
+      "prompt": "A customer closes their support ticket with: 'I would formally like to request that this matter be brought to a satisfactory conclusion at your earliest convenience.' They have been waiting for a resolution for six days. What should you recognize about this message?",
+      "choices": [
+        "It is a routine polite closing — no escalation action is needed",
+        "Extremely controlled, formal language from a frustrated customer can indicate serious concern even without explicit anger words",
+        "The word 'formally' is a direct legal signal and should trigger immediate legal review",
+        "The message is positive — the customer is still engaging rather than canceling"
+      ],
+      "correctIndex": 1,
+      "explanation": "Overly controlled, formal language is a signal AI often misses and humans can detect. Some customers — particularly professionals — become more formal as frustration increases rather than more expressive. Six days without resolution combined with this tone warrants attention."
+    }
+  ]
+}

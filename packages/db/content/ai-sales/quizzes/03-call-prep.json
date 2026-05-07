@@ -1,0 +1,41 @@
+{
+  "title": "Call Preparation Quiz",
+  "questions": [
+    {
+      "prompt": "A rep has a discovery call in 20 minutes with a VP of Operations at a regional community bank. They want AI to surface industry-specific context they might miss. Which prompt best achieves this?",
+      "choices": [
+        "Tell me everything about the banking industry.",
+        "What are the top 3 regulatory or operational pressures a VP of Operations at a regional community bank is managing right now, and what language do they use to describe these internally?",
+        "Write me an introduction I can use to start the call with a banking executive.",
+        "What are common objections from people in financial services?"
+      ],
+      "correctIndex": 1,
+      "explanation": "This prompt is role- and industry-specific and asks for both the substantive pressures and the internal language — which is what allows a rep to speak the buyer's language rather than the vendor's language during the call.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Before a high-stakes enterprise call, a rep wants to review notes from three previous calls with the account. The notes are in their CRM and contain deal amounts, competitive intel, and contact details. What is the correct approach?",
+      "choices": [
+        "Paste the notes into ChatGPT for a quick summary — the information is already a few weeks old.",
+        "Skip the review — the rep remembers the key points from memory.",
+        "Use only an AI tool approved by the company for internal CRM data, such as Salesforce Einstein or an internally vetted LLM.",
+        "Share the notes with the solutions engineer who can summarize them verbally before the call."
+      ],
+      "correctIndex": 2,
+      "explanation": "CRM notes containing deal amounts, competitive references, and contact details are private data. Only company-approved AI tools should be used to process this information. General-purpose public models are not appropriate for this data.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "According to the lesson, what distinguishes a discovery question that earns a genuine response from a generic one?",
+      "choices": [
+        "Generic questions are open-ended; effective questions are closed-ended so the prospect can answer quickly.",
+        "Effective questions demonstrate understanding of the prospect's specific world — their industry, their role, and a relevant recent change — rather than asking about process in the abstract.",
+        "Generic questions are too short; effective questions should be at least three sentences to show preparation.",
+        "Effective questions always reference a competitor to show market knowledge."
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson contrasts 'What does your current process look like?' (generic) with a question that references a specific industry dynamic or recent change. Context-specific questions signal preparation and tend to produce more substantive, honest answers.",
+      "orderIndex": 3
+    }
+  ]
+}

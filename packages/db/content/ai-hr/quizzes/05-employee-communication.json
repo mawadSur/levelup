@@ -1,0 +1,41 @@
+{
+  "title": "Employee Communication — Check",
+  "questions": [
+    {
+      "prompt": "For which type of HR communication is it most appropriate to use AI to generate the first draft?",
+      "choices": [
+        "A reduction-in-force notification to an affected employee",
+        "A formal disciplinary action letter",
+        "A general policy update announcement to all employees",
+        "A message to an employee about a workplace investigation"
+      ],
+      "correctIndex": 2,
+      "explanation": "General, non-case-specific communications — policy updates, benefit enrollment reminders, team announcements — are appropriate for AI first drafts. Communications tied to a specific employee's employment situation (RIFs, discipline, investigations) require a human-written first draft because they demand context, relationship awareness, and judgment AI cannot provide.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An HR manager wants AI to review a draft message about a sensitive employee situation. What must she do before pasting the draft into the prompt?",
+      "choices": [
+        "Add a disclaimer at the top of the message instructing AI not to share the content",
+        "Replace all real names and identifying details with placeholders like [EMPLOYEE] and [MANAGER]",
+        "Summarize the message in her own words rather than pasting the draft",
+        "Get written consent from the employee before using AI on the communication"
+      ],
+      "correctIndex": 1,
+      "explanation": "Before any employee-specific content goes into a public AI model, all identifying information must be replaced with neutral placeholders. The AI can still review tone and flag problems without knowing who the message is about. Real names and case-specific details must never enter a public model.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which phrase in an AI-drafted HR communication is a strong signal that the message was not meaningfully personalized?",
+      "choices": [
+        "A direct opening sentence that names the specific situation",
+        "A sentence like 'Please do not hesitate to reach out if you have any questions'",
+        "A short paragraph that acknowledges the employee's experience",
+        "A clear next step with a specific date or action"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Please do not hesitate to reach out' is one of the most common AI-generated filler phrases. It appears across tools, contexts, and drafts regardless of the situation, and experienced readers recognize it as a signal that no human thought carefully about this message. Replacing it with a specific offer or next step always improves the communication.",
+      "orderIndex": 3
+    }
+  ]
+}

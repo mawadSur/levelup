@@ -1,0 +1,41 @@
+{
+  "title": "Audience Research and Personas Quiz",
+  "questions": [
+    {
+      "prompt": "A demand-gen manager has no customer interview data but needs to build personas for a new campaign. She asks AI to generate three buyer personas for her product category. What is the primary risk the lesson identifies with this approach?",
+      "choices": [
+        "AI-generated personas will not include photos, which makes them harder for the team to remember",
+        "The personas will lack demographic data, which is required for ad targeting",
+        "AI will generate plausible-sounding but entirely fabricated personas with no grounding in real customer behavior",
+        "The personas will be too similar to each other to be useful for segmentation"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI generates the statistical average of text it has seen, not insight about your specific buyers. Without real signal — interviews, NPS verbatims, call transcripts — AI personas are fabrications that look like research. The lesson is explicit: use AI to process real signal, not to invent signal you do not have.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A content marketer has 10 customer interview transcripts and wants to use AI to synthesize buyer types. Before pasting them into the prompt, what must she do?",
+      "choices": [
+        "Convert the transcripts to PDF format so the AI can process them more accurately",
+        "Remove all names, company identifiers, and other information that could identify specific customers or accounts",
+        "Get written permission from each customer whose transcript she plans to use",
+        "Summarize each transcript herself first, so the AI has less text to process"
+      ],
+      "correctIndex": 1,
+      "explanation": "Customer interview transcripts are confidential and likely contain identifying information. Before using any customer-sourced material in an AI prompt, you must anonymize it — replacing names, company names, and specific details that could identify individuals or accounts. The lesson also notes that interview transcripts should only be used in AI tools your company has approved for that data category.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which prompt approach would surface the strongest buyer segmentation from customer interview data?",
+      "choices": [
+        "Ask AI to generate buyer types based on industry, company size, and job title from the transcripts",
+        "Ask AI to cluster buyer types based on jobs-to-be-done and quote specific phrases customers used — with an explicit instruction not to invent quotes",
+        "Ask AI to identify which buyers are most likely to convert, based on their language in the transcripts",
+        "Ask AI to generate a demographic profile for each buyer type, including age range and education level"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jobs-to-be-done segmentation tells you why buyers buy, which is more useful for messaging than demographic segmentation. The explicit instruction not to invent quotes is critical — without it, AI will generate plausible customer language that did not actually appear in the transcripts, which defeats the purpose of processing real signal.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "ai-support",
+  "title": "AI for Customer Support",
+  "description": "Faster, clearer support replies — without losing the human voice. Drafting, tone, summarization, knowledge articles, and escalation cues.",
+  "targetRole": "Customer Support",
+  "targetLevel": "PRACTITIONER",
+  "isPublished": true,
+  "orderIndex": 3
+}

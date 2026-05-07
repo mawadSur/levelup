@@ -1,0 +1,41 @@
+{
+  "title": "Common Mistakes to Avoid — Check",
+  "questions": [
+    {
+      "prompt": "A colleague sends a client-facing report that includes an AI-generated paragraph they didn't read carefully. The paragraph contains a factually incorrect claim about the client's industry. Who is responsible?",
+      "choices": [
+        "The AI tool vendor, since the tool produced the error",
+        "The colleague, because they sent the document under their name without verifying the content",
+        "Nobody — AI errors are a known risk that clients should account for",
+        "The colleague's manager, for allowing AI tool use"
+      ],
+      "correctIndex": 1,
+      "explanation": "When you send a document under your name, you are responsible for its contents. AI generating an error does not transfer that responsibility to the tool or its vendor.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which phrase is most characteristic of the 'ChatGPT smell' that makes AI-generated corporate writing recognizable?",
+      "choices": [
+        "Our Q3 revenue came in at $4.2M, down 3% versus plan",
+        "In today's rapidly evolving landscape, it is crucial to leverage best-in-class solutions moving forward",
+        "The project is two weeks behind schedule because the vendor missed their delivery date",
+        "I disagree with this approach for three reasons"
+      ],
+      "correctIndex": 1,
+      "explanation": "Phrases like 'rapidly evolving landscape,' 'leverage,' 'best-in-class,' and 'moving forward' are overrepresented in AI-generated corporate text. Specific facts, plain language, and direct opinions are signs of human editing.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You have been using the same AI chatbot for weeks and feel you understand when it is reliable. You stop verifying its factual claims on familiar topics. What risk does this create?",
+      "choices": [
+        "No risk — familiarity with a tool's patterns is a valid form of quality control",
+        "AI errors are not evenly distributed; the model can be accurate many times in a row and then wrong in a consequential way that prior accuracy did not predict",
+        "The risk decreases over time as the model learns your preferences",
+        "The only risk is wasted time from over-verifying"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI errors are unpredictable in timing. A track record of accuracy on past prompts does not predict accuracy on the next one. Verification should remain standard practice for claims that carry professional consequences.",
+      "orderIndex": 3
+    }
+  ]
+}

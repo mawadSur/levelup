@@ -1,0 +1,41 @@
+{
+  "title": "Objection Handling Quiz",
+  "questions": [
+    {
+      "prompt": "A prospect says: 'We're not ready to make a decision right now.' According to the lesson, what does this objection most likely signal?",
+      "choices": [
+        "Their fiscal year budget is already committed and they have no funds available.",
+        "They have a genuine timeline conflict and will return to the conversation in 90 days.",
+        "There is an unstated concern — possibly political, economic, or related to internal buy-in — that they have not voiced.",
+        "The rep contacted them too early in the sales cycle."
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson identifies 'we need to think about it / get back to you' as the objection most likely to hide an unstated concern. The recommended response is a direct, curious follow-up question — 'What specifically are you weighing?' — rather than accepting the delay at face value.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A rep uses the AI brainstorming prompt for objection handling and receives three responses. One is polished and confident-sounding. One acknowledges the prospect's concern before making a case. One is conversational and brief. The rep's instinct is that the polished one sounds 'most professional.' What should they do?",
+      "choices": [
+        "Use the polished one — it will project confidence and credibility.",
+        "Combine all three responses into one comprehensive answer.",
+        "Choose the response that acknowledges the concern most genuinely, even if it sounds less impressive, and deliver it in their own words.",
+        "Ask AI to generate three more options until they find one that sounds both polished and empathetic."
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson explicitly warns against picking the slickest answer. A response that genuinely acknowledges the prospect's concern — delivered in the rep's own voice — lands more credibly than a polished response that reads as a deflection. The goal is to internalize the framing, not recite the words.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "After a call where a 'we already have a tool for that' objection derailed the conversation, a rep wants to improve. How does the lesson recommend using AI to accelerate learning from this experience?",
+      "choices": [
+        "Ask AI to write a follow-up email that overcomes the objection after the fact.",
+        "Run a post-call debrief prompt: describe the objection, your response, and the prospect's reaction, then ask AI to diagnose the underlying concern you may have missed and suggest a more effective alternative.",
+        "Ask AI to look up common objections for your product category and memorize the top responses.",
+        "Use AI to draft a case study that addresses the objection for future prospects."
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson recommends a structured debrief prompt that describes the objection, the rep's actual response, and the outcome, then asks AI to diagnose the underlying concern and suggest a better framing. This iterative debrief practice is presented as faster learning than replaying the call mentally.",
+      "orderIndex": 3
+    }
+  ]
+}

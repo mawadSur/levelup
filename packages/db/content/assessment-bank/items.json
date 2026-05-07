@@ -1,0 +1,562 @@
+[
+  {
+    "slug": "safety-paste-customer-pii",
+    "prompt": "A colleague asks you to paste a customer's full name, email, and order history into a public AI chat tool to draft a refund email. What should you do?",
+    "choices": [
+      "A. Paste the data and ask the tool to anonymize it afterward.",
+      "B. Decline and use only placeholder or anonymized data when drafting the email.",
+      "C. Paste only the email address since it is less sensitive than financial data.",
+      "D. Ask the customer for permission first, then paste the data."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "safety",
+    "explanation": "Customer PII should never be entered into an AI tool that is not explicitly approved and data-protected for that purpose. Use anonymized or placeholder data to draft, then fill in details through approved systems."
+  },
+  {
+    "slug": "safety-ai-output-confidential",
+    "prompt": "An AI tool generates a summary that contains what looks like confidential internal financial figures you did not provide. What is the most appropriate next step?",
+    "choices": [
+      "A. Use the summary but redact the figures before sharing.",
+      "B. Assume the model hallucinated the numbers and proceed.",
+      "C. Do not use the output and report the incident to your security or compliance team.",
+      "D. Ask the AI to regenerate the summary without the figures."
+    ],
+    "correctIndex": 2,
+    "level": "BEGINNER",
+    "category": "safety",
+    "explanation": "Unexplained confidential-looking data in AI output is a potential data-leakage incident and should be escalated, not simply removed and ignored. Report first; let the security team determine whether a breach occurred."
+  },
+  {
+    "slug": "verification-no-source-stat",
+    "prompt": "An AI tool returns a statistic ('74% of customers prefer self-service') with no cited source. What is the best next step?",
+    "choices": [
+      "A. Include the stat in your report with a note that it came from AI.",
+      "B. Search for a primary source to verify the figure before using it.",
+      "C. Ask the AI to provide a source link so you can cite it directly.",
+      "D. Round the number to 75% to signal that it is approximate."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "verification",
+    "explanation": "AI models can confabulate statistics convincingly. Any figure used in a business context must be traced to a verifiable primary source before publication."
+  },
+  {
+    "slug": "prompting-vague-vs-specific",
+    "prompt": "You ask an AI 'Help me with my email' and receive a generic response. Which revised prompt is most likely to produce a useful result?",
+    "choices": [
+      "A. 'Help me with my very important email right away.'",
+      "B. 'Write a follow-up email to a prospect who went dark after a demo, aiming to reopen the conversation in two sentences.'",
+      "C. 'Improve my email writing style.'",
+      "D. 'Make my email sound more professional and less aggressive.'"
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "prompting",
+    "explanation": "Effective prompts specify the task, audience, goal, and format constraints. Adding urgency or generic adjectives does not narrow the output the way concrete context does."
+  },
+  {
+    "slug": "safety-approved-tools-policy",
+    "prompt": "You find a free AI writing browser extension that produces better results than your company's approved tool. What is the appropriate action?",
+    "choices": [
+      "A. Use the extension for non-sensitive tasks and the approved tool for sensitive ones.",
+      "B. Recommend the extension to your team via internal chat.",
+      "C. Submit the extension for IT or governance review before using it at work.",
+      "D. Install it since it is free and therefore low risk."
+    ],
+    "correctIndex": 2,
+    "level": "BEGINNER",
+    "category": "safety",
+    "explanation": "Any tool that processes work data must pass security and data-privacy review regardless of cost. Unsanctioned tools may exfiltrate data or violate compliance obligations."
+  },
+  {
+    "slug": "verification-hallucinated-quote",
+    "prompt": "You prompt an AI to summarize an article and the output includes a direct quote from the author. You cannot find that quote in the original article. What most likely happened?",
+    "choices": [
+      "A. The AI summarized a different version of the article.",
+      "B. The AI generated a plausible-sounding quote that the author did not write.",
+      "C. The quote was deleted from the article after the AI read it.",
+      "D. The AI summarized a related article by the same author."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "verification",
+    "explanation": "Language models can fabricate quotes that match an author's style — a form of hallucination. Always verify direct quotes against the primary source before attributing them."
+  },
+  {
+    "slug": "prompting-role-context",
+    "prompt": "Which addition to a prompt most reliably steers an AI toward responses appropriate for a specialist audience?",
+    "choices": [
+      "A. Adding 'Please be very detailed' to the end of the prompt.",
+      "B. Specifying the intended reader's role and knowledge level at the start of the prompt.",
+      "C. Asking the AI to 'use expert language throughout.'",
+      "D. Increasing the length of the prompt with background information about the topic."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "prompting",
+    "explanation": "Declaring the audience (for example, 'for a senior software engineer') calibrates vocabulary, assumed knowledge, and depth more reliably than vague quality adjectives."
+  },
+  {
+    "slug": "safety-output-review-before-send",
+    "prompt": "An AI drafts a customer-facing email on your behalf. Before sending, you should at minimum:",
+    "choices": [
+      "A. Spell-check the email using a separate tool.",
+      "B. Read and verify every claim, tone, and commitment in the email.",
+      "C. Have a colleague review it since AI output always needs a second human reader.",
+      "D. Add a disclaimer that the email was AI-generated."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "safety",
+    "explanation": "The sender is accountable for every claim and commitment in a message they send, regardless of how it was drafted. Thorough review before sending is non-negotiable."
+  },
+  {
+    "slug": "verification-confidence-vs-accuracy",
+    "prompt": "An AI answers a complex regulatory question with a confident, detailed response. What does that confidence level tell you about the answer's accuracy?",
+    "choices": [
+      "A. High confidence indicates the model has verified the information.",
+      "B. Nothing — AI confidence and factual accuracy are not reliably correlated.",
+      "C. The answer is likely correct since the model would hedge if uncertain.",
+      "D. The model has retrieved the answer from an authoritative source."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "verification",
+    "explanation": "Large language models produce confident-sounding text even when wrong. Confidence of expression is a stylistic property, not an accuracy signal."
+  },
+  {
+    "slug": "prompting-iteration-strategy",
+    "prompt": "Your first AI-generated draft misses the mark. Which strategy is most effective for improving the output?",
+    "choices": [
+      "A. Start a new chat session and rephrase the entire prompt from scratch.",
+      "B. Identify the specific gap (wrong tone, missing detail, wrong format) and provide targeted follow-up instructions.",
+      "C. Ask the AI to 'try harder' or 'be more creative' in the next attempt.",
+      "D. Switch to a different AI tool to get a fresh perspective."
+    ],
+    "correctIndex": 1,
+    "level": "BEGINNER",
+    "category": "prompting",
+    "explanation": "Targeted feedback — naming exactly what is wrong — is more efficient than restarting or using vague quality requests. Iterating on specific gaps compounds improvement quickly."
+  },
+  {
+    "slug": "application-sales-prospect-research",
+    "prompt": "A sales rep uses AI to research a prospect before a call. Which use is most appropriate?",
+    "choices": [
+      "A. Using AI to generate a fabricated LinkedIn summary for a contact the rep could not find online.",
+      "B. Using AI to draft personalized talking points based on the prospect's publicly available press releases.",
+      "C. Pasting the prospect's private CRM notes into a public AI tool to identify buying signals.",
+      "D. Using AI to predict the prospect's budget based on their company size alone."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "application",
+    "explanation": "Public information is a legitimate AI research input; fabricating data or using private CRM data in unapproved tools are both risky. Drafting from public sources keeps work grounded and safe."
+  },
+  {
+    "slug": "prompting-chain-of-thought",
+    "prompt": "You need an AI to help you decide whether to escalate a customer complaint. Which prompt structure is most likely to produce a reasoned recommendation?",
+    "choices": [
+      "A. 'Should I escalate this complaint? Yes or no.'",
+      "B. 'List all possible actions for this complaint.'",
+      "C. 'Review the complaint below. First identify the root issue, then list escalation criteria, then recommend whether to escalate and why.'",
+      "D. 'Escalate or not? Give me a one-word answer.'"
+    ],
+    "correctIndex": 2,
+    "level": "PRACTITIONER",
+    "category": "prompting",
+    "explanation": "Breaking a decision task into sequential reasoning steps (a chain-of-thought structure) surfaces the logic and reduces the chance of an unsupported snap conclusion."
+  },
+  {
+    "slug": "verification-cross-check-sources",
+    "prompt": "An AI-generated market research summary contradicts a report you read last week. What is the most rigorous way to resolve the conflict?",
+    "choices": [
+      "A. Trust the AI summary because it is more recent.",
+      "B. Trust the report you read because you vetted it previously.",
+      "C. Check both sources' methodology and publication dates, then find a third authoritative source if they still conflict.",
+      "D. Average the two figures and note the discrepancy in a footnote."
+    ],
+    "correctIndex": 2,
+    "level": "PRACTITIONER",
+    "category": "verification",
+    "explanation": "Neither recency nor prior familiarity establishes accuracy. Resolving conflicting data requires understanding methodology, currency, and corroboration from independent sources."
+  },
+  {
+    "slug": "safety-practitioner-data-minimization",
+    "prompt": "When crafting a prompt that requires some customer context, the data-minimization principle means you should:",
+    "choices": [
+      "A. Include all available customer data so the AI has full context.",
+      "B. Include only the specific fields the task genuinely requires.",
+      "C. Hash the customer's name and email before including them.",
+      "D. Summarize the data in your own words to reduce token count."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "safety",
+    "explanation": "Data minimization limits exposure: if a tool is compromised or the session is logged, only the minimum necessary information is at risk. Include only what the task genuinely requires."
+  },
+  {
+    "slug": "application-hr-job-description",
+    "prompt": "An HR manager uses AI to draft a job description. Which review step is most critical before posting?",
+    "choices": [
+      "A. Check that the word count meets the job board's requirements.",
+      "B. Verify that the language is free of terms that could screen out protected-class candidates.",
+      "C. Confirm the salary range is formatted correctly.",
+      "D. Ensure the AI used active voice throughout."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "application",
+    "explanation": "AI models can reproduce historical biases present in training data. Job descriptions must be reviewed for language that unintentionally disadvantages protected groups before publication."
+  },
+  {
+    "slug": "prompting-few-shot-examples",
+    "prompt": "You want an AI to classify support tickets into three categories using a consistent format. Which prompting technique most reliably produces consistent output?",
+    "choices": [
+      "A. Telling the AI 'Always be consistent in your classifications.'",
+      "B. Providing two or three labeled example tickets before your request.",
+      "C. Asking the AI to explain its classification rules before classifying.",
+      "D. Running the prompt ten times and selecting the most common result."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "prompting",
+    "explanation": "Few-shot examples demonstrate the desired output format and decision boundary more precisely than instructions alone, and they dramatically reduce classification inconsistency."
+  },
+  {
+    "slug": "application-manager-performance-review",
+    "prompt": "A manager drafts a performance review with AI assistance. Which practice best maintains fairness and accountability?",
+    "choices": [
+      "A. Letting the AI finalize the review to remove personal bias from the manager.",
+      "B. Using AI to draft language, then personally verifying every assessment against documented evidence.",
+      "C. Having HR approve any AI-drafted review before the manager edits it.",
+      "D. Disclosing to the employee that AI was used to write the review."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "application",
+    "explanation": "The manager owns the accuracy and fairness of the review; AI drafts require verification against real documented evidence. Delegating judgment entirely to AI in consequential HR decisions is not appropriate."
+  },
+  {
+    "slug": "verification-prompt-injection-risk",
+    "prompt": "You build a workflow where an AI reads external web pages and summarizes them. A malicious page contains hidden instructions telling the AI to ignore previous instructions. This is an example of:",
+    "choices": [
+      "A. A jailbreak triggered by the user.",
+      "B. A prompt injection attack embedded in external content.",
+      "C. Model drift caused by fine-tuning on bad data.",
+      "D. An adversarial token inserted into the model weights."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "verification",
+    "explanation": "Prompt injection occurs when malicious text in external input hijacks the model's instructions. Workflows that feed external content to an AI must sanitize or sandbox that content."
+  },
+  {
+    "slug": "application-support-escalation-criteria",
+    "prompt": "A support agent uses an AI triage tool that recommends closing a ticket as resolved. The customer's most recent message expresses ongoing frustration. What should the agent do?",
+    "choices": [
+      "A. Close the ticket because the AI assessed the technical issue as resolved.",
+      "B. Override the AI recommendation and keep the ticket open to address the customer's sentiment.",
+      "C. Ask the AI to re-evaluate the ticket sentiment before deciding.",
+      "D. Escalate to a supervisor because the AI and the customer disagree."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "application",
+    "explanation": "AI triage can miss emotional signals. Agents must apply human judgment when observable customer signals contradict the automated recommendation."
+  },
+  {
+    "slug": "prompting-output-format-control",
+    "prompt": "You need an AI to return data in a format a downstream system can parse automatically. Which prompt technique best ensures that?",
+    "choices": [
+      "A. Asking the AI to 'be structured and organized.'",
+      "B. Specifying the exact output schema (for example, a JSON template or numbered fields) in the prompt.",
+      "C. Running the output through a formatting tool after generation.",
+      "D. Instructing the AI to 'use tables wherever possible.'"
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "prompting",
+    "explanation": "Embedding the exact schema or template in the prompt constrains the output format programmatically. Vague formatting instructions leave too much room for variation."
+  },
+  {
+    "slug": "safety-practitioner-output-logging",
+    "prompt": "Before deploying an AI-assisted workflow in production, which safety measure specifically addresses the risk of undetected errors over time?",
+    "choices": [
+      "A. Reviewing the workflow design one final time before launch.",
+      "B. Establishing ongoing output sampling and human review of a percentage of AI decisions.",
+      "C. Adding a disclaimer to all AI-generated outputs.",
+      "D. Limiting the workflow to a single department initially."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "safety",
+    "explanation": "AI performance can degrade as input distributions shift over time. Continuous sampling and human review create a feedback loop that catches silent drift before it causes significant harm."
+  },
+  {
+    "slug": "application-sales-ai-objection-handling",
+    "prompt": "A sales AI tool suggests a response to a customer objection that understates a product limitation. The best action is:",
+    "choices": [
+      "A. Use the response because it is optimized for conversion.",
+      "B. Edit the response to accurately represent the limitation before sending.",
+      "C. Ask the AI to regenerate until it produces an accurate response.",
+      "D. Send the AI response but add a verbal caveat during the call."
+    ],
+    "correctIndex": 1,
+    "level": "PRACTITIONER",
+    "category": "application",
+    "explanation": "Sales representatives are accountable for accuracy in customer communications. Misrepresenting product capabilities creates legal and reputational risk regardless of how the content was generated."
+  },
+  {
+    "slug": "tooling-rag-vs-fine-tuning",
+    "prompt": "Your team needs an AI assistant that answers questions about your company's internal documentation, which updates monthly. Which approach is most practical?",
+    "choices": [
+      "A. Fine-tune the base model on the documentation every month.",
+      "B. Use retrieval-augmented generation (RAG) to query a regularly refreshed document index.",
+      "C. Embed the full documentation in the system prompt on every request.",
+      "D. Ask employees to paste relevant paragraphs into their prompts manually."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "RAG separates the knowledge store from the model, making updates cheap (refresh the index) and keeping answers grounded in the current documents. Fine-tuning for frequently changing facts is expensive and slow."
+  },
+  {
+    "slug": "tooling-agent-loop-guardrails",
+    "prompt": "When designing a multi-step AI agent that can send emails and update records, the most important safeguard to prevent uncontrolled actions is:",
+    "choices": [
+      "A. Using the most capable model available to reduce error rates.",
+      "B. Defining a strict set of allowed tools and requiring a human confirmation step before irreversible actions.",
+      "C. Logging every agent action to a database for later review.",
+      "D. Running the agent in a sandbox environment indefinitely before production use."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "Irreversible actions (sending emails, writing records) require human-in-the-loop confirmation. Logging and sandboxing are valuable but do not prevent the agent from taking a harmful action in production."
+  },
+  {
+    "slug": "prompting-system-prompt-design",
+    "prompt": "You are building an AI customer-service bot. Which system-prompt element most effectively prevents the bot from going off-topic?",
+    "choices": [
+      "A. Telling the bot 'You are a helpful and knowledgeable assistant.'",
+      "B. Explicitly listing the topics the bot is permitted to address and instructing it to redirect others.",
+      "C. Adding 'Do not answer questions unrelated to customer service' at the end of every user message.",
+      "D. Setting the model temperature to 0 to reduce creative responses."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "prompting",
+    "explanation": "An explicit allow-list of topics with a clear redirect instruction is more robust than a single negative instruction or temperature tuning, which does not address topic scope."
+  },
+  {
+    "slug": "tooling-embedding-similarity-search",
+    "prompt": "A semantic search system returns results that are topically adjacent but not relevant to the user's specific question. The most targeted fix is:",
+    "choices": [
+      "A. Increase the number of retrieved chunks from 3 to 10.",
+      "B. Re-rank retrieved chunks using the full query before presenting results to the model.",
+      "C. Switch to a keyword search engine instead of embeddings.",
+      "D. Shorten user queries to reduce ambiguity during embedding."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "Embedding similarity favors topical closeness but can miss intent. A re-ranking step scores retrieved chunks against the full query to surface the most relevant passages."
+  },
+  {
+    "slug": "prompting-advanced-persona-constraint",
+    "prompt": "An internal AI assistant is repeatedly ignoring format instructions after a few turns in a long conversation. The most likely cause and fix is:",
+    "choices": [
+      "A. The model temperature is too high; lower it to enforce consistency.",
+      "B. The format instructions have moved outside the model's effective attention window; restate them in the most recent user turn.",
+      "C. The model needs to be fine-tuned on format-compliant examples.",
+      "D. The system prompt is too long; shorten it to under 200 tokens."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "prompting",
+    "explanation": "In long conversations, instructions stated only in an early system prompt can lose influence as context grows. Restating key constraints near the end of the conversation window is the fastest fix."
+  },
+  {
+    "slug": "tooling-automation-trigger-design",
+    "prompt": "You are automating a workflow where AI classifies incoming emails and routes them. Which design choice makes the workflow most resilient to misclassification?",
+    "choices": [
+      "A. Using a more powerful model to eliminate misclassification.",
+      "B. Creating a low-confidence threshold below which emails are routed to a human review queue.",
+      "C. Adding more classification categories to make the task more precise.",
+      "D. Running the classifier twice and taking the majority result."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "No classifier is perfect. A confidence-based fallback to human review is the practical way to contain the cost of errors without blocking throughput on high-confidence items."
+  },
+  {
+    "slug": "verification-advanced-citation-grounding",
+    "prompt": "You are building a legal-research assistant that must cite specific clauses. Which technique best ensures the citations are accurate?",
+    "choices": [
+      "A. Instruct the model to 'only cite sources it is confident about.'",
+      "B. Use RAG to retrieve the actual document chunks and require the model to quote directly from retrieved text.",
+      "C. Post-process the model's output to check that cited clause numbers exist in a reference index.",
+      "D. Fine-tune the model on legal documents so it memorizes the citations."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "verification",
+    "explanation": "Grounding citations in retrieved source text (RAG with direct quotation) is the only technique that makes fabricated citations structurally difficult. Confidence instructions and post-processing checks do not prevent hallucination."
+  },
+  {
+    "slug": "tooling-context-window-management",
+    "prompt": "A long-running AI workflow is degrading in quality midway through because earlier context is being lost. The most architecturally sound solution is:",
+    "choices": [
+      "A. Increasing the model's context window size by switching to a larger model.",
+      "B. Implementing a summarization or memory layer that condenses earlier turns into structured state.",
+      "C. Restarting the conversation and including only the most recent messages.",
+      "D. Asking the user to repeat key information periodically."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "A persistent memory or summarization layer maintains relevant state without consuming the full context window, making the workflow scalable beyond any single window limit."
+  },
+  {
+    "slug": "prompting-power-user-meta-prompt",
+    "prompt": "You need to generate 50 variations of a marketing tagline. Which prompting approach produces the most diverse results?",
+    "choices": [
+      "A. Running the same prompt 50 times at high temperature.",
+      "B. Writing a meta-prompt that instructs the AI to vary tone, audience, and value proposition explicitly across batches.",
+      "C. Asking a colleague to write 25 prompts while you write 25.",
+      "D. Increasing the maximum output length to encourage more ideas per run."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "prompting",
+    "explanation": "Structured variation dimensions in a meta-prompt guide diversity systematically. Random temperature variation alone often recycles the same angles because the model defaults to high-probability combinations."
+  },
+  {
+    "slug": "governance-measuring-ai-adoption",
+    "prompt": "A business unit wants to measure whether an AI tool is delivering value. Which metric is most directly tied to business outcomes?",
+    "choices": [
+      "A. Number of prompts submitted per week.",
+      "B. Employee satisfaction score with the AI tool.",
+      "C. Time saved on the specific task the AI was deployed for, measured before and after.",
+      "D. Percentage of employees who completed AI training."
+    ],
+    "correctIndex": 2,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Task-level time savings measured before and after deployment is a direct outcome metric. Activity metrics (prompts, satisfaction, training completion) indicate usage but not value delivered."
+  },
+  {
+    "slug": "governance-change-management-resistance",
+    "prompt": "A team resists adopting an AI tool because they fear it will replace their jobs. The most effective change-management response is:",
+    "choices": [
+      "A. Mandate adoption and track compliance metrics.",
+      "B. Demonstrate how the tool removes low-value work, involve the team in defining its use cases, and address the job-security concern directly.",
+      "C. Roll out the tool quietly and let employees discover its benefits organically.",
+      "D. Offer a financial bonus to employees who use the tool most frequently."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Addressing underlying anxieties and co-designing use cases builds psychological safety and durable adoption. Mandates and incentives suppress resistance but do not remove it."
+  },
+  {
+    "slug": "governance-responsible-use-modeling",
+    "prompt": "A senior leader wants to model responsible AI use for their organization. Which behavior most reinforces a culture of accountability?",
+    "choices": [
+      "A. Publicly praising the team member who automates the most tasks with AI.",
+      "B. Sharing examples of AI errors they personally caught and corrected, alongside the value it added.",
+      "C. Requiring all AI outputs to be disclosed in meeting agendas.",
+      "D. Delegating AI governance entirely to the IT department."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Leaders who openly discuss AI limitations and their own correction behavior normalize critical thinking over blind trust. Pure praise of speed or volume signals that speed matters more than accuracy."
+  },
+  {
+    "slug": "governance-policy-refresh-cadence",
+    "prompt": "An organization established its AI acceptable-use policy 18 months ago. Given the pace of AI development, the most appropriate review cadence is:",
+    "choices": [
+      "A. Every five years, aligned with the general IT policy review cycle.",
+      "B. Only when a significant incident occurs.",
+      "C. At least annually, with a lightweight scan whenever a major new AI capability becomes available.",
+      "D. Quarterly, reviewing every clause at each cycle."
+    ],
+    "correctIndex": 2,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Annual review with a triggered scan on major capability releases balances thoroughness with the rapid evolution of AI tools. Waiting for incidents is reactive; quarterly full reviews are resource-intensive."
+  },
+  {
+    "slug": "governance-ai-audit-trail",
+    "prompt": "An organization uses AI to assist in loan approval decisions. Which governance requirement is most critical for regulatory accountability?",
+    "choices": [
+      "A. Ensuring all AI models used are open-source so they can be inspected.",
+      "B. Maintaining a log that records the AI inputs, outputs, and the human decision made in each case.",
+      "C. Having a data scientist certify the model's accuracy quarterly.",
+      "D. Publishing the model's training data summary on the company website."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Regulators require that consequential AI-assisted decisions can be explained and audited. An immutable log of inputs, outputs, and the human override decision provides the evidentiary trail."
+  },
+  {
+    "slug": "governance-center-of-excellence",
+    "prompt": "A company wants to scale AI capability across 12 business units without each unit repeating the same mistakes. The most effective organizational structure is:",
+    "choices": [
+      "A. Centralizing all AI work in a single IT team that handles every unit's requests.",
+      "B. Establishing a cross-functional AI Center of Excellence that maintains shared standards, tooling, and learning, while business units execute their own use cases.",
+      "C. Letting each business unit develop its own AI practice independently to maximize speed.",
+      "D. Hiring a Chief AI Officer and delegating all coordination to that role."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "A Center of Excellence creates economies of scale in standards and tooling while preserving business-unit autonomy. Full centralization creates bottlenecks; full decentralization duplicates effort and risks."
+  },
+  {
+    "slug": "governance-bias-in-automated-decisions",
+    "prompt": "An AI screening tool for job applications shows statistically lower pass rates for one demographic group. The most responsible immediate action is:",
+    "choices": [
+      "A. Retrain the model on a more balanced dataset before the next hiring cycle.",
+      "B. Suspend the tool's use in screening decisions and conduct a bias audit before redeployment.",
+      "C. Add a human reviewer for applications from the affected demographic group.",
+      "D. Adjust the tool's threshold for the affected group to equalize pass rates."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Continuing to use a tool with documented discriminatory outcomes creates legal and ethical liability. Suspension pending a full audit is the responsible first step before any technical remediation."
+  },
+  {
+    "slug": "governance-roi-framework",
+    "prompt": "An executive asks you to build a business case for expanding AI tooling across the sales team. Which evidence is most persuasive?",
+    "choices": [
+      "A. A benchmark study showing AI improves productivity by 30% on average in other industries.",
+      "B. A pilot result showing the specific time-per-deal reduction and revenue impact observed in your own sales team.",
+      "C. The number of Fortune 500 companies using similar tools.",
+      "D. A vendor case study from a comparable company."
+    ],
+    "correctIndex": 1,
+    "level": "CHAMPION",
+    "category": "governance",
+    "explanation": "Internal pilot data from your own context is far more persuasive and accurate than external benchmarks or vendor case studies, which may not reflect your team's workflow or customer base."
+  },
+  {
+    "slug": "tooling-when-to-use-agent-vs-single-call",
+    "prompt": "A task requires looking up a customer record, then drafting a personalized email, then logging the action in a CRM — three dependent steps. Which architecture is most appropriate?",
+    "choices": [
+      "A. A single large prompt that instructs the model to perform all three steps at once.",
+      "B. An agent loop that calls tools for CRM lookup and logging, with the model handling drafting between tool calls.",
+      "C. Three separate model calls with a human manually passing output between each step.",
+      "D. A fine-tuned model trained on examples of all three steps combined."
+    ],
+    "correctIndex": 1,
+    "level": "POWER_USER",
+    "category": "tooling",
+    "explanation": "Dependent multi-step tasks with external system interactions are the canonical use case for an agent loop with tool calls. A single prompt cannot reliably execute real system actions, and manual handoffs negate the efficiency gain."
+  }
+]

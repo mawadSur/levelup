@@ -1,0 +1,9 @@
+{
+  "slug": "ai-sales",
+  "title": "AI for Sales Teams",
+  "description": "Use AI to research prospects, draft outreach, prep calls, summarize CRM notes, handle objections, and write proposals — without leaking deal data.",
+  "targetRole": "Sales",
+  "targetLevel": "PRACTITIONER",
+  "isPublished": true,
+  "orderIndex": 1
+}

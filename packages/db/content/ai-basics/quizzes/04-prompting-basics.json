@@ -1,0 +1,41 @@
+{
+  "title": "Prompting Basics — Check",
+  "questions": [
+    {
+      "prompt": "Which prompt is most likely to produce a useful, targeted response?",
+      "choices": [
+        "Write something about the new policy",
+        "Write an email",
+        "You are an HR manager writing to all employees. Summarize the new expense reimbursement policy in plain language, using three bullet points, no jargon, under 150 words",
+        "Please help me with the expense policy email for employees who need to know about reimbursement changes thanks"
+      ],
+      "correctIndex": 2,
+      "explanation": "The third option specifies role, audience, format, length, and tone. This eliminates most of the assumptions the model would otherwise make, producing output that matches the need.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You get a first response from an AI that is close to what you need but too formal in tone. What is the best next step?",
+      "choices": [
+        "Accept it as the best the model can do and edit it manually from scratch",
+        "Start a new conversation and try a completely different prompt",
+        "Reply in the same conversation: 'That's good, but rewrite it in a more casual, conversational tone'",
+        "Add more detailed instructions to the original prompt and resubmit it"
+      ],
+      "correctIndex": 2,
+      "explanation": "Prompting is iterative. Asking for a targeted adjustment in the same conversation is faster and more effective than starting over. The model retains the context of what it already produced.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "What is the main risk of writing a prompt that contains fifteen specific and detailed requirements all at once?",
+      "choices": [
+        "The model will refuse to respond to prompts that are too long",
+        "Longer prompts always cost more money to run",
+        "The model is likely to follow some requirements and quietly drop others, producing incomplete results",
+        "Detailed prompts make the model less creative"
+      ],
+      "correctIndex": 2,
+      "explanation": "Models have limits on how many detailed constraints they reliably follow at once. Complex tasks are better broken into sequential steps, each with a focused, smaller set of instructions.",
+      "orderIndex": 3
+    }
+  ]
+}

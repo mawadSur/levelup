@@ -1,0 +1,41 @@
+{
+  "title": "Team Productivity Workflows Quiz",
+  "questions": [
+    {
+      "prompt": "A manager announces to the team: 'Starting this month, everyone should be using AI to improve productivity.' Three weeks later, usage is inconsistent and most team members say they are not sure where to start. What went wrong?",
+      "choices": [
+        "The team needs more AI training before they can use the tools effectively",
+        "The manager should have mandated specific tools instead of leaving the choice open",
+        "The instruction lacked specific workflows and tasks — without those, people default to not changing behavior",
+        "AI adoption always takes longer than three weeks and the manager should wait longer"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vague adoption mandates fail because they place the full burden of figuring out 'how' on each individual. Effective AI rollout names specific, repeated tasks and provides templates. Without that specificity, adoption stays low and inconsistent regardless of team capability or tool quality.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "What distinguishes a team prompt library from a list of generic AI tips?",
+      "choices": [
+        "A prompt library is organized by tool, while a tips list is organized by task",
+        "A prompt library contains prompts tested on the team's actual work and refined based on results, while generic tips are not context-specific",
+        "A prompt library requires manager approval for each entry, which ensures quality",
+        "A prompt library is for technical teams only, while tips lists are for general use"
+      ],
+      "correctIndex": 1,
+      "explanation": "The value of a team prompt library is specificity. Prompts that have been tested on your team's actual tasks, adjusted based on what worked and what did not, and documented with context are far more useful than generic best practices. The library encodes institutional knowledge, not just general AI guidance.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A manager adds a retro agenda item: 'Report your AI tool usage this sprint.' The intent is to encourage adoption. What is the likely outcome of this framing?",
+      "choices": [
+        "It will accurately capture adoption levels across the team",
+        "It will drive compliance-reporting rather than learning, and people who did not use AI will feel judged rather than curious",
+        "It will create healthy competition that increases experimentation",
+        "It will help the manager identify who needs additional AI training"
+      ],
+      "correctIndex": 1,
+      "explanation": "Framing a retro item around usage reporting shifts the behavior it measures toward compliance rather than reflection. People who did not use AI that sprint will minimize or avoid sharing. A better framing — 'What did you try with AI? What worked or failed?' — invites honest learning from both use and non-use.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+# SETUP — Accounts & Keys
+
+This codebase tolerates `PLACEHOLDER_*` values for every external integration — anything left as a placeholder runs in **stub mode** (logs the call, returns a deterministic mock). To go live with a feature, replace the placeholder in `.env.local`.
+
+## Order of operations
+
+1. **Local infra (free, required):** `docker compose -f infra/docker-compose.yml up -d` — Postgres+pgvector + Redis.
+2. **OpenAI (required for real AI coach + assessments):** create a project key → `OPENAI_API_KEY`.
+3. **Supabase Auth (required for real auth):** create a project at supabase.com → Project Settings → API → copy URL + `anon` key + `service_role` key → set `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, plus the matching `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` for the web bundle. Optionally set `SUPABASE_JWT_SECRET` for legacy HS256 projects (modern projects validate via JWKS). Then in Authentication → URL Configuration add `http://localhost:3000` (and your production domain) to the Redirect URLs allowlist for magic links to work.
+4. **Stripe (required for billing):** create three products with monthly prices ($499 / $1,499 / $5,000) → set `STRIPE_*` vars + the three price IDs.
+5. **Resend (required for invitations / cert email):** API key → `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.
+
+## Stub mode behaviour
+
+| Env var                              | When stubbed                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `OPENAI_API_KEY`                     | Coach responses are a canned "Stub mode — set OPENAI_API_KEY to enable real responses." Embeddings return zero vectors.                                                                                                                                                                                                                    |
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY` | Auth runs in dev-bypass mode. `GET /api/auth/dev-bypass?email=…` mints a Supabase-shaped JWT signed with a local stub secret, which the API verifies the same way as a real Supabase token. The web sign-in form auto-detects stub mode and skips the password field. DO NOT ship to prod stubbed (`NODE_ENV=production` refuses to boot). |
+| `STRIPE_*`                           | Checkout links return a fake URL. Webhooks are no-ops. Plan stays on `starter`.                                                                                                                                                                                                                                                            |
+| `RESEND_API_KEY`                     | Emails are written to `apps/api/.outbox/` as `.eml` files instead of sent.                                                                                                                                                                                                                                                                 |
+
+## Production setup
+
+### Web — Vercel
+
+`apps/web/vercel.json` is wired up. From the Vercel dashboard:
+
+1. Import the repo, select `apps/web` as the root directory.
+2. Vercel detects Next.js automatically; the build/install commands in `vercel.json` run from the monorepo root.
+3. Add env vars (Production scope): `NEXT_PUBLIC_API_URL` (your API hostname), `NEXT_PUBLIC_APP_URL` (your web hostname). All other secrets stay on the API side.
+4. Set the production domain. Update Supabase Authentication → URL Configuration → Redirect URLs to include the production web origin so magic-link callbacks land on the right host.
+
+### API + Worker — Render (recommended) or Fly
+
+**Render:** apply `infra/render.yaml` via Blueprints. Two services come up: `levelup-api` (web) and `levelup-worker` (worker). Set the `sync: false` env vars after first deploy.
+
+**Fly:** `infra/fly.api.toml` and `infra/fly.worker.toml` plus `Dockerfile.api` / `Dockerfile.worker`. From the repo root:
+
+```bash
+fly launch --config infra/fly.api.toml --dockerfile infra/Dockerfile.api --no-deploy
+fly secrets set -a levelup-api DATABASE_URL=... REDIS_URL=... OPENAI_API_KEY=...  # etc.
+fly deploy --config infra/fly.api.toml --dockerfile infra/Dockerfile.api
+
+fly launch --config infra/fly.worker.toml --dockerfile infra/Dockerfile.worker --no-deploy
+fly secrets set -a levelup-worker DATABASE_URL=... REDIS_URL=... OPENAI_API_KEY=...
+fly deploy --config infra/fly.worker.toml --dockerfile infra/Dockerfile.worker
+```
+
+### Postgres — Supabase (recommended)
+
+Full walk-through in [`docs/runbooks/supabase-setup.md`](./docs/runbooks/supabase-setup.md). For Claude Code MCP integration with your Supabase project, see [`.claude/README.md`](./.claude/README.md). Quick version:
+
+1. Create a project. Pick a region close to your API deploy region.
+2. Database → Extensions → enable `vector`, `pg_trgm`, `pgcrypto` (or paste `infra/supabase/init.sql` into the SQL editor).
+3. Project Settings → Database → Connection string:
+   - `DATABASE_URL` = **Transaction pooler** (port 6543, append `?pgbouncer=true&connection_limit=1`)
+   - `DIRECT_DATABASE_URL` = **Session pooler** OR direct (port 5432) — used by Prisma migrations
+4. `pnpm db:generate && pnpm db:migrate && pnpm db:seed`.
+
+### Postgres — Neon (alternative)
+
+1. Create a project, enable the `vector` extension (`CREATE EXTENSION IF NOT EXISTS vector;`) on the main database.
+2. Use a separate branch per environment (preview, staging, production).
+3. `DATABASE_URL` = pooled endpoint (`...-pooler...`); `DIRECT_DATABASE_URL` = direct endpoint.
+4. The init migration handles `pg_trgm`, `pgcrypto`, `vector` — confirm they're enabled before running migrations.
+
+### File storage — Supabase Storage
+
+Certificate PDFs and uploaded company-policy files are persisted to private
+Supabase Storage buckets. Both buckets are accessed exclusively from the
+server side using the service-role key (`@levelup/storage` wraps the client),
+so no RLS policies are required.
+
+1. Create the buckets (one-time):
+
+   ```bash
+   curl -X POST \
+     -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+     -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+     -H "Content-Type: application/json" \
+     "$SUPABASE_URL/storage/v1/bucket" \
+     -d '{"id":"certificates","name":"certificates","public":false}'
+
+   curl -X POST \
+     -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+     -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+     -H "Content-Type: application/json" \
+     "$SUPABASE_URL/storage/v1/bucket" \
+     -d '{"id":"policy-files","name":"policy-files","public":false}'
+   ```
+
+2. Set the env vars:
+   - `SUPABASE_URL=https://<project-ref>.supabase.co`
+   - `SUPABASE_SERVICE_ROLE_KEY=<from Project Settings → API>`
+3. Object key conventions:
+   - Certificates: `<orgId>/<certId>.pdf` in bucket `certificates`. Persisted
+     as `Certificate.storagePath`. `Certificate.pdfUrl` stores a 7-day signed
+     URL minted at upload time; `GET /api/certificates/:id/file` mints a
+     fresh signed URL on each request and 302-redirects.
+   - Policy files: `<orgId>/<policyVersionId>__<safeName>` in bucket
+     `policy-files`. Persisted as `CompanyPolicy.fileStoragePath`.
+4. Stub mode: when `SUPABASE_SERVICE_ROLE_KEY` is unset or `PLACEHOLDER_*`,
+   `@levelup/storage` falls back to local filesystem
+   (`apps/api/.cert-output/<id>.pdf`) and returns `file://` URLs. The
+   certificates controller detects stub mode and streams from disk on
+   `GET /api/certificates/:id/file` so the demo flow keeps working.
+
+### Redis — Upstash
+
+1. Create a Global database (low latency from your API region).
+2. Use the `rediss://` (TLS) connection string for `REDIS_URL`. The `@levelup/queue` config detects `rediss://` and enables TLS automatically.
+3. Production traffic on the Free tier is fine for early pilots; upgrade to Pay-as-you-go before serving real customers.
+
+### DNS / domains
+
+- Web → Vercel (e.g., `app.levelup.example`)
+- API → Render or Fly (e.g., `api.levelup.example`)
+- Set `NEXT_PUBLIC_API_URL=https://api.levelup.example`
+- Set `WEB_ORIGIN=https://app.levelup.example` on the API
+- Set `COOKIE_DOMAIN=.levelup.example` so the Supabase auth cookie works across subdomains
+- Add `https://app.levelup.example` (and any preview domains) to Supabase Authentication → URL Configuration → Redirect URLs so magic-link callbacks land correctly
+
+### Production environment matrix
+
+| Variable                                                     | Local dev                            | Staging                             | Production                           |
+| ------------------------------------------------------------ | ------------------------------------ | ----------------------------------- | ------------------------------------ |
+| `NODE_ENV`                                                   | development                          | production                          | production                           |
+| `DATABASE_URL`                                               | docker compose (port 5432)           | Supabase pooler / Neon pooled       | Supabase pooler / Neon pooled        |
+| `DIRECT_DATABASE_URL`                                        | unset (falls back to `DATABASE_URL`) | Supabase session / Neon direct      | Supabase session / Neon direct       |
+| `REDIS_URL`                                                  | docker compose                       | Upstash staging                     | Upstash prod                         |
+| `OPENAI_API_KEY`                                             | PLACEHOLDER or real key              | real key                            | real key                             |
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY`                         | PLACEHOLDER (uses dev bypass)        | real keys                           | real keys                            |
+| `SUPABASE_SERVICE_ROLE_KEY`                                  | PLACEHOLDER (local fs)               | service-role key                    | service-role key (rotated yearly)    |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | PLACEHOLDER                          | mirror the server values            | mirror the server values             |
+| `STRIPE_SECRET_KEY`                                          | PLACEHOLDER                          | test mode key                       | live mode key                        |
+| `STRIPE_WEBHOOK_SECRET`                                      | n/a                                  | test webhook secret                 | live webhook secret                  |
+| `RESEND_API_KEY`                                             | PLACEHOLDER (writes .eml)            | real key, sandbox domain            | real key, verified domain            |
+| `SESSION_SECRET`                                             | optional                             | 32+ random chars                    | 32+ random chars (rotated quarterly) |
+| `COOKIE_DOMAIN`                                              | localhost                            | `.staging.levelup.example`          | `.levelup.example`                   |
+| `WEB_ORIGIN`                                                 | http://localhost:3000                | https://app.staging.levelup.example | https://app.levelup.example          |
+| `NEXT_PUBLIC_API_URL`                                        | http://localhost:4000                | https://api.staging.levelup.example | https://api.levelup.example          |
+
+Stub mode is allowed in local + staging. In production, every `PLACEHOLDER_*` value will throw at boot — the relevant package's `config.ts` enforces this.
+
+## Smoke test after setup
+
+```bash
+pnpm db:migrate
+pnpm db:seed
+pnpm dev
+```
+
+Then:
+
+1. Visit http://localhost:3000 → marketing landing renders.
+2. Sign up as a new org → admin dashboard loads.
+3. `/coach` returns either real or stub responses based on your OpenAI key.
+4. `/admin/people` allows inviting a teammate (real or stub email).
+
+If anything 500s, check `pnpm dev` output and the structured logs from the API.

@@ -1,0 +1,41 @@
+{
+  "title": "Decision Memos Quiz",
+  "questions": [
+    {
+      "prompt": "A manager runs a pre-mortem prompt before finalizing a vendor contract decision. One of the AI-generated failure modes describes a dependency the manager had not considered. The manager is still confident in the decision. What is the best next step?",
+      "choices": [
+        "Disregard the failure mode since the manager's confidence indicates the risk is low",
+        "Delay the decision until the dependency is fully resolved",
+        "Document the dependency risk and design a specific mitigation or monitoring plan before signing",
+        "Ask AI whether the dependency is actually a problem for this specific vendor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Pre-mortem output is not a reason to abandon a decision — it is input for making the decision more robust. A confidence-adjusting insight should be acted on: either mitigate the risk, build in monitoring, or note it explicitly in the reversal trigger. The goal is decisions made with open eyes.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "What is the primary purpose of including a reversal trigger in a decision memo?",
+      "choices": [
+        "To satisfy documentation requirements for audit purposes",
+        "To name in advance the conditions that would justify revisiting the decision, preventing status quo bias from locking in a bad outcome",
+        "To give stakeholders a clear timeline for when the decision will be reviewed",
+        "To signal flexibility and avoid appearing overconfident to senior leadership"
+      ],
+      "correctIndex": 1,
+      "explanation": "A reversal trigger is written at decision time, before the choice becomes part of your identity, to define what would actually constitute a reason to change course. Without it, decisions tend to persist past their useful life because revisiting them feels like admitting failure. The trigger changes the question from 'should we revisit this?' to 'has the named condition occurred?'",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A manager reads the AI-generated steelman for an option they rejected and finds it genuinely persuasive. What should they do?",
+      "choices": [
+        "Ignore it — AI steelmans everything equally and the result is not meaningful",
+        "Treat it as a signal to gather more information or reconsider before finalizing the decision",
+        "Present the steelman to stakeholders as the opposing view before announcing the decision",
+        "Ask AI to steelman the chosen option to balance the analysis"
+      ],
+      "correctIndex": 1,
+      "explanation": "If a steelman genuinely shakes your confidence, that is the exercise working correctly. It means either the rejected option has real merit you had underweighted, or you need more information before committing. Genuine uncertainty after steelmanning is a reason to slow down, not push through.",
+      "orderIndex": 3
+    }
+  ]
+}

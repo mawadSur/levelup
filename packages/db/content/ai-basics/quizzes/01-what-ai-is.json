@@ -1,0 +1,41 @@
+{
+  "title": "What AI Is — Check",
+  "questions": [
+    {
+      "prompt": "Which best describes how a large language model produces a response?",
+      "choices": [
+        "It queries a database of verified facts and returns matching records",
+        "It searches the web in real time and summarizes the results",
+        "It predicts likely next words based on patterns learned from training text",
+        "It retrieves documents written by human experts and paraphrases them"
+      ],
+      "correctIndex": 2,
+      "explanation": "LLMs generate text by predicting what comes next based on patterns in training data. They do not query databases, search the web in real time, or retrieve pre-written documents.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A colleague says an AI response must be accurate because it is written in a clear, professional tone with no grammatical errors. What is wrong with that reasoning?",
+      "choices": [
+        "Nothing — well-formatted output is a reliable indicator of factual accuracy",
+        "Fluency and accuracy are separate things; a model can produce polished text that is factually wrong",
+        "The colleague is right for short responses but wrong for long ones",
+        "Grammar errors are actually a sign of higher accuracy because the model is being careful"
+      ],
+      "correctIndex": 1,
+      "explanation": "The model is optimized for fluent, plausible-sounding text. Fluency is independent of accuracy. A confident, well-formatted response can still be factually incorrect.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You ask an AI chatbot to explain a concept from your own area of expertise and notice it gets one detail wrong. What is the most useful conclusion to draw?",
+      "choices": [
+        "The tool is broken and should not be used",
+        "The error was a fluke; the tool is reliable in all other areas",
+        "AI output in your area of expertise is always wrong",
+        "AI output can contain errors even on familiar topics, and checking the things that matter is a standard practice"
+      ],
+      "correctIndex": 3,
+      "explanation": "Finding an error in a domain you know well is a healthy calibration exercise. It does not mean the tool is useless, but it confirms that verification is always warranted for claims that matter.",
+      "orderIndex": 3
+    }
+  ]
+}

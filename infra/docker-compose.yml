@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: levelup-postgres
+    environment:
+      POSTGRES_USER: levelup
+      POSTGRES_PASSWORD: levelup
+      POSTGRES_DB: levelup
+    ports:
+      - '5432:5432'
+    volumes:
+      - levelup_pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U levelup -d levelup']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: levelup-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - levelup_redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  levelup_pgdata:
+  levelup_redisdata:

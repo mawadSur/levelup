@@ -1,0 +1,18 @@
+app = "levelup-worker"
+primary_region = "iad"
+kill_signal = "SIGTERM"
+kill_timeout = 60
+
+[build]
+  dockerfile = "Dockerfile.worker"
+
+[env]
+  NODE_ENV = "production"
+
+[processes]
+  app = "pnpm --filter @levelup/worker start"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512

@@ -1,0 +1,41 @@
+{
+  "title": "Project Planning Quiz",
+  "questions": [
+    {
+      "prompt": "A project manager asks AI for time estimates for each task in their project plan. The AI provides confident, detailed estimates. What should the manager do with these estimates?",
+      "choices": [
+        "Use them as the baseline since AI has seen many similar projects",
+        "Multiply each estimate by 1.5 to account for AI's tendency to underestimate",
+        "Discard the estimates and use AI's task category breakdown as input for the team's own estimation session",
+        "Present them to stakeholders as preliminary estimates pending team review"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI time estimates are structurally unreliable because the model does not know your team's velocity, codebase, or context. What AI does well is decomposing work into categories. Use those categories as the input for a real estimation process with your actual team.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "When is the most useful time to run an AI risk-surfacing prompt on a project?",
+      "choices": [
+        "After the project plan is finalized, as a final quality check",
+        "During project kickoff, to give stakeholders a risk register",
+        "Before the project brief is written, while the plan can still be changed",
+        "At the first sign of a schedule slip, to diagnose what went wrong"
+      ],
+      "correctIndex": 2,
+      "explanation": "The pre-brief stage is when risk information is most actionable. If you discover a missing dependency or an unmitigated risk before committing to a plan, you can change the plan. Running the same prompt after the plan is locked produces a list you cannot act on without disrupting the project.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A manager describes a project to AI and asks for the top risks not yet named. The AI produces five risks, three of which the manager had already identified. What does this result indicate?",
+      "choices": [
+        "The AI failed to provide useful output since it duplicated known risks",
+        "The project is well-planned because the manager already identified most risks",
+        "The two new risks AI surfaced should be evaluated — that is the value of the exercise",
+        "The prompt needs to be rewritten to exclude already-known risks"
+      ],
+      "correctIndex": 2,
+      "explanation": "Even one new risk in a five-item list can be worth significant time and effort to address. The purpose of the exercise is not to get five entirely new risks — it is to surface anything you missed. Three duplicates and two genuine gaps is a successful run of the prompt.",
+      "orderIndex": 3
+    }
+  ]
+}

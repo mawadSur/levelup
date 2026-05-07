@@ -1,0 +1,39 @@
+{
+  "lessonSlug": "tone-improvement",
+  "title": "Improving Tone with AI",
+  "questions": [
+    {
+      "prompt": "A customer writes a short, casually worded message with no punctuation about a billing charge they do not recognize. You draft a formal reply that begins: 'Dear valued customer, please be advised that your inquiry has been received and is currently under review.' What tone problem does this illustrate?",
+      "choices": [
+        "Too breezy — the reply is too casual for a billing issue",
+        "Too formal — the reply does not match the customer's register or urgency",
+        "Correct — formal language is always appropriate for billing topics",
+        "Too short — the reply does not contain enough empathy phrases"
+      ],
+      "correctIndex": 1,
+      "explanation": "The customer wrote casually and wants a direct, human response. A formal, passive-voice reply signals a process rather than a person, and the phrase 'please be advised' is a textbook example of the corporate-language failure mode."
+    },
+    {
+      "prompt": "The 'read aloud' test described in this lesson is designed to help you identify what?",
+      "choices": [
+        "Grammar errors that spell-check misses",
+        "Whether a reply is short enough for mobile readers",
+        "Phrases that sound professional on paper but would sound unnatural in real conversation",
+        "Whether the reply meets the 120-word target length"
+      ],
+      "correctIndex": 2,
+      "explanation": "Reading a reply aloud at normal speaking speed exposes corporate jargon and filler phrases. If you would not say it to a friend dealing with the same problem, you should rewrite it."
+    },
+    {
+      "prompt": "Which of these two empathy statements is more effective, and why?",
+      "choices": [
+        "'I completely understand your frustration' — it is direct and universal",
+        "'Three days without account access during a deadline week is genuinely disruptive — I understand why you want this resolved today' — it is specific and proves you read the ticket",
+        "Both are equally effective because they both express empathy",
+        "'I completely understand your frustration' — it is shorter and less likely to seem patronizing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Specific empathy proves you read the ticket and understood the impact. Generic empathy phrases like 'I completely understand' are used so frequently that they have lost most of their meaning."
+    }
+  ]
+}

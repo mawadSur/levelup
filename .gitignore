@@ -1,0 +1,25 @@
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+.DS_Store
+.cert-output/
+.outbox/
+.vercel
+.supabase
+supabase/.temp
+coverage/
+test-results/
+playwright-report/
+
+# Claude Code per-developer files (contain personal API tokens, MCP configs)
+.claude/settings.local.json
+.claude/projects/
+.claude/__claude__/
+.claude/.cache/

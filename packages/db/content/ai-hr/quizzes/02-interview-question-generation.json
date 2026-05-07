@@ -1,0 +1,41 @@
+{
+  "title": "Interview Question Generation — Check",
+  "questions": [
+    {
+      "prompt": "What is the key difference between a trivia interview question and a scenario interview question?",
+      "choices": [
+        "Trivia questions are shorter and faster to ask",
+        "Scenario questions test memory; trivia questions test judgment",
+        "Trivia questions test recalled knowledge; scenario questions surface how a candidate actually thinks and decides",
+        "Scenario questions are only appropriate for senior candidates"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trivia questions ('what is the difference between X and Y') test whether someone has memorized a definition. Scenario questions ('tell me about a time when...') reveal judgment, priorities, communication choices, and how the person actually behaves — which is what hiring decisions should be based on.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A recruiter wants to use AI to help screen resumes by pasting candidate applications into ChatGPT. What is the main problem with this approach?",
+      "choices": [
+        "ChatGPT is not capable of reading resume formatting",
+        "Candidate names and application materials are PII and should not be entered into a public model without appropriate data agreements",
+        "AI will always prefer candidates from top-tier universities",
+        "Recruiter screens should only be conducted by phone, not assisted by text analysis"
+      ],
+      "correctIndex": 1,
+      "explanation": "Candidate resumes contain personally identifiable information. Pasting them into a public AI tool without appropriate data processing agreements violates candidate privacy and may create legal exposure. Only use candidate data in approved tools with proper agreements in place.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "When asking AI to generate interview questions, which prompt instruction produces the most useful output?",
+      "choices": [
+        "Include what a strong answer would address, alongside each question",
+        "Specify that questions should be easy enough for an entry-level candidate to answer",
+        "Ask for 20 or more questions so there are plenty of options",
+        "Avoid mentioning the role level so the questions stay broadly applicable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Asking AI to include what a strong answer would address gives you a proto-rubric alongside each question. That is the practical tool interviewers need to calibrate their scoring — not just questions in a vacuum.",
+      "orderIndex": 3
+    }
+  ]
+}

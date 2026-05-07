@@ -1,0 +1,866 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  // Runtime queries: pooled connection (Supabase pgBouncer port 6543, Neon pooled, or local Postgres).
+  url        = env("DATABASE_URL")
+  // Migrations + Prisma introspect: direct connection (Supabase port 5432, Neon direct).
+  // Prepared statements + DDL aren't safe over a transaction-mode pooler, so migrations
+  // need a non-pooled URL. Falls back to DATABASE_URL when DIRECT_DATABASE_URL is unset
+  // (e.g. local docker-compose where the same connection works for both).
+  directUrl  = env("DIRECT_DATABASE_URL")
+  extensions = [vector, pg_trgm, pgcrypto]
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum AiLevel {
+  BEGINNER
+  PRACTITIONER
+  POWER_USER
+  CHAMPION
+}
+
+enum Plan {
+  STARTER
+  GROWTH
+  ENTERPRISE
+}
+
+enum LessonStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum AssessmentType {
+  BASELINE
+  FINAL
+  CHECKPOINT
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum BadgeRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum XpEventKind {
+  LESSON_COMPLETED
+  LESSON_FIRST_TIME
+  QUIZ_PASSED_FIRST_TRY
+  QUIZ_PASSED_RETRY
+  PATH_COMPLETED
+  COACH_PROMPT_FIXED
+  PROMPT_CLONED
+  DAILY_QUEST
+  STREAK_7
+  STREAK_30
+  ASSESSMENT_BASELINE
+  BADGE_BONUS
+}
+
+enum QuestStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
+
+enum DataExportStatus {
+  PENDING
+  PROCESSING
+  READY
+  EXPIRED
+  FAILED
+}
+
+enum DeletionRequestStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PathGenerationStatus {
+  PENDING
+  GENERATING
+  READY
+  FAILED
+  CANCELLED
+}
+
+model Organization {
+  id                   String         @id @default(cuid())
+  name                 String
+  industry             String?
+  companySize          String?
+  plan                 Plan           @default(STARTER)
+  stripeCustomerId     String?        @unique
+  stripeSubscriptionId String?        @unique
+  planSeats            Int            @default(50)
+  policyText           String?        @db.Text
+  paymentFailed        Boolean        @default(false)
+  paymentFailedAt      DateTime?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  users                  User[]
+  departments            Department[]
+  learningPaths          LearningPath[]
+  invitations            Invitation[]
+  policies               CompanyPolicy[]
+  auditLogs              AuditLog[]
+  assessments            Assessment[]
+  prompts                Prompt[]
+  coachSessions          AiCoachSession[]
+  conversations          Conversation[]
+  xpEvents               XpEvent[]
+  dailyQuests            DailyQuest[]
+  reportSnapshots        ReportSnapshot[]
+  featureFlags           FeatureFlag[]
+  pathGenerationRequests PathGenerationRequest[]
+  integrations           OrganizationIntegration[]
+  anomalyAlerts          AnomalyAlert[]
+
+  @@map("organizations")
+}
+
+model Department {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  users           User[]
+  invitations     Invitation[]
+  reportSnapshots ReportSnapshot[]
+  prompts         Prompt[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("departments")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  organizationId  String
+  departmentId    String?
+  workosUserId    String?   @unique
+  supabaseUserId  String?   @unique
+  email           String
+  name            String
+  role            Role      @default(EMPLOYEE)
+  jobTitle        String?
+  aiLevel         AiLevel   @default(BEGINNER)
+  avatarUrl       String?
+  lastLoginAt     DateTime?
+  deactivatedAt   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  organization           Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  department             Department?              @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  progress               UserProgress[]
+  assessments            Assessment[]
+  prompts                Prompt[]
+  coachSessions          AiCoachSession[]
+  certificates           Certificate[]
+  badges                 Badge[]
+  sentInvitations        Invitation[]             @relation("InvitedBy")
+  acceptedInvitations    Invitation[]             @relation("AcceptedBy")
+  auditLogs              AuditLog[]
+  pathAssignments        LearningPathAssignment[] @relation("AssignedTo")
+  pathAssignmentsMade    LearningPathAssignment[] @relation("AssignedBy")
+  quizAttempts           QuizAttempt[]
+  policiesCreated        CompanyPolicy[]          @relation("PolicyCreatedBy")
+  sessions               Session[]
+  gameState              UserGameState?
+  xpEvents               XpEvent[]
+  dailyQuests            DailyQuest[]
+  conversations          Conversation[]
+  onboarding             UserOnboarding?
+  dataExportRequests     DataExportRequest[]
+  deletionRequests       DeletionRequest[]
+  pathGenerationRequests PathGenerationRequest[]
+  installedIntegrations  OrganizationIntegration[]
+  anomalyAlerts          AnomalyAlert[]
+  acknowledgedAnomalies  AnomalyAlert[]            @relation("AnomalyAcknowledgedBy")
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@index([departmentId])
+  @@index([organizationId, role])
+  @@map("users")
+}
+
+model Invitation {
+  id             String           @id @default(cuid())
+  organizationId String
+  email          String
+  role           Role
+  departmentId   String?
+  token          String           @unique
+  status         InvitationStatus @default(PENDING)
+  expiresAt      DateTime
+  invitedById    String
+  acceptedById   String?
+  createdAt      DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  invitedBy    User         @relation("InvitedBy", fields: [invitedById], references: [id])
+  acceptedBy   User?        @relation("AcceptedBy", fields: [acceptedById], references: [id])
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([status])
+  @@map("invitations")
+}
+
+model LearningPath {
+  id             String   @id @default(cuid())
+  organizationId String?
+  title          String
+  slug           String
+  description    String?  @db.Text
+  targetRole     Role?
+  targetLevel    AiLevel
+  coverImageUrl  String?
+  isPublished    Boolean  @default(false)
+  orderIndex     Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization           Organization?            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  lessons                Lesson[]
+  assignments            LearningPathAssignment[]
+  certificates           Certificate[]
+  pathGenerationRequests PathGenerationRequest[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+  @@index([targetLevel])
+  @@map("learning_paths")
+}
+
+model LearningPathAssignment {
+  id             String   @id @default(cuid())
+  learningPathId String
+  userId         String
+  assignedById   String
+  assignedAt     DateTime @default(now())
+
+  learningPath LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  user         User         @relation("AssignedTo", fields: [userId], references: [id], onDelete: Cascade)
+  assignedBy   User         @relation("AssignedBy", fields: [assignedById], references: [id])
+
+  @@unique([learningPathId, userId])
+  @@index([userId])
+  @@map("learning_path_assignments")
+}
+
+model Lesson {
+  id               String   @id @default(cuid())
+  learningPathId   String
+  title            String
+  slug             String
+  body             String   @db.Text
+  videoUrl         String?
+  estimatedMinutes Int
+  orderIndex       Int
+
+  learningPath     LearningPath     @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  quizzes          Quiz[]
+  progress         UserProgress[]
+  contentEmbedding LessonEmbedding?
+
+  @@unique([learningPathId, slug])
+  @@index([learningPathId])
+  @@map("lessons")
+}
+
+/// LessonEmbedding stores OpenAI text-embedding-3-small vectors (1536 dims).
+/// `Unsupported("vector(1536)")` is required because Prisma has no first-class
+/// pgvector type; we still get the column generated and can query it via
+/// `prisma.$queryRaw`. The init migration enables the `vector` extension.
+model LessonEmbedding {
+  id        String                       @id @default(cuid())
+  lessonId  String                       @unique
+  embedding Unsupported("vector(1536)")?
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@map("lesson_embeddings")
+}
+
+model Quiz {
+  id       String @id @default(cuid())
+  lessonId String
+  title    String
+
+  lesson    Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+
+  @@index([lessonId])
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id           String  @id @default(cuid())
+  quizId       String
+  prompt       String  @db.Text
+  choices      Json
+  correctIndex Int
+  explanation  String? @db.Text
+  orderIndex   Int
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  quizId      String
+  userId      String
+  answers     Json
+  score       Int
+  passed      Boolean
+  completedAt DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@index([userId])
+  @@map("quiz_attempts")
+}
+
+model UserProgress {
+  id          String       @id @default(cuid())
+  userId      String
+  lessonId    String
+  status      LessonStatus @default(NOT_STARTED)
+  score       Int?
+  completedAt DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+  @@map("user_progress")
+}
+
+model Assessment {
+  id               String         @id @default(cuid())
+  organizationId   String
+  userId           String
+  type             AssessmentType
+  score            Int
+  recommendedLevel AiLevel
+  itemResponses    Json
+  createdAt        DateTime       @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("assessments")
+}
+
+model AssessmentItem {
+  id             String   @id @default(cuid())
+  organizationId String?
+  prompt         String   @db.Text
+  choices        Json
+  correctIndex   Int
+  level          AiLevel
+  category       String
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([level])
+  @@index([category])
+  @@map("assessment_items")
+}
+
+model Prompt {
+  id             String   @id @default(cuid())
+  organizationId String?
+  userId         String
+  departmentId   String?
+  title          String
+  promptText     String   @db.Text
+  category       String
+  isShared       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department   Department?   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([category])
+  @@index([departmentId])
+  @@map("prompts")
+}
+
+model FeatureFlag {
+  id             String   @id @default(cuid())
+  organizationId String?
+  key            String
+  enabled        Boolean  @default(false)
+  rolloutPercent Int?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@map("feature_flags")
+}
+
+model CompanyPolicy {
+  id                String   @id @default(cuid())
+  organizationId    String
+  version           Int      @default(1)
+  policyText        String   @db.Text
+  uploadedFileUrl   String?
+  fileStoragePath   String?
+  approvedTools     Json
+  createdAt         DateTime @default(now())
+  createdById       String
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy    User         @relation("PolicyCreatedBy", fields: [createdById], references: [id])
+
+  @@index([organizationId, version(sort: Desc)])
+  @@map("company_policies")
+}
+
+model AiCoachSession {
+  id                     String   @id @default(cuid())
+  organizationId         String
+  userId                 String
+  conversationId         String?
+  inputText              String   @db.Text
+  aiResponse             String   @db.Text
+  category               String?
+  sensitiveDataDetected  Boolean  @default(false)
+  tokensUsed             Int      @default(0)
+  modelUsed              String?
+  createdAt              DateTime @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([conversationId, createdAt])
+  @@map("ai_coach_sessions")
+}
+
+enum TurnRole {
+  USER
+  ASSISTANT
+}
+
+model Conversation {
+  id             String             @id @default(cuid())
+  organizationId String
+  userId         String
+  title          String?
+  archivedAt     DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  turns        ConversationTurn[]
+  sessions     AiCoachSession[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@map("conversations")
+}
+
+model ConversationTurn {
+  id                    String   @id @default(cuid())
+  conversationId        String
+  role                  TurnRole
+  content               String   @db.Text
+  sensitiveDataDetected Boolean  @default(false)
+  tokensUsed            Int      @default(0)
+  modelUsed             String?
+  createdAt             DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("conversation_turns")
+}
+
+model UserOnboarding {
+  userId         String    @id
+  currentStep    Int       @default(0)
+  completedSteps Json      @default("[]")
+  dismissedAt    DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_onboarding")
+}
+
+model Certificate {
+  id             String   @id @default(cuid())
+  userId         String
+  learningPathId String
+  signedHash     String
+  pdfUrl         String?
+  storagePath    String?
+  issuedAt       DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  learningPath LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, learningPathId])
+  @@index([userId])
+  @@map("certificates")
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  userId      String
+  slug        String
+  label       String
+  description String?
+  iconKey     String?
+  rarity      BadgeRarity @default(COMMON)
+  xpReward    Int         @default(0)
+  awardedAt   DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug])
+  @@index([userId])
+  @@map("badges")
+}
+
+model UserGameState {
+  userId                String    @id
+  level                 Int       @default(1)
+  xp                    Int       @default(0)
+  weeklyXp              Int       @default(0)
+  weeklyXpResetAt       DateTime  @default(now())
+  currentStreak         Int       @default(0)
+  longestStreak         Int       @default(0)
+  lastActiveDate        DateTime?
+  streakFreezes         Int       @default(0)
+  totalLessonsCompleted Int       @default(0)
+  totalQuestsCompleted  Int       @default(0)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_game_state")
+}
+
+model XpEvent {
+  id             String      @id @default(cuid())
+  userId         String
+  organizationId String
+  kind           XpEventKind
+  xp             Int
+  sourceType     String?
+  sourceId       String?
+  meta           Json?
+  createdAt      DateTime    @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind, sourceId])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("xp_events")
+}
+
+model DailyQuest {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  date           DateTime
+  quests         Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([organizationId, date])
+  @@map("daily_quests")
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String
+  actorId        String?
+  action         String
+  targetType     String?
+  targetId       String?
+  metadata       Json
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actor        User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([actorId])
+  @@map("audit_logs")
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  userId      String
+  expiresAt   DateTime
+  lastSeenAt  DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model ReportSnapshot {
+  id             String       @id @default(cuid())
+  organizationId String
+  departmentId   String?
+  periodStart    DateTime
+  periodEnd      DateTime
+  payload        Json
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  department     Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([organizationId, departmentId, periodStart])
+  @@map("report_snapshots")
+}
+
+model DataExportRequest {
+  id            String           @id @default(cuid())
+  userId        String
+  status        DataExportStatus @default(PENDING)
+  fileUrl       String?
+  fileSizeBytes Int?
+  expiresAt     DateTime?
+  failedReason  String?
+  requestedAt   DateTime         @default(now())
+  readyAt       DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, requestedAt(sort: Desc)])
+  @@map("data_export_requests")
+}
+
+model DeletionRequest {
+  id           String                @id @default(cuid())
+  userId       String
+  status       DeletionRequestStatus @default(PENDING)
+  scheduledFor DateTime
+  reason       String?
+  requestedAt  DateTime              @default(now())
+  confirmedAt  DateTime?
+  cancelledAt  DateTime?
+  completedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([scheduledFor])
+  @@map("deletion_requests")
+}
+
+/// ProcessedWebhookEvent — provider-side idempotency log for webhook deliveries.
+///
+/// Stripe and WorkOS may redeliver the same event on transient failures. We
+/// insert one row per processed event keyed on the provider's natural id
+/// (`evt_...` for Stripe, payload `id` for WorkOS). On primary-key conflict
+/// the handler short-circuits with a 200 acknowledgement so no side effects
+/// (plan changes, audit logs, deactivations) re-apply.
+///
+/// No FK / no relations: this table is provider-scoped infrastructure.
+model ProcessedWebhookEvent {
+  id          String   @id // the provider event id (stripe `evt_...` or workos event id)
+  provider    String // 'stripe' | 'workos'
+  type        String // event type, for analytics/debugging
+  processedAt DateTime @default(now())
+
+  @@index([provider, processedAt(sort: Desc)])
+  @@map("processed_webhook_events")
+}
+
+/// PathGenerationRequest — CR.33 AI-generated custom learning paths.
+///
+/// One row per admin "build a path with AI" submission. The worker fills in
+/// `draft` (the generated structure) and flips `status` to READY. The admin
+/// then accepts the draft, which materializes it into real `LearningPath` /
+/// `Lesson` / `Quiz` rows and stores the path id in `generatedPathId`.
+///
+/// `draft` is the canonical store of the LLM output between generation and
+/// acceptance — schema-validated against `generatedPathSchema` in `@levelup/llm`.
+model PathGenerationRequest {
+  id              String               @id @default(cuid())
+  organizationId  String
+  requestedById   String
+  prompt          String               @db.Text
+  audience        String?
+  status          PathGenerationStatus @default(PENDING)
+  failedReason    String?
+  generatedPathId String?
+  draft           Json?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  completedAt     DateTime?
+
+  organization  Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  requestedBy   User          @relation(fields: [requestedById], references: [id], onDelete: Cascade)
+  generatedPath LearningPath? @relation(fields: [generatedPathId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([status])
+  @@map("path_generation_requests")
+}
+
+/// DeadLetterJob — failed BullMQ jobs whose retry budget was exhausted.
+///
+/// Workers attach a `failed` listener that inserts one row per terminally
+/// failed job (attemptsMade >= attempts). Operators can then inspect the
+/// failures and optionally requeue them out-of-band. The index supports
+/// time-ordered listings per job name. No FK to other entities: dead-letter
+/// rows are infrastructure-only.
+model DeadLetterJob {
+  id           String   @id @default(cuid())
+  jobName      String
+  jobId        String
+  attempts     Int
+  failedReason String   @db.Text
+  data         Json
+  createdAt    DateTime @default(now())
+
+  @@index([jobName, createdAt(sort: Desc)])
+  @@map("dead_letter_jobs")
+}
+
+enum IntegrationProvider {
+  SLACK
+  MS_TEAMS
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  REVOKED
+  ERROR
+}
+
+/// OrganizationIntegration — third-party workspace connections (Slack, MS Teams).
+///
+/// Stores OAuth artifacts per provider per org. The `accessToken` and
+/// `botToken` are encrypted at rest by the integrations service before
+/// persistence (AES-256-GCM keyed by INTEGRATION_ENCRYPTION_KEY env). The
+/// raw tokens are never serialized in API responses; the controller masks them.
+model OrganizationIntegration {
+  id              String              @id @default(cuid())
+  organizationId  String
+  provider        IntegrationProvider
+  status          IntegrationStatus   @default(ACTIVE)
+  externalTeamId  String              // Slack workspace id or Teams tenant id
+  externalTeamName String?
+  accessToken     String              @db.Text
+  botToken        String?             @db.Text
+  botUserId       String?
+  scopes          String?
+  installedById   String
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  installedBy  User         @relation(fields: [installedById], references: [id])
+
+  @@unique([organizationId, provider])
+  @@index([externalTeamId])
+  @@map("organization_integrations")
+}
+
+/// AnomalyAlert — proactive risk surface (CR.40).
+///
+/// Generated by a periodic worker that scans usage patterns. Each alert is
+/// scoped to an org + optional user. Severity matches the risk-flag scheme.
+enum AnomalySeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum AnomalyKind {
+  COACH_USAGE_SPIKE
+  SENSITIVE_DATA_BURST
+  STREAK_BROKEN_AT_RISK
+  PATH_BUILDER_ABUSE
+  PROMPT_CLONING_ABUSE
+}
+
+model AnomalyAlert {
+  id             String           @id @default(cuid())
+  organizationId String
+  userId         String?
+  kind           AnomalyKind
+  severity       AnomalySeverity
+  signal         Json
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+  createdAt      DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  acknowledger User?        @relation("AnomalyAcknowledgedBy", fields: [acknowledgedBy], references: [id])
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([organizationId, severity, acknowledgedAt])
+  @@map("anomaly_alerts")
+}

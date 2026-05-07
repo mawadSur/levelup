@@ -1,0 +1,41 @@
+{
+  "title": "What AI Cannot Do — Check",
+  "questions": [
+    {
+      "prompt": "You ask an AI chatbot: 'What did my team decide in last Monday's meeting?' The chatbot has not been connected to any internal systems. What will it do?",
+      "choices": [
+        "Access your company's calendar and meeting notes automatically",
+        "Have no information about your meeting because it only knows what you type to it",
+        "Refuse to answer any question about internal company matters",
+        "Generate an accurate summary by inferring from context"
+      ],
+      "correctIndex": 1,
+      "explanation": "A base language model only knows what is in its training data and what you provide in the current conversation. It cannot access your email, calendar, or internal systems unless explicitly integrated.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An AI chatbot provides a citation including an author name, a journal title, and a URL. What is the safest next step?",
+      "choices": [
+        "Use the citation immediately — AI tools are trained on academic literature and are reliable for citations",
+        "Verify the citation by clicking the URL and confirming the paper exists and says what the AI claims",
+        "Check only the URL, since author names are always accurate",
+        "Accept it if the journal name sounds reputable"
+      ],
+      "correctIndex": 1,
+      "explanation": "Language models can generate citations that look real but are partially or entirely fabricated. Always verify citations independently by looking them up yourself.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which of these tasks is most likely to produce an unreliable result from a language model?",
+      "choices": [
+        "Rewriting a paragraph in a more formal tone",
+        "Summarizing a document you have pasted into the prompt",
+        "Calculating the compound interest on a loan over 30 years",
+        "Brainstorming a list of possible names for a new product"
+      ],
+      "correctIndex": 2,
+      "explanation": "Language models are unreliable at multi-step arithmetic. Tone rewrites, summarization, and brainstorming are tasks that rely on language patterns, where models perform better.",
+      "orderIndex": 3
+    }
+  ]
+}

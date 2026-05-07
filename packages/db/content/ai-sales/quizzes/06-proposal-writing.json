@@ -1,0 +1,41 @@
+{
+  "title": "Proposal Writing Quiz",
+  "questions": [
+    {
+      "prompt": "A rep asks AI to generate a full proposal for a prospect, including a pricing section. The AI produces a plausible-sounding pricing table with specific dollar amounts. What should the rep do?",
+      "choices": [
+        "Use the AI-generated pricing as a starting point and adjust based on memory of the approved rate card.",
+        "Delete the pricing section entirely and replace it with a placeholder, then populate pricing from approved templates or the deal desk.",
+        "Include the AI-generated pricing since it is close enough to the real rates.",
+        "Send the proposal without a pricing section and address pricing verbally on the next call."
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson is explicit: AI does not generate hard numbers. Pricing, discounting, and contract terms come from approved templates and the deal desk. AI-generated pricing figures may have no relationship to actual rates and can create contractual or margin exposure if included in a proposal.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A rep finishes a discovery call and uses AI to generate a proposal outline. The output contains several [TBD] placeholders in the 'Approach' and 'Why Us' sections. What is the correct interpretation?",
+      "choices": [
+        "The AI tool encountered an error and the prompt should be re-run.",
+        "These sections are optional and can be left blank for early-stage proposals.",
+        "The placeholders signal gaps in the rep's discovery — specific information about the customer's needs and the rep's relevant capabilities was not provided to AI.",
+        "The rep should fill in generic industry language to complete these sections."
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson frames [TBD] placeholders as a diagnostic tool — they reveal exactly where discovery is incomplete. The right response is to schedule a targeted follow-up to gather the missing information, not to fill in generic language that does not reflect the customer's actual situation.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A rep has a strong proposal written for their VP of Sales champion. The deal now requires CFO approval, and the CFO was not in any of the discovery calls. What does the lesson recommend?",
+      "choices": [
+        "Send the existing proposal unchanged — the champion will translate it for the CFO.",
+        "Write a completely new proposal from scratch tailored to the CFO.",
+        "Ask AI to rewrite the 'Desired Outcome' and 'Why Us' sections using ROI framing, implementation risk reduction, and measurable business outcomes suited to a financial executive's lens.",
+        "Schedule a new discovery call with the CFO before advancing the proposal."
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson provides a specific prompt for translating champion-facing language into executive/CFO language — focusing on ROI framing, risk reduction, and measurable outcomes. This targeted rewrite of key sections is faster than starting over and more effective than relying on the champion to translate.",
+      "orderIndex": 3
+    }
+  ]
+}

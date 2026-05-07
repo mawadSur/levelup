@@ -1,0 +1,41 @@
+{
+  "title": "CRM Note Summarization Quiz",
+  "questions": [
+    {
+      "prompt": "A rep wants to use AI to summarize a post-call note before a pipeline review. The note includes the prospect's stated budget ceiling and a reference to a mutual competitor they mentioned confidentially. What should the rep do?",
+      "choices": [
+        "Paste the note into ChatGPT and ask for a 5-bullet summary — the information stays in the conversation.",
+        "Use only a company-approved AI tool (such as Salesforce Einstein or an internally vetted LLM) that is authorized to process internal CRM data.",
+        "Email the note to a colleague who can summarize it verbally.",
+        "Delete the sensitive details from the CRM note before the review to keep things simple."
+      ],
+      "correctIndex": 1,
+      "explanation": "CRM notes containing budget figures and competitive intelligence shared in confidence are private, sensitive data. Using a public AI model for this data exposes both company information and customer trust. Only company-approved AI tools are appropriate here.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of the following components does the lesson identify as most underused in call note summaries, yet often the most valuable for future conversations?",
+      "choices": [
+        "Account health signal",
+        "Decision-maker identification",
+        "Notable direct quotes or paraphrases of how the prospect frames their pain",
+        "Next step with a specific date"
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson specifically calls out direct quotes as underused but high-value. When prospects use specific language to describe their problem ('we can't justify another point solution'), that language carries weight in follow-up emails and proposals in a way that paraphrasing does not.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A rep runs the multi-note deal summary prompt on three sanitized call notes and notices the output includes several [TBD] placeholders in the 'Desired Outcome' section. What does this indicate?",
+      "choices": [
+        "The AI tool is malfunctioning and needs to be rerun with cleaner input.",
+        "The deal is too early stage to write a summary for.",
+        "The discovery process has gaps — the rep does not yet have the information needed to articulate the customer's desired outcome clearly.",
+        "The rep should make up plausible outcomes based on the company's industry."
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson notes that [TBD] placeholders in AI output are a diagnostic signal — they tell you exactly where your discovery is incomplete. The right response is to schedule a follow-up touchpoint or send a targeted question to fill the gap, not to invent information.",
+      "orderIndex": 3
+    }
+  ]
+}

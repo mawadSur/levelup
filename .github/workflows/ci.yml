@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: levelup
+          POSTGRES_PASSWORD: levelup
+          POSTGRES_DB: levelup
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U levelup"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://levelup:levelup@localhost:5432/levelup?schema=public
+      REDIS_URL: redis://localhost:6379
+      OPENAI_API_KEY: PLACEHOLDER_openai_key
+      WORKOS_API_KEY: PLACEHOLDER_workos_key
+      WORKOS_CLIENT_ID: PLACEHOLDER_workos_client_id
+      STRIPE_SECRET_KEY: PLACEHOLDER_stripe_secret
+      STRIPE_WEBHOOK_SECRET: PLACEHOLDER_stripe_webhook
+      RESEND_API_KEY: PLACEHOLDER_resend_key
+      SESSION_SECRET: ci-session-secret-at-least-32-chars-long-yes
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Run migrations
+        run: pnpm db:migrate
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test

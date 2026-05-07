@@ -1,0 +1,39 @@
+{
+  "lessonSlug": "help-center-article-generation",
+  "title": "Generating Help Center Articles with AI",
+  "questions": [
+    {
+      "prompt": "You want to write a new help center article. What is the correct first step according to this lesson?",
+      "choices": [
+        "Run the article generation prompt with a broad topic like 'billing' to see what AI suggests",
+        "Identify the topic from your ticket data — the question you have answered more than twenty times recently",
+        "Write a rough outline yourself before involving AI",
+        "Check whether a similar article already exists on a competitor's help center"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article topics should come from ticket data, not from assumptions about what customers might find useful. The question your team has already answered repeatedly is the highest-value target."
+    },
+    {
+      "prompt": "An AI-generated help center article instructs customers to click 'Account Settings' to find the billing page. A customer tries this and cannot find it because the menu is actually called 'Profile and Preferences' in the current product version. Who is responsible for this error, and what does it illustrate?",
+      "choices": [
+        "The AI — it fabricated a menu label that does not exist",
+        "The customer — they should have searched for alternative menu names",
+        "The agent who published the article without verifying UI labels against the actual product",
+        "The product team — they should have kept the menu name consistent"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI produces plausible-sounding UI labels, not verified ones. Every step in a help article must be checked against the actual, current product interface before publishing. This is a human responsibility that AI cannot fulfill."
+    },
+    {
+      "prompt": "Which section of a help center article, if missing or poorly written, most commonly causes customers to get stuck before they complete the process?",
+      "choices": [
+        "'What you'll do' — because customers skip to the steps without reading the introduction",
+        "'Before you start' — because prerequisites that are not listed leave customers missing something they need",
+        "'If it doesn't work' — because troubleshooting information is the most frequently read section",
+        "'Need more help' — because customers cannot find a way to contact support"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'Before you start' section is where articles most commonly fail. If customers do not have the right permissions, access, information, or setup completed before they begin the steps, they will get stuck partway through with no clear path forward."
+    }
+  ]
+}

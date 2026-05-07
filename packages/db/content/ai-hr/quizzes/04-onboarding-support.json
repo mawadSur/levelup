@@ -1,0 +1,41 @@
+{
+  "title": "Onboarding Support — Check",
+  "questions": [
+    {
+      "prompt": "What instruction in a 30-60-90 plan prompt prevents AI from producing a generic, aspirational plan instead of a useful one?",
+      "choices": [
+        "Specifying that the plan should be formatted as a table",
+        "Asking for weekly milestones that include concrete outputs, not just activities",
+        "Including the new hire's previous employer so AI can personalize the content",
+        "Requesting that the plan cover the first year rather than 90 days"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic 30-60-90 plans list activities ('meet the team', 'learn the roadmap') without requiring anything concrete. Specifying that each week should include a tangible output forces AI to write a plan that actually measures progress rather than filling calendar time.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An HR team wants to deploy an AI chatbot that answers new hire onboarding questions. Which approach is most appropriate?",
+      "choices": [
+        "Route questions to ChatGPT with a system prompt containing the employee handbook",
+        "Use a company-approved AI tool connected to the internal knowledge base with appropriate access controls",
+        "Have new hires submit questions via email and use AI to draft the HR team's replies",
+        "Deploy a public chatbot and instruct it not to discuss sensitive topics"
+      ],
+      "correctIndex": 1,
+      "explanation": "An onboarding chatbot needs a controlled knowledge base, proper data handling agreements, and an audit trail for the answers it provides. Routing to a public model — even with a handbook pasted in — provides none of these and creates compliance exposure.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Why is the 'embarrassing questions' prompt useful for HR teams building onboarding content?",
+      "choices": [
+        "It helps HR teams identify which new hires are likely to struggle",
+        "It surfaces the questions new hires have but will not ask their manager, revealing gaps in existing onboarding documentation",
+        "It generates questions that managers can ask new hires to assess cultural fit",
+        "It creates a list of topics that should be excluded from onboarding discussions"
+      ],
+      "correctIndex": 1,
+      "explanation": "New hires often have pressing, practical questions — about how decisions really get made, unwritten norms, their predecessor — that feel too risky to ask directly. The prompt surfaces those questions so HR can answer the common ones proactively in documentation, reducing friction that every new hire was experiencing silently.",
+      "orderIndex": 3
+    }
+  ]
+}

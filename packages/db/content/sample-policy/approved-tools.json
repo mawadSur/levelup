@@ -1,0 +1,124 @@
+{
+  "lastUpdated": "2026-01-15",
+  "governedBy": "IT Security and the AI Governance Committee",
+  "updateProcess": "Any employee may request a tool be added or re-tiered by submitting a request to it-security@company.com. Additions require a vendor security review, a DPA assessment, and sign-off from the AI Governance Committee. The list is reviewed in full every six months.",
+  "tiers": [
+    {
+      "tier": "consumer",
+      "description": "Public, generic AI tools with no data processing agreement in place. Use only for Public or Internal data. Never paste Confidential or Restricted information into these tools.",
+      "allowedDataClasses": ["Public", "Internal"],
+      "tools": [
+        {
+          "name": "ChatGPT (Free / Plus)",
+          "vendor": "OpenAI",
+          "approvedFor": ["Public", "Internal"],
+          "notes": "Approved for drafting, brainstorming, and learning tasks using non-sensitive information. Do not use the memory feature for work-related content. Disable chat history when working with any internal information."
+        },
+        {
+          "name": "Claude (claude.ai free / pro)",
+          "vendor": "Anthropic",
+          "approvedFor": ["Public", "Internal"],
+          "notes": "Approved for the same uses as ChatGPT Free/Plus. The Projects feature may retain context across sessions; do not use it for internal company data unless using the enterprise tier."
+        },
+        {
+          "name": "Perplexity (free tier)",
+          "vendor": "Perplexity AI",
+          "approvedFor": ["Public"],
+          "notes": "Research and information gathering using public sources only. Treat outputs as unverified starting points — citations require independent verification. Not approved for internal data inputs."
+        },
+        {
+          "name": "Google Gemini (personal account)",
+          "vendor": "Google",
+          "approvedFor": ["Public"],
+          "notes": "Personal Google accounts do not carry enterprise data protections. Use a company Google Workspace account with Gemini for Google Workspace (enterprise tier below) for Internal or Confidential data."
+        }
+      ]
+    },
+    {
+      "tier": "enterprise",
+      "description": "Tools for which we have a signed Data Processing Agreement (DPA) and, where applicable, a Business Associate Agreement (BAA). These tools contractually restrict use of your data to service delivery and do not train public models on your inputs. Approved for Public, Internal, and Confidential data. Still not approved for Restricted data.",
+      "allowedDataClasses": ["Public", "Internal", "Confidential"],
+      "tools": [
+        {
+          "name": "ChatGPT Enterprise / ChatGPT Team",
+          "vendor": "OpenAI",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Provisioned through IT. Inputs are not used for model training. Use this tier for drafting with confidential business information, customer summaries (anonymized), and internal strategy documents."
+        },
+        {
+          "name": "Claude for Work (Teams / Enterprise)",
+          "vendor": "Anthropic",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Provisioned through IT. DPA in place. Projects and shared spaces are appropriate for confidential team content. Do not use for regulated personal data (PII, health data) — those require Restricted-tier review."
+        },
+        {
+          "name": "Microsoft Copilot (M365 integrated)",
+          "vendor": "Microsoft",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Integrated into Microsoft 365 apps (Word, Outlook, Teams, Excel). Data stays within your Microsoft tenant under existing DPA. Approved for confidential documents already stored in M365. Check with IT before enabling Copilot for any new Microsoft product."
+        },
+        {
+          "name": "Gemini for Google Workspace",
+          "vendor": "Google",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Integrated into Gmail, Docs, Sheets, and Slides via your company Google Workspace account. Data stays within the Workspace tenant. Only use via company account — not a personal Gmail account."
+        },
+        {
+          "name": "GitHub Copilot (Business/Enterprise)",
+          "vendor": "GitHub (Microsoft)",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Approved for code assistance in company repositories. Code suggestions are based on your codebase context. Do not work in repositories that contain secrets, credentials, or regulated data with Copilot enabled unless the Restricted-tier review has been completed."
+        },
+        {
+          "name": "Notion AI",
+          "vendor": "Notion Labs",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Available within company Notion workspaces. Approved for document drafting, summarization, and action item extraction within pages already stored in Notion. DPA in place via Notion Business plan."
+        },
+        {
+          "name": "Cursor (Business plan)",
+          "vendor": "Anysphere",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "AI-assisted code editor. Business plan includes privacy mode by default (code not used for training). Approved for most engineering use. Follow the same secrets-handling rules as GitHub Copilot."
+        },
+        {
+          "name": "Glean",
+          "vendor": "Glean Technologies",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Enterprise search and AI assistant connected to internal knowledge sources. Data stays within the company's Glean instance. Outputs are grounded in company documents — still verify before acting on summaries in critical decisions."
+        },
+        {
+          "name": "Perplexity Enterprise Pro",
+          "vendor": "Perplexity AI",
+          "approvedFor": ["Public", "Internal", "Confidential"],
+          "notes": "Enterprise plan with DPA in place. Approved for research tasks involving internal context and confidential background information. Verify all citations independently — grounding on public sources does not guarantee accuracy."
+        }
+      ]
+    },
+    {
+      "tier": "internal",
+      "description": "AI tooling hosted entirely within company infrastructure or a dedicated private cloud instance with no data leaving our environment. Approved for all data classes, including Restricted. Requires access provisioning by IT.",
+      "allowedDataClasses": ["Public", "Internal", "Confidential", "Restricted"],
+      "tools": [
+        {
+          "name": "Internal LLM Gateway (company-hosted)",
+          "vendor": "Internal (hosted on Azure Private Cloud)",
+          "approvedFor": ["Public", "Internal", "Confidential", "Restricted"],
+          "notes": "Primary entry point for AI use cases involving restricted data such as regulated PII, HR records, and legal communications. Access requires manager approval and IT provisioning. All inputs and outputs are logged for audit purposes."
+        },
+        {
+          "name": "LevelUp AI Academy (this platform)",
+          "vendor": "Internal (LevelUp AI Academy)",
+          "approvedFor": ["Public", "Internal", "Confidential", "Restricted"],
+          "notes": "The company's AI learning and productivity platform. Prompt library and workflows are configured to route requests through the internal LLM gateway for sensitive use cases. Refer to platform documentation for data handling specifics per feature."
+        },
+        {
+          "name": "Internal Code Review Assistant",
+          "vendor": "Internal (Engineering Platform team)",
+          "approvedFor": ["Public", "Internal", "Confidential", "Restricted"],
+          "notes": "AI-assisted code review tool integrated into the internal CI/CD pipeline. No code leaves company infrastructure. Approved for use with all repositories including those containing sensitive business logic. Managed by the Engineering Platform team."
+        }
+      ]
+    }
+  ]
+}

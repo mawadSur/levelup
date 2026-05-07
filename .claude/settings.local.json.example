@@ -1,0 +1,18 @@
+{
+  "$schema": "https://claude.ai/schemas/settings.json",
+  "//": "Copy this file to .claude/settings.local.json and fill in the values. The local file is gitignored and overrides .claude/settings.json.",
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=YOUR_SUPABASE_PROJECT_REF"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_YOUR_PERSONAL_ACCESS_TOKEN_HERE"
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "title": "Safe Use at Work — Check",
+  "questions": [
+    {
+      "prompt": "Which of these prompts is most likely to create a compliance or privacy problem when typed into a free public AI chatbot?",
+      "choices": [
+        "Rewrite this paragraph to be more concise",
+        "What are three ways to structure a project kickoff meeting?",
+        "Here is the full support ticket from customer Jane Smith (Account #48291): summarize the issue",
+        "Explain the difference between a fixed and variable cost"
+      ],
+      "correctIndex": 2,
+      "explanation": "Pasting a customer's name, account number, and support details into a public AI tool exposes personally identifiable information outside your organization's environment, which can violate privacy regulations and company policy.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A colleague argues that pasting source code into a public AI tool is fine because 'it's just asking for help with a bug.' What is the main risk they are overlooking?",
+      "choices": [
+        "The AI will misread the code and introduce new bugs",
+        "Proprietary source code — especially code with embedded credentials or trade secrets — may violate employment agreements or security policy when sent to a third-party service",
+        "The AI cannot read code at all",
+        "Source code is always public information if it has been compiled"
+      ],
+      "correctIndex": 1,
+      "explanation": "Proprietary source code, particularly code containing API keys, credentials, or business-sensitive logic, should not be pasted into public AI tools. This may breach employment agreements, security policies, or expose secrets.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You need AI help drafting a difficult message to a client about a contract delay. The client's name and contract details are sensitive. What is the right approach?",
+      "choices": [
+        "Skip using AI entirely — any task involving a client is off-limits",
+        "Paste the full contract including names and terms; the AI needs all the context to help well",
+        "Describe the situation in general terms, omitting the client's name and specific contract details",
+        "Only use the AI if you delete the conversation immediately after"
+      ],
+      "correctIndex": 2,
+      "explanation": "You can get useful help by describing the situation generically — 'a client whose project is delayed due to a vendor issue' — without exposing names, contract terms, or identifying details.",
+      "orderIndex": 3
+    }
+  ]
+}

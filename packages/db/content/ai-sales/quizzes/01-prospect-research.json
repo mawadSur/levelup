@@ -1,0 +1,41 @@
+{
+  "title": "Prospect Research Quiz",
+  "questions": [
+    {
+      "prompt": "A prospect's company just announced a new CFO after the previous one left abruptly. According to the lesson, why is this a useful trigger for outreach?",
+      "choices": [
+        "It means the company is in financial distress and needs help immediately.",
+        "New finance leadership typically re-evaluates existing vendors and wants to put their stamp on the tech stack.",
+        "CFOs are always the economic buyer for software purchases.",
+        "It gives you a reason to congratulate them, which builds rapport."
+      ],
+      "correctIndex": 1,
+      "explanation": "Leadership changes — especially at the CFO, CRO, or CMO level — create a natural window because incoming executives often review and re-evaluate vendor relationships in their first 90 days.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You are about to paste prospect information into an AI tool to build a pre-call brief. Which of the following inputs is safe to use with a public AI model?",
+      "choices": [
+        "Deal notes your AE wrote after a confidential discovery call",
+        "The prospect's contact email address from your CRM",
+        "A press release the company published last week about a new product launch",
+        "Your company's internal pricing sheet for this account"
+      ],
+      "correctIndex": 2,
+      "explanation": "Public information — press releases, LinkedIn profiles, news articles — is safe to use with general-purpose AI tools. CRM notes, contact data, and internal pricing contain private company or customer data that should only be processed in approved internal tools.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A rep wants to use AI to score an account against their ICP. They have collected a LinkedIn company page summary and a recent TechCrunch funding announcement. Which prompt approach best follows the lesson guidance?",
+      "choices": [
+        "Ask AI to search the web for more information about the company before scoring it.",
+        "Paste the public data and ask AI to score the account against a described ICP, flagging fit reasons and trigger events.",
+        "Ask AI to generate a complete outreach sequence based on the funding news alone.",
+        "Ask AI to predict the company's revenue so you can qualify budget before reaching out."
+      ],
+      "correctIndex": 1,
+      "explanation": "The ICP scorecard prompt works by feeding AI the public data you have collected and asking it to evaluate fit against your defined ICP criteria — combining your research with AI's ability to process and synthesize information quickly.",
+      "orderIndex": 3
+    }
+  ]
+}

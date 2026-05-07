@@ -1,0 +1,41 @@
+{
+  "title": "Policy Summaries — Check",
+  "questions": [
+    {
+      "prompt": "When prompting AI to summarize a policy, why should you explicitly instruct it to keep specific dollar amounts, dates, and contacts verbatim?",
+      "choices": [
+        "AI cannot read numbers and will skip them without this instruction",
+        "AI tends to round or paraphrase specific details in the interest of readability, but employees rely on those exact figures when acting on the policy",
+        "Legal departments require verbatim language in all employee-facing documents",
+        "Specific figures make the summary look more credible to employees"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI optimizes for readability and may silently paraphrase or round precise figures — a $500 reimbursement cap becomes 'up to several hundred dollars,' a deadline shifts a day. Those specifics are exactly what an employee needs to act correctly, so they must survive the summary unchanged.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An HR team uses AI to summarize the company's parental leave policy and sends the summary to all US employees without legal review. What is the primary risk?",
+      "choices": [
+        "The summary will be too short for employees to find useful",
+        "AI may have smoothed over jurisdiction-specific rules, potentially giving employees in some states inaccurate guidance",
+        "Employees prefer to read the full policy rather than a summary",
+        "The AI summary will contain language that is too informal for a legal document"
+      ],
+      "correctIndex": 1,
+      "explanation": "Leave policies often have state-level variations. AI does not know which version applies where, and it may present the general rule without flagging that California, New York, or other states have different requirements. Legal review before publication is mandatory.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which of these policy documents should NOT be pasted into a public AI model for summarization?",
+      "choices": [
+        "The company's general expense reimbursement policy",
+        "The employee code of conduct",
+        "A performance improvement plan that names a specific employee and their manager",
+        "The company's parental leave policy"
+      ],
+      "correctIndex": 2,
+      "explanation": "A PIP naming specific employees and managers is case-specific HR documentation that identifies real individuals. That never goes into a public model. Generic policy documents — expense policy, code of conduct, leave policy — do not contain identifiable employee information and are generally appropriate to summarize.",
+      "orderIndex": 3
+    }
+  ]
+}

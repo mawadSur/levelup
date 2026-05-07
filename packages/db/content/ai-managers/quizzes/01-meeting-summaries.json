@@ -1,0 +1,41 @@
+{
+  "title": "Meeting Summaries Quiz",
+  "questions": [
+    {
+      "prompt": "A manager uses AI to summarize a project kickoff meeting and sends the output directly to the team without reviewing it. The summary lists the wrong person as the owner of a key action item. What is the root cause of this error?",
+      "choices": [
+        "The AI model was not trained on enough meeting data",
+        "The manager skipped the verification step that is required because AI reliably confuses names and attribution",
+        "The meeting did not have a clear agenda, which confused the AI",
+        "The transcript was too long for the model to process accurately"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI consistently struggles with accurately attributing who said what, especially when names or roles are similar. This is a known failure mode, not a one-time bug. Verification of names and owners is always required before sending an AI-generated summary.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of the following meeting summary sections is most likely to contain information that AI invented rather than pulled from the actual meeting?",
+      "choices": [
+        "The TL;DR two-sentence overview",
+        "The list of attendees",
+        "Specific numbers, dates, or dollar amounts in the decisions section",
+        "The subject line of the summary email"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI fabricates numbers most reliably. It will insert specific figures — dates, amounts, percentages — because they fit the sentence pattern, regardless of whether those numbers appeared in the transcript. Always verify every number in an AI-generated summary against the source.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A manager wants to use AI to summarize a 1:1 conversation that touched on a team member's performance concerns and compensation. Which approach is correct?",
+      "choices": [
+        "Paste the full transcript into the approved company AI tool only, never into a public model",
+        "Use any AI tool because the conversation was verbal and not officially documented",
+        "Ask the team member's permission before pasting the transcript into any AI tool",
+        "Summarize by describing general themes to AI without pasting any specifics"
+      ],
+      "correctIndex": 0,
+      "explanation": "Performance and compensation discussions are HR data. They must stay within tools your company has approved for that data category. Pasting such content into a public AI model — even one that does not retain training data — violates data handling standards and can create legal exposure.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "Verifying AI Output — Check",
+  "questions": [
+    {
+      "prompt": "An AI response includes the statistic: 'Studies show that 80% of employees feel disengaged at work.' What should make you most skeptical of this claim?",
+      "choices": [
+        "The sentence uses the word 'show,' which AI tends to overuse",
+        "The number is a suspiciously round figure and no specific study is named",
+        "The claim is about employees, and AI cannot discuss workplace topics reliably",
+        "Statistics in AI responses are always fabricated"
+      ],
+      "correctIndex": 1,
+      "explanation": "Round numbers combined with vague attribution ('studies show') are common signals of AI-generated statistics that may not reflect real research. Real studies tend to produce irregular numbers, and credible claims name a specific source.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You ask an AI for three academic sources on a topic. It provides three citations with author names, journal titles, and URLs. You click the first URL and get a 404 error. What is the right conclusion?",
+      "choices": [
+        "The URL changed; the paper is still real and citable",
+        "One broken URL is normal; the other two are probably fine",
+        "This is a sign of citation hallucination; verify all three citations independently before using any of them",
+        "The AI made a minor formatting error; fix the URL manually and proceed"
+      ],
+      "correctIndex": 2,
+      "explanation": "A broken URL is a common indicator of citation hallucination. It does not prove the other two citations are wrong, but it raises serious doubt about all three. Verify each independently.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which type of AI output generally requires the least intensive factual verification?",
+      "choices": [
+        "A statistic about industry trends, with a citation",
+        "A claim about recent legislation passed in the last six months",
+        "A rewrite of your own paragraph to improve clarity, keeping your original facts",
+        "A summary of a competitor's current product features"
+      ],
+      "correctIndex": 2,
+      "explanation": "A clarity rewrite of your own content introduces minimal new factual claims — the facts are yours and you can evaluate them. Statistics, recent legislation, and competitor information all require independent verification.",
+      "orderIndex": 3
+    }
+  ]
+}

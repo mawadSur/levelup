@@ -1,0 +1,41 @@
+{
+  "title": "Measurement and Attribution Quiz",
+  "questions": [
+    {
+      "prompt": "A marketing manager asks AI: 'Based on our Q2 activities, what was marketing's contribution to the pipeline?' The AI responds with a detailed breakdown showing email contributed 34%, paid search 28%, and events 19%. What is the problem with acting on this output?",
+      "choices": [
+        "The percentages do not add up to 100%, which suggests the model made a calculation error",
+        "AI cannot calculate attribution from activities it has not been given data about — these numbers are fabricated inferences, not analysis",
+        "Marketing attribution should always be calculated by the finance team, not marketing",
+        "The breakdown is missing organic search and social, which are typically the highest contributors"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI will generate confident-looking attribution percentages when asked, but without access to your actual analytics data, these numbers are fabrications. The lesson is clear: AI cannot tell you what your marketing ROI was because it does not have your data. Acting on AI-generated attribution numbers as if they are real analysis is the specific failure mode this lesson warns against.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A marketing director wants to use AI to write the weekly performance update for the executive team. She has pulled this week's metrics. Before pasting them into the AI prompt, what does the lesson require her to do?",
+      "choices": [
+        "Format the data as a table so AI can process it more accurately",
+        "Sanitize the data by removing full revenue figures, individual customer records, and any data that could identify specific accounts",
+        "Only include metrics that are positive, to ensure the executive update is constructive",
+        "Get sign-off from the CFO before sharing financial data with any AI tool"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson specifies that full revenue numbers, individual customer records, and pipeline data that could identify specific accounts should not go into a public AI model. Sanitize first — use aggregated figures, replace specific deal values with index numbers, remove company names. Or use only AI tools your company has approved for financial data.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A marketing team generates a list of five hypotheses using AI to explain why one email variant significantly outperformed another. The next step in the lesson's recommended process is to:",
+      "choices": [
+        "Run A/B tests on all five hypotheses simultaneously to get results faster",
+        "Share the hypotheses with the team and filter for the ones that match both AI's output and the team's existing intuition, then prioritize those for testing",
+        "Accept the hypothesis ranked first by AI as the most likely explanation and build the next campaign around it",
+        "Discard the AI-generated hypotheses and run a formal statistical analysis to determine the actual cause"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson describes this explicitly: the hypothesis list is most useful when you share it with your team and filter for the hypotheses that match what the team's intuition already says is true. When AI's hypothesis aligns with your gut, you have a candidate worth testing. The hypotheses are a starting point for prioritization, not a definitive answer.",
+      "orderIndex": 3
+    }
+  ]
+}

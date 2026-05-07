@@ -1,0 +1,41 @@
+{
+  "title": "Cold Email Drafting Quiz",
+  "questions": [
+    {
+      "prompt": "Which of the following cold email opening lines best follows the four-part structure taught in this lesson?",
+      "choices": [
+        "I hope this email finds you well. I wanted to reach out about our revenue intelligence platform.",
+        "As a fellow sales leader, I know how challenging it can be to manage a growing team.",
+        "Saw that you posted five SDR job listings last week — when headcount scales that fast, pipeline quality usually becomes the bottleneck.",
+        "We work with companies like yours to improve sales productivity. I'd love to share how."
+      ],
+      "correctIndex": 2,
+      "explanation": "This option leads with a specific, public trigger (SDR job listings) and immediately connects it to a relevant pain (pipeline quality at scale) — the first two elements of the trigger-relevance-value-CTA structure. The others use filler phrases or generic claims that could apply to any company.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A rep uses AI to generate a cold email and receives this output: 'I came across your profile and was impressed by your company's growth. I wanted to reach out to introduce our platform, which many companies in your space have found valuable.' What should the rep do?",
+      "choices": [
+        "Send it as-is — AI-generated emails have high deliverability.",
+        "Add the prospect's name to the greeting to personalize it, then send.",
+        "Delete the draft and start with a specific trigger before re-prompting AI.",
+        "Add a case study link to increase credibility, then send."
+      ],
+      "correctIndex": 2,
+      "explanation": "The draft contains multiple 'AI-smell' phrases ('I came across your profile,' 'I wanted to reach out,' generic value claim) and zero personalization. The right move is to find a real, specific trigger first, then prompt AI again with that trigger as the foundation.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A rep wants to A/B test their cold email approach. How does the lesson recommend using AI to produce testable variants efficiently?",
+      "choices": [
+        "Run the same prompt three times and send whichever output looks different.",
+        "Ask AI to generate three versions with different lead-ins: one starting with the business trigger, one with the value outcome, one with a direct question.",
+        "Ask AI to write the email in three different tones: formal, casual, and humorous.",
+        "Generate one strong version and split the send list randomly without varying the email."
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson recommends asking AI for three structurally different versions — leading with the trigger, the value outcome, or a direct question — so you test meaningfully different framings rather than style variations of the same message.",
+      "orderIndex": 3
+    }
+  ]
+}

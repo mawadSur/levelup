@@ -1,0 +1,68 @@
+export {
+  Prisma,
+  PrismaClient,
+  Role,
+  AiLevel,
+  Plan,
+  LessonStatus,
+  AssessmentType,
+  InvitationStatus,
+  BadgeRarity,
+  XpEventKind,
+  TurnRole,
+  DataExportStatus,
+  DeletionRequestStatus,
+  PathGenerationStatus,
+  IntegrationProvider,
+  IntegrationStatus,
+  AnomalySeverity,
+  AnomalyKind,
+} from '@prisma/client';
+
+// `QuestStatus` exists in the SQL schema (created via the gamification
+// migration) and the @levelup/types package re-exports a string-literal
+// equivalent for client-side use. We do NOT re-export it from `@prisma/client`
+// here because Prisma only generates TS bindings for enums referenced by a
+// model column — DailyQuest stores per-quest status inside its JSON `quests`
+// payload rather than on a typed column, so the generated client has no
+// `QuestStatus` value to re-export. If a future migration adds a typed
+// `status QuestStatus` column on DailyQuest, add it back to the export list.
+
+export type {
+  Organization,
+  Department,
+  User,
+  Invitation,
+  LearningPath,
+  LearningPathAssignment,
+  Lesson,
+  LessonEmbedding,
+  Quiz,
+  QuizQuestion,
+  QuizAttempt,
+  UserProgress,
+  Assessment,
+  AssessmentItem,
+  Prompt,
+  CompanyPolicy,
+  AiCoachSession,
+  Certificate,
+  Badge,
+  AuditLog,
+  Session,
+  UserGameState,
+  XpEvent,
+  DailyQuest,
+  ReportSnapshot,
+  ProcessedWebhookEvent,
+  Conversation,
+  ConversationTurn,
+  UserOnboarding,
+  DataExportRequest,
+  DeletionRequest,
+  DeadLetterJob,
+  FeatureFlag,
+  PathGenerationRequest,
+  OrganizationIntegration,
+  AnomalyAlert,
+} from '@prisma/client';

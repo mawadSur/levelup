@@ -1,0 +1,41 @@
+{
+  "title": "Performance Review Drafts Quiz",
+  "questions": [
+    {
+      "prompt": "A manager provides AI with a list of observations and asks it to draft a performance review. The AI draft includes a specific example — a project outcome with metrics — that the manager does not recognize. What should the manager do?",
+      "choices": [
+        "Keep the example because AI would only include it if it was in the notes",
+        "Remove the example and add only examples the manager can personally verify",
+        "Ask the employee if the example sounds accurate before including it",
+        "Replace the example with a generic statement to be safe"
+      ],
+      "correctIndex": 1,
+      "explanation": "Without explicit instructions, AI will invent plausible-sounding examples to fill a narrative. Any example in a performance review must be traceable to something the manager actually observed. Including an invented example is inaccurate and can create serious trust and legal problems.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "What is the most important reason a manager should rewrite an AI-drafted performance review in their own words before submitting it?",
+      "choices": [
+        "To ensure compliance with HR formatting requirements",
+        "To make the review longer and more detailed",
+        "Because performance reviews are trust documents that need to reflect the manager's actual voice and judgment",
+        "To catch spelling and grammar errors that AI frequently makes"
+      ],
+      "correctIndex": 2,
+      "explanation": "A performance review is a relationship document as much as an evaluation document. Employees detect when a review does not sound like their manager, which damages trust. More importantly, rewriting forces the manager to confirm that the document reflects their actual assessment, not just what AI made sound plausible.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which of the following inputs should a manager NOT include when using AI to draft a performance review?",
+      "choices": [
+        "Specific projects the employee worked on",
+        "Observable behaviors the manager witnessed directly",
+        "The employee's current salary and planned compensation adjustment",
+        "Growth areas identified through the review period"
+      ],
+      "correctIndex": 2,
+      "explanation": "Salary and compensation data is sensitive HR and financial information that should never be pasted into an AI tool unless it has been explicitly approved for that data type. Your observational notes about performance are appropriate inputs; compensation decisions are not.",
+      "orderIndex": 3
+    }
+  ]
+}

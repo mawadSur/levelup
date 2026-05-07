@@ -1,0 +1,41 @@
+{
+  "title": "Content Brief Generation Quiz",
+  "questions": [
+    {
+      "prompt": "An AI-generated content brief includes the statistic: 'According to a 2024 Gartner report, 73% of B2B buyers complete more than half of their research before contacting a vendor.' Before passing this brief to a writer, what must the marketer do?",
+      "choices": [
+        "Confirm that Gartner is on the approved sources list, then use the statistic as written",
+        "Find the specific report URL and verify the exact number appears in it, because AI regularly generates plausible but inaccurate citations",
+        "Ask the writer to verify the statistic as part of the research phase",
+        "Remove the percentage and replace it with 'most' to avoid potential inaccuracy"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson is explicit that AI fabricates statistics with real-sounding source citations. Every number in an AI-generated brief requires a URL you can click before it goes to a writer. Delegating verification to the writer does not fix the problem — briefs that contain unverified statistics produce content with unverified statistics.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A marketer produces a content brief using the AI prompt pattern from the lesson. She reviews it and finds the 'angle' section reads: 'This article will help marketing managers improve their content strategy.' What is missing?",
+      "choices": [
+        "A specific title and word count for the piece",
+        "A description of the intended publication or channel",
+        "The specific reason this angle is different from the five other articles on this topic that already exist",
+        "A named SEO keyword the piece should target"
+      ],
+      "correctIndex": 2,
+      "explanation": "The angle section's job is to answer why this piece is worth reading now and what makes it different from existing content on the same topic. 'Will help marketing managers improve content strategy' describes any article on this topic. A strong angle names the specific differentiation — the contrarian take, the underreported angle, the new data point — that makes this piece stand out.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A brief drafted by AI is shared with a writer who was not in any planning conversations. After reading it, the writer produces the first 200 words. The content is well-written but misses the core argument you intended. What does this indicate about the brief?",
+      "choices": [
+        "The writer needs more detailed feedback on what 'the point' means for this specific piece",
+        "The brief succeeded structurally but the writer interpreted it differently than expected, which is normal",
+        "The brief failed — 'the point' section was not specific enough for someone outside the planning conversation to execute without a follow-up discussion",
+        "The brief should have included a sample draft for the writer to reference"
+      ],
+      "correctIndex": 2,
+      "explanation": "The lesson describes a specific test: if a writer who was not in the briefing conversation cannot execute from the brief alone, the brief is not done. The misalignment reveals that 'the point' section left too much interpretive work to the writer. The fix is in the brief, not in giving the writer more feedback after the fact.",
+      "orderIndex": 3
+    }
+  ]
+}

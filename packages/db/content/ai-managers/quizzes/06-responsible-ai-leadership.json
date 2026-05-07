@@ -1,0 +1,41 @@
+{
+  "title": "Responsible AI Leadership Quiz",
+  "questions": [
+    {
+      "prompt": "A manager bans the use of AI tools on the team due to data security concerns but does not provide approved alternatives. What is the most likely outcome?",
+      "choices": [
+        "Team members will stop using AI and productivity will remain stable",
+        "Team members will use AI anyway but hide it, creating shadow use with no quality standards or oversight",
+        "The ban will prompt the company to accelerate approved tool rollout",
+        "Productivity will temporarily decrease but will improve once the team adapts to working without AI"
+      ],
+      "correctIndex": 1,
+      "explanation": "Banning tools without providing alternatives drives use underground. Shadow AI use is worse than visible use — the manager loses the ability to set quality standards, catch errors, or help when something goes wrong. Governed use is safer and more effective than prohibition.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A manager notices that team communications sent to senior leadership are starting to read with a detectable AI-generated pattern — formal hedging, certain sentence structures — with no apparent human editing. What does this signal and what should the manager do?",
+      "choices": [
+        "This is acceptable because AI-generated writing is often clearer than human writing",
+        "The manager should ban AI use in external communications",
+        "The review step before sending is being skipped; the manager should address the process, not single out individuals",
+        "The team should use different AI tools that generate less detectable text"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI prose patterns in unedited outbound communications are a sign that the human review step is being skipped. The fix is a process norm — explicit review required before any external communication — not a ban or a tool change. Addressing the process protects quality without penalizing the use of useful tools.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A manager used AI to draft a Q3 planning document that they then substantially edited and reviewed. Their director asks who wrote the document. What is the most appropriate response?",
+      "choices": [
+        "Say they wrote it, since they edited and reviewed it and it reflects their thinking",
+        "Decline to answer since AI assistance is a private workflow choice",
+        "Say AI drafted it and they reviewed and revised it — this is accurate and there is nothing to hide",
+        "Explain in detail which specific sentences were AI-generated and which were written by the manager"
+      ],
+      "correctIndex": 2,
+      "explanation": "Transparency about AI assistance, when asked directly, is the right standard. There is nothing wrong with using AI to draft a document you then owned through editing and review. Being comfortable saying so models the honesty you want your team to practice. Claiming sole authorship when AI was meaningfully involved sets a norm of concealment.",
+      "orderIndex": 3
+    }
+  ]
+}

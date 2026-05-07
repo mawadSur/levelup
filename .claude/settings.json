@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--read-only"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "PLACEHOLDER_set_real_value_in_settings.local.json"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "vercel@claude-plugins-official": true
+  }
+}

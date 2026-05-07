@@ -1,0 +1,39 @@
+{
+  "lessonSlug": "ticket-summarization",
+  "title": "Summarizing Tickets with AI",
+  "questions": [
+    {
+      "prompt": "You run the summarization prompt on a long ticket thread and the AI output says: 'Next step: escalate to the billing team and offer a partial refund.' The thread does not mention any partial refund discussion. What should you do?",
+      "choices": [
+        "Follow the suggestion — AI is inferring from similar resolved tickets",
+        "Discard the summary entirely and read the thread manually",
+        "Keep the summary but remove the fabricated next step and check the thread for what the actual next step is",
+        "Add a note to the summary that the refund idea came from AI"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI sometimes infers next steps that are not in the actual thread. The rest of the summary may be accurate. Remove the unsupported recommendation, check the thread for the real next step, and use the summary with that correction."
+    },
+    {
+      "prompt": "What is the strongest use case for AI ticket summarization?",
+      "choices": [
+        "Generating a summary to paste directly to the customer as a recap",
+        "Replacing the need to read the full thread before replying",
+        "Providing a structured handoff note when another agent takes over a ticket",
+        "Automatically closing tickets that have been inactive for seven days"
+      ],
+      "correctIndex": 2,
+      "explanation": "Handoffs are where AI summarization has the most impact — it replaces the need for an incoming agent to read an entire thread to understand where the ticket stands. Customer-facing summaries and fully automated responses both require careful human review."
+    },
+    {
+      "prompt": "A ticket thread includes several screenshots of error messages that the customer attached. What does the AI summary contain about those screenshots?",
+      "choices": [
+        "An accurate transcription of the text visible in each screenshot",
+        "A description of each image based on its filename",
+        "Nothing — or only a note that attachments are present — because AI cannot read image content from a pasted thread",
+        "A generated description based on what error messages typically contain"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI summarizes what it can read. Image attachments in a ticket thread are not readable from pasted text, so the summary will either skip them or note their presence. Error message text from screenshots must be reviewed manually."
+    }
+  ]
+}
