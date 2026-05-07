@@ -13,18 +13,32 @@ services:
         value: production
       - key: API_PORT
         value: 4000
+
+      # Postgres (Supabase pooler)
       - key: DATABASE_URL
         sync: false
       - key: DIRECT_DATABASE_URL
         sync: false
+
+      # Redis (Upstash recommended)
       - key: REDIS_URL
         sync: false
+
+      # Supabase Auth + Storage
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+
+      # OpenAI (coach + embeddings + voice)
       - key: OPENAI_API_KEY
         sync: false
-      - key: WORKOS_API_KEY
-        sync: false
-      - key: WORKOS_CLIENT_ID
-        sync: false
+
+      # Stripe
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
@@ -35,13 +49,27 @@ services:
         sync: false
       - key: STRIPE_PRICE_ENTERPRISE
         sync: false
+
+      # Resend (transactional email)
       - key: RESEND_API_KEY
         sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+
+      # Cert PDF HMAC signing key (REQUIRED — boot fails without it)
+      - key: CERT_SIGNING_SECRET
+        generateValue: true
+
+      # Slack OAuth state HMAC (legacy, still consumed by integrations module)
       - key: SESSION_SECRET
         generateValue: true
+
+      # CORS / cookie config
       - key: WEB_ORIGIN
-        sync: false
+        value: https://ailevel.app
       - key: COOKIE_DOMAIN
+        value: .ailevel.app
+      - key: NEXT_PUBLIC_API_URL
         sync: false
 
   - type: worker
@@ -55,13 +83,28 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+
       - key: DATABASE_URL
         sync: false
       - key: DIRECT_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
+
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
       - key: OPENAI_API_KEY
         sync: false
       - key: RESEND_API_KEY
         sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+
+      - key: CERT_SIGNING_SECRET
+        fromService:
+          type: web
+          name: levelup-api
+          envVarKey: CERT_SIGNING_SECRET
