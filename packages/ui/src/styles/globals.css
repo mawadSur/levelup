@@ -71,15 +71,15 @@
 @layer utilities {
   .bg-blueprint {
     background-image:
-      linear-gradient(to right, rgb(var(--ink-600) / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--ink-600) / 0.06) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--ink-600) / 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--ink-600) / 0.09) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
   .bg-blueprint-dense {
     background-image:
-      linear-gradient(to right, rgb(var(--ink-600) / 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--ink-600) / 0.08) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--ink-600) / 0.11) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--ink-600) / 0.11) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
