@@ -37,7 +37,7 @@ import {
   isWithinSeatLimit,
   priceFor,
 } from './plan';
-import { getStripePriceId } from './config';
+import { getStripePriceId, getStripePriceIdOrThrow } from './config';
 import { Plan, BillingInterval } from '@levelup/db';
 
 // ============================================================================
@@ -195,6 +195,32 @@ describe('getStripePriceId', () => {
 
   it('returns null for ENTERPRISE (sales-led)', () => {
     expect(getStripePriceId(Plan.ENTERPRISE, BillingInterval.MONTHLY)).toBeNull();
+  });
+});
+
+// ============================================================================
+// getStripePriceIdOrThrow
+// ============================================================================
+describe('getStripePriceIdOrThrow', () => {
+  it('returns the configured price ID', () => {
+    expect(getStripePriceIdOrThrow(Plan.STARTER, BillingInterval.MONTHLY)).toBe(
+      'price_starter_monthly',
+    );
+    expect(getStripePriceIdOrThrow(Plan.GROWTH, BillingInterval.ANNUAL)).toBe(
+      'price_growth_annual',
+    );
+  });
+
+  it('throws for TRIAL (never goes through Checkout)', () => {
+    expect(() => getStripePriceIdOrThrow(Plan.TRIAL, BillingInterval.MONTHLY)).toThrow(
+      /not configured/i,
+    );
+  });
+
+  it('throws for ENTERPRISE (sales-led)', () => {
+    expect(() => getStripePriceIdOrThrow(Plan.ENTERPRISE, BillingInterval.MONTHLY)).toThrow(
+      /not configured/i,
+    );
   });
 });
 

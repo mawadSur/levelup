@@ -1,5 +1,5 @@
 import { Plan, BillingInterval } from '@levelup/db';
-import { billingConfig, isStubMode, getStripePriceId } from './config';
+import { billingConfig, isStubMode, getStripePriceIdOrThrow } from './config';
 import { getStripe } from './stripe';
 import { isPerSeat, requiresSales, getPlanConfig } from './plan';
 import { stubCheckoutSession, stubBillingPortalSession, stubSeatProration } from './stub';
@@ -12,6 +12,26 @@ import type {
 } from './types';
 
 // ---------------------------------------------------------------------------
+// Typed errors
+// ---------------------------------------------------------------------------
+
+/**
+ * Thrown when the caller tries to send a non-purchasable plan through the
+ * Stripe Checkout flow. TRIAL initialises in-app via the trial-init endpoint;
+ * ENTERPRISE is sales-led and should hand off to a contact form. The API
+ * controller is expected to short-circuit before calling `createCheckoutSession`,
+ * but this guard prevents misuse from any future caller.
+ */
+export class CheckoutNotApplicableError extends Error {
+  override readonly name = 'CheckoutNotApplicableError';
+  readonly plan: Plan;
+  constructor(plan: Plan, message: string) {
+    super(message);
+    this.plan = plan;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Checkout Session
 // ---------------------------------------------------------------------------
 
@@ -21,7 +41,8 @@ import type {
  * Per-seat tiers (TEAM, GROWTH) bill `quantity` seats at the price configured
  * for the (plan, interval) pair. Flat-rate tiers (STARTER) ignore quantity.
  *
- * Returns null for plans that don't go through Checkout:
+ * Throws {@link CheckoutNotApplicableError} for plans that don't go through
+ * Checkout:
  *   - TRIAL — initialised in-app via the trial-init flow
  *   - ENTERPRISE — sales-led; UI must redirect to a sales contact form
  *
@@ -42,10 +63,20 @@ export async function createCheckoutSession(
   } = input;
 
   // TRIAL doesn't go through Checkout — caller should run the trial-init flow.
-  if (plan === Plan.TRIAL) return null;
+  if (plan === Plan.TRIAL) {
+    throw new CheckoutNotApplicableError(
+      plan,
+      "TRIAL plans don't go through checkout. Use the trial-init endpoint instead.",
+    );
+  }
 
   // ENTERPRISE is sales-led — caller should hand off to a sales contact form.
-  if (requiresSales(plan)) return null;
+  if (requiresSales(plan)) {
+    throw new CheckoutNotApplicableError(
+      plan,
+      'ENTERPRISE is sales-led — contact hello@ailevel.app',
+    );
+  }
 
   if (isStubMode()) {
     return stubCheckoutSession(organizationId, plan);
@@ -53,13 +84,9 @@ export async function createCheckoutSession(
 
   const stripe = getStripe();
 
-  const priceId = getStripePriceId(plan, interval);
-  if (!priceId) {
-    throw new Error(
-      `[@levelup/billing] No Stripe price ID configured for plan "${plan}" / interval "${interval}". ` +
-        'Set the corresponding STRIPE_PRICE_<TIER>_<INTERVAL> environment variable.',
-    );
-  }
+  // Strict lookup — throws a clear "not configured" error if the env var is
+  // missing or still set to a PLACEHOLDER_* value.
+  const priceId = getStripePriceIdOrThrow(plan, interval);
 
   // Per-seat tiers must pass a quantity; flat-rate ignore it.
   let lineItemQuantity = 1;

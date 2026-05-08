@@ -105,6 +105,26 @@ export function getStripePriceId(plan: Plan, interval: BillingInterval): string 
   return null;
 }
 
+/**
+ * Strict variant of {@link getStripePriceId}. Returns the configured Stripe
+ * price ID for (plan, interval) or throws a clear error when the env var is
+ * missing or still set to a `PLACEHOLDER_*` placeholder.
+ *
+ * Use this inside the checkout flow where a missing price ID is unrecoverable.
+ * For lookup-style scans (e.g. webhook reverse-resolve), use the nullable
+ * `getStripePriceId` so a single missing var doesn't crash the iteration.
+ */
+export function getStripePriceIdOrThrow(plan: Plan, interval: BillingInterval): string {
+  const id = getStripePriceId(plan, interval);
+  if (!id || id.startsWith(PLACEHOLDER_PREFIX) || id.includes('PLACEHOLDER_')) {
+    throw new Error(
+      `[@levelup/billing] Stripe price for ${plan}/${interval} is not configured. ` +
+        'Run `scripts/setup-stripe-products.ts` and paste the output into your env.',
+    );
+  }
+  return id;
+}
+
 // ---------------------------------------------------------------------------
 // Price → Plan map (legacy compatibility)
 // ---------------------------------------------------------------------------

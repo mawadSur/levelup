@@ -20,7 +20,14 @@ export type {
 } from './types';
 
 // Config utilities
-export { billingConfig, isStubMode, priceToPlan, planToPrice, getStripePriceId } from './config';
+export {
+  billingConfig,
+  isStubMode,
+  priceToPlan,
+  planToPrice,
+  getStripePriceId,
+  getStripePriceIdOrThrow,
+} from './config';
 export type { BillingConfig } from './config';
 
 // Stripe singleton
@@ -32,6 +39,7 @@ export {
   createBillingPortalSession,
   previewSeatProration,
   updateSubscriptionQuantity,
+  CheckoutNotApplicableError,
 } from './checkout';
 
 // Customer
