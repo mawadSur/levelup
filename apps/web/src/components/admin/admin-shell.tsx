@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
@@ -14,8 +14,6 @@ import {
   Flag,
   Menu,
   X,
-  Sun,
-  Moon,
   LogOut,
   User,
   ChevronDown,
@@ -33,19 +31,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Separator,
+  MonoLabel,
 } from '@levelup/ui';
-import { Logo } from '@/components/brand/logo';
 import { NavItem } from './nav-item';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider } from '@/lib/analytics/posthog-provider';
 
-/** Minimal user shape passed from the server layout — avoids importing server-only auth-client */
+/** Minimal user shape passed from the server layout — avoids importing server-only auth-client. */
 export interface ShellUser {
   email: string;
   name?: string;
   role: 'ADMIN' | 'MANAGER' | 'EMPLOYEE';
-  /** Optional: provided for analytics identification. */
   userId?: string;
   organizationId?: string;
 }
@@ -58,20 +54,49 @@ interface AdminShellProps {
   unackAnomalyCount?: number;
 }
 
-const NAV_ITEMS = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/people', label: 'People', icon: Users },
-  { href: '/admin/learning', label: 'Learning', icon: BookOpen },
-  { href: '/admin/reports', label: 'Reports', icon: BarChart2 },
-  { href: '/admin/insights', label: 'Insights', icon: BarChart3 },
-  { href: '/admin/policy', label: 'Policy', icon: FileText },
-  { href: '/admin/billing', label: 'Billing', icon: CreditCard },
-  { href: '/admin/flags', label: 'Flags', icon: Flag },
-  { href: '/admin/integrations', label: 'Integrations', icon: Plug },
-  { href: '/admin/anomalies', label: 'Anomalies', icon: AlertTriangle },
-  { href: '/admin/dlq', label: 'DLQ', icon: Activity },
-  { href: '/admin/audit', label: 'Audit log', icon: FileSearch },
-] as const;
+type NavGroup = {
+  label: string;
+  items: ReadonlyArray<{
+    href: string;
+    label: string;
+    icon: typeof LayoutDashboard;
+  }>;
+};
+
+const NAV_GROUPS: ReadonlyArray<NavGroup> = [
+  {
+    label: 'General',
+    items: [
+      { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/admin/people', label: 'People', icon: Users },
+    ],
+  },
+  {
+    label: 'Learning',
+    items: [
+      { href: '/admin/learning', label: 'Learning paths', icon: BookOpen },
+      { href: '/admin/reports', label: 'Reports', icon: BarChart2 },
+      { href: '/admin/insights', label: 'Insights', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'Governance',
+    items: [
+      { href: '/admin/policy', label: 'Policy', icon: FileText },
+      { href: '/admin/flags', label: 'Flags', icon: Flag },
+      { href: '/admin/anomalies', label: 'Anomalies', icon: AlertTriangle },
+      { href: '/admin/audit', label: 'Audit log', icon: FileSearch },
+    ],
+  },
+  {
+    label: 'Ops',
+    items: [
+      { href: '/admin/integrations', label: 'Integrations', icon: Plug },
+      { href: '/admin/dlq', label: 'DLQ', icon: Activity },
+      { href: '/admin/billing', label: 'Billing', icon: CreditCard },
+    ],
+  },
+];
 
 function getInitials(name: string | undefined, email: string): string {
   if (name) {
@@ -86,33 +111,14 @@ function getInitials(name: string | undefined, email: string): string {
   return email.slice(0, 2).toUpperCase();
 }
 
-function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <Button variant="ghost" size="icon" className="h-8 w-8">
-        <span className="sr-only">Toggle theme</span>
-      </Button>
-    );
-  }
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-8 w-8"
-      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-      aria-label="Toggle theme"
-    >
-      {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </Button>
-  );
+function buildBreadcrumb(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0 || segments[0] !== 'admin') return 'ADMIN';
+  if (segments.length === 1) return 'ADMIN / DASHBOARD';
+  return `ADMIN / ${segments
+    .slice(1)
+    .map((s) => s.replace(/-/g, ' ').toUpperCase())
+    .join(' / ')}`;
 }
 
 function Sidebar({
@@ -126,71 +132,80 @@ function Sidebar({
 }) {
   return (
     <div
-      className={`flex h-full flex-col border-r border-ink-600 bg-ink-800 transition-all duration-300 ${
-        collapsed ? 'w-14' : 'w-56'
+      className={`flex h-full flex-col border-r border-ink-600 bg-ink-800 transition-[width] duration-200 ease-mission ${
+        collapsed ? 'w-14' : 'w-60'
       }`}
     >
-      {/* Logo area */}
+      {/* Wordmark */}
       <div
-        className={`flex h-16 shrink-0 items-center border-b border-ink-600 px-3 ${
-          collapsed ? 'justify-center' : 'gap-2'
+        className={`flex h-14 shrink-0 items-center border-b border-ink-600 px-4 ${
+          collapsed ? 'justify-center px-2' : ''
         }`}
       >
-        <Link href="/admin" aria-label="LevelUp AI Academy">
-          {collapsed ? (
-            <svg
-              width={28}
-              height={28}
-              viewBox="0 0 36 36"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <rect width="36" height="36" rx="9" fill="hsl(239 84% 45%)" />
-              <text
-                x="5"
-                y="26"
-                fontFamily="ui-sans-serif, system-ui, sans-serif"
-                fontSize="17"
-                fontWeight="700"
-                fill="white"
-                letterSpacing="-0.5"
-              >
-                LU
-              </text>
-            </svg>
-          ) : (
-            <Logo size="sm" />
-          )}
+        <Link
+          href="/admin"
+          aria-label="LevelUp AI Academy — admin home"
+          className="flex items-center gap-2"
+        >
+          <span
+            aria-hidden="true"
+            className="flex h-7 w-7 items-center justify-center rounded-sm bg-signal font-mono text-mono-sm font-semibold text-ink-900"
+          >
+            LU
+          </span>
+          {!collapsed && <span className="font-serif text-h3 italic text-paper-100">LevelUp</span>}
         </Link>
       </div>
 
-      {/* Org name */}
+      {/* Org name in mono */}
       {!collapsed && (
-        <div className="px-3 py-2">
-          <p className="truncate text-xs font-medium text-paper-300">{orgName}</p>
+        <div className="border-b border-ink-600 px-4 py-3">
+          <MonoLabel className="block truncate text-paper-500">ORG</MonoLabel>
+          <p className="mt-0.5 truncate text-body-sm text-paper-100">{orgName}</p>
         </div>
       )}
 
-      {/* Nav items */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-2">
-        {NAV_ITEMS.map((item) => {
-          const badge =
-            item.href === '/admin/anomalies' && (unackAnomalyCount ?? 0) > 0
-              ? String(unackAnomalyCount)
-              : undefined;
-          return (
-            <NavItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-              collapsed={collapsed}
-              badge={badge}
-            />
-          );
-        })}
+      {/* Grouped nav */}
+      <nav className="flex-1 overflow-y-auto py-3" aria-label="Admin navigation">
+        {NAV_GROUPS.map((group, idx) => (
+          <div key={group.label} className={idx > 0 ? 'mt-5' : undefined}>
+            {!collapsed && (
+              <div className="mb-1.5 px-4">
+                <MonoLabel className="block text-paper-500">{group.label.toUpperCase()}</MonoLabel>
+              </div>
+            )}
+            <ul className="space-y-0.5 px-2">
+              {group.items.map((item) => {
+                const badge =
+                  item.href === '/admin/anomalies' && (unackAnomalyCount ?? 0) > 0
+                    ? String(unackAnomalyCount)
+                    : undefined;
+                return (
+                  <li key={item.href}>
+                    <NavItem
+                      href={item.href}
+                      label={item.label}
+                      icon={item.icon}
+                      collapsed={collapsed}
+                      badge={badge}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </nav>
+
+      {/* Footer status row */}
+      {!collapsed && (
+        <div className="border-t border-ink-600 px-4 py-2.5">
+          <div className="flex items-center gap-2">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-success" />
+            <MonoLabel className="text-paper-500">SYSTEM NOMINAL</MonoLabel>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -198,8 +213,10 @@ function Sidebar({
 export function AdminShell({ user, orgName, children, unackAnomalyCount }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = React.useState(false);
+  const pathname = usePathname() ?? '/admin';
 
   const initials = getInitials(user.name, user.email);
+  const breadcrumb = buildBreadcrumb(pathname);
 
   const analyticsUser =
     user.userId && user.organizationId
@@ -215,7 +232,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
   return (
     <PostHogProvider user={analyticsUser}>
       <FlagsProvider>
-        <div className="flex h-screen overflow-hidden bg-ink-900">
+        <div className="flex h-screen overflow-hidden bg-ink-900 text-paper-100">
           {/* Desktop sidebar */}
           <div className="hidden md:flex md:shrink-0">
             <Sidebar
@@ -228,10 +245,11 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
           {/* Mobile sidebar overlay */}
           {sidebarOpen && (
             <div className="fixed inset-0 z-40 md:hidden">
-              <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              <button
+                type="button"
+                aria-label="Close sidebar"
+                className="absolute inset-0 bg-ink-900/80 backdrop-blur-[2px]"
                 onClick={() => setSidebarOpen(false)}
-                aria-hidden="true"
               />
               <div className="relative flex h-full w-64 flex-col">
                 <Sidebar
@@ -243,10 +261,10 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
             </div>
           )}
 
-          {/* Main content */}
+          {/* Main column */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            {/* Top bar */}
-            <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-600 bg-ink-800 px-4">
+            {/* Top bar — 56px */}
+            <header className="flex h-14 shrink-0 items-center gap-3 border-b border-ink-600 bg-ink-900 px-4">
               {/* Mobile menu toggle */}
               <Button
                 variant="ghost"
@@ -269,49 +287,68 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
                 {desktopCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
               </Button>
 
+              {/* Breadcrumb in mono */}
+              <MonoLabel className="hidden truncate text-paper-300 sm:block">
+                {breadcrumb}
+              </MonoLabel>
+
               <div className="flex-1" />
 
-              {/* Right side controls */}
+              {/* Right controls */}
               <div className="flex items-center gap-2">
-                <ThemeToggle />
+                <MonoLabel className="hidden text-paper-500 lg:block">
+                  {new Date()
+                    .toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                    .toUpperCase()}
+                </MonoLabel>
 
-                <Separator orientation="vertical" className="h-6" />
-
-                {/* User dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex h-8 items-center gap-2 px-2 text-sm">
+                    <Button variant="ghost" className="flex h-9 items-center gap-2 px-2">
                       <Avatar className="h-7 w-7">
-                        <AvatarFallback className="bg-signal text-ink-900 text-xs font-semibold">
+                        <AvatarFallback className="bg-signal font-mono text-mono-sm font-semibold text-ink-900">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="hidden max-w-[120px] truncate sm:inline">
+                      <span className="hidden max-w-[140px] truncate text-body-sm text-paper-100 sm:inline">
                         {user.name ?? user.email}
                       </span>
-                      <ChevronDown className="h-3 w-3 opacity-60" />
+                      <ChevronDown className="h-3 w-3 text-paper-500" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium truncate">{user.name ?? 'Admin'}</p>
-                      <p className="text-xs text-paper-300 truncate">{user.email}</p>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-2">
+                      <MonoLabel className="block text-paper-500">SIGNED IN AS</MonoLabel>
+                      <p className="mt-1 truncate text-body-sm font-medium text-paper-100">
+                        {user.name ?? 'Admin'}
+                      </p>
+                      <p className="truncate font-mono text-mono-sm text-paper-300">{user.email}</p>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" className="flex items-center gap-2 cursor-pointer">
-                        <User className="h-4 w-4" />
-                        Profile
+                      <Link href="/profile" className="flex cursor-pointer items-center gap-2">
+                        <User className="h-4 w-4 text-paper-300" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/learn" className="flex cursor-pointer items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-paper-300" />
+                        <span>Learner view</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link
                         href="/sign-out"
-                        className="flex items-center gap-2 cursor-pointer text-danger focus:text-danger"
+                        className="flex cursor-pointer items-center gap-2 text-danger focus:text-danger"
                       >
                         <LogOut className="h-4 w-4" />
-                        Sign out
+                        <span>Sign out</span>
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -320,7 +357,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
             </header>
 
             {/* Page content */}
-            <main className="flex-1 overflow-y-auto">{children}</main>
+            <main className="flex-1 overflow-y-auto bg-ink-900">{children}</main>
           </div>
         </div>
       </FlagsProvider>
