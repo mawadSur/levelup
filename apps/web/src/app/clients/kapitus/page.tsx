@@ -4,6 +4,8 @@ import { KapitusHowItWorks } from '@/components/kapitus/how-it-works';
 import { KapitusRoles } from '@/components/kapitus/roles';
 import { KapitusGovernanceMock } from '@/components/kapitus/governance-mock';
 import { KapitusPricing } from '@/components/kapitus/pricing';
+import { KapitusFaq } from '@/components/kapitus/faq';
+import { KapitusFinalCta } from '@/components/kapitus/final-cta';
 
 export default function KapitusLandingPage() {
   return (
@@ -14,6 +16,8 @@ export default function KapitusLandingPage() {
       <KapitusRoles />
       <KapitusGovernanceMock />
       <KapitusPricing />
+      <KapitusFaq />
+      <KapitusFinalCta />
     </>
   );
 }
