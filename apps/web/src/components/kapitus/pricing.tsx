@@ -11,17 +11,14 @@ const INCLUDED = [
 
 export function KapitusPricing() {
   return (
-    <section
-      id="pricing"
-      className="border-b border-kp-rule bg-kp-mist py-20 lg:py-24"
-    >
+    <section id="pricing" className="border-b border-kp-rule bg-kp-mist py-20 lg:py-24">
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
           <p className="kp-eyebrow text-kp-purple">Pricing</p>
           <h2 className="kp-h1 mt-3 text-kp-ink">What it costs.</h2>
           <p className="kp-body-lg mt-5 text-kp-ink-soft">
-            Plain numbers, no procurement labyrinth. Pricing scales with seats,
-            not features &mdash; every customer gets the full product.
+            Plain numbers, no procurement labyrinth. Pricing scales with seats, not features &mdash;
+            every customer gets the full product.
           </p>
         </div>
 
@@ -37,15 +34,15 @@ export function KapitusPricing() {
                 $25,000<span className="kp-body-lg text-kp-ink-mute">/year</span>
               </p>
               <p className="kp-body mt-4 text-kp-ink-soft">
-                Starts at <span className="kp-data text-kp-ink">$25,000</span>{' '}
-                annually for a 100-seat team. Volume discounts kick in at 250
-                and 500 seats. Talk to us for a precise quote.
+                Starts at <span className="kp-data text-kp-ink">$25,000</span> annually for a
+                100-seat team. Volume discounts kick in at 250 and 500 seats. Talk to us for a
+                precise quote.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="mailto:hello@ailevel.app?subject=Kapitus%20engagement"
-                  className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
+                  className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
                 >
                   Talk To A Specialist
                 </Link>

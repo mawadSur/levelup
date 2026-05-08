@@ -4,10 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createOrganizationSchema } from '@levelup/types';
 import { apiPost } from '@/lib/api';
-import {
-  getSupabaseBrowserClient,
-  isSupabaseConfiguredOnClient,
-} from '@/lib/supabase/client';
+import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
 
 interface CreateOrgResponse {
   id: string;
@@ -87,7 +84,9 @@ export function KapitusSignUpForm() {
         }
       }
 
-      router.push(`/clients/kapitus/sign-in${data.signInUrl.includes('?') ? data.signInUrl.slice(data.signInUrl.indexOf('?')) : ''}`);
+      router.push(
+        `/clients/kapitus/sign-in${data.signInUrl.includes('?') ? data.signInUrl.slice(data.signInUrl.indexOf('?')) : ''}`,
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong';
       if (message.includes('404')) {
@@ -194,7 +193,7 @@ export function KapitusSignUpForm() {
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-kp-sm bg-kp-purple px-6 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple disabled:cursor-not-allowed disabled:opacity-70"
       >
         {loading ? 'Creating Account…' : 'Create Account'}
       </button>

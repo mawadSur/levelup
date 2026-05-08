@@ -3,10 +3,7 @@ import { ShieldCheck, FileBarChart, BadgeCheck } from 'lucide-react';
 
 export function KapitusHero() {
   return (
-    <section
-      id="hero"
-      className="relative overflow-hidden bg-kp-dark-band text-white"
-    >
+    <section id="hero" className="relative overflow-hidden bg-kp-dark-band text-white">
       <div className="mx-auto max-w-kp-container px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div>
@@ -19,16 +16,15 @@ export function KapitusHero() {
             </h1>
 
             <p className="kp-body-lg mt-6 max-w-kp-reading text-white/80">
-              LevelUp trains every Kapitus employee to use ChatGPT, Claude, and
-              your internal AI tools safely &mdash; with real-time guardrails on
-              customer financial data, audit-ready evidence reports, and a
-              curriculum tuned for lenders, underwriters, and operations.
+              LevelUp trains every Kapitus employee to use ChatGPT, Claude, and your internal AI
+              tools safely &mdash; with real-time guardrails on customer financial data, audit-ready
+              evidence reports, and a curriculum tuned for lenders, underwriters, and operations.
             </p>
 
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <Link
                 href="mailto:hello@ailevel.app?subject=Kapitus%20%E2%80%94%2030-min%20audit"
-                className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Schedule A 30-Min Audit
               </Link>
@@ -41,8 +37,7 @@ export function KapitusHero() {
             </div>
 
             <p className="kp-data mt-6 text-white/60">
-              GLBA-aligned &middot; SOC 2 in progress &middot; 30-day pilot
-              available
+              GLBA-aligned &middot; SOC 2 in progress &middot; 30-day pilot available
             </p>
           </div>
 
@@ -75,9 +70,7 @@ function HeroVisual() {
           >
             0
           </p>
-          <p className="kp-body-sm mt-2 text-kp-ink-mute">
-            Across 142 monitored sessions
-          </p>
+          <p className="kp-body-sm mt-2 text-kp-ink-mute">Across 142 monitored sessions</p>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-3">
@@ -106,24 +99,14 @@ function HeroVisual() {
   );
 }
 
-function Tile({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function Tile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center justify-between rounded-kp-sm border border-kp-rule bg-kp-mist px-4 py-3">
       <div className="flex items-center gap-3 text-kp-ink-soft">
         <span className="text-kp-purple">{icon}</span>
         <span className="kp-body-sm">{label}</span>
       </div>
-      <span className="kp-body-sm font-semibold tabular-nums text-kp-purple">
-        {value}
-      </span>
+      <span className="kp-body-sm font-semibold tabular-nums text-kp-purple">{value}</span>
     </div>
   );
 }

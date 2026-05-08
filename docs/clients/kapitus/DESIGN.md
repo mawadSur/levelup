@@ -15,21 +15,21 @@
 
 ## What changes vs Mission Brief
 
-| Dimension | Mission Brief (default) | Kapitus (this branch) |
-|---|---|---|
-| Theme baseline | Dark (`#08090E`) | Mostly light (`#FFFFFF` / `#F8FAFC`) with a dark `#282828` hero + final-CTA band |
-| Display font | Instrument Serif (italic) | Manrope (sans, all weights) |
-| Body font | Geist Sans | Manrope |
-| Mono font | Geist Mono (heavy use as eyebrows) | Used sparingly — only for technical IDs |
-| Primary accent | Sodium amber `#FFB300` | Vibrant purple `#AD00FF` (primary CTAs, brand highlights) |
-| Secondary accent | — | Periwinkle blue `#7694FF` (secondary CTAs, sidebar form actions) |
-| Highlight band | — | Cream-yellow `#FCFFDF` (one band, e.g. "KapitusPLUS Difference") |
-| Layout | Editorial / asymmetric | Strict 12-col grid, modular cards |
-| Decoration | Blueprint grid, grain overlay, numbered Roman sections | None — whitespace and rules are the decoration |
-| Headline rhythm | Italic emphasis ("safely") | Bold, sentence case, with terminal periods ("Financing solutions to fuel your business.") |
-| CTA style | Sharp, mono-uppercase ("REQUEST DEMO →") | Title Case ("Apply Now", "Get Offers", "Explore Financing Options") |
-| Section markers | Roman numerals (`I.`, `II.`) | Plain heading-eyebrows ("HOW IT WORKS"), small caps |
-| Density | High | Low–medium (lots of whitespace) |
+| Dimension        | Mission Brief (default)                                | Kapitus (this branch)                                                                     |
+| ---------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| Theme baseline   | Dark (`#08090E`)                                       | Mostly light (`#FFFFFF` / `#F8FAFC`) with a dark `#282828` hero + final-CTA band          |
+| Display font     | Instrument Serif (italic)                              | Manrope (sans, all weights)                                                               |
+| Body font        | Geist Sans                                             | Manrope                                                                                   |
+| Mono font        | Geist Mono (heavy use as eyebrows)                     | Used sparingly — only for technical IDs                                                   |
+| Primary accent   | Sodium amber `#FFB300`                                 | Vibrant purple `#AD00FF` (primary CTAs, brand highlights)                                 |
+| Secondary accent | —                                                      | Periwinkle blue `#4B62D9` (secondary CTAs, sidebar form actions)                          |
+| Highlight band   | —                                                      | Cream-yellow `#FCFFDF` (one band, e.g. "KapitusPLUS Difference")                          |
+| Layout           | Editorial / asymmetric                                 | Strict 12-col grid, modular cards                                                         |
+| Decoration       | Blueprint grid, grain overlay, numbered Roman sections | None — whitespace and rules are the decoration                                            |
+| Headline rhythm  | Italic emphasis ("safely")                             | Bold, sentence case, with terminal periods ("Financing solutions to fuel your business.") |
+| CTA style        | Sharp, mono-uppercase ("REQUEST DEMO →")               | Title Case ("Apply Now", "Get Offers", "Explore Financing Options")                       |
+| Section markers  | Roman numerals (`I.`, `II.`)                           | Plain heading-eyebrows ("HOW IT WORKS"), small caps                                       |
+| Density          | High                                                   | Low–medium (lots of whitespace)                                                           |
 
 ## Tokens
 
@@ -38,30 +38,30 @@
 ```css
 .kapitus {
   /* Foundation */
-  --kp-paper: 255 255 255;          /* #FFFFFF — primary background */
-  --kp-mist: 248 250 252;           /* #F8FAFC — section background */
-  --kp-fog: 241 245 249;            /* #F1F5F9 — subtle panel background */
-  --kp-rule: 226 232 240;           /* #E2E8F0 — borders / dividers */
-  --kp-rule-strong: 203 213 225;    /* #CBD5E1 — emphasized borders */
+  --kp-paper: 255 255 255; /* #FFFFFF — primary background */
+  --kp-mist: 248 250 252; /* #F8FAFC — section background */
+  --kp-fog: 241 245 249; /* #F1F5F9 — subtle panel background */
+  --kp-rule: 226 232 240; /* #E2E8F0 — borders / dividers */
+  --kp-rule-strong: 203 213 225; /* #CBD5E1 — emphasized borders */
 
   /* Ink */
-  --kp-ink: 15 23 42;               /* #0F172A — primary text (slate-900) */
-  --kp-ink-soft: 51 65 85;          /* #334155 — secondary text */
-  --kp-ink-mute: 100 116 139;       /* #64748B — muted (placeholder, captions) */
-  --kp-ink-faint: 148 163 184;      /* #94A3B8 — disabled */
+  --kp-ink: 15 23 42; /* #0F172A — primary text (slate-900) */
+  --kp-ink-soft: 51 65 85; /* #334155 — secondary text */
+  --kp-ink-mute: 100 116 139; /* #64748B — muted (placeholder, captions) */
+  --kp-ink-faint: 148 163 184; /* #94A3B8 — disabled */
 
   /* Brand — matches live kapitus.com palette */
-  --kp-purple: 173 0 255;           /* #AD00FF — primary brand accent (CTAs, highlights) */
-  --kp-purple-deep: 145 0 224;      /* #9100E0 — hover on primary */
-  --kp-blue-soft: 118 148 255;      /* #7694FF — periwinkle secondary CTA */
-  --kp-dark-band: 40 40 40;         /* #282828 — hero + final-CTA dark band */
-  --kp-cream: 252 255 223;          /* #FCFFDF — accent highlight band */
+  --kp-purple: 173 0 255; /* #AD00FF — primary brand accent (CTAs, highlights) */
+  --kp-purple-deep: 145 0 224; /* #9100E0 — hover on primary */
+  --kp-blue-soft: 75 98 217; /* #4B62D9 — periwinkle secondary CTA (5.10:1 on white, AA) */
+  --kp-dark-band: 40 40 40; /* #282828 — hero + final-CTA dark band */
+  --kp-cream: 252 255 223; /* #FCFFDF — accent highlight band */
 
   /* Semantic */
-  --kp-success: 22 163 74;          /* #16A34A — green-600 */
-  --kp-warning: 217 119 6;          /* #D97706 — amber-600 */
-  --kp-danger: 220 38 38;           /* #DC2626 — red-600 */
-  --kp-info: 14 165 233;            /* #0EA5E9 — sky-500 */
+  --kp-success: 22 163 74; /* #16A34A — green-600 */
+  --kp-warning: 217 119 6; /* #D97706 — amber-600 */
+  --kp-danger: 220 38 38; /* #DC2626 — red-600 */
+  --kp-info: 14 165 233; /* #0EA5E9 — sky-500 */
 }
 ```
 
@@ -74,17 +74,17 @@ No dark theme on this client. Light page chrome with two dedicated dark bands (h
 
 **Hierarchy:**
 
-| Utility | Size | Weight | Use |
-|---|---|---|---|
-| `kp-display` | clamp(2.75rem, 5vw, 4rem) | 700 | hero headline only |
-| `kp-h1` | 2.25rem | 700 | page titles |
-| `kp-h2` | 1.75rem | 600 | section headers |
-| `kp-h3` | 1.25rem | 600 | card titles |
-| `kp-eyebrow` | 0.75rem, uppercase, tracking +0.1em | 600 | section eyebrows ("HOW IT WORKS") — small caps style, purple color, no monospace |
-| `kp-body` | 1rem | 400 | body |
-| `kp-body-lg` | 1.125rem | 400 | hero subhead, intro paragraphs |
-| `kp-body-sm` | 0.875rem | 400 | captions, helper text |
-| `kp-data` | 1rem mono | 500 | account/application IDs, dates, dollars |
+| Utility      | Size                                | Weight | Use                                                                              |
+| ------------ | ----------------------------------- | ------ | -------------------------------------------------------------------------------- |
+| `kp-display` | clamp(2.75rem, 5vw, 4rem)           | 700    | hero headline only                                                               |
+| `kp-h1`      | 2.25rem                             | 700    | page titles                                                                      |
+| `kp-h2`      | 1.75rem                             | 600    | section headers                                                                  |
+| `kp-h3`      | 1.25rem                             | 600    | card titles                                                                      |
+| `kp-eyebrow` | 0.75rem, uppercase, tracking +0.1em | 600    | section eyebrows ("HOW IT WORKS") — small caps style, purple color, no monospace |
+| `kp-body`    | 1rem                                | 400    | body                                                                             |
+| `kp-body-lg` | 1.125rem                            | 400    | hero subhead, intro paragraphs                                                   |
+| `kp-body-sm` | 0.875rem                            | 400    | captions, helper text                                                            |
+| `kp-data`    | 1rem mono                           | 500    | account/application IDs, dates, dollars                                          |
 
 Line heights: 1.1 for display, 1.25 for h1/h2, 1.4 for h3, 1.6 for body, 1.5 for body-sm.
 
@@ -111,7 +111,7 @@ Line heights: 1.1 for display, 1.25 for h1/h2, 1.4 for h3, 1.6 for body, 1.5 for
 
 ### CTAs
 
-- **Primary CTA:** `bg-kp-purple text-white px-6 py-3 rounded-kp-sm font-semibold hover:bg-kp-purple-deep`. Title Case ("Apply Now", "Get Started", "Schedule A 30-Min Audit"). NOT all-caps, NOT sentence case.
+- **Primary CTA:** `bg-kp-purple-deep text-white px-6 py-3 rounded-kp-sm font-semibold hover:bg-kp-purple`. Resting at the deeper `#9100E0` (6.40:1 on white text — comfortable AA margin); hover lifts to the brighter `#AD00FF`. Title Case ("Apply Now", "Get Started", "Schedule A 30-Min Audit"). NOT all-caps, NOT sentence case.
 - **Secondary CTA:** `border border-kp-blue-soft text-kp-blue-soft px-6 py-3 rounded-kp-sm font-medium hover:bg-kp-blue-soft hover:text-white` — periwinkle outline that fills on hover. Used for sidebar form actions and "secondary" calls.
 - **Tertiary / link:** plain text, `text-kp-purple underline-offset-2 hover:underline`.
 - **On the dark hero band:** primary button stays purple; secondary becomes `border-white/30 text-white hover:bg-white/10`.
@@ -134,6 +134,7 @@ Initial scope (shipped):
 4. **`/clients/kapitus/sign-up`** — co-branded form, industry pre-set to Financial services.
 
 Phase 2 (when client buys in deeper):
+
 - `/clients/kapitus/sign-in` co-branded.
 - Kapitus-themed certificate template (the cert PDF generator can branch on `org.industry === 'FINANCIAL_SERVICES_KAPITUS'`).
 
@@ -146,6 +147,7 @@ Phase 2 (when client buys in deeper):
 ## Implementation reference
 
 Token + preset files:
+
 1. `packages/ui/src/styles/kapitus.css` — class-scoped CSS custom properties under `.kapitus`.
 2. `packages/ui/kapitus-tailwind-preset.ts` — exports `kp-*` color/spacing utilities and Manrope `fontFamily.sans`.
 3. `apps/web/src/components/kapitus/{nav,footer,hero,problem-stats,how-it-works,roles,governance-mock,pricing,faq,final-cta,sign-up-form}.tsx` — landing components.
@@ -155,4 +157,4 @@ Token + preset files:
 
 - Side-by-side compare: kapitus.com vs `/clients/kapitus` — hero, CTAs, card grid, color palette, typography hierarchy.
 - Run the sales narrative against a friendly Kapitus-equivalent buyer ("would you click 'Apply Now' from this page?").
-- A11y pass: WCAG AA contrast on every text/background pair (financial-services compliance). Special attention: `kp-blue-soft` (`#7694FF`) on white passes AA at 18px+ but not at 14px body — use it as button surface (white text on `kp-blue-soft`) rather than as text on white for body copy.
+- A11y pass: WCAG AA contrast on every text/background pair (financial-services compliance). Special attention: `kp-blue-soft` was darkened from the original `#7694FF` (only 2.82:1 on white text — failed AA) to `#4B62D9` (5.10:1 on white text — passes AA at all sizes), so it is now safe both as a button surface (white text on `kp-blue-soft`) and as text on white. The primary CTA token pair was kept (`--kp-purple` `#AD00FF` and `--kp-purple-deep` `#9100E0`) but resting/hover were swapped: resting is now the deeper purple (6.40:1) for a comfortable AA margin, and hover is the brighter purple (4.98:1).

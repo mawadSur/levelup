@@ -2,10 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  getSupabaseBrowserClient,
-  isSupabaseConfiguredOnClient,
-} from '@/lib/supabase/client';
+import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
 
 const API_BASE =
   typeof process !== 'undefined'
@@ -125,21 +122,17 @@ export function KapitusSignInForm({ redirect, initialEmail }: KapitusSignInFormP
     <div className="flex flex-col gap-5">
       {stubMode && (
         <div className="rounded-kp-sm border border-kp-rule bg-kp-cream px-4 py-3">
-          <p className="kp-body-sm font-semibold text-kp-ink">
-            Dev bypass &middot; stub mode
-          </p>
+          <p className="kp-body-sm font-semibold text-kp-ink">Dev bypass &middot; stub mode</p>
           <p className="kp-body-sm mt-1 text-kp-ink-soft">
-            Supabase Auth isn&rsquo;t configured here. Sign-in mints a fake token
-            via the dev-bypass route.
+            Supabase Auth isn&rsquo;t configured here. Sign-in mints a fake token via the dev-bypass
+            route.
           </p>
         </div>
       )}
 
       {magicLinkSent && (
         <div className="rounded-kp-sm border border-[rgb(var(--kp-success)_/_0.4)] bg-[rgb(var(--kp-success)_/_0.08)] px-4 py-3">
-          <p className="kp-body-sm font-semibold text-kp-success">
-            Magic link sent
-          </p>
+          <p className="kp-body-sm font-semibold text-kp-success">Magic link sent</p>
           <p className="kp-body-sm mt-1 text-kp-ink-soft">
             Check <strong>{email}</strong> and click the link to sign in.
           </p>
@@ -148,9 +141,7 @@ export function KapitusSignInForm({ redirect, initialEmail }: KapitusSignInFormP
 
       {error && (
         <div className="rounded-kp-sm border border-kp-danger/30 bg-[rgb(var(--kp-danger)_/_0.05)] px-4 py-3">
-          <p className="kp-body-sm font-semibold text-kp-danger">
-            We couldn&rsquo;t sign you in.
-          </p>
+          <p className="kp-body-sm font-semibold text-kp-danger">We couldn&rsquo;t sign you in.</p>
           <p className="kp-body-sm mt-1 text-kp-ink-soft">{error}</p>
         </div>
       )}
@@ -194,7 +185,7 @@ export function KapitusSignInForm({ redirect, initialEmail }: KapitusSignInFormP
         <button
           type="submit"
           disabled={loading}
-          className="mt-1 inline-flex h-12 w-full items-center justify-center rounded-kp-sm bg-kp-purple px-6 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-1 inline-flex h-12 w-full items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple disabled:cursor-not-allowed disabled:opacity-70"
         >
           {loading ? 'Signing in…' : stubMode ? 'Continue (dev bypass)' : 'Sign in'}
         </button>

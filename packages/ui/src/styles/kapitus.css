@@ -22,7 +22,7 @@
   /* Brand — matches live kapitus.com palette */
   --kp-purple: 173 0 255;        /* #AD00FF — primary brand accent */
   --kp-purple-deep: 145 0 224;   /* #9100E0 — hover on primary */
-  --kp-blue-soft: 118 148 255;   /* #7694FF — periwinkle secondary CTA */
+  --kp-blue-soft: 75 98 217;     /* #4B62D9 — periwinkle secondary CTA (5.10:1 on white, AA) */
   --kp-dark-band: 40 40 40;      /* #282828 — hero + final CTA dark band */
   --kp-cream: 252 255 223;       /* #FCFFDF — accent highlight band */
 
