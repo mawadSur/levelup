@@ -145,7 +145,7 @@ export class OrganizationsService {
     await this.prisma.auditLog.create({
       data: {
         organizationId: org.id,
-        actorId: org.id, // system actor — no user record yet
+        actorId: null, // system actor — no user row exists at trial-init time
         action: 'org.create_via_signup',
         targetType: 'Organization',
         targetId: org.id,
@@ -160,7 +160,7 @@ export class OrganizationsService {
     await this.prisma.auditLog.create({
       data: {
         organizationId: org.id,
-        actorId: org.id,
+        actorId: null,
         action: 'org.trial_started',
         targetType: 'Organization',
         targetId: org.id,
