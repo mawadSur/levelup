@@ -92,8 +92,10 @@ async function bootstrap(): Promise<void> {
     SwaggerModule.setup('api/docs', app, document);
   }
 
-  const port = process.env['API_PORT'] ?? 4000;
-  await app.listen(port);
+  // Render (and most PaaS hosts) inject PORT dynamically and health-check against it.
+  // Honor PORT first; fall back to API_PORT for local dev where API_PORT=4000.
+  const port = process.env['PORT'] ?? process.env['API_PORT'] ?? 4000;
+  await app.listen(port, '0.0.0.0');
   logger.log(`Server listening on port ${port}`, 'Bootstrap');
 }
 
