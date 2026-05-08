@@ -55,11 +55,39 @@ async function getBearerHeader(): Promise<string | null> {
 // ---------------------------------------------------------------------------
 // Raw error body shape (what the server sends)
 // ---------------------------------------------------------------------------
+/**
+ * The API's GlobalExceptionFilter wraps every error in a nested envelope:
+ *   { error: { code, message, requestId, ...extras } }
+ * Some legacy paths still send a flat shape, so we tolerate both.
+ */
 interface RawErrorBody {
+  // Flat-shape fallback
   message?: string;
   code?: string;
   requestId?: string;
-  error?: string;
+  // Nested envelope (current standard)
+  error?:
+    | string
+    | { code?: string; message?: string; requestId?: string; [k: string]: unknown };
+}
+
+function extractErrorFields(raw: RawErrorBody): {
+  message?: string;
+  code?: string;
+  requestId?: string;
+} {
+  if (raw.error && typeof raw.error === 'object') {
+    return {
+      message: raw.error.message,
+      code: raw.error.code,
+      requestId: raw.error.requestId,
+    };
+  }
+  return {
+    message: raw.message ?? (typeof raw.error === 'string' ? raw.error : undefined),
+    code: raw.code,
+    requestId: raw.requestId,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -114,11 +142,12 @@ export async function apiFetch<TResponse = unknown>(
       // body is not JSON — keep defaults
     }
 
+    const fields = extractErrorFields(rawBody);
     throw new ApiError({
-      message: rawBody.message ?? rawBody.error ?? `Request failed with status ${response.status}`,
+      message: fields.message ?? `Request failed with status ${response.status}`,
       status: response.status,
-      code: rawBody.code ?? defaultCodeForStatus(response.status),
-      requestId: rawBody.requestId,
+      code: fields.code ?? defaultCodeForStatus(response.status),
+      requestId: fields.requestId,
     });
   }
 
