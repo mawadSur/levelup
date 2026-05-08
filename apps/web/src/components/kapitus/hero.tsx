@@ -5,20 +5,20 @@ export function KapitusHero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden border-b border-kp-rule bg-kp-paper"
+      className="relative overflow-hidden bg-kp-dark-band text-white"
     >
       <div className="mx-auto max-w-kp-container px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div>
-            <span className="kp-eyebrow inline-flex rounded-kp-pill bg-kp-blue-soft px-3 py-1 text-kp-blue">
+            <span className="kp-eyebrow inline-flex rounded-kp-pill bg-white/10 px-3 py-1 text-white">
               For Kapitus · AI training with guardrails
             </span>
 
-            <h1 className="kp-display mt-6 text-kp-navy">
+            <h1 className="kp-display mt-6 text-white">
               AI training that protects your loan applicants&rsquo; data.
             </h1>
 
-            <p className="kp-body-lg mt-6 max-w-kp-reading text-kp-ink-soft">
+            <p className="kp-body-lg mt-6 max-w-kp-reading text-white/80">
               LevelUp trains every Kapitus employee to use ChatGPT, Claude, and
               your internal AI tools safely &mdash; with real-time guardrails on
               customer financial data, audit-ready evidence reports, and a
@@ -28,19 +28,19 @@ export function KapitusHero() {
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <Link
                 href="mailto:hello@ailevel.app?subject=Kapitus%20%E2%80%94%2030-min%20audit"
-                className="inline-flex items-center justify-center rounded-kp-sm bg-kp-navy px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-navy-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-blue"
+                className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                Schedule a 30-min audit
+                Schedule A 30-Min Audit
               </Link>
               <Link
                 href="#evidence"
-                className="inline-flex items-center justify-center rounded-kp-sm border border-kp-rule-strong bg-kp-paper px-6 py-3 text-base font-medium text-kp-ink transition-colors duration-200 ease-kp-out hover:bg-kp-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-blue"
+                className="inline-flex items-center justify-center rounded-kp-sm border border-white/30 bg-transparent px-6 py-3 text-base font-medium text-white transition-colors duration-200 ease-kp-out hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                View sample governance report
+                View Sample Governance Report
               </Link>
             </div>
 
-            <p className="kp-data mt-6 text-kp-ink-mute">
+            <p className="kp-data mt-6 text-white/60">
               GLBA-aligned &middot; SOC 2 in progress &middot; 30-day pilot
               available
             </p>
@@ -57,7 +57,7 @@ export function KapitusHero() {
 
 function HeroVisual() {
   return (
-    <div className="rounded-kp-lg border border-kp-rule bg-kp-mist p-6 lg:p-8">
+    <div className="rounded-kp-lg border border-white/10 bg-white/5 p-6 lg:p-8">
       <div className="rounded-kp-md border border-kp-rule bg-kp-paper p-6 shadow-kp-sm">
         <div className="flex items-center justify-between border-b border-kp-rule pb-4">
           <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ function HeroVisual() {
         <div className="mt-5">
           <p className="kp-body-sm text-kp-ink-soft">Sensitive data triggers</p>
           <p
-            className="mt-1 font-bold tabular-nums text-kp-navy"
+            className="mt-1 font-bold tabular-nums text-kp-purple"
             style={{ fontSize: '3rem', lineHeight: 1 }}
           >
             0
@@ -99,7 +99,7 @@ function HeroVisual() {
         </div>
       </div>
 
-      <p className="kp-body-sm mt-4 text-center text-kp-ink-mute">
+      <p className="kp-body-sm mt-4 text-center text-white/60">
         Sample dashboard &middot; available post-pilot
       </p>
     </div>
@@ -118,10 +118,10 @@ function Tile({
   return (
     <div className="flex items-center justify-between rounded-kp-sm border border-kp-rule bg-kp-mist px-4 py-3">
       <div className="flex items-center gap-3 text-kp-ink-soft">
-        <span className="text-kp-blue">{icon}</span>
+        <span className="text-kp-purple">{icon}</span>
         <span className="kp-body-sm">{label}</span>
       </div>
-      <span className="kp-body-sm font-semibold tabular-nums text-kp-navy">
+      <span className="kp-body-sm font-semibold tabular-nums text-kp-purple">
         {value}
       </span>
     </div>

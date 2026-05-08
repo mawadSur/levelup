@@ -57,7 +57,7 @@ export function KapitusFooter() {
             <Link
               href="/clients/kapitus"
               aria-label="LevelUp home"
-              className="kp-h2 inline-block text-kp-navy"
+              className="kp-h2 inline-block text-kp-ink"
             >
               LevelUp
             </Link>
@@ -68,13 +68,13 @@ export function KapitusFooter() {
 
           {FOOTER_COLUMNS.map(({ heading, links }) => (
             <div key={heading}>
-              <h3 className="kp-eyebrow text-kp-navy">{heading}</h3>
+              <h3 className="kp-eyebrow text-kp-ink">{heading}</h3>
               <ul className="mt-4 space-y-3">
                 {links.map(({ label, href }) => (
                   <li key={label}>
                     <Link
                       href={href}
-                      className="kp-body-sm text-kp-ink-soft transition-colors hover:text-kp-navy"
+                      className="kp-body-sm text-kp-ink-soft transition-colors hover:text-kp-ink"
                     >
                       {label}
                     </Link>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function KapitusFinalCta() {
   return (
-    <section className="bg-kp-navy">
+    <section className="bg-kp-dark-band">
       <div className="mx-auto max-w-kp-container px-6 py-20 sm:px-8 lg:px-12 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div>
@@ -17,9 +17,9 @@ export function KapitusFinalCta() {
           <div className="flex flex-col gap-3 lg:items-end">
             <Link
               href="mailto:hello@ailevel.app?subject=Kapitus%20%E2%80%94%2030-min%20call"
-              className="inline-flex items-center justify-center rounded-kp-sm bg-white px-6 py-3 text-base font-semibold text-kp-navy shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              Schedule a 30-minute call
+              Schedule A 30-Minute Call
             </Link>
             <Link
               href="/clients/kapitus/sign-up"

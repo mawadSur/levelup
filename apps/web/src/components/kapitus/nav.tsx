@@ -16,7 +16,7 @@ export function KapitusNav() {
           aria-label="LevelUp home"
           className="flex items-center gap-2"
         >
-          <span className="kp-h2 text-kp-navy">LevelUp</span>
+          <span className="kp-h2 text-kp-ink">LevelUp</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
@@ -24,7 +24,7 @@ export function KapitusNav() {
             <Link
               key={label}
               href={href}
-              className="kp-body-sm text-kp-ink-soft transition-colors hover:text-kp-navy"
+              className="kp-body-sm text-kp-ink-soft transition-colors hover:text-kp-ink"
             >
               {label}
             </Link>
@@ -34,15 +34,15 @@ export function KapitusNav() {
         <div className="flex items-center gap-3">
           <Link
             href="/clients/kapitus/sign-in"
-            className="kp-body-sm hidden text-kp-ink-soft transition-colors hover:text-kp-navy sm:inline-block"
+            className="kp-body-sm hidden text-kp-ink-soft transition-colors hover:text-kp-ink sm:inline-block"
           >
-            Sign in
+            Sign In
           </Link>
           <Link
             href="/clients/kapitus/sign-up"
-            className="rounded-kp-sm bg-kp-cta px-5 py-2.5 text-sm font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-[rgb(2_132_199)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-blue"
+            className="rounded-kp-sm bg-kp-purple px-5 py-2.5 text-sm font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
           >
-            Apply now
+            Apply Now
           </Link>
         </div>
       </div>

@@ -25,8 +25,8 @@ export function KapitusProblemStats() {
     >
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
-          <p className="kp-eyebrow text-kp-blue">The exposure</p>
-          <h2 className="kp-h1 mt-3 text-kp-navy">
+          <p className="kp-eyebrow text-kp-purple">The exposure</p>
+          <h2 className="kp-h1 mt-3 text-kp-ink">
             The exposure your training program is supposed to prevent.
           </h2>
         </div>
@@ -37,7 +37,7 @@ export function KapitusProblemStats() {
               key={s.figure}
               className="rounded-kp-md border border-kp-rule bg-kp-paper p-8 transition-all duration-200 ease-kp-out hover:-translate-y-px hover:border-kp-rule-strong hover:shadow-kp-sm"
             >
-              <p className="kp-display text-kp-navy">{s.figure}</p>
+              <p className="kp-display text-kp-purple">{s.figure}</p>
               <p className="kp-body mt-4 text-kp-ink-soft">{s.body}</p>
               {s.citation && (
                 <p className="kp-body-sm mt-4 text-kp-ink-mute">
@@ -46,7 +46,7 @@ export function KapitusProblemStats() {
                     href={s.citation.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-kp-blue underline-offset-2 hover:underline"
+                    className="text-kp-purple underline-offset-2 hover:underline"
                   >
                     {s.citation.label}
                   </a>

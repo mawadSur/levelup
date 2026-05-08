@@ -39,12 +39,12 @@ function FaqItem({ q, a, isOpen, onToggle }: ItemProps) {
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors hover:text-kp-navy"
+        className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors hover:text-kp-ink"
         aria-expanded={isOpen}
       >
-        <span className="kp-body-lg font-medium text-kp-navy">{q}</span>
+        <span className="kp-body-lg font-medium text-kp-ink">{q}</span>
         <span
-          className={`shrink-0 text-kp-blue transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}
+          className={`shrink-0 text-kp-purple transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}
           aria-hidden
         >
           <Plus className="h-5 w-5" strokeWidth={1.75} />
@@ -72,8 +72,8 @@ export function KapitusFaq() {
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
           <div>
-            <p className="kp-eyebrow text-kp-blue">FAQ</p>
-            <h2 className="kp-h1 mt-3 text-kp-navy">
+            <p className="kp-eyebrow text-kp-purple">FAQ</p>
+            <h2 className="kp-h1 mt-3 text-kp-ink">
               Questions Kapitus leaders ask first.
             </h2>
             <p className="kp-body mt-5 text-kp-ink-soft">

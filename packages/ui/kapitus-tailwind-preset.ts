@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss';
 
 /*
  * Kapitus client preset — kp-* namespaced theme extension.
- * Apps that import this preset get the kp-* utilities (kp-navy, kp-paper, etc.).
+ * Apps that import this preset get the kp-* utilities (kp-purple, kp-paper, etc.).
  * Apps that don't import it keep the Mission Brief tokens unchanged.
  *
  * The kp.* utilities reference CSS custom properties defined in
@@ -22,18 +22,19 @@ export const kapitusPreset = {
         'kp-ink-soft': 'rgb(var(--kp-ink-soft) / <alpha-value>)',
         'kp-ink-mute': 'rgb(var(--kp-ink-mute) / <alpha-value>)',
         'kp-ink-faint': 'rgb(var(--kp-ink-faint) / <alpha-value>)',
-        'kp-navy': 'rgb(var(--kp-navy) / <alpha-value>)',
-        'kp-navy-deep': 'rgb(var(--kp-navy-deep) / <alpha-value>)',
-        'kp-blue': 'rgb(var(--kp-blue) / <alpha-value>)',
+        'kp-purple': 'rgb(var(--kp-purple) / <alpha-value>)',
+        'kp-purple-deep': 'rgb(var(--kp-purple-deep) / <alpha-value>)',
         'kp-blue-soft': 'rgb(var(--kp-blue-soft) / <alpha-value>)',
-        'kp-cta': 'rgb(var(--kp-cta) / <alpha-value>)',
+        'kp-dark-band': 'rgb(var(--kp-dark-band) / <alpha-value>)',
+        'kp-cream': 'rgb(var(--kp-cream) / <alpha-value>)',
         'kp-success': 'rgb(var(--kp-success) / <alpha-value>)',
         'kp-warning': 'rgb(var(--kp-warning) / <alpha-value>)',
         'kp-danger': 'rgb(var(--kp-danger) / <alpha-value>)',
         'kp-info': 'rgb(var(--kp-info) / <alpha-value>)',
       },
       fontFamily: {
-        'inter-tight': ['var(--font-inter-tight)', 'system-ui', 'sans-serif'],
+        manrope: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'kp-display': [

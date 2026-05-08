@@ -37,8 +37,8 @@ export function KapitusGovernanceMock() {
     >
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
-          <p className="kp-eyebrow text-kp-blue">Evidence</p>
-          <h2 className="kp-h1 mt-3 text-kp-navy">Evidence over assertions.</h2>
+          <p className="kp-eyebrow text-kp-purple">Evidence</p>
+          <h2 className="kp-h1 mt-3 text-kp-ink">Evidence over assertions.</h2>
           <p className="kp-body-lg mt-5 text-kp-ink-soft">
             Your CISO can hand a quarterly governance report to GLBA examiners
             without ever sitting in a LevelUp UI. Below is a representative
@@ -50,7 +50,7 @@ export function KapitusGovernanceMock() {
           <header className="flex flex-col gap-3 border-b border-kp-rule bg-kp-mist px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
               <p className="kp-eyebrow text-kp-ink-mute">Governance dashboard</p>
-              <h3 className="kp-h3 mt-1 text-kp-navy">
+              <h3 className="kp-h3 mt-1 text-kp-ink">
                 Department risk &mdash; week of May 5
               </h3>
             </div>
@@ -89,14 +89,14 @@ export function KapitusGovernanceMock() {
                     key={d.name}
                     className="border-b border-kp-rule last:border-b-0 hover:bg-kp-mist"
                   >
-                    <td className="kp-body px-6 py-4 font-medium text-kp-navy sm:px-8">
+                    <td className="kp-body px-6 py-4 font-medium text-kp-ink sm:px-8">
                       {d.name}
                     </td>
                     <td className="px-6 py-4 sm:px-8">
                       <div className="flex items-center gap-3">
                         <div className="h-1.5 w-32 overflow-hidden rounded-kp-pill bg-kp-fog">
                           <div
-                            className="h-full rounded-kp-pill bg-kp-blue"
+                            className="h-full rounded-kp-pill bg-kp-purple"
                             style={{ width: `${d.completion}%` }}
                           />
                         </div>

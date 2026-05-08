@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
-import { Inter_Tight } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import { KapitusNav } from '@/components/kapitus/nav';
 import { KapitusFooter } from '@/components/kapitus/footer';
 import '@levelup/ui/styles/kapitus';
 
-const interTight = Inter_Tight({
+const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-inter-tight',
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -25,9 +25,9 @@ export default function KapitusLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div
-      className={`kapitus ${interTight.variable} flex min-h-screen flex-col bg-kp-paper text-kp-ink`}
+      className={`kapitus ${manrope.variable} flex min-h-screen flex-col bg-kp-paper text-kp-ink`}
       data-theme="kapitus"
-      style={{ fontFamily: 'var(--font-inter-tight), system-ui, sans-serif' }}
+      style={{ fontFamily: 'var(--font-manrope), system-ui, sans-serif' }}
     >
       <KapitusNav />
       <main className="flex-1">{children}</main>

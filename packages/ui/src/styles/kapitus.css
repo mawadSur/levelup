@@ -19,12 +19,12 @@
   --kp-ink-mute: 100 116 139;
   --kp-ink-faint: 148 163 184;
 
-  /* Brand */
-  --kp-navy: 11 36 71;
-  --kp-navy-deep: 7 22 44;
-  --kp-blue: 30 64 175;
-  --kp-blue-soft: 219 234 254;
-  --kp-cta: 14 165 233;
+  /* Brand — matches live kapitus.com palette */
+  --kp-purple: 173 0 255;        /* #AD00FF — primary brand accent */
+  --kp-purple-deep: 145 0 224;   /* #9100E0 — hover on primary */
+  --kp-blue-soft: 118 148 255;   /* #7694FF — periwinkle secondary CTA */
+  --kp-dark-band: 40 40 40;      /* #282828 — hero + final CTA dark band */
+  --kp-cream: 252 255 223;       /* #FCFFDF — accent highlight band */
 
   /* Semantic */
   --kp-success: 22 163 74;
@@ -53,7 +53,7 @@
 
   background-color: rgb(var(--kp-paper));
   color: rgb(var(--kp-ink));
-  font-family: var(--font-inter-tight), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings:
@@ -68,12 +68,12 @@
 }
 
 .kapitus ::selection {
-  background-color: rgb(var(--kp-blue) / 0.18);
+  background-color: rgb(var(--kp-purple) / 0.18);
   color: rgb(var(--kp-ink));
 }
 
 .kapitus *:focus-visible {
-  outline: 2px solid rgb(var(--kp-blue));
+  outline: 2px solid rgb(var(--kp-purple));
   outline-offset: 2px;
 }
 

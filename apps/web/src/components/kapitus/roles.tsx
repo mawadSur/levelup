@@ -48,8 +48,8 @@ export function KapitusRoles() {
     >
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
-          <p className="kp-eyebrow text-kp-blue">By role</p>
-          <h2 className="kp-h1 mt-3 text-kp-navy">
+          <p className="kp-eyebrow text-kp-purple">By role</p>
+          <h2 className="kp-h1 mt-3 text-kp-ink">
             Built for the roles you actually staff.
           </h2>
           <p className="kp-body-lg mt-5 text-kp-ink-soft">
@@ -64,10 +64,10 @@ export function KapitusRoles() {
               key={title}
               className="rounded-kp-md border border-kp-rule bg-kp-paper p-6 transition-all duration-200 ease-kp-out hover:-translate-y-px hover:border-kp-rule-strong hover:shadow-kp-sm lg:p-7"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-kp-sm bg-kp-blue-soft text-kp-navy">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-kp-sm bg-kp-cream text-kp-purple">
                 <Icon className="h-5 w-5" strokeWidth={1.5} />
               </span>
-              <h3 className="kp-h3 mt-5 text-kp-navy">{title}</h3>
+              <h3 className="kp-h3 mt-5 text-kp-ink">{title}</h3>
               <p
                 className="kp-body-sm mt-2 text-kp-ink-soft"
                 dangerouslySetInnerHTML={{ __html: body }}

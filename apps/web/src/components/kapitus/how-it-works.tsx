@@ -24,8 +24,8 @@ export function KapitusHowItWorks() {
     >
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
-          <p className="kp-eyebrow text-kp-blue">How it works</p>
-          <h2 className="kp-h1 mt-3 text-kp-navy">
+          <p className="kp-eyebrow text-kp-purple">How it works</p>
+          <h2 className="kp-h1 mt-3 text-kp-ink">
             A 30-day path from blind spot to board-ready evidence.
           </h2>
           <p className="kp-body-lg mt-5 text-kp-ink-soft">
@@ -41,12 +41,12 @@ export function KapitusHowItWorks() {
               className="rounded-kp-md border border-kp-rule bg-kp-paper p-8 transition-all duration-200 ease-kp-out hover:-translate-y-px hover:border-kp-rule-strong hover:shadow-kp-sm"
             >
               <span
-                className="font-bold tabular-nums text-kp-navy"
+                className="font-bold tabular-nums text-kp-purple"
                 style={{ fontSize: '3.25rem', lineHeight: 1 }}
               >
                 {s.n}
               </span>
-              <h3 className="kp-h2 mt-5 text-kp-navy">{s.title}</h3>
+              <h3 className="kp-h2 mt-5 text-kp-ink">{s.title}</h3>
               <p className="kp-body mt-4 text-kp-ink-soft">{s.body}</p>
             </article>
           ))}
