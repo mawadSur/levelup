@@ -21,6 +21,7 @@ import {
   FileSearch,
   AlertTriangle,
   Plug,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   Avatar,
@@ -82,6 +83,7 @@ const NAV_GROUPS: ReadonlyArray<NavGroup> = [
   {
     label: 'Governance',
     items: [
+      { href: '/admin/governance', label: 'Governance', icon: ShieldCheck },
       { href: '/admin/policy', label: 'Policy', icon: FileText },
       { href: '/admin/flags', label: 'Flags', icon: Flag },
       { href: '/admin/anomalies', label: 'Anomalies', icon: AlertTriangle },
