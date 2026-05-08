@@ -25,6 +25,7 @@ export {
   enqueuePathGeneration,
   enqueueAnomalyScan,
   enqueueGovernanceReport,
+  enqueueTrialExpiryCheck,
 } from './queues.js';
 
 // Worker factory
@@ -60,4 +61,6 @@ export type {
   AnomalyScanOutput,
   GovernanceReportInput,
   GovernanceReportOutput,
+  TrialExpiryCheckInput,
+  TrialExpiryCheckOutput,
 } from './types.js';

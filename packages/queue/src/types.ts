@@ -91,6 +91,19 @@ export interface AnomalyScanOutput {
   alertsCreated: number;
 }
 
+export interface TrialExpiryCheckInput {
+  /** ISO timestamp injected by the cron scheduler. */
+  triggeredAt?: string;
+}
+export interface TrialExpiryCheckOutput {
+  /** Orgs reminded at day 11 (3-day warning). */
+  remindedCount: number;
+  /** Orgs that hit the soft-lock window (day 14+, no upgrade). */
+  expiredCount: number;
+  /** Orgs auto-archived at day 21+. */
+  archivedCount: number;
+}
+
 export interface GovernanceReportInput {
   /** Caller-issued request id (cuid) used to track status & idempotency. */
   requestId: string;
@@ -127,6 +140,7 @@ export interface JobMap {
   'path-generation': { input: PathGenerationInput; output: PathGenerationOutput };
   'anomaly-scan': { input: AnomalyScanInput; output: AnomalyScanOutput };
   'governance-report': { input: GovernanceReportInput; output: GovernanceReportOutput };
+  'trial-expiry-check': { input: TrialExpiryCheckInput; output: TrialExpiryCheckOutput };
 }
 
 /** Union of all valid job names. */

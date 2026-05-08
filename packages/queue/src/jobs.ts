@@ -111,4 +111,13 @@ export const JOBS: Record<JobName, JobRegistration> = {
       removeOnFail: false,
     },
   },
+
+  'trial-expiry-check': {
+    queue: 'trial-expiry-check',
+    defaultOpts: {
+      // Single attempt — daily scan. Failed runs are picked up by the next
+      // day's scheduled invocation; re-running could double-archive.
+      attempts: 1,
+    },
+  },
 } as const;

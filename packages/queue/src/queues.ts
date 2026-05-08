@@ -14,6 +14,7 @@ import type {
   PathGenerationInput,
   AnomalyScanInput,
   GovernanceReportInput,
+  TrialExpiryCheckInput,
 } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -189,6 +190,23 @@ export function enqueueGovernanceReport(
     // jobId mirrors requestId so getJob(requestId) is a one-liner from the
     // status endpoint, and BullMQ deduplicates concurrent same-id submits.
     jobId: input.requestId,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `trial-expiry-check` job.
+ *
+ * Daily scan: emits 3-day warning emails (day 11), records the trial
+ * expired audit event (day 14), and archives orgs that never upgraded
+ * (day 21+). Producer is the worker's recurring-cron registration.
+ */
+export function enqueueTrialExpiryCheck(
+  input?: TrialExpiryCheckInput,
+  overrides?: JobsOptions,
+): Promise<Job<TrialExpiryCheckInput, JobMap['trial-expiry-check']['output']>> {
+  return getQueue('trial-expiry-check').add('trial-expiry-check', input ?? {}, {
+    ...JOBS['trial-expiry-check'].defaultOpts,
     ...overrides,
   });
 }
