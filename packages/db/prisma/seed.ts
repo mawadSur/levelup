@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { PrismaClient, Role, AiLevel, Plan } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -431,10 +433,42 @@ async function main() {
     }
   }
 
+  // ── Global assessment-item bank ───────────────────────────────────────────
+  // Items are global (organizationId = null) so every tenant samples from the
+  // same bank. Idempotent: matched by prompt text.
+  const bankPath = path.join(__dirname, '..', 'content', 'assessment-bank', 'items.json');
+  const bankItems: Array<{
+    prompt: string;
+    choices: string[];
+    correctIndex: number;
+    level: AiLevel;
+    category: string;
+  }> = JSON.parse(fs.readFileSync(bankPath, 'utf-8'));
+  let bankCreated = 0;
+  for (const item of bankItems) {
+    const existing = await prisma.assessmentItem.findFirst({
+      where: { organizationId: null, prompt: item.prompt },
+      select: { id: true },
+    });
+    if (existing) continue;
+    await prisma.assessmentItem.create({
+      data: {
+        organizationId: null,
+        prompt: item.prompt,
+        choices: item.choices,
+        correctIndex: item.correctIndex,
+        level: item.level,
+        category: item.category,
+      },
+    });
+    bankCreated += 1;
+  }
+
   console.log('Seed complete:', {
     org: org.id,
     users: [admin.email, manager.email, employee1.email, employee2.email],
     paths: PATHS.map((p) => p.slug),
+    assessmentItems: { created: bankCreated, total: bankItems.length },
   });
 }
 
