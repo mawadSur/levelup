@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { Button, GridLines, MonoLabel } from '@levelup/ui';
+import { Button, GridLines, MissionNumber, MonoLabel } from '@levelup/ui';
 
 export function Hero() {
   return (
@@ -54,34 +55,46 @@ export function Hero() {
 }
 
 function TelemetryCard() {
-  const rows = [
-    { idx: '01', label: 'AI POLICY', value: '98%', tone: 'signal' as const, status: 'ENFORCED' },
+  const rows: Array<{
+    idx: string;
+    label: string;
+    value: ReactNode;
+    tone: 'signal' | 'success' | 'default';
+    status: string;
+  }> = [
+    {
+      idx: '01',
+      label: 'AI POLICY',
+      value: <MissionNumber value={0.98} format="percent" />,
+      tone: 'signal',
+      status: 'ENFORCED',
+    },
     {
       idx: '02',
       label: 'COACH',
       value: 'ACTIVE',
-      tone: 'success' as const,
+      tone: 'success',
       status: 'STREAMING',
     },
     {
       idx: '03',
       label: 'COMPLETION',
-      value: '84%',
-      tone: 'default' as const,
+      value: <MissionNumber value={0.84} format="percent" />,
+      tone: 'default',
       status: 'Q2 RUN',
     },
     {
       idx: '04',
       label: 'RISK FLAGS',
       value: '00',
-      tone: 'success' as const,
+      tone: 'success',
       status: 'CLEAR',
     },
     {
       idx: '05',
       label: 'CERTIFICATES',
-      value: '1,248',
-      tone: 'default' as const,
+      value: <MissionNumber value={1248} format="integer" />,
+      tone: 'default',
       status: 'ISSUED',
     },
   ];
