@@ -19,8 +19,8 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, selectedIndex, onSelect, groupName }: QuestionCardProps) {
   return (
-    <fieldset className="space-y-5">
-      <legend className="block text-balance text-xl font-semibold leading-snug text-paper-100 sm:text-2xl">
+    <fieldset className="space-y-6">
+      <legend className="block text-balance font-serif text-h1 italic leading-snug text-paper-100 sm:text-display-md">
         {question.text}
       </legend>
 
@@ -49,10 +49,8 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
               />
               <span
                 className={cn(
-                  'mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-colors',
-                  isSelected
-                    ? 'border-signal bg-signal text-white dark:border-signal/55 dark:bg-signal/55'
-                    : 'border-ink-500 bg-ink-900',
+                  'mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-data border transition-colors',
+                  isSelected ? 'border-signal bg-signal text-ink-900' : 'border-ink-500 bg-ink-900',
                 )}
                 aria-hidden="true"
               >

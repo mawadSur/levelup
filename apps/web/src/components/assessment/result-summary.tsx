@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Loader2, RotateCcw, Sparkles } from 'lucide-react';
-import { Button, Card, CardContent, Progress, Separator } from '@levelup/ui';
+import { Button, Card, CardContent, MissionNumber, MonoLabel, Separator } from '@levelup/ui';
 import { LevelBadge, levelDescription, type AiLevel } from './level-badge';
 
 const RESULT_KEY = 'levelup-assessment-last-result';
@@ -82,14 +82,14 @@ export function ResultSummary() {
 
   if (!result) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-12">
+      <div className="mx-auto max-w-xl px-6 py-12">
         <Card>
-          <CardContent className="py-8 text-center">
-            <h2 className="mb-2 text-lg font-semibold">No recent result found</h2>
-            <p className="mb-6 text-sm text-paper-300">
+          <CardContent className="space-y-4 py-10 text-center">
+            <MonoLabel>NO RECENT RESULT</MonoLabel>
+            <p className="text-body-sm text-paper-300">
               Take the baseline assessment to see your recommended level.
             </p>
-            <Button asChild>
+            <Button asChild variant="primary">
               <Link href="/assessment/start">Start the assessment</Link>
             </Button>
           </CardContent>
@@ -110,75 +110,85 @@ export function ResultSummary() {
     : deriveLevelBreakdown(result.score, result.recommendedLevel);
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
-      {/* Hero */}
+    <div className="mx-auto max-w-content px-6 py-12 sm:py-16">
       <div className="text-center">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-signal/15 px-3 py-1 text-xs font-medium text-signal-dim dark:bg-ink-800/50 dark:text-signal">
-          <Sparkles size={14} aria-hidden="true" />
-          Assessment complete
+        <div className="mb-4 inline-flex items-center gap-2">
+          <Sparkles size={14} className="text-signal" aria-hidden="true" />
+          <MonoLabel tone="signal">ASSESSMENT COMPLETE</MonoLabel>
         </div>
-        <h1 className="mb-3 text-3xl font-bold tracking-tight text-paper-100 sm:text-4xl">
-          Your recommended level
+        <p className="mb-4 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          RECOMMENDED LEVEL
+        </p>
+        <h1 className="mb-3 font-serif text-display-lg italic text-paper-100">
+          <MissionNumber value={result.score / 100} format="percent" /> ·{' '}
+          {result.recommendedLevel.replace('_', ' ')}
         </h1>
         <div className="mb-4 flex justify-center">
           <LevelBadge level={result.recommendedLevel} size="lg" />
         </div>
-        <p className="mx-auto max-w-md text-balance text-sm text-paper-300">
+        <p className="mx-auto max-w-reading text-balance text-body text-paper-300">
           {levelDescription(result.recommendedLevel)}
         </p>
       </div>
 
-      <Card className="mt-8">
-        <CardContent className="pt-6">
-          {/* Overall score row */}
-          <div className="mb-6">
-            <div className="mb-1.5 flex items-baseline justify-between">
-              <h2 className="text-sm font-semibold text-paper-100">Overall score</h2>
-              <span className="text-2xl font-bold tracking-tight text-paper-100">
+      <Card className="mx-auto mt-10 max-w-2xl">
+        <CardContent className="space-y-6 p-6">
+          <div className="space-y-2">
+            <div className="flex items-baseline justify-between">
+              <MonoLabel>OVERALL SCORE</MonoLabel>
+              <span className="font-serif text-h1 italic tabular-nums text-paper-100">
                 {result.score}%
               </span>
             </div>
-            <Progress value={result.score} className="h-2" />
-            <p className="mt-2 text-xs text-paper-300">
-              You answered {result.answered} of {result.total} questions
-              {result.skipped > 0 ? ` (${result.skipped} skipped)` : ''}.
+            <div className="h-1 overflow-hidden rounded-data bg-ink-700">
+              <div
+                className="h-full bg-signal transition-[width] duration-500 ease-mission"
+                style={{ width: `${result.score}%` }}
+              />
+            </div>
+            <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              {result.answered} / {result.total} ANSWERED
+              {result.skipped > 0 ? ` · ${result.skipped} SKIPPED` : ''}
             </p>
           </div>
 
-          <Separator className="my-6" />
+          <Separator />
 
-          {/* Per-level breakdown */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-paper-100">How you scored at each level</h3>
-            <div className="space-y-2.5">
+            <MonoLabel>BREAKDOWN BY LEVEL</MonoLabel>
+            <ul className="space-y-2.5">
               {ALL_LEVELS.map((level) => (
-                <div key={level} className="flex items-center gap-3">
+                <li key={level} className="flex items-center gap-3">
                   <div className="w-32 flex-none">
                     <LevelBadge level={level} size="sm" />
                   </div>
-                  <Progress value={breakdown[level]} className="h-1.5 flex-1" />
-                  <span className="w-10 text-right text-xs tabular-nums text-paper-300">
+                  <div className="h-1 flex-1 overflow-hidden rounded-data bg-ink-700">
+                    <div
+                      className="h-full bg-signal transition-[width] duration-500 ease-mission"
+                      style={{ width: `${breakdown[level]}%` }}
+                    />
+                  </div>
+                  <span className="w-10 text-right font-mono text-mono-sm tabular-nums text-paper-100">
                     {breakdown[level]}%
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
-            <p className="pt-2 text-xs text-paper-300">
-              We&apos;ll use this to tailor your learning path. You can retake the assessment any
-              time.
+            </ul>
+            <p className="pt-1 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              YOU CAN RETAKE THIS ANY TIME
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
-        <Button variant="ghost" asChild>
+      <div className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 sm:flex-row sm:justify-between">
+        <Button variant="secondary" asChild>
           <Link href="/assessment/start">
             <RotateCcw className="mr-1.5 h-4 w-4" aria-hidden="true" />
             Retake assessment
           </Link>
         </Button>
-        <Button asChild size="lg">
+        <Button asChild variant="primary" size="lg">
           <Link href="/learn">
             See your tailored learning path
             <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />

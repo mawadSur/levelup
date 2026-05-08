@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Loader2, SkipForward } from 'lucide-react';
-import { Button, Card, CardContent } from '@levelup/ui';
+import { Button, Card, CardContent, MonoLabel } from '@levelup/ui';
 import { assessments } from '@/lib/api';
 import type { Assessment, AssessmentItem } from '@/lib/api/assessments';
 import { ProgressHeader } from './progress-header';
@@ -338,9 +338,9 @@ export function AssessmentRunner() {
   if (state.phase === 'idle' || state.phase === 'loading') {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-paper-300">
-          <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
-          <span className="text-sm">Loading your assessment...</span>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-6 w-6 animate-spin text-paper-500" aria-hidden="true" />
+          <MonoLabel>LOADING ASSESSMENT…</MonoLabel>
         </div>
       </div>
     );
@@ -348,12 +348,14 @@ export function AssessmentRunner() {
 
   if (state.phase === 'error') {
     return (
-      <div className="mx-auto max-w-xl px-4 py-12">
+      <div className="mx-auto max-w-xl px-6 py-12">
         <Card>
-          <CardContent className="py-8 text-center">
-            <h2 className="mb-2 text-lg font-semibold">We couldn&apos;t start your assessment</h2>
-            <p className="mb-6 text-sm text-paper-300">{state.errorMessage}</p>
-            <Button onClick={() => window.location.reload()}>Try again</Button>
+          <CardContent className="space-y-4 py-10 text-center">
+            <MonoLabel tone="danger">ASSESSMENT FAILED</MonoLabel>
+            <p className="text-body-sm text-paper-300">{state.errorMessage}</p>
+            <Button variant="primary" onClick={() => window.location.reload()}>
+              Try again
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -393,11 +395,18 @@ export function AssessmentRunner() {
         }
       `}</style>
 
-      <ProgressHeader current={state.index + 1} total={total} />
+      <ProgressHeader
+        current={state.index + 1}
+        total={total}
+        estimatedMinutesRemaining={Math.max(1, Math.round((total - state.index) * 0.25))}
+      />
 
-      <div className="mt-8 flex-1">
+      <div className="mt-10 flex-1">
         {state.errorMessage && (
-          <div className="mb-4 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+          <div
+            role="alert"
+            className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
+          >
             {state.errorMessage}
           </div>
         )}
@@ -411,20 +420,20 @@ export function AssessmentRunner() {
           />
         </div>
 
-        <div className="mt-6 flex items-center justify-center">
+        <div className="mt-8 flex items-center justify-center">
           <button
             type="button"
             onClick={handleSkip}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-paper-300 hover:text-paper-100 hover:underline disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500 transition-colors hover:text-paper-100 disabled:opacity-50"
           >
             <SkipForward size={14} aria-hidden="true" />
-            Skip this question
+            SKIP
           </button>
         </div>
       </div>
 
-      <div className="mt-8 flex items-center justify-between gap-3 border-t pt-6">
+      <div className="mt-10 flex items-center justify-between gap-3 border-t border-ink-600 pt-6">
         <Button variant="ghost" onClick={handleBack} disabled={isFirst || isSubmitting}>
           <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden="true" />
           Back
@@ -432,6 +441,7 @@ export function AssessmentRunner() {
 
         {isLast ? (
           <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={!canAdvance || isSubmitting}
             className="min-w-[120px]"
@@ -439,14 +449,15 @@ export function AssessmentRunner() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-1.5 h-4 w-4 animate-spin" aria-hidden="true" />
-                Scoring...
+                Scoring…
               </>
             ) : (
-              'Submit'
+              'Submit →'
             )}
           </Button>
         ) : (
           <Button
+            variant="primary"
             onClick={handleNext}
             disabled={!canAdvance || isSubmitting}
             className="min-w-[100px]"
