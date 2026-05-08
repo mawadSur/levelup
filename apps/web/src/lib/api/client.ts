@@ -254,12 +254,12 @@ export async function apiFetchStream(
     } catch {
       // ignore
     }
+    const fields = extractErrorFields(rawBody);
     throw new ApiError({
-      message:
-        rawBody.message ?? rawBody.error ?? `Stream request failed with status ${response.status}`,
+      message: fields.message ?? `Stream request failed with status ${response.status}`,
       status: response.status,
-      code: rawBody.code ?? defaultCodeForStatus(response.status),
-      requestId: rawBody.requestId,
+      code: fields.code ?? defaultCodeForStatus(response.status),
+      requestId: fields.requestId,
     });
   }
 
