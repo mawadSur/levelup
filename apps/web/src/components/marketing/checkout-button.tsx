@@ -8,6 +8,8 @@ import type { CreateCheckoutSessionInput } from '@levelup/types';
 
 interface CheckoutButtonProps {
   plan: CreateCheckoutSessionInput['plan'];
+  interval?: CreateCheckoutSessionInput['interval'];
+  quantity?: number;
   label: string;
   variant?: 'primary' | 'secondary' | 'default' | 'outline';
   className?: string;
@@ -15,6 +17,8 @@ interface CheckoutButtonProps {
 
 export function CheckoutButton({
   plan,
+  interval,
+  quantity,
   label,
   variant = 'primary',
   className,
@@ -27,9 +31,8 @@ export function CheckoutButton({
     try {
       const { url } = await billing.createCheckout({
         plan,
-        seats: 1,
-        successUrl: `${window.location.origin}/admin`,
-        cancelUrl: window.location.href,
+        interval,
+        quantity,
       });
       router.push(url);
     } catch {

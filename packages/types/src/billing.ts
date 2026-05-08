@@ -1,11 +1,12 @@
 import { z } from 'zod';
-import { Plan } from '@levelup/db';
+import { Plan, BillingInterval } from '@levelup/db';
 
 export const createCheckoutSessionSchema = z.object({
   plan: z.nativeEnum(Plan),
-  seats: z.number().int().min(1).max(10_000),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
+  interval: z.nativeEnum(BillingInterval).optional(),
+  quantity: z.number().int().min(1).max(10_000).optional(),
+  successUrl: z.string().url().optional(),
+  cancelUrl: z.string().url().optional(),
 });
 export type CreateCheckoutSessionInput = z.infer<typeof createCheckoutSessionSchema>;
 

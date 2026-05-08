@@ -166,42 +166,45 @@ describe('submitQuizAttemptSchema', () => {
 // createCheckoutSessionSchema
 // ============================================================================
 describe('createCheckoutSessionSchema', () => {
-  it('parses a valid checkout session request', () => {
+  it('parses a valid per-seat checkout request', () => {
     const result = createCheckoutSessionSchema.safeParse({
       plan: VALID_PLAN,
-      seats: 10,
-      successUrl: 'https://app.levelup.ai/billing/success',
-      cancelUrl: 'https://app.levelup.ai/billing/cancel',
+      interval: 'MONTHLY',
+      quantity: 10,
     });
     expect(result.success).toBe(true);
   });
 
-  it('fails when seats is 0', () => {
+  it('parses a flat-rate checkout request without quantity', () => {
     const result = createCheckoutSessionSchema.safeParse({
       plan: VALID_PLAN,
-      seats: 0,
-      successUrl: 'https://app.levelup.ai/success',
-      cancelUrl: 'https://app.levelup.ai/cancel',
+      interval: 'ANNUAL',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('fails when quantity is 0', () => {
+    const result = createCheckoutSessionSchema.safeParse({
+      plan: VALID_PLAN,
+      interval: 'MONTHLY',
+      quantity: 0,
     });
     expect(result.success).toBe(false);
   });
 
-  it('fails when seats exceeds 10000', () => {
+  it('fails when quantity exceeds 10000', () => {
     const result = createCheckoutSessionSchema.safeParse({
       plan: VALID_PLAN,
-      seats: 10001,
-      successUrl: 'https://app.levelup.ai/success',
-      cancelUrl: 'https://app.levelup.ai/cancel',
+      interval: 'MONTHLY',
+      quantity: 10001,
     });
     expect(result.success).toBe(false);
   });
 
-  it('fails on invalid successUrl', () => {
+  it('fails on invalid successUrl when provided', () => {
     const result = createCheckoutSessionSchema.safeParse({
       plan: VALID_PLAN,
-      seats: 5,
       successUrl: 'not-a-url',
-      cancelUrl: 'https://app.levelup.ai/cancel',
     });
     expect(result.success).toBe(false);
   });
@@ -209,14 +212,12 @@ describe('createCheckoutSessionSchema', () => {
   it('fails on invalid plan value', () => {
     const result = createCheckoutSessionSchema.safeParse({
       plan: 'PRO',
-      seats: 5,
-      successUrl: 'https://app.levelup.ai/success',
-      cancelUrl: 'https://app.levelup.ai/cancel',
+      quantity: 5,
     });
     expect(result.success).toBe(false);
   });
 
-  it('fails on missing required fields', () => {
+  it('fails on missing plan', () => {
     const result = createCheckoutSessionSchema.safeParse({});
     expect(result.success).toBe(false);
     if (!result.success) {
