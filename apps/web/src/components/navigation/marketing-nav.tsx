@@ -38,7 +38,7 @@ export function MarketingNav() {
             <Link href="/sign-in">Sign in</Link>
           </Button>
           <Button asChild size="sm">
-            <Link href="mailto:hello@levelup.example">Get a demo</Link>
+            <Link href="/sign-up">Get a demo</Link>
           </Button>
         </nav>
       </div>

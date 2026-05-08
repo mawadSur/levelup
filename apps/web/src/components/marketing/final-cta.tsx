@@ -29,7 +29,7 @@ export function FinalCta() {
               size="lg"
               className="w-full bg-white text-indigo-700 hover:bg-indigo-50 sm:w-auto"
             >
-              <Link href="mailto:hello@levelup.example">Get a demo</Link>
+              <Link href="/sign-up">Get a demo</Link>
             </Button>
           </ScrollItem>
           <ScrollItem variants={scaleIn}>

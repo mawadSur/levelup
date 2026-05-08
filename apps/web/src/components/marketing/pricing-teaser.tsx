@@ -19,7 +19,7 @@ const PLANS = [
       'Basic completion reporting',
     ],
     cta: 'Start free trial',
-    ctaHref: 'mailto:hello@levelup.example?subject=Starter plan',
+    ctaHref: '/sign-up?plan=starter',
     highlight: false,
   },
   {
@@ -35,7 +35,7 @@ const PLANS = [
       'CSV export and API access',
     ],
     cta: 'Get a demo',
-    ctaHref: 'mailto:hello@levelup.example?subject=Growth plan',
+    ctaHref: '/sign-up?plan=growth',
     highlight: true,
   },
   {
@@ -51,7 +51,7 @@ const PLANS = [
       'Custom learning paths and branding',
     ],
     cta: 'Talk to sales',
-    ctaHref: 'mailto:hello@levelup.example?subject=Enterprise plan',
+    ctaHref: '/sign-up?plan=enterprise',
     highlight: false,
   },
 ];

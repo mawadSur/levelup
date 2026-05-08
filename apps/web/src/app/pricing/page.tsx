@@ -190,7 +190,7 @@ export default async function PricingPage() {
               ]}
               cta={
                 <Button asChild variant="outline" className="w-full">
-                  <a href="mailto:hello@levelup.example">Contact sales</a>
+                  <Link href="/sign-up?plan=enterprise">Contact sales</Link>
                 </Button>
               }
             />
@@ -303,7 +303,7 @@ export default async function PricingPage() {
             </p>
             <div className="mt-8">
               <Button asChild size="lg" variant="default">
-                <a href="mailto:hello@levelup.example">Get a demo</a>
+                <Link href="/sign-up">Get a demo</Link>
               </Button>
             </div>
           </div>

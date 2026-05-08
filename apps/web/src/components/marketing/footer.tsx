@@ -7,7 +7,7 @@ const FOOTER_LINKS = [
     heading: 'Product',
     links: [
       { label: 'Pricing', href: '/pricing' },
-      { label: 'Request a demo', href: 'mailto:hello@levelup.example' },
+      { label: 'Request a demo', href: '/sign-up' },
     ],
   },
   {
@@ -15,7 +15,7 @@ const FOOTER_LINKS = [
     links: [
       { label: 'About', href: '/about' },
       { label: 'Careers', href: '/careers' },
-      { label: 'Contact', href: 'mailto:hello@levelup.example' },
+      { label: 'Contact', href: '/sign-up' },
     ],
   },
   {

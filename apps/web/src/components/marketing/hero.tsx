@@ -86,7 +86,7 @@ export function Hero() {
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
               <Button asChild size="lg" className="w-full sm:w-auto">
-                <Link href="mailto:hello@levelup.example">Get a demo</Link>
+                <Link href="/sign-up">Get a demo</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
                 <a href="#how-it-works">See how it works</a>
