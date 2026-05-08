@@ -1,16 +1,12 @@
-'use client';
-
 import Link from 'next/link';
-import { Button } from '@levelup/ui';
-import { ScrollReveal } from '@/lib/motion/scroll-reveal';
-import { Stagger, ScrollItem } from '@/lib/motion/stagger';
+import { Button, MonoLabel, NumberedSection } from '@levelup/ui';
 import { PlanCard } from './plan-card';
 
 const PLANS = [
   {
     name: 'Starter',
     price: '$499',
-    period: '/month',
+    period: '/MONTH',
     description: 'For smaller teams starting their AI training program.',
     features: [
       'Up to 50 seats',
@@ -25,7 +21,7 @@ const PLANS = [
   {
     name: 'Growth',
     price: '$1,499',
-    period: '/month',
+    period: '/MONTH',
     description: 'For mid-size organizations that need visibility and control.',
     features: [
       'Up to 250 seats',
@@ -58,46 +54,55 @@ const PLANS = [
 
 export function PricingTeaser() {
   return (
-    <section className="py-20 sm:py-28 bg-muted/20" id="pricing">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ScrollReveal className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="font-display text-3xl tracking-tight text-foreground sm:text-4xl">
-            Pricing that scales with your team.
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            All plans include a 30-day pilot. No training required to launch.
-          </p>
-        </ScrollReveal>
+    <div id="pricing" className="border-b border-ink-600 bg-ink-900 py-24 lg:py-32">
+      <div className="mx-auto max-w-content px-6 lg:px-8">
+        <NumberedSection numeral="V." eyebrow="THE PRICE">
+          <div className="mb-16 grid gap-8 lg:grid-cols-[7fr,5fr] lg:items-end">
+            <h2 className="font-serif text-display-lg text-paper-100">
+              Pricing that scales <em className="italic text-paper-300">with the team.</em>
+            </h2>
+            <p className="text-body-lg text-paper-300">
+              All plans include a 30-day pilot. No training required to launch. No procurement
+              labyrinth.
+            </p>
+          </div>
 
-        {/* items-end so the taller Growth card naturally sticks up at the top */}
-        <Stagger className="grid gap-8 sm:grid-cols-3 items-end">
-          {PLANS.map(({ name, price, period, description, features, cta, ctaHref, highlight }) => (
-            <ScrollItem key={name}>
-              <PlanCard
-                name={name}
-                price={price}
-                period={period}
-                description={description}
-                features={features}
-                highlight={highlight}
-                cta={
-                  <Button asChild variant={highlight ? 'default' : 'outline'} className="w-full">
-                    <Link href={ctaHref}>{cta}</Link>
-                  </Button>
-                }
-              />
-            </ScrollItem>
-          ))}
-        </Stagger>
+          <div className="grid gap-6 sm:grid-cols-3 sm:items-stretch">
+            {PLANS.map(
+              ({ name, price, period, description, features, cta, ctaHref, highlight }) => (
+                <PlanCard
+                  key={name}
+                  name={name}
+                  price={price}
+                  period={period}
+                  description={description}
+                  features={features}
+                  highlight={highlight}
+                  cta={
+                    <Button
+                      asChild
+                      variant={highlight ? 'primary' : 'secondary'}
+                      className="w-full"
+                    >
+                      <Link href={ctaHref}>{cta}</Link>
+                    </Button>
+                  }
+                />
+              ),
+            )}
+          </div>
 
-        <p className="mt-8 text-center text-sm text-muted-foreground">
-          Need more detail?{' '}
-          <Link href="/pricing" className="text-primary underline-offset-4 hover:underline">
-            See the full pricing page
-          </Link>{' '}
-          with seat-by-seat estimates and an ROI calculator.
-        </p>
+          <div className="mt-10 flex items-center justify-center gap-3">
+            <MonoLabel className="text-paper-500">FULL COMPARISON</MonoLabel>
+            <Link
+              href="/pricing"
+              className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal underline-offset-4 hover:underline"
+            >
+              SEE PRICING PAGE →
+            </Link>
+          </div>
+        </NumberedSection>
       </div>
-    </section>
+    </div>
   );
 }

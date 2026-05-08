@@ -9,14 +9,14 @@ import type { CreateCheckoutSessionInput } from '@levelup/types';
 interface CheckoutButtonProps {
   plan: CreateCheckoutSessionInput['plan'];
   label: string;
-  variant?: 'default' | 'outline';
+  variant?: 'primary' | 'secondary' | 'default' | 'outline';
   className?: string;
 }
 
 export function CheckoutButton({
   plan,
   label,
-  variant = 'default',
+  variant = 'primary',
   className,
 }: CheckoutButtonProps) {
   const router = useRouter();
