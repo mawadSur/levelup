@@ -33,6 +33,7 @@ import { handleAuditCleanup } from './jobs/audit-cleanup.js';
 import { pathGenerationHandler } from './jobs/path-generation.js';
 import { anomalyScanHandler } from './jobs/anomaly-scan.js';
 import { handleGovernanceReport } from './jobs/governance-report.js';
+import { handleTrialExpiryCheck } from './jobs/trial-expiry-check.js';
 import { attachDlqListener } from './jobs/dlq.js';
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -46,6 +47,12 @@ const ANOMALY_SCAN_REPEAT_JOB_ID = 'anomaly-scan-hourly';
 const AUDIT_CLEANUP_CRON = '0 3 * * *';
 /** Stable jobId so BullMQ deduplicates the repeatable on worker restart. */
 const AUDIT_CLEANUP_REPEAT_JOB_ID = 'audit-cleanup-daily';
+
+/** Daily at 02:00 UTC — runs ahead of audit-cleanup so archived orgs roll out
+ * before the same day's retention sweep. */
+const TRIAL_EXPIRY_CHECK_CRON = '0 2 * * *';
+/** Stable jobId so BullMQ deduplicates the repeatable on worker restart. */
+const TRIAL_EXPIRY_CHECK_REPEAT_JOB_ID = 'repeat:trial-expiry-check:daily';
 
 // ---------------------------------------------------------------------------
 // Boot workers
@@ -139,6 +146,14 @@ function boot(): void {
   registerWorker(
     'governance-report',
     createWorker('governance-report', handleGovernanceReport, { concurrency: 1 }),
+    1,
+  );
+
+  // trial-expiry-check — concurrency 1: a daily sweep that mutates
+  // organizations should never run in parallel with itself.
+  registerWorker(
+    'trial-expiry-check',
+    createWorker('trial-expiry-check', handleTrialExpiryCheck, { concurrency: 1 }),
     1,
   );
 }
@@ -285,6 +300,29 @@ void (async () => {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     logger.error('anomaly-scan: failed to register recurring schedule', {
+      error: message,
+    });
+  }
+})();
+
+// Trial-expiry sweep — daily at 02:00 UTC
+void (async () => {
+  try {
+    const trialExpiryQueue = new Queue('trial-expiry-check', { connection: getConnection() });
+    await trialExpiryQueue.add(
+      'trial-expiry-check',
+      { triggeredAt: new Date().toISOString() },
+      {
+        repeat: { pattern: TRIAL_EXPIRY_CHECK_CRON },
+        jobId: TRIAL_EXPIRY_CHECK_REPEAT_JOB_ID,
+      },
+    );
+    logger.info('trial-expiry-check: recurring schedule registered', {
+      cron: TRIAL_EXPIRY_CHECK_CRON,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error('trial-expiry-check: failed to register recurring schedule', {
       error: message,
     });
   }
