@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@levelup/ui';
+import { MonoLabel } from '@levelup/ui';
 import { SignInForm } from '@/components/auth/sign-in-form';
 
 export const metadata: Metadata = {
@@ -15,29 +15,30 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const { redirect } = await searchParams;
 
   return (
-    <>
-      <Card className="shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl">Sign in to LevelUp AI Academy</CardTitle>
-          <CardDescription>Use the email associated with your work account.</CardDescription>
-        </CardHeader>
+    <div className="space-y-10">
+      <div>
+        <MonoLabel className="mb-4 block text-paper-500">MISSION BRIEF / SIGN IN</MonoLabel>
+        <h1 className="font-serif text-display-md text-paper-100">
+          Welcome back, <em className="italic text-signal">operator.</em>
+        </h1>
+        <p className="mt-3 text-body-sm text-paper-300">
+          Sign in with the email tied to your work account.
+        </p>
+      </div>
 
-        <CardContent>
-          <SignInForm redirect={redirect} />
-        </CardContent>
+      <SignInForm redirect={redirect} />
 
-        <CardFooter className="flex justify-center border-t pt-4">
-          <p className="text-sm text-muted-foreground">
-            New to LevelUp?{' '}
-            <Link
-              href="/sign-up"
-              className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-            >
-              Create an organization →
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
-    </>
+      <div className="border-t border-ink-600 pt-6">
+        <MonoLabel className="block text-paper-500">NEW HERE?</MonoLabel>
+        <p className="mt-2 text-body-sm text-paper-300">
+          <Link
+            href="/sign-up"
+            className="font-mono uppercase tracking-[0.05em] text-signal underline-offset-4 hover:underline"
+          >
+            CREATE AN ORGANIZATION →
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

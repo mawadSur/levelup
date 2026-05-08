@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Label, Alert, AlertDescription, AlertTitle } from '@levelup/ui';
+import { Button, Input, Label, Alert, AlertDescription, AlertTitle, MonoLabel } from '@levelup/ui';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
 
 const API_BASE =
@@ -125,38 +125,47 @@ export function SignInForm({ redirect }: SignInFormProps) {
   return (
     <div className="flex flex-col gap-5">
       {stubMode && (
-        <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">
-          <AlertTitle className="text-sm font-semibold">Development mode</AlertTitle>
-          <AlertDescription className="text-xs">
-            Supabase Auth is not configured. Sign-in will use a local dev-bypass flow that mints a
-            fake access token.
+        <Alert>
+          <AlertTitle>
+            <MonoLabel tone="signal">DEV BYPASS · STUB MODE</MonoLabel>
+          </AlertTitle>
+          <AlertDescription>
+            Supabase Auth is not configured. Sign-in will mint a fake access token via the
+            dev-bypass route.
           </AlertDescription>
         </Alert>
       )}
 
       {magicLinkSent && (
         <Alert>
-          <AlertTitle className="text-sm font-semibold">Check your email</AlertTitle>
-          <AlertDescription className="text-xs">
-            We sent a magic link to <strong>{email}</strong>. Click it to sign in.
+          <AlertTitle>
+            <MonoLabel tone="success">MAGIC LINK SENT</MonoLabel>
+          </AlertTitle>
+          <AlertDescription>
+            Check <strong>{email}</strong> and click the link to sign in.
           </AlertDescription>
         </Alert>
       )}
 
       {error && (
         <Alert variant="destructive">
+          <AlertTitle>
+            <MonoLabel tone="danger">SIGN-IN FAILED</MonoLabel>
+          </AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      <form onSubmit={handleEmailPasswordSubmit} className="flex flex-col gap-4" noValidate>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email">Work email</Label>
+      <form onSubmit={handleEmailPasswordSubmit} className="flex flex-col gap-5" noValidate>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="email">
+            <MonoLabel>WORK EMAIL</MonoLabel>
+          </Label>
           <Input
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="you@company.com"
+            placeholder="commander@company.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
@@ -165,8 +174,10 @@ export function SignInForm({ redirect }: SignInFormProps) {
         </div>
 
         {!stubMode && (
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="password">Password</Label>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="password">
+              <MonoLabel>PASSWORD</MonoLabel>
+            </Label>
             <Input
               id="password"
               type="password"
@@ -179,19 +190,19 @@ export function SignInForm({ redirect }: SignInFormProps) {
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Signing in…' : stubMode ? 'Continue (dev-bypass)' : 'Sign in with password'}
+        <Button type="submit" variant="primary" size="lg" className="w-full" disabled={loading}>
+          {loading ? 'SIGNING IN…' : stubMode ? 'CONTINUE (DEV BYPASS) →' : 'SIGN IN →'}
         </Button>
 
         {!stubMode && (
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             className="w-full"
             disabled={loading}
             onClick={handleMagicLink}
           >
-            Send magic link instead
+            SEND MAGIC LINK INSTEAD
           </Button>
         )}
       </form>
