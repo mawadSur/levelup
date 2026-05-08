@@ -1,27 +1,17 @@
 import type { Metadata } from 'next';
-import { Fraunces, Inter_Tight, JetBrains_Mono } from 'next/font/google';
+import { Instrument_Serif } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { Toaster } from '@levelup/ui';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { GrainOverlay } from '@/components/atmosphere/grain-overlay';
 import './globals.css';
 
-const fraunces = Fraunces({
+const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const interTight = Inter_Tight({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '500'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-instrument-serif',
   display: 'swap',
 });
 
@@ -45,9 +35,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
+      className={`${instrumentSerif.variable} ${GeistSans.variable} ${GeistMono.variable}`}
     >
-      <body className="font-sans bg-background text-foreground antialiased">
+      <body className="bg-ink-900 text-paper-100 font-sans antialiased">
         <ThemeProvider>
           {children}
           <Toaster />
