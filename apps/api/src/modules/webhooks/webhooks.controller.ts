@@ -10,7 +10,7 @@ import {
 import type { Request } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { verifyWebhook, parseEvent, isStubMode } from '@levelup/billing';
-import { Plan, Prisma } from '@levelup/db';
+import { Prisma } from '@levelup/db';
 import type { BillingService } from '../billing/billing.service';
 import type { PrismaService } from '../prisma';
 
@@ -83,63 +83,61 @@ export class WebhooksController {
     const parsed = parseEvent(stripeEvent);
 
     switch (parsed.type) {
-      case 'subscription.created': {
-        await this.billingService.recordSubscriptionChange({
-          orgId: parsed.organizationId,
-          plan: parsed.plan,
-          billingInterval: parsed.interval,
-          planSeats: parsed.quantity,
-          customerId: parsed.customerId,
-          subscriptionId: parsed.subscriptionId,
-          stripePriceId: parsed.priceId,
-          subscriptionStatus: parsed.status,
-        });
-        await this.auditWebhook(parsed.organizationId, 'webhook.stripe.subscription.created', {
-          subscriptionId: parsed.subscriptionId,
-          plan: parsed.plan,
-          interval: parsed.interval,
-          quantity: parsed.quantity,
-          priceId: parsed.priceId,
-          status: parsed.status,
-          customerId: parsed.customerId,
-        });
-        break;
-      }
-
+      case 'subscription.created':
       case 'subscription.updated': {
+        // Treat created and updated identically — both arrive as a fully
+        // resolved subscription state, and Stripe is not consistent about
+        // which one fires first on initial checkout. Idempotent updates
+        // mean replays are safe.
         await this.billingService.recordSubscriptionChange({
           orgId: parsed.organizationId,
           plan: parsed.plan,
           billingInterval: parsed.interval,
           planSeats: parsed.quantity,
+          ...(parsed.type === 'subscription.created' && { customerId: parsed.customerId }),
           subscriptionId: parsed.subscriptionId,
           stripePriceId: parsed.priceId,
           subscriptionStatus: parsed.status,
         });
-        await this.auditWebhook(parsed.organizationId, 'webhook.stripe.subscription.updated', {
+        // Stop the trial-expiry job from processing this org now that they
+        // have a paid subscription on file.
+        await this.prisma.organization
+          .update({
+            where: { id: parsed.organizationId },
+            data: { trialEndsAt: null },
+          })
+          .catch(() => undefined);
+        await this.auditWebhook(parsed.organizationId, 'billing.subscription_synced', {
+          eventType: parsed.type,
           subscriptionId: parsed.subscriptionId,
           plan: parsed.plan,
           interval: parsed.interval,
           quantity: parsed.quantity,
           priceId: parsed.priceId,
           status: parsed.status,
+          ...(parsed.type === 'subscription.created' && { customerId: parsed.customerId }),
         });
         break;
       }
 
       case 'subscription.deleted': {
-        // Don't immediately archive — give the customer a 7-day grace
-        // window to reactivate. The trial-expiry worker job picks up
-        // canceled subs and archives them after the grace period.
-        await this.billingService.recordSubscriptionChange({
-          orgId: parsed.organizationId,
-          plan: Plan.STARTER,
-          subscriptionId: null,
-          stripePriceId: null,
-          subscriptionStatus: 'canceled',
-        });
-        await this.auditWebhook(parsed.organizationId, 'webhook.stripe.subscription.deleted', {
+        // Don't archive immediately — give the customer a 7-day grace
+        // window to reactivate via the billing portal. archivedAt is set
+        // to now()+7d; the trial-expiry worker treats archivedAt as a
+        // hard cutoff for reads.
+        const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await this.prisma.organization
+          .update({
+            where: { id: parsed.organizationId },
+            data: {
+              subscriptionStatus: 'canceled',
+              archivedAt: sevenDaysFromNow,
+            },
+          })
+          .catch(() => undefined);
+        await this.auditWebhook(parsed.organizationId, 'billing.subscription_canceled', {
           subscriptionId: parsed.subscriptionId,
+          archivedAt: sevenDaysFromNow.toISOString(),
           gracePeriodDays: 7,
         });
         break;
@@ -171,15 +169,41 @@ export class WebhooksController {
           `Payment failed for org ${parsed.organizationId} ` +
             `subscriptionId=${parsed.subscriptionId}`,
         );
-        // Set status so the dunning UI can surface it; org is not archived
-        // here — the customer should be given a chance to retry.
+        // Set status + flag so the dunning UI can surface it; org is not
+        // archived here — the customer should be given a chance to retry.
         await this.prisma.organization
           .update({
             where: { id: parsed.organizationId },
-            data: { subscriptionStatus: 'past_due' },
+            data: {
+              subscriptionStatus: 'past_due',
+              paymentFailed: true,
+              paymentFailedAt: new Date(),
+            },
           })
           .catch(() => undefined);
-        await this.auditWebhook(parsed.organizationId, 'webhook.stripe.invoice.payment_failed', {
+        await this.auditWebhook(parsed.organizationId, 'billing.payment_failed', {
+          subscriptionId: parsed.subscriptionId,
+        });
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        // Clear the failed flag if a previous payment_failed had set it.
+        // Use updateMany so the no-op case (org never failed) doesn't
+        // throw on unique-fk mismatch — it just affects 0 rows.
+        await this.prisma.organization
+          .updateMany({
+            where: {
+              id: parsed.organizationId,
+              paymentFailed: true,
+            },
+            data: {
+              paymentFailed: false,
+              paymentFailedAt: null,
+            },
+          })
+          .catch(() => undefined);
+        await this.auditWebhook(parsed.organizationId, 'billing.payment_succeeded', {
           subscriptionId: parsed.subscriptionId,
         });
         break;

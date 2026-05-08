@@ -14,6 +14,7 @@ export type {
   SubscriptionDeletedEvent,
   CheckoutCompletedEvent,
   InvoicePaymentFailedEvent,
+  InvoicePaymentSucceededEvent,
   UnknownBillingEvent,
   ParsedBillingEvent,
   SeatProrationPreview,

@@ -109,6 +109,12 @@ export interface InvoicePaymentFailedEvent {
   subscriptionId: string;
 }
 
+export interface InvoicePaymentSucceededEvent {
+  type: 'invoice.payment_succeeded';
+  organizationId: string;
+  subscriptionId: string;
+}
+
 export interface UnknownBillingEvent {
   type: 'unknown';
   raw: Stripe.Event;
@@ -120,4 +126,5 @@ export type ParsedBillingEvent =
   | SubscriptionDeletedEvent
   | CheckoutCompletedEvent
   | InvoicePaymentFailedEvent
+  | InvoicePaymentSucceededEvent
   | UnknownBillingEvent;

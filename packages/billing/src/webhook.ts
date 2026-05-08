@@ -184,29 +184,7 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
       const organizationId = invoice.metadata?.['organizationId'];
       if (!organizationId) return { type: 'unknown', raw: event };
 
-      // Stripe SDK v17 exposes subscription info via `invoice.parent` when
-      // parent.type === 'subscription_details'. The older `invoice.subscription`
-      // field is still present in the API response for backwards compatibility.
-      const parent = (
-        invoice as unknown as {
-          parent?: { type: string; subscription_details?: { subscription: string } };
-        }
-      ).parent;
-      let subscriptionId: string | null = null;
-
-      if (parent?.type === 'subscription_details' && parent.subscription_details?.subscription) {
-        subscriptionId = parent.subscription_details.subscription;
-      } else {
-        // Fallback: legacy field (string | Stripe.Subscription | null)
-        const legacySub = (invoice as unknown as { subscription?: string | { id: string } | null })
-          .subscription;
-        if (typeof legacySub === 'string') {
-          subscriptionId = legacySub;
-        } else if (legacySub && typeof legacySub === 'object') {
-          subscriptionId = legacySub.id;
-        }
-      }
-
+      const subscriptionId = extractInvoiceSubscriptionId(invoice);
       if (!subscriptionId) return { type: 'unknown', raw: event };
 
       return {
@@ -216,7 +194,49 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
       };
     }
 
+    case 'invoice.payment_succeeded': {
+      const invoice = event.data.object as Stripe.Invoice;
+
+      const organizationId = invoice.metadata?.['organizationId'];
+      if (!organizationId) return { type: 'unknown', raw: event };
+
+      const subscriptionId = extractInvoiceSubscriptionId(invoice);
+      if (!subscriptionId) return { type: 'unknown', raw: event };
+
+      return {
+        type: 'invoice.payment_succeeded',
+        organizationId,
+        subscriptionId,
+      };
+    }
+
     default:
       return { type: 'unknown', raw: event };
   }
+}
+
+// ---------------------------------------------------------------------------
+// Helper: pull a subscription ID off an invoice across SDK shapes
+// ---------------------------------------------------------------------------
+//
+// Stripe SDK v17 exposes subscription info via `invoice.parent` when
+// parent.type === 'subscription_details'. The older `invoice.subscription`
+// field is still present in the API response for backwards compatibility.
+function extractInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
+  const parent = (
+    invoice as unknown as {
+      parent?: { type: string; subscription_details?: { subscription: string } };
+    }
+  ).parent;
+
+  if (parent?.type === 'subscription_details' && parent.subscription_details?.subscription) {
+    return parent.subscription_details.subscription;
+  }
+
+  // Fallback: legacy field (string | Stripe.Subscription | null)
+  const legacySub = (invoice as unknown as { subscription?: string | { id: string } | null })
+    .subscription;
+  if (typeof legacySub === 'string') return legacySub;
+  if (legacySub && typeof legacySub === 'object') return legacySub.id;
+  return null;
 }
