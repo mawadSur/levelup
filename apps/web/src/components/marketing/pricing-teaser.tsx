@@ -2,52 +2,50 @@ import Link from 'next/link';
 import { Button, MonoLabel, NumberedSection } from '@levelup/ui';
 import { PlanCard } from './plan-card';
 
-const PLANS = [
+const TEASER_PLANS = [
   {
-    name: 'Starter',
-    price: '$499',
-    period: '/MONTH',
-    description: 'For smaller teams starting their AI training program.',
+    tier: 'STARTER',
+    description: 'Up to 25 seats. A small AI team in the door, flat rate.',
+    price: '$599/MO',
+    priceCaption: 'FLAT · UP TO 25 SEATS',
     features: [
-      'Up to 50 seats',
-      'All 8 role-based learning paths',
-      'Built-in AI coach',
-      'Basic completion reporting',
+      'Core AI learning paths',
+      'In-context AI coach',
+      'Admin dashboard',
+      'Basic reporting',
     ],
-    cta: 'Start free trial',
-    ctaHref: '/sign-up?plan=starter',
+    cta: 'CHECKOUT →',
+    ctaHref: '/sign-up?plan=starter&interval=monthly',
     highlight: false,
   },
   {
-    name: 'Growth',
-    price: '$1,499',
-    period: '/MONTH',
-    description: 'For mid-size organizations that need visibility and control.',
+    tier: 'TEAM',
+    description: 'Per-seat pricing for the whole AI-using team. 25–100 seats.',
+    price: '$12/SEAT/MO',
+    priceCaption: 'PER-SEAT · MONTHLY',
     features: [
-      'Up to 250 seats',
       'Everything in Starter',
-      'Department heatmaps and risk flags',
-      'Company policy upload and guardrails',
-      'CSV export and API access',
+      'Custom learning paths',
+      'Department reporting',
+      'Policy guardrails',
     ],
-    cta: 'Get a demo',
-    ctaHref: '/sign-up?plan=growth',
+    cta: 'CHECKOUT →',
+    ctaHref: '/sign-up?plan=team&interval=monthly&seats=50',
     highlight: true,
   },
   {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    description: 'For large organizations with complex requirements.',
+    tier: 'GROWTH',
+    description: 'Mid-market with SSO + custom paths. 100–500 seats.',
+    price: '$15/SEAT/MO',
+    priceCaption: 'PER-SEAT · MONTHLY',
     features: [
-      'Unlimited seats',
-      'Everything in Growth',
-      'SSO and SCIM provisioning',
-      'Dedicated customer success',
-      'Custom learning paths and branding',
+      'Everything in Team',
+      'SSO / SAML',
+      'Advanced analytics',
+      'Priority support',
     ],
-    cta: 'Talk to sales',
-    ctaHref: '/sign-up?plan=enterprise',
+    cta: 'CHECKOUT →',
+    ctaHref: '/sign-up?plan=growth&interval=monthly&seats=150',
     highlight: false,
   },
 ];
@@ -62,34 +60,32 @@ export function PricingTeaser() {
               Pricing that scales <em className="italic text-paper-300">with the team.</em>
             </h2>
             <p className="text-body-lg text-paper-300">
-              All plans include a 30-day pilot. No training required to launch. No procurement
-              labyrinth.
+              Per-seat from the day you start. 14-day trial, no credit card. Annual contracts save
+              17% versus monthly.
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3 sm:items-stretch">
-            {PLANS.map(
-              ({ name, price, period, description, features, cta, ctaHref, highlight }) => (
-                <PlanCard
-                  key={name}
-                  name={name}
-                  price={price}
-                  period={period}
-                  description={description}
-                  features={features}
-                  highlight={highlight}
-                  cta={
-                    <Button
-                      asChild
-                      variant={highlight ? 'primary' : 'secondary'}
-                      className="w-full"
-                    >
-                      <Link href={ctaHref}>{cta}</Link>
-                    </Button>
-                  }
-                />
-              ),
-            )}
+            {TEASER_PLANS.map((plan) => (
+              <PlanCard
+                key={plan.tier}
+                tier={plan.tier}
+                description={plan.description}
+                price={plan.price}
+                priceCaption={plan.priceCaption}
+                features={plan.features}
+                highlight={plan.highlight}
+                cta={
+                  <Button
+                    asChild
+                    variant={plan.highlight ? 'primary' : 'secondary'}
+                    className="w-full"
+                  >
+                    <Link href={plan.ctaHref}>{plan.cta}</Link>
+                  </Button>
+                }
+              />
+            ))}
           </div>
 
           <div className="mt-10 flex items-center justify-center gap-3">
