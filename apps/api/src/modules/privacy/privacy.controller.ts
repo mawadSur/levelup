@@ -28,7 +28,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PrivacyService } from './privacy.service';
+import { PrivacyService } from './privacy.service';
 import { requestDeletionSchema, type RequestDeletionInput } from '@levelup/types';
 
 // Where the worker writes export zips (mirrors worker config)

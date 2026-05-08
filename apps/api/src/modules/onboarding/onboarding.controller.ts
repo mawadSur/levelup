@@ -4,7 +4,7 @@ import type { SessionPayload } from '@levelup/auth-client';
 import type { OnboardingState } from '@levelup/types';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { OnboardingService } from './onboarding.service';
+import { OnboardingService } from './onboarding.service';
 import { type AdvanceStepDto, advanceStepSchema } from './dto/advance-step.dto';
 
 @ApiTags('onboarding')

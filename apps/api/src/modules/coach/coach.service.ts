@@ -16,9 +16,9 @@ import type {
 } from '@levelup/llm';
 import { AiLevel as PrismaAiLevel, TurnRole } from '@levelup/db';
 import type { SessionPayload } from '@levelup/auth-client';
-import type { PrismaService } from '../prisma';
-import type { GameService } from '../game/game.service';
-import type { RiskAlertsService } from '../risk-alerts/risk-alerts.service';
+import { PrismaService } from '../prisma';
+import { GameService } from '../game/game.service';
+import { RiskAlertsService } from '../risk-alerts/risk-alerts.service';
 import { track } from '@levelup/analytics';
 
 /**

@@ -13,7 +13,7 @@ import {
   ForbiddenException,
   ConflictException,
 } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { enqueueCertPdf } from '@levelup/queue';
 import type { IssueCertificateDto } from './dto/issue-certificate.dto';

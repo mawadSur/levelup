@@ -15,7 +15,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { FlagsService } from './flags.service';
+import { FlagsService } from './flags.service';
 import type { EvaluatedFlag } from './flags.service';
 import { upsertFlagSchema } from './dto/upsert-flag.dto';
 import type { UpsertFlagDto } from './dto/upsert-flag.dto';

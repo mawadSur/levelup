@@ -3,7 +3,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
-import type { AnomalyService } from './anomaly.service';
+import { AnomalyService } from './anomaly.service';
 import { listAnomaliesQuerySchema } from '@levelup/types';
 
 @Controller('anomalies')

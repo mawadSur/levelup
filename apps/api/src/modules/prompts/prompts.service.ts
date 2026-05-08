@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import type { Prisma } from '@levelup/db';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { GameService } from '../game/game.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { GameService } from '../game/game.service';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { Prompt } from '@levelup/db';
 import type { SavePromptDto } from './dto/save-prompt.dto';

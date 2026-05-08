@@ -6,7 +6,7 @@
  */
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { ListAnomaliesQuery, AnomalyAlertDto, ListAnomaliesResponse } from '@levelup/types';
 import type { Prisma } from '@levelup/db';

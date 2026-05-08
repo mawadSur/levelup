@@ -5,7 +5,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { LessonsService } from './lessons.service';
+import { LessonsService } from './lessons.service';
 import { upsertLessonSchema } from './dto/upsert-lesson.dto';
 import type { UpsertLessonDto } from './dto/upsert-lesson.dto';
 

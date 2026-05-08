@@ -34,8 +34,8 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { CertificatesService } from './certificates.service';
-import type { PrismaService } from '../prisma';
+import { CertificatesService } from './certificates.service';
+import { PrismaService } from '../prisma';
 import { issueCertificateSchema, type IssueCertificateDto } from './dto/issue-certificate.dto';
 import { LocalFsCertStorage } from './cert-storage';
 

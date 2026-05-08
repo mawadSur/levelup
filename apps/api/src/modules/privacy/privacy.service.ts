@@ -15,7 +15,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import type { DataExportRequest, DeletionRequest, Prisma } from '@levelup/db';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { enqueueDataExport, enqueueEmail } from '@levelup/queue';
 

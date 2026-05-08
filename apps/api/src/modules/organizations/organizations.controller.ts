@@ -7,7 +7,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { OrganizationsService } from './organizations.service';
+import { OrganizationsService } from './organizations.service';
 import { updateOrgSchema } from './dto/update-org.dto';
 import type { UpdateOrgDto } from './dto/update-org.dto';
 import { createOrganizationSchema } from '@levelup/types';

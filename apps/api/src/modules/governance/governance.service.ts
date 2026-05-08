@@ -25,7 +25,7 @@ import { Prisma } from '@levelup/db';
 import { enqueueGovernanceReport, getQueue } from '@levelup/queue';
 import { randomUUID } from 'node:crypto';
 import { getGovernanceReportSignedUrl } from '@levelup/storage';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { GenerateReportDto, TriggerFeedQueryDto } from './dto/governance-query.dto';
 

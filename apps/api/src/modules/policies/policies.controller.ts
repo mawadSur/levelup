@@ -15,7 +15,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PoliciesService } from './policies.service';
+import { PoliciesService } from './policies.service';
 import { publishPolicySchema } from './dto/update-policy.dto';
 import type { PublishPolicyDto } from './dto/update-policy.dto';
 

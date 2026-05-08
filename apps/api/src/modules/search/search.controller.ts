@@ -12,7 +12,7 @@ import { Controller, Get, Query, UseGuards, BadRequestException } from '@nestjs/
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
-import type { SearchService } from './search.service';
+import { SearchService } from './search.service';
 import type { SearchResponse } from '@levelup/types';
 
 const MIN_QUERY_LENGTH = 2;

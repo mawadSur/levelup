@@ -15,8 +15,8 @@
  */
 
 import { ForbiddenException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
-import type { PrismaService } from '../prisma';
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, Role, AssessmentType, XpEventKind } from '@levelup/db';
 import type { DemoResetInput, DemoResetResponse } from '@levelup/types';

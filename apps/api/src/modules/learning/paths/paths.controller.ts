@@ -4,7 +4,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { PathsService } from './paths.service';
+import { PathsService } from './paths.service';
 import { createLearningPathSchema } from './dto/create-path.dto';
 import type { CreatePathDto } from './dto/create-path.dto';
 import { updatePathSchema } from './dto/update-path.dto';

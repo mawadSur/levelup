@@ -4,11 +4,11 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import type { PrismaService } from '../../prisma';
+import { PrismaService } from '../../prisma';
 import { LessonStatus } from '@levelup/db';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { TeamProgressEntry } from '@levelup/types';
-import type { GameService } from '../../game/game.service';
+import { GameService } from '../../game/game.service';
 import { signCertificate } from '../../certificates/cert-signing';
 import { track, captureEvent } from '@levelup/analytics';
 

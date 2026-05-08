@@ -4,7 +4,7 @@ import type { Request, Response } from 'express';
 import type { SessionPayload } from '@levelup/auth-client';
 import { getPlanLimit } from '@levelup/billing';
 import { Plan } from '@levelup/db';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 
 /**
  * PlanEnforcementGuard
