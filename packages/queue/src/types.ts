@@ -91,6 +91,24 @@ export interface AnomalyScanOutput {
   alertsCreated: number;
 }
 
+export interface GovernanceReportInput {
+  /** Caller-issued request id (cuid) used to track status & idempotency. */
+  requestId: string;
+  organizationId: string;
+  actorId: string;
+  /** Inclusive ISO start of the reporting period. */
+  periodStart: string;
+  /** Exclusive ISO end of the reporting period. */
+  periodEnd: string;
+  /** Optional human-readable label rendered into the PDF header (e.g. "Q2 2026"). */
+  periodLabel?: string;
+}
+export interface GovernanceReportOutput {
+  storagePath: string;
+  signedUrl: string;
+  byteLength: number;
+}
+
 // ---------------------------------------------------------------------------
 // Discriminated union map  name → { input, output }
 // ---------------------------------------------------------------------------
@@ -108,6 +126,7 @@ export interface JobMap {
   'manager-digest-cron': { input: ManagerDigestCronInput; output: ManagerDigestCronOutput };
   'path-generation': { input: PathGenerationInput; output: PathGenerationOutput };
   'anomaly-scan': { input: AnomalyScanInput; output: AnomalyScanOutput };
+  'governance-report': { input: GovernanceReportInput; output: GovernanceReportOutput };
 }
 
 /** Union of all valid job names. */

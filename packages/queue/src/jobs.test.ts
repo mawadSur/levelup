@@ -33,6 +33,7 @@ describe('JOBS catalog', () => {
     'manager-digest-cron',
     'path-generation',
     'anomaly-scan',
+    'governance-report',
   ];
 
   it('has exactly the expected number of entries', () => {

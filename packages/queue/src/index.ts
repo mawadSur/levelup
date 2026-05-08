@@ -24,6 +24,7 @@ export {
   enqueueManagerDigestCron,
   enqueuePathGeneration,
   enqueueAnomalyScan,
+  enqueueGovernanceReport,
 } from './queues.js';
 
 // Worker factory
@@ -57,4 +58,6 @@ export type {
   PathGenerationOutput,
   AnomalyScanInput,
   AnomalyScanOutput,
+  GovernanceReportInput,
+  GovernanceReportOutput,
 } from './types.js';

@@ -99,4 +99,16 @@ export const JOBS: Record<JobName, JobRegistration> = {
       attempts: 1,
     },
   },
+
+  'governance-report': {
+    queue: 'governance-report',
+    defaultOpts: {
+      ...defaultJobOptions,
+      // PDF generation can fail transiently (Storage upload hiccup); two
+      // attempts is enough — the operator can re-trigger from the dashboard.
+      attempts: 2,
+      removeOnComplete: { age: 60 * 60 * 24 * 30 }, // keep success rows 30 days
+      removeOnFail: false,
+    },
+  },
 } as const;

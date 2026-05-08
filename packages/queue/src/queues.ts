@@ -13,6 +13,7 @@ import type {
   ManagerDigestCronInput,
   PathGenerationInput,
   AnomalyScanInput,
+  GovernanceReportInput,
 } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -169,6 +170,25 @@ export function enqueueAnomalyScan(
 ): Promise<Job<AnomalyScanInput, JobMap['anomaly-scan']['output']>> {
   return getQueue('anomaly-scan').add('anomaly-scan', input ?? {}, {
     ...JOBS['anomaly-scan'].defaultOpts,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `governance-report` job.
+ * Builds a PDF AI-governance evidence report for the given period and uploads
+ * it to the `governance-reports` bucket. Producer (the API) hands the worker
+ * a stable `requestId` so subsequent status polls can locate the result.
+ */
+export function enqueueGovernanceReport(
+  input: GovernanceReportInput,
+  overrides?: JobsOptions,
+): Promise<Job<GovernanceReportInput, JobMap['governance-report']['output']>> {
+  return getQueue('governance-report').add('governance-report', input, {
+    ...JOBS['governance-report'].defaultOpts,
+    // jobId mirrors requestId so getJob(requestId) is a one-liner from the
+    // status endpoint, and BullMQ deduplicates concurrent same-id submits.
+    jobId: input.requestId,
     ...overrides,
   });
 }

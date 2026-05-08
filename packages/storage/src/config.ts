@@ -13,10 +13,13 @@ export interface StorageConfig {
   supabaseServiceRoleKey: string;
   certificatesBucket: string;
   policyFilesBucket: string;
+  governanceReportsBucket: string;
   /** Where the local-fs stub writes cert PDFs (also where the legacy worker wrote them). */
   certOutputDir: string;
   /** Where the local-fs stub writes policy uploads. */
   policyOutputDir: string;
+  /** Where the local-fs stub writes governance evidence reports. */
+  governanceOutputDir: string;
   nodeEnv: string;
 }
 
@@ -26,11 +29,15 @@ function readEnv(): StorageConfig {
     supabaseServiceRoleKey: process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '',
     certificatesBucket: process.env['SUPABASE_CERTIFICATES_BUCKET'] ?? 'certificates',
     policyFilesBucket: process.env['SUPABASE_POLICY_FILES_BUCKET'] ?? 'policy-files',
+    governanceReportsBucket:
+      process.env['SUPABASE_GOVERNANCE_REPORTS_BUCKET'] ?? 'governance-reports',
     certOutputDir:
       process.env['CERT_OUTPUT_DIR'] ??
       // Two levels up from packages/storage/dist → repo root → apps/api/.cert-output
       `${process.cwd()}/.cert-output`,
     policyOutputDir: process.env['POLICY_OUTPUT_DIR'] ?? `${process.cwd()}/.policy-uploads`,
+    governanceOutputDir:
+      process.env['GOVERNANCE_OUTPUT_DIR'] ?? `${process.cwd()}/.governance-reports`,
     nodeEnv: process.env['NODE_ENV'] ?? 'development',
   };
 }

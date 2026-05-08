@@ -30,6 +30,7 @@ import { AnalyticsModule } from './modules/analytics';
 import { InsightsModule } from './modules/insights';
 import { AnomalyModule } from './modules/anomaly';
 import { IntegrationsModule } from './modules/integrations';
+import { GovernanceModule } from './modules/governance';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { IntegrationsModule } from './modules/integrations';
     InsightsModule,
     AnomalyModule,
     IntegrationsModule,
+    GovernanceModule,
   ],
   controllers: [AppController],
   providers: [AppLogger],

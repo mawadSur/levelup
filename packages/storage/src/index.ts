@@ -7,4 +7,7 @@ export type { CertificateUploadResult } from './certificates';
 export { uploadPolicyFile, getPolicyFileSignedUrl } from './policies';
 export type { PolicyUploadResult } from './policies';
 
+export { uploadGovernanceReport, getGovernanceReportSignedUrl } from './governance';
+export type { GovernanceReportUploadResult } from './governance';
+
 export { stubGetCertificateLocalFilePath } from './stub';
