@@ -126,13 +126,13 @@ function Sidebar({
 }) {
   return (
     <div
-      className={`flex h-full flex-col border-r border-border bg-card transition-all duration-300 ${
+      className={`flex h-full flex-col border-r border-ink-600 bg-ink-800 transition-all duration-300 ${
         collapsed ? 'w-14' : 'w-56'
       }`}
     >
       {/* Logo area */}
       <div
-        className={`flex h-16 shrink-0 items-center border-b border-border px-3 ${
+        className={`flex h-16 shrink-0 items-center border-b border-ink-600 px-3 ${
           collapsed ? 'justify-center' : 'gap-2'
         }`}
       >
@@ -168,7 +168,7 @@ function Sidebar({
       {/* Org name */}
       {!collapsed && (
         <div className="px-3 py-2">
-          <p className="truncate text-xs font-medium text-muted-foreground">{orgName}</p>
+          <p className="truncate text-xs font-medium text-paper-300">{orgName}</p>
         </div>
       )}
 
@@ -215,7 +215,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
   return (
     <PostHogProvider user={analyticsUser}>
       <FlagsProvider>
-        <div className="flex h-screen overflow-hidden bg-background">
+        <div className="flex h-screen overflow-hidden bg-ink-900">
           {/* Desktop sidebar */}
           <div className="hidden md:flex md:shrink-0">
             <Sidebar
@@ -246,7 +246,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
           {/* Main content */}
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Top bar */}
-            <header className="flex h-16 shrink-0 items-center gap-3 border-b border-border bg-card px-4">
+            <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-600 bg-ink-800 px-4">
               {/* Mobile menu toggle */}
               <Button
                 variant="ghost"
@@ -282,7 +282,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex h-8 items-center gap-2 px-2 text-sm">
                       <Avatar className="h-7 w-7">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                        <AvatarFallback className="bg-signal text-ink-900 text-xs font-semibold">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
@@ -295,7 +295,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
                   <DropdownMenuContent align="end" className="w-48">
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-medium truncate">{user.name ?? 'Admin'}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      <p className="text-xs text-paper-300 truncate">{user.email}</p>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
@@ -308,7 +308,7 @@ export function AdminShell({ user, orgName, children, unackAnomalyCount }: Admin
                     <DropdownMenuItem asChild>
                       <Link
                         href="/sign-out"
-                        className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive"
+                        className="flex items-center gap-2 cursor-pointer text-danger focus:text-danger"
                       >
                         <LogOut className="h-4 w-4" />
                         Sign out

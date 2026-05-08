@@ -30,8 +30,8 @@ export function ReportsPageClient({
       {/* Header */}
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Reports</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Reports</h1>
+          <p className="mt-1 text-sm text-paper-300">
             Monitor learning progress, identify skill gaps, and act on risk signals.
           </p>
         </div>
@@ -54,7 +54,7 @@ export function ReportsPageClient({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Department skill heatmap</CardTitle>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-paper-300 mt-0.5">
             Cells show member count. Color intensity = completion rate.
           </p>
         </CardHeader>
@@ -89,8 +89,8 @@ export function ReportsPageClient({
       {/* Risk flags */}
       <div className="space-y-4">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Risk flags</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-lg font-semibold text-paper-100">Risk flags</h2>
+          <p className="text-sm text-paper-300">
             Top 20 users by severity. Click a name to view their profile.
           </p>
         </div>

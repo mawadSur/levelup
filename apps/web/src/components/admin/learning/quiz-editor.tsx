@@ -80,9 +80,9 @@ export function QuizEditor({ quiz, onChange }: QuizEditorProps) {
 
       <div className="space-y-4">
         {quiz.questions.map((question, qi) => (
-          <div key={qi} className="space-y-3 rounded-lg border border-border bg-muted/20 p-3">
+          <div key={qi} className="space-y-3 rounded-lg border border-ink-600 bg-ink-700/20 p-3">
             <div className="flex items-start justify-between gap-2">
-              <span className="mt-1 text-xs font-mono text-muted-foreground">Q{qi + 1}</span>
+              <span className="mt-1 text-xs font-mono text-paper-300">Q{qi + 1}</span>
               <div className="flex-1">
                 <Textarea
                   rows={2}
@@ -97,7 +97,7 @@ export function QuizEditor({ quiz, onChange }: QuizEditorProps) {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                  className="h-7 w-7 p-0 text-danger hover:text-danger"
                   onClick={() => removeQuestion(qi)}
                   aria-label="Remove question"
                 >
@@ -107,7 +107,7 @@ export function QuizEditor({ quiz, onChange }: QuizEditorProps) {
             </div>
 
             <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">
+              <p className="text-xs font-medium text-paper-300">
                 Choices — select the correct answer
               </p>
               {question.choices.map((choice, ci) => (

@@ -72,8 +72,8 @@ export function StreakCallout({ streak, earnedToday, nextLessonHref }: StreakCal
       role="alert"
       aria-live="polite"
       className={cn(
-        'flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/10 px-4 py-3',
-        'text-foreground',
+        'flex items-start gap-3 rounded-lg border border-signal/30 bg-signal/10 px-4 py-3',
+        'text-paper-100',
       )}
     >
       {/* Flame icon with optional pulse animation */}
@@ -99,10 +99,10 @@ export function StreakCallout({ streak, earnedToday, nextLessonHref }: StreakCal
 
       {/* Copy + CTA */}
       <div className="flex flex-1 flex-wrap items-center gap-x-4 gap-y-1">
-        <p className="font-display text-sm italic leading-snug">{copy}</p>
+        <p className="font-serif text-sm italic leading-snug">{copy}</p>
         <Link
           href={nextLessonHref}
-          className="shrink-0 text-sm font-semibold text-primary underline-offset-2 hover:underline"
+          className="shrink-0 text-sm font-semibold text-signal underline-offset-2 hover:underline"
         >
           Quick lesson &rarr;
         </Link>
@@ -112,7 +112,7 @@ export function StreakCallout({ streak, earnedToday, nextLessonHref }: StreakCal
       <button
         type="button"
         onClick={handleDismiss}
-        className="ml-auto shrink-0 self-start text-muted-foreground hover:text-foreground"
+        className="ml-auto shrink-0 self-start text-paper-300 hover:text-paper-100"
         aria-label="Dismiss streak reminder"
       >
         <span aria-hidden="true">&times;</span>

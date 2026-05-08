@@ -39,7 +39,7 @@ function SegmentGroup<T extends string>({
   const prefersReduced = useReducedMotion();
 
   return (
-    <div className="inline-flex rounded-lg border border-border bg-muted/40 p-0.5" role="group">
+    <div className="inline-flex rounded-lg border border-ink-600 bg-ink-700/40 p-0.5" role="group">
       {options.map((opt) => {
         const isActive = opt.value === current;
         return (
@@ -50,27 +50,27 @@ function SegmentGroup<T extends string>({
             aria-checked={isActive}
             onClick={() => onChange(opt.value)}
             className={cn(
-              'relative rounded-md px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+              'relative rounded-md px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal',
+              isActive ? 'text-signal' : 'text-paper-300 hover:text-paper-100',
             )}
           >
             {isActive && !prefersReduced && (
               <motion.span
                 layoutId={`seg-active-${groupId}`}
-                className="absolute inset-0 rounded-md bg-background shadow-sm"
+                className="absolute inset-0 rounded-md bg-ink-900 shadow-sm"
                 style={{ zIndex: -1 }}
                 transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
               />
             )}
             {isActive && prefersReduced && (
               <span
-                className="absolute inset-0 rounded-md bg-background shadow-sm"
+                className="absolute inset-0 rounded-md bg-ink-900 shadow-sm"
                 style={{ zIndex: -1 }}
               />
             )}
             <span className="relative z-10">{opt.label}</span>
             {isActive && (
-              <span className="absolute inset-x-2 bottom-0 h-[2px] rounded-full bg-primary" />
+              <span className="absolute inset-x-2 bottom-0 h-[2px] rounded-full bg-signal" />
             )}
           </button>
         );

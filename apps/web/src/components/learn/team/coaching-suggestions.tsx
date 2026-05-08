@@ -99,8 +99,8 @@ export function CoachingSuggestions({ users, progressMap }: CoachingSuggestionsP
       </CardHeader>
       <CardContent>
         {suggestions.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border p-6 text-center">
-            <p className="text-sm text-muted-foreground">
+          <div className="rounded-lg border border-dashed border-ink-600 p-6 text-center">
+            <p className="text-sm text-paper-300">
               Your team is on track. No immediate coaching opportunities detected.
             </p>
           </div>
@@ -112,8 +112,8 @@ export function CoachingSuggestions({ users, progressMap }: CoachingSuggestionsP
                 className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="text-sm font-medium text-foreground">{s.userName}</p>
-                  <p className="text-xs text-muted-foreground">{s.reason}</p>
+                  <p className="text-sm font-medium text-paper-100">{s.userName}</p>
+                  <p className="text-xs text-paper-300">{s.reason}</p>
                 </div>
                 <Badge variant={severityVariant[s.severity]} className="shrink-0 text-xs w-fit">
                   {severityLabel[s.severity]}

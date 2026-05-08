@@ -23,9 +23,7 @@ function formatDate(iso: string): string {
 export function RiskFlagsTable({ flags }: RiskFlagsTableProps) {
   if (flags.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-muted-foreground italic">
-        No risk flags — great work!
-      </p>
+      <p className="py-8 text-center text-sm text-paper-300 italic">No risk flags — great work!</p>
     );
   }
 
@@ -42,11 +40,11 @@ export function RiskFlagsTable({ flags }: RiskFlagsTableProps) {
     .slice(0, 20);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
+    <div className="overflow-hidden rounded-xl border border-ink-600">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/50">
+            <tr className="border-b border-ink-600 bg-ink-700/50">
               <th className="px-4 py-3 text-left font-semibold">Severity</th>
               <th className="px-4 py-3 text-left font-semibold">Name</th>
               <th className="px-4 py-3 text-left font-semibold">Department</th>
@@ -58,7 +56,7 @@ export function RiskFlagsTable({ flags }: RiskFlagsTableProps) {
             {top20.map((flag) => (
               <tr
                 key={`${flag.userId}-${flag.flagType}-${flag.flaggedAt}`}
-                className="bg-background hover:bg-muted/30 transition-colors"
+                className="bg-ink-900 hover:bg-ink-700/30 transition-colors"
               >
                 <td className="px-4 py-3">
                   <span
@@ -74,18 +72,18 @@ export function RiskFlagsTable({ flags }: RiskFlagsTableProps) {
                   >
                     {flag.userName}
                   </Link>
-                  <p className="text-xs text-muted-foreground">{flag.email}</p>
+                  <p className="text-xs text-paper-300">{flag.email}</p>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">{flag.departmentId ?? '—'}</td>
+                <td className="px-4 py-3 text-paper-300">{flag.departmentId ?? '—'}</td>
                 <td className="px-4 py-3 max-w-xs">
-                  <p className="line-clamp-2 text-muted-foreground" title={flag.detail}>
+                  <p className="line-clamp-2 text-paper-300" title={flag.detail}>
                     {flag.detail}
                   </p>
                   <Badge variant="outline" className="mt-1 text-xs">
                     {flag.flagType}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
+                <td className="px-4 py-3 text-paper-300 whitespace-nowrap">
                   {formatDate(flag.flaggedAt)}
                 </td>
               </tr>
@@ -94,7 +92,7 @@ export function RiskFlagsTable({ flags }: RiskFlagsTableProps) {
         </table>
       </div>
       {flags.length > 20 && (
-        <div className="border-t border-border bg-muted/20 px-4 py-2 text-center text-xs text-muted-foreground">
+        <div className="border-t border-ink-600 bg-ink-700/20 px-4 py-2 text-center text-xs text-paper-300">
           Showing top 20 of {flags.length} flags
         </div>
       )}

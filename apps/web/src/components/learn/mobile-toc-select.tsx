@@ -26,17 +26,14 @@ export function MobileTocSelect({ pathSlug, lessons, currentLessonSlug }: Mobile
 
   return (
     <div className="lg:hidden mb-6">
-      <label
-        htmlFor="mobile-toc"
-        className="mb-1.5 block text-xs font-medium text-muted-foreground"
-      >
+      <label htmlFor="mobile-toc" className="mb-1.5 block text-xs font-medium text-paper-300">
         Jump to lesson
       </label>
       <select
         id="mobile-toc"
         value={currentLessonSlug}
         onChange={handleChange}
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+        className="w-full rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm text-paper-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-signal"
       >
         {lessons.map((lesson) => (
           <option key={lesson.slug} value={lesson.slug}>

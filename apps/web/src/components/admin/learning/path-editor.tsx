@@ -217,16 +217,16 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
   return (
     <div className="flex h-full flex-col">
       {/* ---- Header bar ---- */}
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-card px-4">
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-ink-600 bg-ink-800 px-4">
         <Link
           href="/admin/learning"
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="flex items-center gap-1 text-sm text-paper-300 hover:text-paper-100"
         >
           <ArrowLeft className="h-4 w-4" />
           Learning
         </Link>
 
-        <span className="text-muted-foreground">/</span>
+        <span className="text-paper-300">/</span>
 
         {/* Inline-editable title */}
         <input
@@ -235,7 +235,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
             setTitle(e.target.value);
             markDirty();
           }}
-          className="flex-1 bg-transparent text-sm font-semibold text-foreground outline-none ring-0 focus:ring-1 focus:ring-indigo-500 rounded px-1 py-0.5"
+          className="flex-1 bg-transparent text-sm font-semibold text-paper-100 outline-none ring-0 focus:ring-1 focus:ring-indigo-500 rounded px-1 py-0.5"
           aria-label="Path title"
           maxLength={200}
         />
@@ -257,7 +257,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
             aria-checked={isPublished}
             onClick={handlePublishToggle}
             className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
-              isPublished ? 'bg-indigo-600' : 'bg-muted-foreground/30'
+              isPublished ? 'bg-indigo-600' : 'bg-ink-700-foreground/30'
             }`}
           >
             <span
@@ -267,9 +267,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
             />
             <span className="sr-only">{isPublished ? 'Published' : 'Draft'}</span>
           </button>
-          <span className="text-xs text-muted-foreground">
-            {isPublished ? 'Published' : 'Draft'}
-          </span>
+          <span className="text-xs text-paper-300">{isPublished ? 'Published' : 'Draft'}</span>
 
           <Button
             size="sm"
@@ -295,7 +293,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
       {/* ---- Body (3-column layout) ---- */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left rail — lesson list */}
-        <aside className="flex w-56 shrink-0 flex-col border-r border-border bg-muted/20 overflow-y-auto">
+        <aside className="flex w-56 shrink-0 flex-col border-r border-ink-600 bg-ink-700/20 overflow-y-auto">
           <div className="flex-1 space-y-1 p-2">
             {lessons.map((lesson, i) => (
               <div key={lesson._key} className={dragOverKey === lesson._key ? 'opacity-50' : ''}>
@@ -312,7 +310,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
               </div>
             ))}
           </div>
-          <div className="border-t border-border p-2">
+          <div className="border-t border-ink-600 p-2">
             <Button variant="outline" size="sm" className="w-full gap-1.5" onClick={addLesson}>
               <Plus className="h-3.5 w-3.5" />
               Add lesson
@@ -323,7 +321,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
         {/* Main area — lesson detail editor */}
         <main className="flex-1 overflow-y-auto p-5">
           {!selectedLesson ? (
-            <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
+            <div className="flex h-full flex-col items-center justify-center gap-3 text-paper-300">
               <p>Select a lesson from the left to start editing.</p>
               <Button variant="outline" onClick={addLesson} className="gap-1.5">
                 <Plus className="h-4 w-4" />
@@ -333,13 +331,11 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
           ) : (
             <div className="space-y-5">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-sm font-semibold text-foreground">
-                  Lesson {selectedIndex + 1}
-                </h2>
+                <h2 className="text-sm font-semibold text-paper-100">Lesson {selectedIndex + 1}</h2>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="gap-1 text-destructive hover:text-destructive"
+                  className="gap-1 text-danger hover:text-danger"
                   onClick={() => setConfirmDeleteKey(selectedLesson._key)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -349,9 +345,9 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
 
               {/* Delete confirm inline */}
               {confirmDeleteKey === selectedLesson._key && (
-                <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm">
-                  <p className="font-medium text-destructive">Delete this lesson?</p>
-                  <p className="mt-1 text-muted-foreground">This cannot be undone.</p>
+                <div className="rounded-lg border border-danger/40 bg-danger/5 p-3 text-sm">
+                  <p className="font-medium text-danger">Delete this lesson?</p>
+                  <p className="mt-1 text-paper-300">This cannot be undone.</p>
                   <div className="mt-3 flex gap-2">
                     <Button
                       size="sm"
@@ -418,7 +414,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
               </div>
 
               {/* Quiz section */}
-              <div className="rounded-lg border border-border">
+              <div className="rounded-lg border border-ink-600">
                 <button
                   type="button"
                   className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold"
@@ -438,13 +434,13 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
                       <ChevronRight className="h-4 w-4" />
                     )
                   ) : (
-                    <span className="text-xs font-normal text-muted-foreground">
+                    <span className="text-xs font-normal text-paper-300">
                       No quiz — click to add
                     </span>
                   )}
                 </button>
                 {selectedLesson.quiz && quizOpen[selectedLesson._key] && (
-                  <div className="border-t border-border p-4">
+                  <div className="border-t border-ink-600 p-4">
                     <QuizEditor
                       quiz={selectedLesson.quiz}
                       onChange={(quiz) => updateQuiz(selectedLesson._key, quiz)}
@@ -457,14 +453,14 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
         </main>
 
         {/* Right rail — live preview */}
-        <aside className="hidden w-72 shrink-0 overflow-y-auto border-l border-border bg-muted/10 p-4 xl:block">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <aside className="hidden w-72 shrink-0 overflow-y-auto border-l border-ink-600 bg-ink-700/10 p-4 xl:block">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-paper-300">
             Preview
           </p>
           {selectedLesson?.body ? (
             <MarkdownView content={selectedLesson.body} />
           ) : (
-            <p className="text-xs text-muted-foreground italic">
+            <p className="text-xs text-paper-300 italic">
               Write lesson body markdown on the left to see a live preview here.
             </p>
           )}

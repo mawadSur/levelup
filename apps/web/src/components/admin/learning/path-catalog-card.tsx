@@ -57,7 +57,7 @@ export function PathCatalogCard({ path, onAssign }: PathCatalogCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-3 text-sm text-muted-foreground">
+      <CardContent className="flex-1 pb-3 text-sm text-paper-300">
         {path.description && <p className="line-clamp-3 text-sm">{path.description}</p>}
         <div className="mt-3 flex items-center gap-4 text-xs">
           <span className="flex items-center gap-1">

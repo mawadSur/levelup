@@ -49,10 +49,10 @@ export default async function AssessmentLandingPage() {
       <div className="mx-auto max-w-xl px-4 py-16 sm:py-24">
         <Card>
           <CardContent className="pt-8 pb-8 text-center">
-            <h1 className="mb-3 text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="mb-3 text-2xl font-bold tracking-tight text-paper-100">
               Your AI Baseline
             </h1>
-            <p className="mx-auto mb-6 max-w-sm text-balance text-sm text-muted-foreground">
+            <p className="mx-auto mb-6 max-w-sm text-balance text-sm text-paper-300">
               Take a short assessment so we can recommend the right learning path for you.
             </p>
             <Button asChild size="lg">
@@ -71,10 +71,10 @@ export default async function AssessmentLandingPage() {
     <div className="mx-auto max-w-xl px-4 py-16 sm:py-24">
       <Card>
         <CardContent className="pt-8 pb-8 text-center">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-paper-300">
             You&apos;re all set
           </p>
-          <h1 className="mb-4 text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="mb-4 text-2xl font-bold tracking-tight text-paper-100">
             You took the baseline on {formatDate(recent.completedAt)}
           </h1>
 
@@ -82,7 +82,7 @@ export default async function AssessmentLandingPage() {
             <LevelBadge level={recent.recommendedLevel} size="lg" />
           </div>
 
-          <p className="mx-auto mb-7 max-w-sm text-balance text-sm text-muted-foreground">
+          <p className="mx-auto mb-7 max-w-sm text-balance text-sm text-paper-300">
             We&apos;ve already tailored your learning path. You can retake the assessment any time
             if your role or experience has changed.
           </p>

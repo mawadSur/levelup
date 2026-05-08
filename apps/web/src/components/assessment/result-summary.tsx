@@ -75,7 +75,7 @@ export function ResultSummary() {
   if (!hydrated) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-paper-300" />
       </div>
     );
   }
@@ -86,7 +86,7 @@ export function ResultSummary() {
         <Card>
           <CardContent className="py-8 text-center">
             <h2 className="mb-2 text-lg font-semibold">No recent result found</h2>
-            <p className="mb-6 text-sm text-muted-foreground">
+            <p className="mb-6 text-sm text-paper-300">
               Take the baseline assessment to see your recommended level.
             </p>
             <Button asChild>
@@ -117,13 +117,13 @@ export function ResultSummary() {
           <Sparkles size={14} aria-hidden="true" />
           Assessment complete
         </div>
-        <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="mb-3 text-3xl font-bold tracking-tight text-paper-100 sm:text-4xl">
           Your recommended level
         </h1>
         <div className="mb-4 flex justify-center">
           <LevelBadge level={result.recommendedLevel} size="lg" />
         </div>
-        <p className="mx-auto max-w-md text-balance text-sm text-muted-foreground">
+        <p className="mx-auto max-w-md text-balance text-sm text-paper-300">
           {levelDescription(result.recommendedLevel)}
         </p>
       </div>
@@ -133,13 +133,13 @@ export function ResultSummary() {
           {/* Overall score row */}
           <div className="mb-6">
             <div className="mb-1.5 flex items-baseline justify-between">
-              <h2 className="text-sm font-semibold text-foreground">Overall score</h2>
-              <span className="text-2xl font-bold tracking-tight text-foreground">
+              <h2 className="text-sm font-semibold text-paper-100">Overall score</h2>
+              <span className="text-2xl font-bold tracking-tight text-paper-100">
                 {result.score}%
               </span>
             </div>
             <Progress value={result.score} className="h-2" />
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-paper-300">
               You answered {result.answered} of {result.total} questions
               {result.skipped > 0 ? ` (${result.skipped} skipped)` : ''}.
             </p>
@@ -149,7 +149,7 @@ export function ResultSummary() {
 
           {/* Per-level breakdown */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">How you scored at each level</h3>
+            <h3 className="text-sm font-semibold text-paper-100">How you scored at each level</h3>
             <div className="space-y-2.5">
               {ALL_LEVELS.map((level) => (
                 <div key={level} className="flex items-center gap-3">
@@ -157,13 +157,13 @@ export function ResultSummary() {
                     <LevelBadge level={level} size="sm" />
                   </div>
                   <Progress value={breakdown[level]} className="h-1.5 flex-1" />
-                  <span className="w-10 text-right text-xs tabular-nums text-muted-foreground">
+                  <span className="w-10 text-right text-xs tabular-nums text-paper-300">
                     {breakdown[level]}%
                   </span>
                 </div>
               ))}
             </div>
-            <p className="pt-2 text-xs text-muted-foreground">
+            <p className="pt-2 text-xs text-paper-300">
               We&apos;ll use this to tailor your learning path. You can retake the assessment any
               time.
             </p>

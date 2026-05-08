@@ -81,7 +81,7 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
       {/* Back link */}
       <Link
         href="/learn"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-paper-300 hover:text-paper-100 transition-colors"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path
@@ -101,11 +101,11 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
           <Badge variant="outline">{pathData.targetLevel}</Badge>
           {pathData.targetRole && <Badge variant="secondary">{pathData.targetRole}</Badge>}
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{pathData.title}</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-paper-100">{pathData.title}</h1>
         {pathData.description && (
-          <p className="max-w-2xl text-muted-foreground leading-relaxed">{pathData.description}</p>
+          <p className="max-w-2xl text-paper-300 leading-relaxed">{pathData.description}</p>
         )}
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-paper-300">
           ~{pathData.estimatedMinutes} min &middot; {sortedLessons.length} lessons
         </p>
       </div>
@@ -115,14 +115,14 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
         <Card className="mb-8 border-amber-300/50 bg-amber-50/50">
           <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-semibold text-foreground">You&apos;re not assigned to this path</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">
+              <p className="font-semibold text-paper-100">You&apos;re not assigned to this path</p>
+              <p className="mt-0.5 text-sm text-paper-300">
                 Ask your manager to assign you to <strong>{pathData.title}</strong>.
               </p>
             </div>
             <Link
               href="/learn"
-              className="shrink-0 text-sm font-medium text-primary hover:underline"
+              className="shrink-0 text-sm font-medium text-signal hover:underline"
             >
               Back to my paths &rarr;
             </Link>
@@ -133,7 +133,7 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         {/* Lessons list */}
         <div>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-paper-300">
             Lessons
           </h2>
           <div className="space-y-3">
@@ -158,7 +158,7 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
               );
             })}
             {sortedLessons.length === 0 && (
-              <p className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+              <p className="rounded-lg border border-dashed border-ink-600 p-8 text-center text-sm text-paper-300">
                 No lessons published yet.
               </p>
             )}
@@ -172,13 +172,13 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
               <CardContent className="space-y-4 pt-6">
                 <div>
                   <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="font-medium text-foreground">Your progress</span>
-                    <span className="font-semibold text-foreground">
+                    <span className="font-medium text-paper-100">Your progress</span>
+                    <span className="font-semibold text-paper-100">
                       {Math.round(completionRate)}%
                     </span>
                   </div>
                   <Progress value={completionRate} className="h-2.5" />
-                  <p className="mt-1.5 text-xs text-muted-foreground">
+                  <p className="mt-1.5 text-xs text-paper-300">
                     {completedCount} of {totalLessons} lessons completed
                   </p>
                 </div>
@@ -188,14 +188,14 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
                     <p className="text-sm font-semibold text-emerald-700">Certificate earned!</p>
                     <Link
                       href={`/certificates?path=${pathData.id}`}
-                      className="mt-1 text-xs text-primary hover:underline"
+                      className="mt-1 text-xs text-signal hover:underline"
                     >
                       View certificate &rarr;
                     </Link>
                   </div>
                 ) : (
-                  <div className="rounded-lg bg-muted p-3">
-                    <p className="text-xs text-muted-foreground">
+                  <div className="rounded-lg bg-ink-700 p-3">
+                    <p className="text-xs text-paper-300">
                       Complete all lessons to earn your certificate.
                     </p>
                   </div>
@@ -205,29 +205,27 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
 
             <Card>
               <CardContent className="pt-6">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-paper-300 mb-2">
                   Path details
                 </p>
                 <dl className="space-y-1.5 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Level</dt>
-                    <dd className="font-medium text-foreground">{pathData.targetLevel}</dd>
+                    <dt className="text-paper-300">Level</dt>
+                    <dd className="font-medium text-paper-100">{pathData.targetLevel}</dd>
                   </div>
                   {pathData.targetRole && (
                     <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Role</dt>
-                      <dd className="font-medium text-foreground">{pathData.targetRole}</dd>
+                      <dt className="text-paper-300">Role</dt>
+                      <dd className="font-medium text-paper-100">{pathData.targetRole}</dd>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Duration</dt>
-                    <dd className="font-medium text-foreground">
-                      ~{pathData.estimatedMinutes} min
-                    </dd>
+                    <dt className="text-paper-300">Duration</dt>
+                    <dd className="font-medium text-paper-100">~{pathData.estimatedMinutes} min</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Lessons</dt>
-                    <dd className="font-medium text-foreground">{sortedLessons.length}</dd>
+                    <dt className="text-paper-300">Lessons</dt>
+                    <dd className="font-medium text-paper-100">{sortedLessons.length}</dd>
                   </div>
                 </dl>
               </CardContent>

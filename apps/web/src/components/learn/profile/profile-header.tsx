@@ -45,14 +45,14 @@ export function ProfileHeader({ user, aiLevel, department }: ProfileHeaderProps)
       <CardContent className="pt-6">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
           <Avatar className="h-20 w-20 shrink-0">
-            <AvatarFallback className="bg-primary/15 text-primary text-xl font-semibold">
+            <AvatarFallback className="bg-signal/15 text-signal text-xl font-semibold">
               {getInitials(displayName)}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex-1 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">{displayName}</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-paper-100">{displayName}</h1>
               <Badge variant={roleBadgeVariant(user.role)} className="text-xs capitalize">
                 {user.role.toLowerCase()}
               </Badge>
@@ -62,8 +62,8 @@ export function ProfileHeader({ user, aiLevel, department }: ProfileHeaderProps)
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
-            {department && <p className="text-sm text-muted-foreground">{department}</p>}
+            <p className="text-sm text-paper-300">{user.email}</p>
+            {department && <p className="text-sm text-paper-300">{department}</p>}
           </div>
         </div>
       </CardContent>

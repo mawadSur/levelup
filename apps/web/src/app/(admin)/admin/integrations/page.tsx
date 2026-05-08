@@ -28,12 +28,12 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
     <div className="mx-auto max-w-4xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       <div>
         <h1
-          className="text-[36px] font-bold leading-tight tracking-tight text-foreground"
+          className="text-[36px] font-bold leading-tight tracking-tight text-paper-100"
           style={{ fontFamily: 'Fraunces, serif' }}
         >
           Integrations
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-paper-300">
           Connect LevelUp to where your team already works.
         </p>
       </div>

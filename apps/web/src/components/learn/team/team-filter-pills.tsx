@@ -35,7 +35,7 @@ export function TeamFilterPills({ activeFilter }: TeamFilterPillsProps) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1 rounded-lg border border-border p-1 w-fit',
+        'flex items-center gap-1 rounded-lg border border-ink-600 p-1 w-fit',
         isPending && 'opacity-60 pointer-events-none',
       )}
       role="group"
@@ -51,8 +51,8 @@ export function TeamFilterPills({ activeFilter }: TeamFilterPillsProps) {
             className={cn(
               'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
               isActive
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                ? 'bg-signal text-ink-900 shadow-sm'
+                : 'text-paper-300 hover:bg-ink-700 hover:text-paper-100',
             )}
             aria-pressed={isActive}
           >

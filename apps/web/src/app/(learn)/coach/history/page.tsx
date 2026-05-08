@@ -72,17 +72,13 @@ export default async function CoachHistoryPage() {
         <div>
           <Link
             href="/coach"
-            className="mb-2 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+            className="mb-2 inline-flex items-center gap-1 text-xs text-paper-300 hover:text-paper-100 hover:underline"
           >
             <ArrowLeft size={12} aria-hidden="true" />
             Back to coach
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Conversation history
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Your past sessions with the AI coach.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Conversation history</h1>
+          <p className="mt-1 text-sm text-paper-300">Your past sessions with the AI coach.</p>
         </div>
         <Button asChild>
           <Link href="/coach">New conversation</Link>
@@ -92,13 +88,9 @@ export default async function CoachHistoryPage() {
       {conversations.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <MessageSquare
-              size={28}
-              aria-hidden="true"
-              className="mx-auto mb-3 text-muted-foreground"
-            />
+            <MessageSquare size={28} aria-hidden="true" className="mx-auto mb-3 text-paper-300" />
             <h2 className="mb-1 text-base font-semibold">No conversations yet</h2>
-            <p className="mx-auto mb-5 max-w-xs text-sm text-muted-foreground">
+            <p className="mx-auto mb-5 max-w-xs text-sm text-paper-300">
               Once you chat with the coach, your conversations will show up here.
             </p>
             <Button asChild>
@@ -112,15 +104,15 @@ export default async function CoachHistoryPage() {
             <li key={c.id}>
               <Link
                 href={`/coach?c=${encodeURIComponent(c.id)}`}
-                className="block rounded-lg border bg-background p-4 transition-colors hover:border-indigo-300 hover:bg-indigo-50/30 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/10"
+                className="block rounded-lg border bg-ink-900 p-4 transition-colors hover:border-indigo-300 hover:bg-indigo-50/30 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/10"
               >
                 <div className="mb-1 flex items-center justify-between gap-3">
-                  <span className="text-xs text-muted-foreground">{formatDate(c.updatedAt)}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-paper-300">{formatDate(c.updatedAt)}</span>
+                  <span className="text-xs text-paper-300">
                     {c.turnCount} turn{c.turnCount === 1 ? '' : 's'}
                   </span>
                 </div>
-                <p className="line-clamp-2 text-sm text-foreground">{pickLabel(c)}</p>
+                <p className="line-clamp-2 text-sm text-paper-100">{pickLabel(c)}</p>
               </Link>
             </li>
           ))}

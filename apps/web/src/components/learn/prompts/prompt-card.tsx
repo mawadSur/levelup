@@ -143,7 +143,7 @@ function EditDialog({ prompt, canShare, open, onClose, onSaved }: EditDialogProp
                 id="edit-shared"
                 checked={isShared}
                 onChange={(e) => setIsShared(e.target.checked)}
-                className="h-4 w-4 rounded border-border accent-primary"
+                className="h-4 w-4 rounded border-ink-600 accent-primary"
               />
               <Label htmlFor="edit-shared" className="cursor-pointer text-sm font-normal">
                 Share with my organisation
@@ -274,7 +274,7 @@ export function PromptCard({
             trigger={
               <button
                 type="button"
-                className="text-left text-base font-semibold text-foreground hover:text-primary transition-colors"
+                className="text-left text-base font-semibold text-paper-100 hover:text-signal transition-colors"
               >
                 {prompt.title}
               </button>
@@ -282,7 +282,7 @@ export function PromptCard({
           />
 
           {/* Preview */}
-          <pre className="rounded-md bg-muted/50 p-3 text-xs font-mono text-muted-foreground whitespace-pre-wrap line-clamp-4 leading-relaxed border border-border/60">
+          <pre className="rounded-md bg-ink-700/50 p-3 text-xs font-mono text-paper-300 whitespace-pre-wrap line-clamp-4 leading-relaxed border border-ink-600/60">
             {preview}
           </pre>
         </CardContent>
@@ -305,7 +305,7 @@ export function PromptCard({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-destructive hover:text-destructive"
+                className="text-danger hover:text-danger"
                 onClick={handleDelete}
                 disabled={isDeleting}
               >

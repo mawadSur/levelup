@@ -46,7 +46,7 @@ function BadgeIcon({
   rarity: Rarity;
 }) {
   const Icon = ICON_MAP[iconKey] ?? Award;
-  const colorClass = earned ? RARITY_ICON_COLOR[rarity] : 'text-muted-foreground';
+  const colorClass = earned ? RARITY_ICON_COLOR[rarity] : 'text-paper-300';
   return (
     <Icon
       className={[
@@ -63,17 +63,17 @@ function BadgeIcon({
 // Rarity border/color helpers
 // ---------------------------------------------------------------------------
 const RARITY_BORDER_CLASS: Record<Rarity, string> = {
-  COMMON: 'border-muted-foreground/40',
-  RARE: 'border-primary',
+  COMMON: 'border-paper-300/40',
+  RARE: 'border-signal',
   EPIC: 'border-[hsl(var(--accent-warm))]',
   LEGENDARY: 'border-transparent',
 };
 
 const RARITY_ICON_COLOR: Record<Rarity, string> = {
-  COMMON: 'text-muted-foreground',
-  RARE: 'text-primary',
+  COMMON: 'text-paper-300',
+  RARE: 'text-signal',
   EPIC: 'text-[hsl(var(--accent-warm))]',
-  LEGENDARY: 'text-primary',
+  LEGENDARY: 'text-signal',
 };
 
 // LEGENDARY gets a gradient border via a wrapper technique:
@@ -112,8 +112,8 @@ export function BadgeCard({ badge, earned, awardedAt }: BadgeCardProps) {
       className={[
         'relative flex flex-col items-center justify-center gap-2 rounded-xl border p-3',
         'aspect-square cursor-default select-none overflow-hidden',
-        'bg-background transition-colors',
-        earned ? RARITY_BORDER_CLASS[badge.rarity] : 'border-border',
+        'bg-ink-900 transition-colors',
+        earned ? RARITY_BORDER_CLASS[badge.rarity] : 'border-ink-600',
         !earned ? 'opacity-50' : '',
       ].join(' ')}
       aria-label={`${badge.label}${earned ? ' (earned)' : ' (locked)'}`}
@@ -127,8 +127,8 @@ export function BadgeCard({ badge, earned, awardedAt }: BadgeCardProps) {
       {/* Label */}
       <span
         className={[
-          'text-center font-display text-[11px] font-semibold leading-tight',
-          earned ? 'text-foreground' : 'text-muted-foreground',
+          'text-center font-serif text-[11px] font-semibold leading-tight',
+          earned ? 'text-paper-100' : 'text-paper-300',
         ].join(' ')}
       >
         {badge.label}
@@ -136,7 +136,7 @@ export function BadgeCard({ badge, earned, awardedAt }: BadgeCardProps) {
 
       {/* Lock overlay icon for locked badges */}
       {!earned && (
-        <Lock className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground/60" aria-hidden />
+        <Lock className="absolute right-1.5 top-1.5 h-3 w-3 text-paper-300/60" aria-hidden />
       )}
     </div>
   );

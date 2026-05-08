@@ -74,7 +74,7 @@ export function ConversationList({
   const recent = conversations.slice(0, 20);
 
   return (
-    <aside className="flex h-full min-h-0 flex-col border-r bg-muted/20">
+    <aside className="flex h-full min-h-0 flex-col border-r bg-ink-700/20">
       <div className="border-b p-3">
         {onNewConversation ? (
           <Button className="w-full justify-start" variant="outline" onClick={onNewConversation}>
@@ -92,12 +92,12 @@ export function ConversationList({
       </div>
 
       <div className="flex items-center justify-between px-3 pt-4 pb-2">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-paper-300">
           Conversations
         </h2>
         <Link
           href="/coach/history"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+          className="inline-flex items-center gap-1 text-xs text-paper-300 hover:text-paper-100 hover:underline"
         >
           <History size={12} aria-hidden="true" />
           All
@@ -106,7 +106,7 @@ export function ConversationList({
 
       <nav className="flex-1 overflow-y-auto px-2 pb-3">
         {recent.length === 0 ? (
-          <p className="px-2 py-4 text-xs text-muted-foreground">
+          <p className="px-2 py-4 text-xs text-paper-300">
             No conversations yet. Try asking the coach anything.
           </p>
         ) : (
@@ -122,20 +122,20 @@ export function ConversationList({
                     className={cn(
                       'group flex items-start gap-2.5 rounded-md px-2 py-2 text-sm transition-colors',
                       isActive
-                        ? 'bg-primary/10 text-foreground'
-                        : 'text-foreground/90 hover:bg-accent hover:text-accent-foreground',
+                        ? 'bg-signal/10 text-paper-100'
+                        : 'text-paper-100/90 hover:bg-ink-700 hover:text-paper-100',
                     )}
                   >
                     <MessageSquare
                       size={14}
                       aria-hidden="true"
-                      className="mt-0.5 flex-none text-muted-foreground"
+                      className="mt-0.5 flex-none text-paper-300"
                     />
                     <span className="flex-1 overflow-hidden">
                       <span className="block truncate text-xs font-medium leading-snug">
                         {label}
                       </span>
-                      <span className="block text-[10px] text-muted-foreground">
+                      <span className="block text-[10px] text-paper-300">
                         {relativeTime(c.updatedAt)}
                         {c.turnCount > 0 ? ` · ${c.turnCount} turns` : ''}
                       </span>

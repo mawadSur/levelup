@@ -62,7 +62,7 @@ export function aiLevelBadgeClass(level: string | null): string {
     case 'ADVANCED':
       return 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/40 dark:text-violet-300';
     default:
-      return 'bg-muted text-muted-foreground border-border';
+      return 'bg-ink-700 text-paper-300 border-ink-600';
   }
 }
 
@@ -191,23 +191,23 @@ function ActionsMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem className="flex items-center gap-2 cursor-pointer" onClick={onChangeRole}>
-          <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+          <ShieldCheck className="h-4 w-4 text-paper-300" />
           Change role
         </DropdownMenuItem>
         <DropdownMenuItem className="flex items-center gap-2 cursor-pointer" onClick={onChangeDept}>
-          <Building2 className="h-4 w-4 text-muted-foreground" />
+          <Building2 className="h-4 w-4 text-paper-300" />
           Change department
         </DropdownMenuItem>
         <DropdownMenuItem
           className="flex items-center gap-2 cursor-pointer"
           onClick={onChangeLevel}
         >
-          <Sliders className="h-4 w-4 text-muted-foreground" />
+          <Sliders className="h-4 w-4 text-paper-300" />
           Set AI level
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive"
+          className="flex items-center gap-2 cursor-pointer text-danger focus:text-danger"
           onClick={onDeactivate}
         >
           <UserX className="h-4 w-4" />
@@ -236,18 +236,18 @@ export function UserRow({ user, departments, isCurrentUserAdmin, adminCount }: U
 
   return (
     <>
-      <tr className="group border-b border-border transition-colors hover:bg-muted/30">
+      <tr className="group border-b border-ink-600 transition-colors hover:bg-ink-700/30">
         {/* Name + email */}
         <td className="py-3 pl-4 pr-3">
           <div className="flex items-center gap-3">
             <Avatar className="h-8 w-8 shrink-0">
-              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+              <AvatarFallback className="bg-signal/10 text-signal text-xs font-semibold">
                 {getInitials(user.name, user.email)}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+              <p className="truncate text-sm font-medium text-paper-100">{user.name}</p>
+              <p className="truncate text-xs text-paper-300">{user.email}</p>
             </div>
           </div>
         </td>
@@ -276,7 +276,7 @@ export function UserRow({ user, departments, isCurrentUserAdmin, adminCount }: U
               </SelectContent>
             </Select>
           ) : (
-            <span className="text-sm text-foreground">{deptName}</span>
+            <span className="text-sm text-paper-100">{deptName}</span>
           )}
         </td>
 
@@ -302,12 +302,12 @@ export function UserRow({ user, departments, isCurrentUserAdmin, adminCount }: U
               {user.aiLevel.charAt(0) + user.aiLevel.slice(1).toLowerCase()}
             </Badge>
           ) : (
-            <span className="text-xs text-muted-foreground">Not set</span>
+            <span className="text-xs text-paper-300">Not set</span>
           )}
         </td>
 
         {/* Last active */}
-        <td className="px-3 py-3 text-sm text-muted-foreground">{formatDate(user.lastActiveAt)}</td>
+        <td className="px-3 py-3 text-sm text-paper-300">{formatDate(user.lastActiveAt)}</td>
 
         {/* Actions */}
         <td className="py-3 pl-3 pr-4 text-right">
@@ -346,17 +346,17 @@ export function UserCard({ user, departments, isCurrentUserAdmin, adminCount }: 
 
   return (
     <>
-      <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4">
+      <div className="flex flex-col gap-2 rounded-lg border border-ink-600 bg-ink-800 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 shrink-0">
-              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+              <AvatarFallback className="bg-signal/10 text-signal text-xs font-semibold">
                 {getInitials(user.name, user.email)}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">{user.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+              <p className="truncate text-sm font-semibold text-paper-100">{user.name}</p>
+              <p className="truncate text-xs text-paper-300">{user.email}</p>
             </div>
           </div>
           {isCurrentUserAdmin && (
@@ -381,14 +381,12 @@ export function UserCard({ user, departments, isCurrentUserAdmin, adminCount }: 
             </Badge>
           )}
           {deptName && (
-            <span className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
+            <span className="rounded-full border border-ink-600 bg-ink-700 px-2.5 py-0.5 text-xs text-paper-300">
               {deptName}
             </span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">
-          Last active: {formatDate(user.lastActiveAt)}
-        </p>
+        <p className="text-xs text-paper-300">Last active: {formatDate(user.lastActiveAt)}</p>
       </div>
 
       <ChangeRoleDialog

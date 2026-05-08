@@ -66,18 +66,18 @@ export default async function CoachHistoryDetailPage({ params }: PageProps) {
         <div className="min-w-0">
           <Link
             href="/coach/history"
-            className="mb-2 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+            className="mb-2 inline-flex items-center gap-1 text-xs text-paper-300 hover:text-paper-100 hover:underline"
           >
             <ArrowLeft size={12} aria-hidden="true" />
             All conversations
           </Link>
-          <h1 className="truncate text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="truncate text-2xl font-bold tracking-tight text-paper-100">
             {conversation.title ?? 'Untitled conversation'}
           </h1>
-          <p className="mt-1 text-xs text-muted-foreground">{formatDate(conversation.createdAt)}</p>
+          <p className="mt-1 text-xs text-paper-300">{formatDate(conversation.createdAt)}</p>
           <Link
             href={`/coach?c=${encodeURIComponent(conversation.id)}`}
-            className="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="mt-2 inline-flex items-center gap-1 text-xs text-signal hover:underline"
           >
             Continue this conversation
           </Link>
@@ -88,7 +88,7 @@ export default async function CoachHistoryDetailPage({ params }: PageProps) {
       <Card>
         <CardContent className="space-y-6 pt-6">
           {conversation.turns.length === 0 ? (
-            <p className="text-sm text-muted-foreground">This conversation has no messages.</p>
+            <p className="text-sm text-paper-300">This conversation has no messages.</p>
           ) : (
             conversation.turns.map((turn) => {
               const isUser = turn.role === 'USER';
@@ -97,7 +97,7 @@ export default async function CoachHistoryDetailPage({ params }: PageProps) {
                   <span
                     className={
                       isUser
-                        ? 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-primary/10 text-primary'
+                        ? 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/10 text-signal'
                         : 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300'
                     }
                     aria-hidden="true"
@@ -105,13 +105,13 @@ export default async function CoachHistoryDetailPage({ params }: PageProps) {
                     {isUser ? <User size={14} /> : <Sparkles size={14} />}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-paper-300">
                       {isUser ? 'You' : 'Coach'}
                       <span className="ml-2 font-normal normal-case tracking-normal">
                         {formatDate(turn.createdAt)}
                       </span>
                     </p>
-                    <div className="whitespace-pre-wrap rounded-lg border bg-background p-3 text-sm leading-relaxed text-foreground">
+                    <div className="whitespace-pre-wrap rounded-lg border bg-ink-900 p-3 text-sm leading-relaxed text-paper-100">
                       {turn.content}
                     </div>
                   </div>

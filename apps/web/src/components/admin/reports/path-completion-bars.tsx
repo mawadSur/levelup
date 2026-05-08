@@ -7,7 +7,7 @@ interface PathCompletionBarsProps {
 
 export function PathCompletionBars({ byPath }: PathCompletionBarsProps) {
   if (byPath.length === 0) {
-    return <p className="text-sm text-muted-foreground italic">No path data available.</p>;
+    return <p className="text-sm text-paper-300 italic">No path data available.</p>;
   }
 
   const sorted = [...byPath].sort((a, b) => b.completionRate - a.completionRate);
@@ -19,10 +19,10 @@ export function PathCompletionBars({ byPath }: PathCompletionBarsProps) {
         return (
           <li key={path.learningPathId} className="space-y-1">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-foreground truncate max-w-[60%]" title={path.title}>
+              <span className="font-medium text-paper-100 truncate max-w-[60%]" title={path.title}>
                 {path.title}
               </span>
-              <span className="text-muted-foreground tabular-nums">
+              <span className="text-paper-300 tabular-nums">
                 {pct}%<span className="ml-1.5 text-xs">({path.assignedCount} assigned)</span>
               </span>
             </div>

@@ -64,10 +64,10 @@ export function BadgeWall({ earnedBadges }: BadgeWallProps) {
     <div className="space-y-4">
       {/* Summary header */}
       <div className="flex items-baseline gap-1.5">
-        <span className="font-display text-3xl font-bold text-foreground">
+        <span className="font-serif text-3xl font-bold text-paper-100">
           <CountUp value={earnedCount} />
         </span>
-        <span className="text-sm text-muted-foreground">/ {totalCount} badges earned</span>
+        <span className="text-sm text-paper-300">/ {totalCount} badges earned</span>
       </div>
 
       {/* Tabs */}

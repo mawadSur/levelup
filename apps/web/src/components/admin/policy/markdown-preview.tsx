@@ -12,7 +12,7 @@ interface MarkdownPreviewProps {
  */
 export function MarkdownPreview({ content }: MarkdownPreviewProps) {
   if (!content.trim()) {
-    return <p className="text-sm text-muted-foreground italic">Start typing to see a preview…</p>;
+    return <p className="text-sm text-paper-300 italic">Start typing to see a preview…</p>;
   }
   return <MarkdownView content={content} />;
 }

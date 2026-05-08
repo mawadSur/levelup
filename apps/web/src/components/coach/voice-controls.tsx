@@ -289,7 +289,7 @@ export function VoiceControls({ onTranscript, speakResponses, onToggleSpeak }: V
           'flex h-9 w-9 items-center justify-center rounded-full border transition-colors',
           speakResponses
             ? 'border-[#8B1A1A] bg-[#8B1A1A]/10 text-[#8B1A1A] hover:bg-[#8B1A1A]/20'
-            : 'border-border text-muted-foreground hover:bg-accent',
+            : 'border-ink-600 text-paper-300 hover:bg-ink-700',
         ].join(' ')}
       >
         {speakResponses ? (
@@ -315,8 +315,8 @@ export function VoiceControls({ onTranscript, speakResponses, onToggleSpeak }: V
           isRecording
             ? 'border-[#8B1A1A] bg-[#8B1A1A] text-white'
             : isTranscribing
-              ? 'cursor-wait border-border bg-muted text-muted-foreground'
-              : 'border-border text-muted-foreground hover:bg-accent',
+              ? 'cursor-wait border-ink-600 bg-ink-700 text-paper-300'
+              : 'border-ink-600 text-paper-300 hover:bg-ink-700',
           // Pulsing ring while recording (suppressed under reduced motion)
           isRecording && !prefersReduced
             ? 'after:absolute after:inset-0 after:animate-ping after:rounded-full after:border after:border-[#8B1A1A]/60'

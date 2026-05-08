@@ -104,7 +104,7 @@ function DetailDialog({ row, onClose }: DetailDialogProps) {
           </DialogDescription>
         </DialogHeader>
         {row && (
-          <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs font-mono whitespace-pre-wrap break-words">
+          <pre className="max-h-96 overflow-auto rounded-md bg-ink-700 p-4 text-xs font-mono whitespace-pre-wrap break-words">
             {JSON.stringify(row.data, null, 2)}
           </pre>
         )}
@@ -142,10 +142,7 @@ function RowActions({ row, onView, onRetry, onDelete }: RowActionsProps) {
           Retry
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => onDelete(row)}
-          className="text-destructive focus:text-destructive"
-        >
+        <DropdownMenuItem onClick={() => onDelete(row)} className="text-danger focus:text-danger">
           <Trash2 className="mr-2 h-4 w-4" />
           Delete
         </DropdownMenuItem>
@@ -202,7 +199,7 @@ function FilterBar({
         type="date"
         value={sinceFilter}
         onChange={(e) => onSinceChange(e.target.value)}
-        className="h-8 rounded-md border border-input bg-background px-3 text-xs"
+        className="h-8 rounded-md border border-ink-500 bg-ink-900 px-3 text-xs"
         aria-label="Since date"
       />
 
@@ -316,15 +313,15 @@ export function DlqTable({ initialRows }: DlqTableProps) {
           ))}
         </div>
       ) : displayed.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 py-16 text-muted-foreground">
+        <div className="flex flex-col items-center justify-center gap-2 py-16 text-paper-300">
           <span className="text-4xl">&#10003;</span>
           <p className="text-sm font-medium">No failed jobs. Workers are healthy.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-border">
+        <div className="overflow-x-auto rounded-md border border-ink-600">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/50 text-xs text-muted-foreground">
+              <tr className="border-b border-ink-600 bg-ink-700/50 text-xs text-paper-300">
                 <th className="px-4 py-2 text-left font-medium">Job name</th>
                 <th className="px-4 py-2 text-left font-medium">Job ID</th>
                 <th className="px-4 py-2 text-right font-medium">Attempts</th>
@@ -337,21 +334,21 @@ export function DlqTable({ initialRows }: DlqTableProps) {
               {displayed.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
+                  className="border-b border-ink-600 last:border-0 hover:bg-ink-700/30 transition-colors"
                 >
                   <td className="px-4 py-2">
                     <Badge variant="secondary" className="font-mono text-xs">
                       {row.jobName}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{row.jobId}</td>
+                  <td className="px-4 py-2 font-mono text-xs text-paper-300">{row.jobId}</td>
                   <td className="px-4 py-2 text-right tabular-nums">{row.attempts}</td>
                   <td className="px-4 py-2 max-w-xs">
                     <span title={row.failedReason} className="cursor-help">
                       {truncate(row.failedReason, 80)}
                     </span>
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-muted-foreground">
+                  <td className="px-4 py-2 whitespace-nowrap text-paper-300">
                     {formatDate(row.createdAt)}
                   </td>
                   <td className="px-4 py-2 text-right">

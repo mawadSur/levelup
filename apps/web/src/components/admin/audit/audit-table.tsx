@@ -70,7 +70,7 @@ function MetaDialog({ row, onClose }: MetaDialogProps) {
           <DialogDescription>{row ? formatDate(row.createdAt) : ''}</DialogDescription>
         </DialogHeader>
         {row && (
-          <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs font-mono whitespace-pre-wrap break-words">
+          <pre className="max-h-96 overflow-auto rounded-md bg-ink-700 p-4 text-xs font-mono whitespace-pre-wrap break-words">
             {JSON.stringify(row.metadata, null, 2)}
           </pre>
         )}
@@ -103,12 +103,12 @@ function AuditTableRow({ row, onExpandMeta }: AuditTableRowProps) {
 
   return (
     <tr
-      className="group border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
+      className="group border-b border-ink-600 last:border-0 hover:bg-ink-700/30 transition-colors"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       {/* Time */}
-      <td className="px-4 py-2 whitespace-nowrap text-xs text-muted-foreground">
+      <td className="px-4 py-2 whitespace-nowrap text-xs text-paper-300">
         {formatDate(row.createdAt)}
       </td>
 
@@ -126,7 +126,7 @@ function AuditTableRow({ row, onExpandMeta }: AuditTableRowProps) {
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-paper-300">
             {row.actorId ? truncateId(row.actorId) : 'System'}
           </span>
         )}
@@ -140,17 +140,17 @@ function AuditTableRow({ row, onExpandMeta }: AuditTableRowProps) {
       </td>
 
       {/* Target type */}
-      <td className="px-4 py-2 text-xs text-muted-foreground">{row.targetType ?? '—'}</td>
+      <td className="px-4 py-2 text-xs text-paper-300">{row.targetType ?? '—'}</td>
 
       {/* Target ID */}
-      <td className="px-4 py-2 font-mono text-xs text-muted-foreground">
+      <td className="px-4 py-2 font-mono text-xs text-paper-300">
         {row.targetId ? truncateId(row.targetId) : '—'}
       </td>
 
       {/* Metadata */}
       <td className="px-4 py-2 max-w-xs">
         <button
-          className="cursor-pointer text-xs text-left text-muted-foreground hover:text-foreground"
+          className="cursor-pointer text-xs text-left text-paper-300 hover:text-paper-100"
           onClick={() => onExpandMeta(row)}
           title="Click to expand"
         >
@@ -166,7 +166,7 @@ function AuditTableRow({ row, onExpandMeta }: AuditTableRowProps) {
           title="Copy row details"
           aria-label="Copy row details"
         >
-          <Copy className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+          <Copy className="h-3.5 w-3.5 text-paper-300 hover:text-paper-100" />
         </button>
       </td>
     </tr>
@@ -231,15 +231,15 @@ export function AuditTable({ initialPage }: AuditTableProps) {
   return (
     <>
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 py-16 text-muted-foreground">
+        <div className="flex flex-col items-center justify-center gap-2 py-16 text-paper-300">
           <p className="text-sm font-medium">No audit log entries match your filters.</p>
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-md border border-border">
+          <div className="overflow-x-auto rounded-md border border-ink-600">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-muted/50 text-xs text-muted-foreground">
+                <tr className="border-b border-ink-600 bg-ink-700/50 text-xs text-paper-300">
                   <th className="px-4 py-2 text-left font-medium">Time</th>
                   <th className="px-4 py-2 text-left font-medium">Actor</th>
                   <th className="px-4 py-2 text-left font-medium">Action</th>

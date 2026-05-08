@@ -42,7 +42,7 @@ function PromptGridSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="rounded-lg border border-border bg-card p-5 space-y-3">
+        <div key={i} className="rounded-lg border border-ink-600 bg-ink-800 p-5 space-y-3">
           <div className="flex gap-2">
             <Skeleton className="h-5 w-16 rounded-full" />
             <Skeleton className="h-5 w-14 rounded-full" />
@@ -88,9 +88,9 @@ async function PromptGrid({
 
   if (filtered.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-ink-600 py-16 text-center">
         <svg
-          className="mb-4 h-10 w-10 text-muted-foreground/50"
+          className="mb-4 h-10 w-10 text-paper-300/50"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -103,8 +103,8 @@ async function PromptGrid({
             d="M9 12h6m-3-3v6M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <p className="text-sm font-medium text-foreground">No prompts found</p>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-sm font-medium text-paper-100">No prompts found</p>
+        <p className="mt-1 text-sm text-paper-300">
           {scope === 'mine'
             ? 'You have no prompts yet. Create one to get started.'
             : scope === 'org'
@@ -163,8 +163,8 @@ export default async function PromptsPage({ searchParams }: PageProps) {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Prompts</h1>
-          <p className="mt-1 text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-paper-100">Prompts</h1>
+          <p className="mt-1 text-paper-300">
             Reusable prompts that work — yours, your team&apos;s, and our library.
           </p>
         </div>

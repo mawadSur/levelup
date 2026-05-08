@@ -68,8 +68,8 @@ function BreakdownRow({ label, xp }: BreakdownRowProps) {
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
       className="flex items-center justify-between text-sm"
     >
-      <span className="text-muted-foreground">{label}</span>
-      <span className="font-semibold text-primary">+{xp}</span>
+      <span className="text-paper-300">{label}</span>
+      <span className="font-semibold text-signal">+{xp}</span>
     </motion.div>
   );
 }
@@ -182,7 +182,7 @@ export function LessonCompletionModal({
           {/* Backdrop */}
           <motion.div
             key="backdrop"
-            className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -203,7 +203,7 @@ export function LessonCompletionModal({
             className={cn(
               'fixed bottom-0 left-1/2 z-50 w-full max-w-md',
               '-translate-x-1/2',
-              'rounded-t-2xl bg-background border border-border/60 shadow-2xl',
+              'rounded-t-2xl bg-ink-900 border border-ink-600/60 shadow-2xl',
               'p-6 pb-8',
             )}
             variants={prefersReduced ? undefined : slideUpVariants}
@@ -218,14 +218,12 @@ export function LessonCompletionModal({
             {/* Header */}
             <h2
               id="lesson-completion-title"
-              className="font-display text-[36px] italic leading-none tracking-tight text-foreground"
+              className="font-serif text-[36px] italic leading-none tracking-tight text-paper-100"
             >
               Lesson complete!
             </h2>
 
-            <p className="mt-1 text-sm text-muted-foreground">
-              Here&apos;s what you earned this session.
-            </p>
+            <p className="mt-1 text-sm text-paper-300">Here&apos;s what you earned this session.</p>
 
             {/* XP breakdown rows — staggered entrance */}
             <motion.div
@@ -252,15 +250,15 @@ export function LessonCompletionModal({
 
             {/* Total */}
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Total XP earned</span>
-              <span className="font-display text-3xl italic font-semibold text-primary leading-none">
+              <span className="text-sm font-medium text-paper-300">Total XP earned</span>
+              <span className="font-serif text-3xl italic font-semibold text-signal leading-none">
                 +<CountUp value={totalXp} duration={0.6} />
               </span>
             </div>
 
             {/* Path progress bar */}
             <div className="mt-4 space-y-1.5">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-paper-300">
                 Path progress — {Math.round(pathProgressPct * 100)}%
               </p>
               <AnimatedProgressBar

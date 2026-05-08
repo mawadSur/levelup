@@ -35,10 +35,10 @@ interface RibbonItemProps {
 }
 
 const RARITY_COLORS: Record<BadgeEarnedEventDetail['rarity'], string> = {
-  common: 'text-foreground',
-  rare: 'text-blue-500',
-  epic: 'text-purple-500',
-  legendary: 'text-amber-500',
+  common: 'text-paper-300',
+  rare: 'text-paper-100',
+  epic: 'text-signal-dim',
+  legendary: 'text-signal',
 };
 
 function RibbonItem({ detail, index, onDismiss }: RibbonItemProps) {
@@ -78,7 +78,7 @@ function RibbonItem({ detail, index, onDismiss }: RibbonItemProps) {
       style={{ top: `${index * 80 + 16}px` }}
       className={cn(
         'fixed right-4 z-[60] w-72',
-        'rounded-xl border border-primary/30 bg-primary px-4 py-3 shadow-xl',
+        'rounded-xl border border-signal/30 bg-signal px-4 py-3 shadow-xl',
       )}
       role="alert"
       aria-live="polite"
@@ -86,7 +86,7 @@ function RibbonItem({ detail, index, onDismiss }: RibbonItemProps) {
       <div className="flex items-start gap-3">
         {/* Icon with 3D coin-flip */}
         <motion.div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink-900/15"
           animate={prefersReduced ? {} : { rotateY: [0, 360] }}
           transition={prefersReduced ? {} : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           style={{ transformStyle: 'preserve-3d' }}
@@ -96,14 +96,12 @@ function RibbonItem({ detail, index, onDismiss }: RibbonItemProps) {
 
         {/* Text */}
         <div className="min-w-0 flex-1">
-          <p className="font-display text-[13px] italic font-semibold leading-none text-primary-foreground">
+          <p className="font-serif text-[13px] italic font-semibold leading-none text-ink-900">
             Badge earned
           </p>
-          <p className="mt-0.5 truncate text-sm font-medium text-primary-foreground/90">
-            {detail.label}
-          </p>
+          <p className="mt-0.5 truncate text-sm font-medium text-ink-900/90">{detail.label}</p>
           {/* XP reward chip */}
-          <span className="mt-1.5 inline-flex items-center rounded-full bg-primary-foreground/15 px-1.5 py-0.5 text-[11px] font-semibold text-primary-foreground">
+          <span className="mt-1.5 inline-flex items-center rounded-full bg-ink-900/15 px-1.5 py-0.5 text-[11px] font-semibold text-ink-900">
             +{detail.xpReward}&nbsp;XP
           </span>
         </div>
@@ -111,7 +109,7 @@ function RibbonItem({ detail, index, onDismiss }: RibbonItemProps) {
         {/* Dismiss button */}
         <button
           onClick={() => onDismiss(detail.slug)}
-          className="ml-1 shrink-0 rounded-sm p-0.5 opacity-60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/40"
+          className="ml-1 shrink-0 rounded-sm p-0.5 opacity-60 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/40"
           aria-label={`Dismiss ${detail.label} badge notification`}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">

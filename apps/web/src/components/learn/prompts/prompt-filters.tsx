@@ -66,7 +66,7 @@ export function PromptFilters({ q, category, scope, hasDepartment = false }: Pro
       {/* Search */}
       <div className="relative flex-1 min-w-[180px] max-w-sm">
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-paper-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -110,7 +110,7 @@ export function PromptFilters({ q, category, scope, hasDepartment = false }: Pro
 
       {/* Scope pills */}
       <div
-        className="flex items-center gap-1 rounded-lg border border-border p-1"
+        className="flex items-center gap-1 rounded-lg border border-ink-600 p-1"
         role="group"
         aria-label="Filter by scope"
       >
@@ -135,8 +135,8 @@ export function PromptFilters({ q, category, scope, hasDepartment = false }: Pro
               className={cn(
                 'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
                 isActive
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                  ? 'bg-signal text-ink-900 shadow-sm'
+                  : 'text-paper-300 hover:bg-ink-700 hover:text-paper-100',
               )}
               aria-pressed={isActive}
             >

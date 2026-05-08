@@ -14,7 +14,7 @@ interface StreakFlameProps {
  *
  * - Oxblood flame when count >= 1, muted at 60% when count = 0.
  * - Warm-amber glow animation when count >= 7 (disabled under reduced-motion).
- * - Count rendered next to the icon in font-display italic 14 px.
+ * - Count rendered next to the icon in font-serif italic 14 px.
  */
 export function StreakFlame({ count, className }: StreakFlameProps) {
   const prefersReduced = useReducedMotion();
@@ -42,12 +42,12 @@ export function StreakFlame({ count, className }: StreakFlameProps) {
         <Flame
           className={cn(
             'h-4 w-4 shrink-0',
-            active ? 'text-primary' : 'text-muted-foreground opacity-60',
+            active ? 'text-signal' : 'text-paper-300 opacity-60',
             glowing && 'streak-glow-anim',
           )}
           aria-hidden="true"
         />
-        <span className="font-display text-[14px] italic leading-none" aria-hidden="true">
+        <span className="font-serif text-[14px] italic leading-none" aria-hidden="true">
           {count}
         </span>
       </span>

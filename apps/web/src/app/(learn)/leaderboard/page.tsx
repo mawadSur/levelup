@@ -78,10 +78,8 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
     <div className="mx-auto max-w-4xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="font-display text-5xl font-bold tracking-tight text-foreground">
-          Leaderboard
-        </h1>
-        <p className="text-base text-muted-foreground">
+        <h1 className="font-serif text-5xl font-bold tracking-tight text-paper-100">Leaderboard</h1>
+        <p className="text-base text-paper-300">
           Top XP earners {periodLabel(period)}, {scopeLabel(scope)}.
         </p>
       </div>
@@ -91,9 +89,9 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
 
       {/* Content */}
       {failed ? (
-        <div className="rounded-xl border border-dashed border-border p-10 text-center">
-          <p className="font-display text-lg text-muted-foreground">Leaderboard coming soon.</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <div className="rounded-xl border border-dashed border-ink-600 p-10 text-center">
+          <p className="font-serif text-lg text-paper-300">Leaderboard coming soon.</p>
+          <p className="mt-1 text-sm text-paper-300">
             We&apos;re still tallying results — check back shortly.
           </p>
         </div>

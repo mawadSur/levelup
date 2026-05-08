@@ -60,8 +60,8 @@ export default async function TeamPage({ searchParams }: PageProps) {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Your team</h1>
-          <p className="mt-1 text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-paper-100">Your team</h1>
+          <p className="mt-1 text-paper-300">
             {totalCount} direct report{totalCount !== 1 ? 's' : ''}
           </p>
         </div>

@@ -150,7 +150,7 @@ export function CreatePathDialog({ open, onOpenChange, onCreated }: CreatePathDi
                 onChange={(e) =>
                   setTargetRole((e.target.value as CreateLearningPathInput['targetRole']) || '')
                 }
-                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+                className="w-full rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm text-paper-100"
               >
                 <option value="">Any role</option>
                 {ROLES.map((r) => (
@@ -167,7 +167,7 @@ export function CreatePathDialog({ open, onOpenChange, onCreated }: CreatePathDi
                 id="cp-level"
                 value={targetLevel}
                 onChange={(e) => setTargetLevel(e.target.value as (typeof LEVELS)[number])}
-                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+                className="w-full rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm text-paper-100"
               >
                 {LEVELS.map((l) => (
                   <option key={l} value={l}>

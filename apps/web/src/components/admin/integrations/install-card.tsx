@@ -56,7 +56,7 @@ function ProviderIcon({ provider, size = 28 }: { provider: 'SLACK' | 'MS_TEAMS';
     );
   }
 
-  return <Plug size={size} className="text-muted-foreground" />;
+  return <Plug size={size} className="text-paper-300" />;
 }
 
 export function InstallCard({ provider, integration, comingSoon }: InstallCardProps) {
@@ -93,7 +93,7 @@ export function InstallCard({ provider, integration, comingSoon }: InstallCardPr
           </Badge>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-paper-300">{description}</p>
         </CardContent>
       </Card>
     );
@@ -107,10 +107,10 @@ export function InstallCard({ provider, integration, comingSoon }: InstallCardPr
           <CardTitle className="text-base font-semibold">{label}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-paper-300">{description}</p>
           <a
             href="/api/integrations/slack/install"
-            className="inline-flex items-center gap-2 rounded-md bg-[#4A154B] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-md bg-[#4A154B] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2"
           >
             <ProviderIcon provider="SLACK" size={18} />
             Add to Slack
@@ -136,9 +136,9 @@ export function InstallCard({ provider, integration, comingSoon }: InstallCardPr
         <div className="flex-1">
           <CardTitle className="text-base font-semibold">{label}</CardTitle>
           {integration.externalTeamName && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-paper-300">
               Connected to{' '}
-              <span className="font-medium text-foreground">{integration.externalTeamName}</span>
+              <span className="font-medium text-paper-100">{integration.externalTeamName}</span>
             </p>
           )}
         </div>
@@ -151,11 +151,11 @@ export function InstallCard({ provider, integration, comingSoon }: InstallCardPr
         </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-1 text-xs text-muted-foreground">
+        <div className="space-y-1 text-xs text-paper-300">
           {integration.installedByName && (
             <p>
               Installed by{' '}
-              <span className="font-medium text-foreground">{integration.installedByName}</span>
+              <span className="font-medium text-paper-100">{integration.installedByName}</span>
               {installedDate ? ` on ${installedDate}` : ''}
             </p>
           )}

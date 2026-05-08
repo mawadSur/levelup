@@ -130,7 +130,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <LessonHeroFade>
           <Link
             href={`/learn/${pathSlug}`}
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-paper-300 hover:text-paper-100 transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path
@@ -161,7 +161,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 <Badge variant="outline" className="text-xs">
                   Lesson {currentLesson.order}
                 </Badge>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-paper-300">
                   ~{currentLesson.estimatedMinutes} min
                 </span>
                 {isCompleted && (
@@ -170,14 +170,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h1 className="text-2xl font-bold tracking-tight text-paper-100 sm:text-3xl">
                 {currentLesson.title}
               </h1>
             </LessonHeroFade>
 
             {/* Video embed */}
             {youtubeEmbedUrl && (
-              <div className="mb-8 aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
+              <div className="mb-8 aspect-video w-full overflow-hidden rounded-xl border border-ink-600 bg-ink-700">
                 <iframe
                   src={youtubeEmbedUrl}
                   title={`Video: ${currentLesson.title}`}
@@ -193,13 +193,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {content ? (
               <MarkdownView content={content} className="pb-8" />
             ) : (
-              <div className="rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-ink-600 p-10 text-center text-paper-300">
                 <p className="text-sm">Lesson content coming soon.</p>
               </div>
             )}
 
             {/* End-of-lesson actions */}
-            <div className="mt-8 border-t border-border pt-8">
+            <div className="mt-8 border-t border-ink-600 pt-8">
               {/* No quiz, not complete: show "Mark as read" */}
               {!quizData && !isCompleted && (
                 <MarkLessonReadButton lessonId={currentLesson.id} nextHref={nextLessonHref} />
@@ -211,7 +211,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   <Button asChild variant="default">
                     <a href="#quiz">Take the quick check</a>
                   </Button>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-paper-300">
                     Pass the quiz to mark this lesson complete.
                   </span>
                 </div>

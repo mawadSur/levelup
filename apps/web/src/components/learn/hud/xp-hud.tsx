@@ -40,8 +40,8 @@ function LevelBadge({ level }: LevelBadgeProps) {
       animate={pulsing && !prefersReduced ? { scale: [1, 1.06, 1] } : { scale: 1 }}
       transition={{ duration: 0.32, ease: [0.34, 1.56, 0.64, 1] }}
       className={cn(
-        'inline-flex items-center rounded-full bg-primary px-2 py-0.5',
-        'font-display text-[13px] italic font-semibold text-primary-foreground leading-none',
+        'inline-flex items-center rounded-full bg-signal px-2 py-0.5',
+        'font-serif text-[13px] italic font-semibold text-ink-900 leading-none',
         'shrink-0 select-none',
       )}
     >
@@ -73,10 +73,10 @@ function XpBar({ xpAtCurrentLevel, xpForNextLevel }: XpBarProps) {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label={`XP progress: ${xpAtCurrentLevel} of ${xpForNextLevel}`}
-            className="h-1.5 w-full overflow-hidden rounded-full bg-primary/15"
+            className="h-1.5 w-full overflow-hidden rounded-full bg-signal/15"
           >
             <motion.div
-              className="h-full rounded-full bg-primary"
+              className="h-full rounded-full bg-signal"
               initial={{ width: '0%' }}
               animate={{ width: `${pct}%` }}
               transition={

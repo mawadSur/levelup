@@ -58,7 +58,7 @@ export function BaselineCard({ assessments }: BaselineCardProps) {
               >
                 {levelLabel(baseline.recommendedLevel)}
               </Badge>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-paper-300">
                 Score: {baseline.score}% &middot; Taken {formatDate(baseline.completedAt)}
               </span>
             </div>
@@ -67,8 +67,8 @@ export function BaselineCard({ assessments }: BaselineCardProps) {
             </Button>
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed border-border p-6 text-center">
-            <p className="text-sm text-muted-foreground">
+          <div className="rounded-lg border border-dashed border-ink-600 p-6 text-center">
+            <p className="text-sm text-paper-300">
               You have not taken the baseline assessment yet.
             </p>
             <Button asChild className="mt-4">

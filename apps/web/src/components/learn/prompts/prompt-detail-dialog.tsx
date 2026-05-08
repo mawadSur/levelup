@@ -56,8 +56,8 @@ export function PromptDetailDialog({ prompt, trigger }: PromptDetailDialogProps)
           </DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-md border border-border bg-muted/40 p-4">
-          <pre className="whitespace-pre-wrap font-mono text-sm text-foreground leading-relaxed">
+        <div className="rounded-md border border-ink-600 bg-ink-700/40 p-4">
+          <pre className="whitespace-pre-wrap font-mono text-sm text-paper-100 leading-relaxed">
             {prompt.promptText}
           </pre>
         </div>

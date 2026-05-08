@@ -26,12 +26,12 @@ export default async function AdminInsightsPage() {
       {/* ── Header ── */}
       <div>
         <h1
-          className="text-[36px] font-bold leading-tight tracking-tight text-foreground"
+          className="text-[36px] font-bold leading-tight tracking-tight text-paper-100"
           style={{ fontFamily: 'Fraunces, Georgia, serif' }}
         >
           Insights
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-sm text-paper-300">
           What&apos;s working in your org. Updated every 5 minutes.
         </p>
       </div>
@@ -57,7 +57,7 @@ export default async function AdminInsightsPage() {
           value={totals.promptsSaved}
           sublabel="last 30 days"
           icon={FileText}
-          iconClassName="bg-primary/10 text-primary"
+          iconClassName="bg-signal/10 text-signal"
         />
         <StatCard
           title="XP Earned"
@@ -80,33 +80,31 @@ export default async function AdminInsightsPage() {
         <SavesPreventedCard data={savesPrevented} />
 
         {/* Category mix */}
-        <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-xl border border-ink-600 bg-ink-800 p-6 space-y-4">
           <div>
-            <h2 className="text-base font-semibold text-foreground">Category Mix</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Prompts saved per category this month.
-            </p>
+            <h2 className="text-base font-semibold text-paper-100">Category Mix</h2>
+            <p className="text-xs text-paper-300 mt-0.5">Prompts saved per category this month.</p>
           </div>
 
           {categoryMix.segments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No prompt data yet.</p>
+            <p className="text-sm text-paper-300">No prompt data yet.</p>
           ) : (
             <div className="space-y-2.5">
               {categoryMix.segments.map((seg) => (
                 <div key={seg.category} className="flex items-center gap-3 text-sm">
-                  <span className="w-24 shrink-0 capitalize truncate text-muted-foreground">
+                  <span className="w-24 shrink-0 capitalize truncate text-paper-300">
                     {seg.category}
                   </span>
-                  <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
+                  <div className="flex-1 h-2.5 rounded-full bg-ink-700 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-primary/70 transition-[width] duration-500"
+                      className="h-full rounded-full bg-signal/70 transition-[width] duration-500"
                       style={{ width: `${Math.max(seg.pct, 2)}%` }}
                       role="progressbar"
                       aria-valuenow={seg.pct}
                       aria-valuemax={100}
                     />
                   </div>
-                  <span className="tabular-nums text-xs text-muted-foreground w-12 text-right">
+                  <span className="tabular-nums text-xs text-paper-300 w-12 text-right">
                     {seg.count} ({seg.pct}%)
                   </span>
                 </div>

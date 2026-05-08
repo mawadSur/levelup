@@ -205,7 +205,7 @@ export function QuizRunner({
       <Card id="quiz" className="mt-10">
         <CardHeader>
           <CardTitle className="text-lg">Quick check</CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-paper-300">
             {quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''} &middot;
             passing score {quiz.passingScore}%
           </p>
@@ -260,7 +260,7 @@ export function QuizRunner({
         <Card id="quiz" className="mt-10">
           <CardHeader>
             <CardTitle className="text-lg">Quick check</CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-paper-300">
               {quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''} &middot;
               passing score {quiz.passingScore}%
             </p>
@@ -284,7 +284,7 @@ export function QuizRunner({
                   {/* Visible question text — also provides the aria-labelledby target */}
                   <p
                     id={promptId}
-                    className="text-sm font-semibold text-foreground leading-snug"
+                    className="text-sm font-semibold text-paper-100 leading-snug"
                     aria-hidden="true"
                   >
                     {qi + 1}. {q.text}
@@ -306,22 +306,22 @@ export function QuizRunner({
                             isSelected
                               ? [
                                   // Oxblood (primary) selected border, 2px
-                                  'border-2 border-primary',
+                                  'border-2 border-signal',
                                   // Soft inner shadow
                                   'shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]',
                                   // Slight scale up
                                   'scale-[1.02]',
-                                  'bg-primary/5 font-medium text-primary',
+                                  'bg-signal/5 font-medium text-signal',
                                 ].join(' ')
-                              : 'border-border bg-card hover:border-primary/40 hover:bg-accent/20',
+                              : 'border-ink-600 bg-ink-800 hover:border-signal/40 hover:bg-ink-700/20',
                             submitting && 'pointer-events-none opacity-70',
                           )}
                         >
                           {/* Letter label — Fraunces italic, oxblood, semi-opaque */}
                           <span
                             className={cn(
-                              'shrink-0 font-display italic text-[14px] leading-none',
-                              isSelected ? 'text-primary/80' : 'text-primary/40',
+                              'shrink-0 font-serif italic text-[14px] leading-none',
+                              isSelected ? 'text-signal/80' : 'text-signal/40',
                             )}
                             aria-hidden="true"
                           >
@@ -343,7 +343,7 @@ export function QuizRunner({
                               // the hidden input is keyboard-focused.
                               // The label itself picks up :focus-within which
                               // we mirror via focus-visible on the input.
-                              'focus-visible:not-sr-only focus-visible:absolute focus-visible:inset-0 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                              'focus-visible:not-sr-only focus-visible:absolute focus-visible:inset-0 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2',
                             )}
                             disabled={submitting}
                           />
@@ -365,9 +365,7 @@ export function QuizRunner({
                 {submitting ? 'Submitting…' : 'Submit answers'}
               </Button>
               {!allAnswered && (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Answer all questions to submit.
-                </p>
+                <p className="mt-2 text-xs text-paper-300">Answer all questions to submit.</p>
               )}
             </div>
           </CardContent>
@@ -400,7 +398,7 @@ export function QuizRunner({
       <style>{QUIZ_KEYFRAMES}</style>
       <Card
         id="quiz"
-        className={cn('mt-10 border-2', passed ? 'border-emerald-500/50' : 'border-destructive/40')}
+        className={cn('mt-10 border-2', passed ? 'border-emerald-500/50' : 'border-danger/40')}
       >
         <CardHeader>
           <div className="flex items-center gap-3">
@@ -417,7 +415,7 @@ export function QuizRunner({
               <CardTitle className="text-lg">
                 {passed ? 'Lesson complete!' : 'Not quite — review and try again'}
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-paper-300">
                 Score: <span className="font-semibold">{result.score}%</span> (passing:{' '}
                 {quiz.passingScore}%)
               </p>
@@ -443,7 +441,7 @@ export function QuizRunner({
 
                 return (
                   <ResultCard key={q.id} isCorrect={isCorrect} className="space-y-2">
-                    <p className="text-sm font-semibold leading-snug text-foreground">
+                    <p className="text-sm font-semibold leading-snug text-paper-100">
                       {qi + 1}. {q.text}
                       <Badge
                         variant={isCorrect ? 'default' : 'destructive'}
@@ -482,22 +480,22 @@ export function QuizRunner({
                               'flex items-center gap-2.5 rounded-md border px-3 py-2 text-sm',
                               isCorrectChoice &&
                                 [
-                                  'border-primary bg-primary/5 text-primary',
+                                  'border-signal bg-signal/5 text-signal',
                                   'transition-colors duration-150',
                                 ].join(' '),
                               isWrongChoice &&
                                 [
-                                  'border-accent-warm bg-accent-warm/10 text-foreground',
+                                  'border-accent-warm bg-ink-700-warm/10 text-paper-100',
                                   'transition-colors duration-150',
                                 ].join(' '),
-                              !wasChosen && 'border-border bg-transparent text-muted-foreground',
+                              !wasChosen && 'border-ink-600 bg-transparent text-paper-300',
                             )}
                           >
                             {/* Letter label in result view */}
                             <span
                               className={cn(
-                                'shrink-0 font-display italic text-[13px] leading-none',
-                                isCorrectChoice ? 'text-primary/70' : 'text-muted-foreground/50',
+                                'shrink-0 font-serif italic text-[13px] leading-none',
+                                isCorrectChoice ? 'text-signal/70' : 'text-paper-300/50',
                               )}
                               aria-hidden="true"
                             >
@@ -517,10 +515,10 @@ export function QuizRunner({
             </>
           ) : (
             /* Failing attempt with answers withheld — show overall score only */
-            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm">
-              <p className="font-medium text-foreground">Review the lesson and try again.</p>
+            <div className="rounded-lg border border-danger/30 bg-danger/5 p-4 text-sm">
+              <p className="font-medium text-paper-100">Review the lesson and try again.</p>
               {typeof result.attemptsRemaining === 'number' && result.attemptsRemaining > 0 && (
-                <p className="mt-1 text-muted-foreground">
+                <p className="mt-1 text-paper-300">
                   {result.attemptsRemaining} attempt
                   {result.attemptsRemaining === 1 ? '' : 's'} before we reveal the answers.
                 </p>

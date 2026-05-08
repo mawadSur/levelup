@@ -36,10 +36,8 @@ function formatXp(xp: number): string {
 function RankMedal({ rank }: { rank: number }) {
   if (rank === 1)
     return <Crown className="h-5 w-5 text-[hsl(var(--accent-warm))]" aria-label="1st place" />;
-  if (rank === 2)
-    return <Trophy className="h-4 w-4 text-muted-foreground" aria-label="2nd place" />;
-  if (rank === 3)
-    return <Award className="h-4 w-4 text-muted-foreground/70" aria-label="3rd place" />;
+  if (rank === 2) return <Trophy className="h-4 w-4 text-paper-300" aria-label="2nd place" />;
+  if (rank === 3) return <Award className="h-4 w-4 text-paper-300/70" aria-label="3rd place" />;
   return null;
 }
 
@@ -59,9 +57,9 @@ function PodiumCard({
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-2 rounded-xl border bg-background p-4 text-center transition-shadow hover:shadow-md',
-        isFirst ? 'border-[hsl(var(--accent-warm))]/60 shadow-sm' : 'border-border',
-        isMe ? 'ring-1 ring-primary' : '',
+        'flex flex-col items-center gap-2 rounded-xl border bg-ink-900 p-4 text-center transition-shadow hover:shadow-md',
+        isFirst ? 'border-[hsl(var(--accent-warm))]/60 shadow-sm' : 'border-ink-600',
+        isMe ? 'ring-1 ring-signal' : '',
         size === 'lg' ? 'flex-1 py-6' : 'flex-1',
       )}
     >
@@ -76,7 +74,7 @@ function PodiumCard({
             'font-semibold',
             isFirst
               ? 'bg-[hsl(var(--accent-warm))]/20 text-[hsl(var(--accent-warm))] text-base'
-              : 'bg-primary/10 text-primary text-sm',
+              : 'bg-signal/10 text-signal text-sm',
           )}
         >
           {getInitials(entry.name)}
@@ -85,36 +83,31 @@ function PodiumCard({
 
       {/* Name */}
       <p
-        className={cn(
-          'font-display font-semibold leading-tight',
-          isFirst ? 'text-base' : 'text-sm',
-        )}
+        className={cn('font-serif font-semibold leading-tight', isFirst ? 'text-base' : 'text-sm')}
       >
         {entry.name}
         {isMe && (
-          <span className="ml-1.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary font-sans not-italic">
+          <span className="ml-1.5 rounded-full bg-signal/10 px-1.5 py-0.5 text-[10px] font-medium text-signal font-sans not-italic">
             You
           </span>
         )}
       </p>
 
       {/* Level */}
-      {entry.departmentName && (
-        <p className="text-[11px] text-muted-foreground">{entry.departmentName}</p>
-      )}
+      {entry.departmentName && <p className="text-[11px] text-paper-300">{entry.departmentName}</p>}
 
       {/* XP */}
       <p
         className={cn(
           'font-semibold tabular-nums',
-          isFirst ? 'text-base text-[hsl(var(--accent-warm))]' : 'text-sm text-primary',
+          isFirst ? 'text-base text-[hsl(var(--accent-warm))]' : 'text-sm text-signal',
         )}
       >
         {formatXp(entry.xp)} XP
       </p>
 
       {/* Level badge */}
-      <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground font-medium">
+      <span className="rounded-full bg-ink-700 px-2 py-0.5 text-xs text-paper-300 font-medium">
         Lv {entry.level}
       </span>
     </div>
@@ -139,23 +132,23 @@ function TableRow({
     <>
       {isSeparator && (
         <tr>
-          <td colSpan={5} className="py-2 text-center text-xs text-muted-foreground">
+          <td colSpan={5} className="py-2 text-center text-xs text-paper-300">
             · · ·
           </td>
         </tr>
       )}
       <tr
         className={cn(
-          'border-b border-border/40 transition-colors hover:bg-muted/30',
-          isMe ? 'bg-primary/5' : '',
+          'border-b border-ink-600/40 transition-colors hover:bg-ink-700/30',
+          isMe ? 'bg-signal/5' : '',
         )}
       >
         {/* Rank */}
         <td className="py-3 pl-4 pr-2 w-12">
           <span
             className={cn(
-              'font-display text-base italic tabular-nums',
-              isTopTen ? 'text-primary font-bold' : 'text-muted-foreground',
+              'font-serif text-base italic tabular-nums',
+              isTopTen ? 'text-signal font-bold' : 'text-paper-300',
             )}
           >
             {entry.rank}
@@ -167,14 +160,14 @@ function TableRow({
           <div className="flex items-center gap-2.5">
             <Avatar className="h-8 w-8 shrink-0">
               {entry.avatarUrl && <AvatarImage src={entry.avatarUrl} alt={entry.name} />}
-              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+              <AvatarFallback className="bg-signal/10 text-signal text-xs font-semibold">
                 {getInitials(entry.name)}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium leading-tight text-foreground">
+            <span className="text-sm font-medium leading-tight text-paper-100">
               {entry.name}
               {isMe && (
-                <span className="ml-1.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                <span className="ml-1.5 rounded-full bg-signal/10 px-1.5 py-0.5 text-[10px] font-medium text-signal">
                   You
                 </span>
               )}
@@ -183,13 +176,13 @@ function TableRow({
         </td>
 
         {/* Department */}
-        <td className="hidden py-3 px-2 text-sm text-muted-foreground sm:table-cell">
+        <td className="hidden py-3 px-2 text-sm text-paper-300 sm:table-cell">
           {entry.departmentName ?? '—'}
         </td>
 
         {/* Level */}
-        <td className="py-3 px-2 text-sm text-muted-foreground text-center">
-          <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+        <td className="py-3 px-2 text-sm text-paper-300 text-center">
+          <span className="rounded-full bg-ink-700 px-2 py-0.5 text-xs font-medium">
             Lv {entry.level}
           </span>
         </td>
@@ -199,7 +192,7 @@ function TableRow({
           <span
             className={cn(
               'text-sm font-semibold tabular-nums',
-              isTopTen ? 'text-primary' : 'text-foreground',
+              isTopTen ? 'text-signal' : 'text-paper-100',
             )}
           >
             {formatXp(entry.xp)}
@@ -218,10 +211,8 @@ export function LeaderboardTable({ entries, highlightUserId }: LeaderboardTableP
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-10 text-center">
-        <p className="font-display text-lg text-muted-foreground">
-          Be the first to earn XP this week.
-        </p>
+      <div className="rounded-xl border border-dashed border-ink-600 p-10 text-center">
+        <p className="font-serif text-lg text-paper-300">Be the first to earn XP this week.</p>
       </div>
     );
   }
@@ -261,21 +252,19 @@ export function LeaderboardTable({ entries, highlightUserId }: LeaderboardTableP
 
       {/* Table (rank 4+) */}
       {tableRows.length > 0 && (
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <div className="overflow-x-auto rounded-xl border border-ink-600">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="py-2.5 pl-4 pr-2 text-xs font-medium text-muted-foreground w-12">
-                  #
-                </th>
-                <th className="py-2.5 px-2 text-xs font-medium text-muted-foreground">Learner</th>
-                <th className="hidden py-2.5 px-2 text-xs font-medium text-muted-foreground sm:table-cell">
+              <tr className="border-b border-ink-600 bg-ink-700/30">
+                <th className="py-2.5 pl-4 pr-2 text-xs font-medium text-paper-300 w-12">#</th>
+                <th className="py-2.5 px-2 text-xs font-medium text-paper-300">Learner</th>
+                <th className="hidden py-2.5 px-2 text-xs font-medium text-paper-300 sm:table-cell">
                   Department
                 </th>
-                <th className="py-2.5 px-2 text-xs font-medium text-muted-foreground text-center">
+                <th className="py-2.5 px-2 text-xs font-medium text-paper-300 text-center">
                   Level
                 </th>
-                <th className="py-2.5 pl-2 pr-4 text-xs font-medium text-muted-foreground text-right">
+                <th className="py-2.5 pl-2 pr-4 text-xs font-medium text-paper-300 text-right">
                   XP
                 </th>
               </tr>

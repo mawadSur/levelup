@@ -16,13 +16,10 @@ export function ProgressHeader({ current, total, pauseHref = '/learn' }: Progres
   return (
     <div className="w-full">
       <div className="mb-2 flex items-center justify-between text-sm">
-        <span className="font-medium text-foreground">
+        <span className="font-medium text-paper-100">
           Question {Math.min(current, total)} of {total}
         </span>
-        <Link
-          href={pauseHref}
-          className="text-muted-foreground hover:text-foreground hover:underline"
-        >
+        <Link href={pauseHref} className="text-paper-300 hover:text-paper-100 hover:underline">
           Pause for now
         </Link>
       </div>

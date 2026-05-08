@@ -109,7 +109,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
         {/* Department quick-add */}
         {departments.length > 0 && (
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <p className="text-xs font-medium text-paper-300 uppercase tracking-wide">
               Add whole department
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -118,7 +118,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
                   key={d.id}
                   type="button"
                   onClick={() => selectDept(d.id)}
-                  className="rounded-full border border-border px-3 py-0.5 text-xs hover:bg-muted transition-colors"
+                  className="rounded-full border border-ink-600 px-3 py-0.5 text-xs hover:bg-ink-700 transition-colors"
                 >
                   {d.name}
                 </button>
@@ -132,7 +132,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
         {/* Filters */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-paper-300" />
             <Input
               placeholder="Search people…"
               value={search}
@@ -143,7 +143,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
           <select
             value={filterDept}
             onChange={(e) => setFilterDept(e.target.value)}
-            className="rounded-md border border-border bg-background px-2 text-sm text-foreground"
+            className="rounded-md border border-ink-600 bg-ink-900 px-2 text-sm text-paper-100"
             aria-label="Filter by department"
           >
             <option value="">All depts</option>
@@ -168,7 +168,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
                     <button
                       type="button"
                       onClick={() => toggleUser(id)}
-                      className="ml-0.5 rounded-full hover:bg-muted"
+                      className="ml-0.5 rounded-full hover:bg-ink-700"
                       aria-label={`Remove ${u.name}`}
                     >
                       <X className="h-3 w-3" />
@@ -181,9 +181,9 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
         )}
 
         {/* User list */}
-        <div className="max-h-60 overflow-y-auto rounded-md border border-border">
+        <div className="max-h-60 overflow-y-auto rounded-md border border-ink-600">
           {filtered.length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-muted-foreground">No users found</p>
+            <p className="px-4 py-6 text-center text-sm text-paper-300">No users found</p>
           ) : (
             <ul className="divide-y divide-border">
               {filtered.map((u) => {
@@ -193,21 +193,21 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
                     <button
                       type="button"
                       onClick={() => toggleUser(u.id)}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-ink-700/50 transition-colors"
                     >
                       <div
                         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-                          selected ? 'border-indigo-600 bg-indigo-600' : 'border-border'
+                          selected ? 'border-indigo-600 bg-indigo-600' : 'border-ink-600'
                         }`}
                       >
                         {selected && <Check className="h-3 w-3 text-white" />}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{u.name}</p>
-                        <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+                        <p className="truncate text-xs text-paper-300">{u.email}</p>
                       </div>
                       {u.departmentId && (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-paper-300">
                           {departments.find((d) => d.id === u.departmentId)?.name}
                         </span>
                       )}

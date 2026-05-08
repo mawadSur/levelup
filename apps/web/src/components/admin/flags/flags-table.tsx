@@ -44,13 +44,13 @@ function ToggleSwitch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-        checked ? 'bg-primary' : 'bg-input',
+        'relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        checked ? 'bg-signal' : 'bg-transparent',
       )}
     >
       <span
         className={cn(
-          'pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform',
+          'pointer-events-none block h-4 w-4 rounded-full bg-ink-900 shadow-lg ring-0 transition-transform',
           checked ? 'translate-x-4' : 'translate-x-0',
         )}
       />
@@ -160,7 +160,7 @@ function AddFlagDialog({ onAdded }: { onAdded: (flag: EvaluatedFlag) => void }) 
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="flag-rollout">
-              Rollout % <span className="text-muted-foreground">(blank = 100%)</span>
+              Rollout % <span className="text-paper-300">(blank = 100%)</span>
             </Label>
             <Input
               id="flag-rollout"
@@ -173,7 +173,7 @@ function AddFlagDialog({ onAdded }: { onAdded: (flag: EvaluatedFlag) => void }) 
               onChange={(e) => setForm((f) => ({ ...f, rolloutPercent: e.target.value }))}
             />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <DialogFooter>
             <Button
               type="button"
@@ -268,11 +268,11 @@ function FlagRow({
   }, [flag.key, onDelete]);
 
   return (
-    <tr className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+    <tr className="border-b border-ink-600 last:border-0 hover:bg-ink-700/30 transition-colors">
       {/* Key */}
-      <td className="py-3 pl-4 pr-2 font-mono text-sm text-foreground">
+      <td className="py-3 pl-4 pr-2 font-mono text-sm text-paper-100">
         <span className="flex items-center gap-1.5">
-          <Flag className="h-3 w-3 shrink-0 text-muted-foreground" />
+          <Flag className="h-3 w-3 shrink-0 text-paper-300" />
           {flag.key}
         </span>
       </td>
@@ -313,7 +313,7 @@ function FlagRow({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground"
+            className="h-7 gap-1 text-xs text-paper-300 hover:text-paper-100"
             onClick={handleReset}
             disabled={resetting}
             title="Reset to global default"
@@ -322,10 +322,8 @@ function FlagRow({
             Reset
           </Button>
         )}
-        {flag.source === 'default' && <span className="text-xs text-muted-foreground/50">—</span>}
-        {flag.source === 'global' && (
-          <span className="text-xs text-muted-foreground/50">Global</span>
-        )}
+        {flag.source === 'default' && <span className="text-xs text-paper-300/50">—</span>}
+        {flag.source === 'global' && <span className="text-xs text-paper-300/50">Global</span>}
       </td>
     </tr>
   );
@@ -371,9 +369,9 @@ export function FlagsTable({ initialFlags }: FlagsTableProps) {
       <CardContent className="p-0">
         {flags.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-10 text-center">
-            <Flag className="h-8 w-8 text-muted-foreground/40" />
-            <p className="text-sm font-medium text-foreground">No flags configured</p>
-            <p className="text-sm text-muted-foreground">
+            <Flag className="h-8 w-8 text-paper-300/40" />
+            <p className="text-sm font-medium text-paper-100">No flags configured</p>
+            <p className="text-sm text-paper-300">
               Add your first flag to control feature rollout for this org.
             </p>
           </div>
@@ -381,18 +379,12 @@ export function FlagsTable({ initialFlags }: FlagsTableProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-border bg-muted/40">
-                  <th className="py-2.5 pl-4 pr-2 text-xs font-medium text-muted-foreground">
-                    Key
-                  </th>
-                  <th className="py-2.5 px-2 text-xs font-medium text-muted-foreground">Enabled</th>
-                  <th className="py-2.5 px-2 text-xs font-medium text-muted-foreground">
-                    Rollout %
-                  </th>
-                  <th className="py-2.5 px-2 text-xs font-medium text-muted-foreground">Source</th>
-                  <th className="py-2.5 pl-2 pr-4 text-xs font-medium text-muted-foreground">
-                    Actions
-                  </th>
+                <tr className="border-b border-ink-600 bg-ink-700/40">
+                  <th className="py-2.5 pl-4 pr-2 text-xs font-medium text-paper-300">Key</th>
+                  <th className="py-2.5 px-2 text-xs font-medium text-paper-300">Enabled</th>
+                  <th className="py-2.5 px-2 text-xs font-medium text-paper-300">Rollout %</th>
+                  <th className="py-2.5 px-2 text-xs font-medium text-paper-300">Source</th>
+                  <th className="py-2.5 pl-2 pr-4 text-xs font-medium text-paper-300">Actions</th>
                 </tr>
               </thead>
               <tbody>

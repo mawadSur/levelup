@@ -118,7 +118,7 @@ export default async function ProfilePage() {
             </CardHeader>
             <CardContent>
               {badgesUnavailable && (
-                <p className="mb-4 text-xs text-muted-foreground italic">
+                <p className="mb-4 text-xs text-paper-300 italic">
                   Badge data coming soon — earned badges will appear here once the endpoint is live.
                 </p>
               )}
@@ -135,8 +135,8 @@ export default async function ProfilePage() {
               <CardDescription>Your recent lesson completions and quiz attempts.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-lg border border-dashed border-border p-6 text-center">
-                <p className="text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-ink-600 p-6 text-center">
+                <p className="text-sm text-paper-300">
                   Detailed activity log is coming soon. Your progress is tracked and will appear
                   here.
                 </p>

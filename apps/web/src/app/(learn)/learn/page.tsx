@@ -129,11 +129,11 @@ export default async function LearnPage() {
     <div className="mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
       {/* Baseline assessment banner */}
       {!hasCompletedAssessment && (
-        <Card data-onboarding="baseline-banner" className="border-primary/40 bg-primary/5">
+        <Card data-onboarding="baseline-banner" className="border-signal/40 bg-signal/5">
           <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-semibold text-foreground">Get a learning path tailored to you</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">
+              <p className="font-semibold text-paper-100">Get a learning path tailored to you</p>
+              <p className="mt-0.5 text-sm text-paper-300">
                 Take the 5-minute baseline assessment to unlock your personalised AI learning
                 journey.
               </p>
@@ -147,10 +147,10 @@ export default async function LearnPage() {
 
       {/* Hero greeting */}
       <section aria-labelledby="hero-greeting">
-        <h1 id="hero-greeting" className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 id="hero-greeting" className="text-3xl font-bold tracking-tight text-paper-100">
           Hi, {firstName}.
         </h1>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-paper-300">
           {completedThisMonth > 0
             ? `${completedThisMonth} lesson${completedThisMonth !== 1 ? 's' : ''} completed this month.`
             : 'No lessons completed this month yet — time to get started!'}
@@ -162,7 +162,7 @@ export default async function LearnPage() {
         <section aria-labelledby="continue-heading">
           <h2
             id="continue-heading"
-            className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground"
+            className="mb-3 text-sm font-semibold uppercase tracking-wider text-paper-300"
           >
             Continue learning
           </h2>
@@ -179,14 +179,12 @@ export default async function LearnPage() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-lg font-semibold text-foreground">{continueTarget.title}</p>
+                <p className="text-lg font-semibold text-paper-100">{continueTarget.title}</p>
                 {currentLesson && (
-                  <p className="text-sm text-muted-foreground truncate">
-                    Current lesson in progress
-                  </p>
+                  <p className="text-sm text-paper-300 truncate">Current lesson in progress</p>
                 )}
                 <div className="pt-1">
-                  <div className="mb-1 flex justify-between text-xs text-muted-foreground">
+                  <div className="mb-1 flex justify-between text-xs text-paper-300">
                     <span>
                       {continueTarget.completedLessons ?? 0} / {continueTarget.lessonCount} lessons
                     </span>
@@ -215,7 +213,7 @@ export default async function LearnPage() {
         <section data-onboarding="paths" aria-labelledby="your-paths-heading">
           <h2
             id="your-paths-heading"
-            className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground"
+            className="mb-4 text-sm font-semibold uppercase tracking-wider text-paper-300"
           >
             Your paths
           </h2>
@@ -246,11 +244,11 @@ export default async function LearnPage() {
         <section aria-labelledby="recommended-heading">
           <h2
             id="recommended-heading"
-            className="mb-1 text-sm font-semibold uppercase tracking-wider text-muted-foreground"
+            className="mb-1 text-sm font-semibold uppercase tracking-wider text-paper-300"
           >
             Recommended for you
           </h2>
-          <p className="mb-4 text-sm text-muted-foreground">
+          <p className="mb-4 text-sm text-paper-300">
             Paths matched to your <span className="font-medium">{userAiLevel.toLowerCase()}</span>{' '}
             level — ask your manager to assign them.
           </p>
@@ -305,7 +303,7 @@ function RecentAchievements({ pathProgress }: { pathProgress: MyPathProgress[] }
     <section aria-labelledby="achievements-heading">
       <h2
         id="achievements-heading"
-        className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground"
+        className="mb-4 text-sm font-semibold uppercase tracking-wider text-paper-300"
       >
         Recent achievements
       </h2>
@@ -313,12 +311,12 @@ function RecentAchievements({ pathProgress }: { pathProgress: MyPathProgress[] }
         {earned.map((milestone) => (
           <div
             key={milestone}
-            className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2"
+            className="flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-4 py-2"
           >
             <span className="text-lg" role="img" aria-label="badge">
               {milestone >= 50 ? '🏆' : milestone >= 10 ? '⭐' : '🎯'}
             </span>
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-sm font-medium text-paper-100">
               {milestone === 1 ? 'First lesson!' : `${milestone} lessons`}
             </span>
           </div>

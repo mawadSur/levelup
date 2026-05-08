@@ -11,10 +11,10 @@ import { RARITY_LABELS } from './badge-catalog';
 // Rarity chip color map
 // ---------------------------------------------------------------------------
 const RARITY_CHIP_CLASS: Record<Rarity, string> = {
-  COMMON: 'bg-muted text-muted-foreground',
-  RARE: 'bg-primary/10 text-primary',
+  COMMON: 'bg-ink-700 text-paper-300',
+  RARE: 'bg-signal/10 text-signal',
   EPIC: 'bg-[hsl(var(--accent-warm))]/20 text-[hsl(var(--accent-warm))]',
-  LEGENDARY: 'bg-gradient-to-r from-primary/20 to-[hsl(var(--accent-warm))]/20 text-primary',
+  LEGENDARY: 'bg-gradient-to-r from-primary/20 to-[hsl(var(--accent-warm))]/20 text-signal',
 };
 
 // ---------------------------------------------------------------------------
@@ -86,18 +86,18 @@ export function BadgeDetailPopover({
             exit={prefersReduced ? undefined : 'exit'}
             className={[
               'absolute bottom-[calc(100%+8px)] left-1/2 z-50 w-56 -translate-x-1/2',
-              'rounded-xl border border-border bg-background p-3.5 shadow-lg',
+              'rounded-xl border border-ink-600 bg-ink-900 p-3.5 shadow-lg',
               'pointer-events-none',
             ].join(' ')}
           >
             {/* Arrow */}
             <span
               aria-hidden
-              className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 block h-[9px] w-[9px] rotate-45 border-b border-r border-border bg-background"
+              className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 block h-[9px] w-[9px] rotate-45 border-b border-r border-ink-600 bg-ink-900"
             />
 
             {/* Label */}
-            <p className="font-display text-base font-semibold leading-tight text-foreground">
+            <p className="font-serif text-base font-semibold leading-tight text-paper-100">
               {badge.label}
             </p>
 
@@ -112,17 +112,15 @@ export function BadgeDetailPopover({
             </span>
 
             {/* Description */}
-            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              {badge.description}
-            </p>
+            <p className="mt-2 text-xs text-paper-300 leading-relaxed">{badge.description}</p>
 
             {/* Earned / locked section */}
             {earned ? (
               formattedDate && (
-                <p className="mt-2 text-xs text-primary font-medium">Earned {formattedDate}</p>
+                <p className="mt-2 text-xs text-signal font-medium">Earned {formattedDate}</p>
               )
             ) : (
-              <p className="mt-2 flex items-start gap-1 text-xs italic text-primary leading-relaxed font-sans">
+              <p className="mt-2 flex items-start gap-1 text-xs italic text-signal leading-relaxed font-sans">
                 <Lock className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
                 How to unlock: {badge.unlockHint}
               </p>

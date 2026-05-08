@@ -133,7 +133,7 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
         {/* Search input */}
         <div className="flex items-center border-b px-4 py-2 gap-2">
           <svg
-            className="h-4 w-4 shrink-0 text-muted-foreground"
+            className="h-4 w-4 shrink-0 text-paper-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -153,7 +153,7 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
           />
           {loading && (
             <svg
-              className="h-4 w-4 animate-spin text-muted-foreground shrink-0"
+              className="h-4 w-4 animate-spin text-paper-300 shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -186,14 +186,14 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
         <div className="max-h-[24rem] overflow-y-auto py-2">
           {/* Empty state — only shown when query is long enough and no results */}
           {showEmpty && (
-            <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+            <p className="px-4 py-6 text-center text-sm text-paper-300">
               No results for &ldquo;{query}&rdquo;
             </p>
           )}
 
           {/* Default hint when query is too short */}
           {query.trim().length < 2 && (
-            <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+            <p className="px-4 py-6 text-center text-sm text-paper-300">
               Search lessons and prompts. Try &ldquo;cold email&rdquo;.
             </p>
           )}
@@ -203,7 +203,7 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
             results.map((hit) => (
               <button
                 key={`${hit.type}-${hit.id}`}
-                className="w-full text-left px-4 py-3 hover:bg-accent focus-visible:bg-accent focus-visible:outline-none transition-colors"
+                className="w-full text-left px-4 py-3 hover:bg-ink-700 focus-visible:bg-ink-700 focus-visible:outline-none transition-colors"
                 onClick={() => handleHitClick(hit)}
               >
                 <div className="flex items-start gap-2">
@@ -218,9 +218,9 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
                       <HighlightedText text={hit.title} query={query} />
                     </p>
                     {hit.pathTitle && (
-                      <p className="text-xs text-muted-foreground mt-0.5">{hit.pathTitle}</p>
+                      <p className="text-xs text-paper-300 mt-0.5">{hit.pathTitle}</p>
                     )}
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                    <p className="text-xs text-paper-300 mt-1 line-clamp-2">
                       <HighlightedText text={hit.snippet} query={query} />
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
 
         {/* Footer hint */}
         <div className="border-t px-4 py-2 flex justify-end">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-paper-300">
             Press <kbd className="rounded border px-1 text-[10px]">Esc</kbd> to close
           </span>
         </div>

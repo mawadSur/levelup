@@ -62,7 +62,7 @@ export function EditProfileForm({ initialName }: EditProfileFormProps) {
             <Button type="submit" disabled={isPending || !name.trim()}>
               {isPending ? 'Saving...' : 'Save changes'}
             </Button>
-            {saved && <span className="text-sm text-muted-foreground">Saved.</span>}
+            {saved && <span className="text-sm text-paper-300">Saved.</span>}
           </div>
         </form>
       </CardContent>

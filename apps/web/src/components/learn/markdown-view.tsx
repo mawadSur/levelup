@@ -52,27 +52,27 @@ export function MarkdownView({ content, className }: MarkdownViewProps) {
     <div
       className={cn(
         // Prose-like typography without pulling in @tailwindcss/typography
-        'max-w-prose space-y-4 text-base leading-relaxed text-foreground',
-        '[&_h1]:mb-3 [&_h1]:mt-8 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-foreground',
-        '[&_h2]:mb-2 [&_h2]:mt-6 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground',
-        '[&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-foreground',
+        'max-w-prose space-y-4 text-base leading-relaxed text-paper-100',
+        '[&_h1]:mb-3 [&_h1]:mt-8 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-paper-100',
+        '[&_h2]:mb-2 [&_h2]:mt-6 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-paper-100',
+        '[&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-paper-100',
         '[&_p]:leading-7',
         '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-1',
         '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-1',
         '[&_li]:leading-relaxed',
         // Pre blocks — relative so the copy button can be absolutely positioned
-        '[&_pre]:relative [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-secondary [&_pre]:border [&_pre]:border-t [&_pre]:border-primary/10 [&_pre]:p-4 [&_pre]:pt-8',
+        '[&_pre]:relative [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-ink-700 [&_pre]:border [&_pre]:border-t [&_pre]:border-signal/10 [&_pre]:p-4 [&_pre]:pt-8',
         // Inline code — oxblood-tinted, mono
-        '[&_code]:rounded [&_code]:bg-primary/8 [&_code]:px-[0.4em] [&_code]:py-[0.15em] [&_code]:text-sm [&_code]:font-mono [&_code]:text-primary',
-        '[&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-foreground',
+        '[&_code]:rounded [&_code]:bg-signal/8 [&_code]:px-[0.4em] [&_code]:py-[0.15em] [&_code]:text-sm [&_code]:font-mono [&_code]:text-signal',
+        '[&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-paper-100',
         // Links — oxblood, transition on hover
-        '[&_a]:text-primary [&_a]:no-underline [&_a]:transition-[color,text-decoration-color] [&_a]:duration-150 [&_a]:hover:underline [&_a]:hover:underline-offset-2',
+        '[&_a]:text-signal [&_a]:no-underline [&_a]:transition-[color,text-decoration-color] [&_a]:duration-150 [&_a]:hover:underline [&_a]:hover:underline-offset-2',
         '[&_strong]:font-semibold',
         '[&_em]:italic',
-        '[&_hr]:border-border',
+        '[&_hr]:border-ink-600',
         '[&_table]:w-full [&_table]:border-collapse',
-        '[&_th]:border [&_th]:border-border [&_th]:bg-muted [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm [&_th]:font-semibold',
-        '[&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-sm',
+        '[&_th]:border [&_th]:border-ink-600 [&_th]:bg-ink-700 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm [&_th]:font-semibold',
+        '[&_td]:border [&_td]:border-ink-600 [&_td]:px-3 [&_td]:py-2 [&_td]:text-sm',
         className,
       )}
     >
@@ -136,7 +136,7 @@ export function MarkdownView({ content, className }: MarkdownViewProps) {
                   paddingLeft: '1rem',
                   margin: '1.25rem 0',
                 }}
-                className="font-display italic text-muted-foreground"
+                className="font-serif italic text-paper-300"
                 {...rest}
               >
                 {children}
@@ -153,7 +153,7 @@ export function MarkdownView({ content, className }: MarkdownViewProps) {
             const isAbsolute = src.startsWith('http://') || src.startsWith('https://');
             if (isAbsolute) {
               return (
-                <span className="block rounded border border-border bg-muted px-3 py-2 text-xs text-muted-foreground">
+                <span className="block rounded border border-ink-600 bg-ink-700 px-3 py-2 text-xs text-paper-300">
                   [Image: {alt ?? src}]
                 </span>
               );

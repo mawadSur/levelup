@@ -124,23 +124,23 @@ export function SavePromptDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Preview</Label>
-            <pre className="max-h-32 overflow-auto rounded-md border bg-muted/40 p-3 text-xs text-foreground whitespace-pre-wrap">
+            <Label className="text-xs text-paper-300">Preview</Label>
+            <pre className="max-h-32 overflow-auto rounded-md border bg-ink-700/40 p-3 text-xs text-paper-100 whitespace-pre-wrap">
               {promptText}
             </pre>
           </div>
 
           {canShare && (
-            <label className="flex cursor-pointer items-start gap-2.5 rounded-md border p-3 text-sm hover:bg-muted/30">
+            <label className="flex cursor-pointer items-start gap-2.5 rounded-md border p-3 text-sm hover:bg-ink-700/30">
               <input
                 type="checkbox"
                 checked={share}
                 onChange={(e) => setShare(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-input text-primary focus-visible:ring-2 focus-visible:ring-ring"
+                className="mt-0.5 h-4 w-4 rounded border-ink-500 text-signal focus-visible:ring-2 focus-visible:ring-signal"
               />
               <span>
-                <span className="block font-medium text-foreground">Share to my organisation</span>
-                <span className="block text-xs text-muted-foreground">
+                <span className="block font-medium text-paper-100">Share to my organisation</span>
+                <span className="block text-xs text-paper-300">
                   Anyone in your org will be able to find and clone this prompt.
                 </span>
               </span>

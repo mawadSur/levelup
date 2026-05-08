@@ -16,9 +16,9 @@ const AUTO_REFRESH_MS = 60_000;
 const SEVERITY_ORDER: AnomalySeverityValue[] = ['HIGH', 'MEDIUM', 'LOW'];
 
 const SEVERITY_COLORS: Record<AnomalySeverityValue, string> = {
-  HIGH: 'bg-destructive text-destructive-foreground',
+  HIGH: 'bg-danger text-danger-foreground',
   MEDIUM: 'bg-orange-500 text-white',
-  LOW: 'bg-muted text-muted-foreground',
+  LOW: 'bg-ink-700 text-paper-300',
 };
 
 const KIND_LABELS: Record<string, string> = {
@@ -113,11 +113,11 @@ export function AnomalyList({ initialItems }: AnomalyListProps) {
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border py-16 text-center">
+      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-ink-600 py-16 text-center">
         <CheckCircle2 className="h-10 w-10 text-emerald-500" />
         <div>
-          <p className="font-semibold text-foreground">No unacknowledged alerts</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="font-semibold text-paper-100">No unacknowledged alerts</p>
+          <p className="mt-1 text-sm text-paper-300">
             Your platform looks healthy. Auto-refreshes every minute.
           </p>
         </div>
@@ -132,7 +132,7 @@ export function AnomalyList({ initialItems }: AnomalyListProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-paper-300">
           {items.length} unacknowledged alert{items.length !== 1 ? 's' : ''}. Auto-refreshes every
           minute.
         </p>
@@ -147,7 +147,7 @@ export function AnomalyList({ initialItems }: AnomalyListProps) {
         if (group.length === 0) return null;
         return (
           <section key={severity}>
-            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-paper-300">
               <AlertTriangle className="h-4 w-4" />
               {severity} ({group.length})
             </h2>
@@ -203,7 +203,7 @@ function AnomalyAlertRow({
           <Badge className={`${severityClass} shrink-0`}>{alert.severity}</Badge>
           <div className="flex-1 min-w-0">
             <CardTitle className="text-sm font-semibold">{kindLabel}</CardTitle>
-            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="mt-1 flex items-center gap-2 text-xs text-paper-300">
               {(alert.userName ?? alert.userId) && (
                 <span className="flex items-center gap-1">
                   <User className="h-3 w-3" />
@@ -240,7 +240,7 @@ function AnomalyAlertRow({
       </CardHeader>
       {signalExpanded && (
         <CardContent className="pt-3 pb-3">
-          <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs text-muted-foreground">
+          <pre className="overflow-x-auto rounded-md bg-ink-700 p-3 text-xs text-paper-300">
             {JSON.stringify(alert.signal, null, 2)}
           </pre>
         </CardContent>

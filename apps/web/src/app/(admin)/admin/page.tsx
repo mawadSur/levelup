@@ -76,13 +76,11 @@ export default async function AdminDashboardPage() {
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       {/* 1. Header row */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+        <h1 className="text-2xl font-bold tracking-tight text-paper-100">
           Welcome back, {firstName}
         </h1>
-        <p className="mt-1 text-base text-muted-foreground">
-          Here&apos;s how your team&apos;s doing.
-        </p>
-        <p className="mt-0.5 text-sm text-muted-foreground/70">{today}</p>
+        <p className="mt-1 text-base text-paper-300">Here&apos;s how your team&apos;s doing.</p>
+        <p className="mt-0.5 text-sm text-paper-300/70">{today}</p>
       </div>
 
       {/* 2. Stat cards */}
@@ -113,7 +111,7 @@ export default async function AdminDashboardPage() {
             pendingInvites.length > 0 ? (
               <Link
                 href="/admin/people"
-                className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                className="text-xs font-medium text-signal underline-offset-4 hover:underline"
               >
                 View in People →
               </Link>
@@ -130,7 +128,7 @@ export default async function AdminDashboardPage() {
           cta={
             <Link
               href="/admin/reports"
-              className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+              className="text-xs font-medium text-signal underline-offset-4 hover:underline"
             >
               View reports →
             </Link>
@@ -149,7 +147,7 @@ export default async function AdminDashboardPage() {
             {deptItems.length > 0 ? (
               <DeptBarList items={deptItems} />
             ) : (
-              <p className="py-6 text-center text-sm text-muted-foreground">
+              <p className="py-6 text-center text-sm text-paper-300">
                 {report === null ? 'Unable to load department data.' : 'No departments set up yet.'}
               </p>
             )}
@@ -165,7 +163,7 @@ export default async function AdminDashboardPage() {
             {activityItems.length > 0 ? (
               <DeptBarList items={activityItems} />
             ) : (
-              <p className="py-6 text-center text-sm text-muted-foreground">
+              <p className="py-6 text-center text-sm text-paper-300">
                 {stats === null ? 'Unable to load stats.' : 'No activity data yet.'}
               </p>
             )}
@@ -183,11 +181,11 @@ export default async function AdminDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-              <TrendingUp className="h-5 w-5 text-muted-foreground" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-700">
+              <TrendingUp className="h-5 w-5 text-paper-300" />
             </div>
-            <p className="text-sm font-medium text-foreground">Coming soon</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm font-medium text-paper-100">Coming soon</p>
+            <p className="text-sm text-paper-300">
               Live feed of invitation accepts, lesson completions, and certificates will appear
               here.
             </p>
@@ -205,7 +203,7 @@ export default async function AdminDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-4 text-sm text-paper-300">
               Wipe and reseed this org with a believable demo snapshot shaped around a
               prospect&apos;s company name.
             </p>

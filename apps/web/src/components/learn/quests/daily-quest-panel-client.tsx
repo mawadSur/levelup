@@ -30,7 +30,7 @@ export function DailyQuestPanelClient({ initialQuests }: DailyQuestPanelClientPr
   if (quests.length === 0) {
     return (
       <Card>
-        <CardContent className="py-6 text-center text-sm text-muted-foreground">
+        <CardContent className="py-6 text-center text-sm text-paper-300">
           Your quests will be ready in a moment.
         </CardContent>
       </Card>
@@ -56,7 +56,7 @@ export function DailyQuestPanelClient({ initialQuests }: DailyQuestPanelClientPr
       <div className="mb-3 flex items-center gap-3">
         <span
           id="daily-quests-progress-label"
-          className="shrink-0 text-xs font-semibold text-muted-foreground"
+          className="shrink-0 text-xs font-semibold text-paper-300"
         >
           {completedCount}/{totalCount} today
         </span>
@@ -72,11 +72,11 @@ export function DailyQuestPanelClient({ initialQuests }: DailyQuestPanelClientPr
         <CardHeader className="pb-2 pt-5">
           <h2
             id="daily-quests-heading"
-            className="font-display text-lg font-semibold leading-snug text-foreground"
+            className="font-serif text-lg font-semibold leading-snug text-paper-100"
           >
             Today&rsquo;s quests
           </h2>
-          <p className="text-sm italic text-muted-foreground">3 missions, ~5 minutes.</p>
+          <p className="text-sm italic text-paper-300">3 missions, ~5 minutes.</p>
         </CardHeader>
 
         <CardContent className="pb-5">
@@ -88,9 +88,7 @@ export function DailyQuestPanelClient({ initialQuests }: DailyQuestPanelClientPr
             ))}
           </Stagger>
 
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Resets at midnight your time.
-          </p>
+          <p className="mt-4 text-center text-xs text-paper-300">Resets at midnight your time.</p>
         </CardContent>
       </Card>
     </section>

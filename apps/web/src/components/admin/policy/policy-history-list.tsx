@@ -24,7 +24,7 @@ function formatDate(iso: string): string {
  */
 export function PolicyHistoryList({ policies, currentId }: PolicyHistoryListProps) {
   if (policies.length === 0) {
-    return <p className="text-sm text-muted-foreground italic">No previous versions.</p>;
+    return <p className="text-sm text-paper-300 italic">No previous versions.</p>;
   }
 
   const sorted = [...policies].sort((a, b) => b.version - a.version);
@@ -37,20 +37,18 @@ export function PolicyHistoryList({ policies, currentId }: PolicyHistoryListProp
           <li
             key={p.id}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
-              isCurrent ? 'bg-indigo-50 dark:bg-indigo-950/30' : 'hover:bg-muted/50'
+              isCurrent ? 'bg-indigo-50 dark:bg-indigo-950/30' : 'hover:bg-ink-700/50'
             }`}
           >
             {isCurrent ? (
               <CheckCircle2 className="h-4 w-4 shrink-0 text-indigo-600" />
             ) : (
-              <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Clock className="h-4 w-4 shrink-0 text-paper-300" />
             )}
             <div className="min-w-0 flex-1">
               <span className="font-medium">v{p.version}</span>
               {p.publishedAt && (
-                <span className="ml-2 text-xs text-muted-foreground">
-                  {formatDate(p.publishedAt)}
-                </span>
+                <span className="ml-2 text-xs text-paper-300">{formatDate(p.publishedAt)}</span>
               )}
             </div>
             {isCurrent && (

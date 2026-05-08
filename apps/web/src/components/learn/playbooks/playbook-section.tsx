@@ -55,11 +55,11 @@ function PlaybookCard({ path }: { path: LearningPath }) {
             </Badge>
           )}
         </div>
-        <h3 className="text-sm font-semibold leading-snug text-foreground">{path.title}</h3>
+        <h3 className="text-sm font-semibold leading-snug text-paper-100">{path.title}</h3>
         {path.description && (
-          <p className="line-clamp-2 text-xs text-muted-foreground">{path.description}</p>
+          <p className="line-clamp-2 text-xs text-paper-300">{path.description}</p>
         )}
-        <p className="mt-auto pt-2 text-xs text-muted-foreground">
+        <p className="mt-auto pt-2 text-xs text-paper-300">
           {path.lessonCount} lessons &middot; ~{path.estimatedMinutes} min
         </p>
       </CardContent>
@@ -80,11 +80,11 @@ export function PlaybookSection({ title, description, paths }: PlaybookSectionPr
       <div className="mb-4">
         <h2
           id={`section-${title.replace(/\s+/g, '-').toLowerCase()}`}
-          className="text-lg font-semibold text-foreground"
+          className="text-lg font-semibold text-paper-100"
         >
           {title}
         </h2>
-        {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
+        {description && <p className="mt-0.5 text-sm text-paper-300">{description}</p>}
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {paths.map((path) => (

@@ -122,7 +122,7 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
-          <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-paper-300" />
           <Input
             placeholder="Search people…"
             value={search}
@@ -133,7 +133,7 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
         <select
           value={deptFilter}
           onChange={(e) => setDeptFilter(e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm text-paper-100"
           aria-label="Filter by department"
         >
           <option value="">All departments</option>
@@ -146,7 +146,7 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as 'all' | 'assigned' | 'unassigned')}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+          className="rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm text-paper-100"
           aria-label="Filter by assignment status"
         >
           <option value="all">All statuses</option>
@@ -156,11 +156,11 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-border">
+      <div className="overflow-hidden rounded-xl border border-ink-600">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/50">
+              <tr className="border-b border-ink-600 bg-ink-700/50">
                 <th
                   className="cursor-pointer select-none px-4 py-3 text-left font-semibold"
                   onClick={() => toggleSort('name')}
@@ -194,7 +194,7 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
             <tbody className="divide-y divide-border">
               {sorted.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={4} className="px-4 py-8 text-center text-paper-300">
                     No learners match your filters.
                   </td>
                 </tr>
@@ -202,15 +202,15 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
                 sorted.map((row) => (
                   <tr
                     key={row.user.id}
-                    className="bg-background hover:bg-muted/30 transition-colors"
+                    className="bg-ink-900 hover:bg-ink-700/30 transition-colors"
                   >
                     <td className="px-4 py-3">
-                      <p className="font-medium text-foreground">{row.user.name}</p>
-                      <p className="text-xs text-muted-foreground">{row.user.email}</p>
+                      <p className="font-medium text-paper-100">{row.user.name}</p>
+                      <p className="text-xs text-paper-300">{row.user.email}</p>
                     </td>
                     <td className="px-4 py-3">
                       {row.pathsAssigned.length === 0 ? (
-                        <span className="text-muted-foreground">—</span>
+                        <span className="text-paper-300">—</span>
                       ) : (
                         <div className="flex flex-wrap gap-1">
                           {row.pathsAssigned.slice(0, 2).map((p) => (
@@ -226,13 +226,11 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
                         </div>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {formatDate(row.lastActivity)}
-                    </td>
+                    <td className="px-4 py-3 text-paper-300">{formatDate(row.lastActivity)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Progress value={row.completionPct} className="h-1.5 w-24" />
-                        <span className="text-xs text-muted-foreground">{row.completionPct}%</span>
+                        <span className="text-xs text-paper-300">{row.completionPct}%</span>
                       </div>
                     </td>
                   </tr>
@@ -243,7 +241,7 @@ export function AssignmentsTable({ users, paths, departments }: AssignmentsTable
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground text-right">
+      <p className="text-xs text-paper-300 text-right">
         {sorted.length} of {rows.length} learners
       </p>
     </div>

@@ -7,7 +7,7 @@ interface DeptCompletionBarsProps {
 
 export function DeptCompletionBars({ byDepartment }: DeptCompletionBarsProps) {
   if (byDepartment.length === 0) {
-    return <p className="text-sm text-muted-foreground italic">No department data available.</p>;
+    return <p className="text-sm text-paper-300 italic">No department data available.</p>;
   }
 
   const sorted = [...byDepartment].sort((a, b) => b.completionRate - a.completionRate);
@@ -19,8 +19,8 @@ export function DeptCompletionBars({ byDepartment }: DeptCompletionBarsProps) {
         return (
           <li key={dept.departmentId} className="space-y-1">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-foreground truncate max-w-[60%]">{dept.name}</span>
-              <span className="text-muted-foreground tabular-nums">
+              <span className="font-medium text-paper-100 truncate max-w-[60%]">{dept.name}</span>
+              <span className="text-paper-300 tabular-nums">
                 {pct}%<span className="ml-1.5 text-xs">({dept.memberCount} members)</span>
               </span>
             </div>

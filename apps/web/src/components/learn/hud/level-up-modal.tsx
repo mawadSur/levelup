@@ -35,7 +35,7 @@ function SparkleDots({ count = 12 }: SparkleDotsProps) {
         return (
           <motion.span
             key={i}
-            className="absolute left-1/2 top-1/2 rounded-full bg-primary"
+            className="absolute left-1/2 top-1/2 rounded-full bg-signal"
             style={{ width: size, height: size, x: '-50%', y: '-50%' }}
             initial={{ opacity: 0, x: '-50%', y: '-50%', scale: 0 }}
             animate={{
@@ -91,7 +91,7 @@ export function LevelUpModal() {
         className={cn(
           'flex flex-col items-center text-center',
           'max-w-sm gap-0 p-8',
-          'bg-background/95 backdrop-blur-sm border-primary/20',
+          'bg-ink-900/95 backdrop-blur-sm border-signal/20',
         )}
       >
         <DialogTitle className="sr-only">Level Up!</DialogTitle>
@@ -105,9 +105,9 @@ export function LevelUpModal() {
             initial={prefersReduced ? false : { scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={prefersReduced ? { duration: 0 } : easeBounce}
-            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10"
+            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-signal/10"
           >
-            <Sparkles className="h-10 w-10 text-primary" aria-hidden="true" />
+            <Sparkles className="h-10 w-10 text-signal" aria-hidden="true" />
           </motion.div>
         </div>
 
@@ -118,7 +118,7 @@ export function LevelUpModal() {
           transition={
             prefersReduced ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
           }
-          className="font-display text-[56px] leading-none tracking-tight text-foreground"
+          className="font-serif text-[56px] leading-none tracking-tight text-paper-100"
           style={{ fontVariationSettings: '"opsz" 144' }}
         >
           Level Up!
@@ -133,7 +133,7 @@ export function LevelUpModal() {
               ? { duration: 0 }
               : { duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.1 }
           }
-          className="mt-3 text-base font-semibold text-primary"
+          className="mt-3 text-base font-semibold text-signal"
         >
           You reached Level {newLevel}
         </motion.p>
@@ -142,7 +142,7 @@ export function LevelUpModal() {
           initial={prefersReduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={prefersReduced ? { duration: 0 } : { duration: 0.4, delay: 0.2 }}
-          className="mt-2 text-sm text-muted-foreground"
+          className="mt-2 text-sm text-paper-300"
         >
           Keep building momentum — your next level awaits.
         </motion.p>

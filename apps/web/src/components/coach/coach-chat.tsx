@@ -544,11 +544,11 @@ export function CoachChat({
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Header */}
-      <header className="flex-none border-b bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
+      <header className="flex-none border-b bg-ink-900/95 px-4 py-3 backdrop-blur sm:px-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-base font-semibold text-foreground">AI Coach</h1>
-            <p className="text-xs text-muted-foreground">
+            <h1 className="text-base font-semibold text-paper-100">AI Coach</h1>
+            <p className="text-xs text-paper-300">
               Ask anything. We&apos;ll improve your prompts and flag sensitive data.
             </p>
           </div>
@@ -572,8 +572,8 @@ export function CoachChat({
         <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
           {messages.length === 0 ? (
             <div className="py-8">
-              <h2 className="mb-1 text-lg font-semibold text-foreground">Try asking...</h2>
-              <p className="mb-5 text-sm text-muted-foreground">
+              <h2 className="mb-1 text-lg font-semibold text-paper-100">Try asking...</h2>
+              <p className="mb-5 text-sm text-paper-300">
                 {user.department
                   ? `Tailored for the ${user.department} team.`
                   : 'Pick one to get started.'}
@@ -610,7 +610,7 @@ export function CoachChat({
       </div>
 
       {/* Composer */}
-      <div className="flex-none border-t bg-background px-4 py-3 sm:px-6">
+      <div className="flex-none border-t bg-ink-900 px-4 py-3 sm:px-6">
         <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-3xl items-end gap-2">
           <div className="flex-1">
             <Textarea
@@ -628,7 +628,7 @@ export function CoachChat({
               maxLength={8000}
               className="resize-none py-2 text-sm leading-relaxed"
             />
-            <p className="mt-1 px-0.5 text-[10px] text-muted-foreground">
+            <p className="mt-1 px-0.5 text-[10px] text-paper-300">
               Cmd/Ctrl + Enter to send. Don&apos;t paste customer PII or secrets.
             </p>
           </div>

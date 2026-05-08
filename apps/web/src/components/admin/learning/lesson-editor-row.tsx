@@ -47,17 +47,17 @@ export function LessonEditorRow({
       className={`flex cursor-pointer items-center gap-2 rounded-lg border px-2 py-2 text-sm transition-colors ${
         isActive
           ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30'
-          : 'border-border bg-background hover:bg-muted/40'
+          : 'border-ink-600 bg-ink-900 hover:bg-ink-700/40'
       }`}
     >
-      <span className="cursor-grab text-muted-foreground active:cursor-grabbing">
+      <span className="cursor-grab text-paper-300 active:cursor-grabbing">
         <GripVertical className="h-4 w-4" aria-hidden="true" />
       </span>
-      <span className="mr-1 shrink-0 text-xs font-mono text-muted-foreground">{index + 1}</span>
-      <span className="flex-1 truncate font-medium text-foreground">
-        {lesson.title || <span className="italic text-muted-foreground">Untitled</span>}
+      <span className="mr-1 shrink-0 text-xs font-mono text-paper-300">{index + 1}</span>
+      <span className="flex-1 truncate font-medium text-paper-100">
+        {lesson.title || <span className="italic text-paper-300">Untitled</span>}
       </span>
-      <span className="shrink-0 text-xs text-muted-foreground">{lesson.estimatedMinutes}m</span>
+      <span className="shrink-0 text-xs text-paper-300">{lesson.estimatedMinutes}m</span>
     </div>
   );
 }

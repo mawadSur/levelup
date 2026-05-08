@@ -19,7 +19,7 @@ interface AnimatedProgressBarProps {
  * A thin progress bar that animates from 0 to `value` on mount.
  *
  * Features:
- * - Oxblood fill (`bg-primary`) animated with `easeStandard`.
+ * - Oxblood fill (`bg-signal`) animated with `easeStandard`.
  * - Optional 1-px trailing glow that fades out after the fill lands.
  * - Fully reduced-motion safe — fills instantly, no glow.
  */
@@ -43,9 +43,9 @@ export function AnimatedProgressBar({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={label}
-        className={cn('relative h-2 w-full overflow-hidden rounded-full bg-muted', className)}
+        className={cn('relative h-2 w-full overflow-hidden rounded-full bg-ink-700', className)}
       >
-        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-signal" style={{ width: `${pct}%` }} />
       </div>
     );
   }
@@ -57,11 +57,11 @@ export function AnimatedProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={label}
-      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-muted', className)}
+      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-ink-700', className)}
     >
       {/* Animated fill */}
       <motion.div
-        className="h-full rounded-full bg-primary"
+        className="h-full rounded-full bg-signal"
         initial={{ width: '0%' }}
         animate={{ width: `${pct}%` }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}

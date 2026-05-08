@@ -70,7 +70,7 @@ export function ChangeRoleDialog({ user, open, onOpenChange, adminCount }: Chang
           <DialogTitle>Change role</DialogTitle>
           <DialogDescription>
             Updating role for{' '}
-            <span className="font-medium text-foreground">
+            <span className="font-medium text-paper-100">
               {user?.name ?? user?.email ?? 'this user'}
             </span>
           </DialogDescription>

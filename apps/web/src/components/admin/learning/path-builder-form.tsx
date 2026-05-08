@@ -196,11 +196,11 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
         <header className="space-y-1">
           <div className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-indigo-600" aria-hidden="true" />
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-2xl font-bold tracking-tight text-paper-100">
               Build a path with AI
             </h1>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-paper-300">
             Describe what your team needs to learn. Our AI drafts a 6-lesson path with quizzes you
             can review, edit, and ship.
           </p>
@@ -209,7 +209,7 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
         {/* Prompt form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
+          className="space-y-4 rounded-xl border border-ink-600 bg-ink-800 p-6 shadow-sm"
         >
           <div className="space-y-1.5">
             <Label htmlFor="pb-prompt">Describe the path</Label>
@@ -223,7 +223,7 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
               minLength={8}
               maxLength={2000}
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-paper-300">
               The more specific the better. Mention tools, workflows, or constraints unique to your
               team.
             </p>
@@ -275,11 +275,11 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
 
       {/* ---------- Sidebar ---------- */}
       <aside className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-paper-300">
           Recent generations
         </h2>
         {recent.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-paper-300">
             No generations yet. Your previous requests will appear here.
           </p>
         ) : (
@@ -289,17 +289,15 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
                 <button
                   type="button"
                   onClick={() => handleSelectRecent(r)}
-                  className={`w-full rounded-lg border p-3 text-left text-sm transition-colors hover:bg-muted/50 ${
-                    active?.id === r.id ? 'border-indigo-500' : 'border-border'
+                  className={`w-full rounded-lg border p-3 text-left text-sm transition-colors hover:bg-ink-700/50 ${
+                    active?.id === r.id ? 'border-indigo-500' : 'border-ink-600'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <StatusBadge status={r.status} />
-                    <span className="text-xs text-muted-foreground">
-                      {formatRelative(r.createdAt)}
-                    </span>
+                    <span className="text-xs text-paper-300">{formatRelative(r.createdAt)}</span>
                   </div>
-                  <p className="mt-2 line-clamp-2 text-foreground">{r.prompt}</p>
+                  <p className="mt-2 line-clamp-2 text-paper-100">{r.prompt}</p>
                 </button>
               </li>
             ))}
@@ -401,7 +399,7 @@ function GeneratingPanel() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="mb-4 text-sm text-paper-300">
           Estimated wait: 30 to 60 seconds. Hold tight — the AI is drafting lessons and quizzes.
         </p>
         <ol className="space-y-2">
@@ -445,8 +443,8 @@ function ReadyPanel({ draft, accepting, onAccept, onEdit, acceptedPathId }: Read
               <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               Draft ready
             </CardTitle>
-            <p className="mt-2 text-lg font-semibold text-foreground">{draft.title}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{draft.description}</p>
+            <p className="mt-2 text-lg font-semibold text-paper-100">{draft.title}</p>
+            <p className="mt-1 text-sm text-paper-300">{draft.description}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               <Badge variant="secondary">{draft.targetLevel}</Badge>
               {draft.targetRole && <Badge variant="outline">For: {draft.targetRole}</Badge>}
@@ -462,17 +460,17 @@ function ReadyPanel({ draft, accepting, onAccept, onEdit, acceptedPathId }: Read
           {draft.lessons.map((lesson, i) => (
             <li
               key={lesson.slug}
-              className="flex items-start justify-between gap-3 rounded-lg border border-border bg-background p-3"
+              className="flex items-start justify-between gap-3 rounded-lg border border-ink-600 bg-ink-900 p-3"
             >
               <div>
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-medium text-paper-100">
                   {i + 1}. {lesson.title}
                 </p>
-                <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
+                <p className="mt-0.5 line-clamp-2 text-xs text-paper-300">
                   {lesson.body.replace(/[#*`]/g, '').slice(0, 160)}…
                 </p>
               </div>
-              <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+              <span className="flex shrink-0 items-center gap-1 text-xs text-paper-300">
                 <Clock className="h-3 w-3" />
                 {lesson.estimatedMinutes}m
               </span>
@@ -482,7 +480,7 @@ function ReadyPanel({ draft, accepting, onAccept, onEdit, acceptedPathId }: Read
 
         <div className="flex items-center justify-end gap-2">
           {acceptedPathId ? (
-            <p className="text-sm text-muted-foreground">Already accepted as a learning path.</p>
+            <p className="text-sm text-paper-300">Already accepted as a learning path.</p>
           ) : (
             <>
               <Button type="button" variant="outline" onClick={onEdit} className="gap-1.5">
@@ -604,7 +602,7 @@ function EditDraftDialog({ open, onOpenChange, draft, onAccept, accepting }: Edi
               id="ed-level"
               value={targetLevel}
               onChange={(e) => setTargetLevel(e.target.value as GeneratedPath['targetLevel'])}
-              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              className="w-full rounded-md border border-ink-600 bg-ink-900 px-3 py-2 text-sm"
             >
               {TARGET_LEVELS.map((l) => (
                 <option key={l} value={l}>
@@ -617,9 +615,9 @@ function EditDraftDialog({ open, onOpenChange, draft, onAccept, accepting }: Edi
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">Lessons</h3>
             {lessons.map((lesson, i) => (
-              <div key={lesson.slug} className="space-y-2 rounded-lg border border-border p-3">
+              <div key={lesson.slug} className="space-y-2 rounded-lg border border-ink-600 p-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-muted-foreground">{i + 1}</span>
+                  <span className="text-xs font-mono text-paper-300">{i + 1}</span>
                   <Input
                     value={lesson.title}
                     onChange={(e) => updateLesson(i, { title: e.target.value })}
@@ -637,7 +635,7 @@ function EditDraftDialog({ open, onOpenChange, draft, onAccept, accepting }: Edi
                     }
                     className="w-20"
                   />
-                  <span className="shrink-0 text-xs text-muted-foreground">min</span>
+                  <span className="shrink-0 text-xs text-paper-300">min</span>
                 </div>
                 <Textarea
                   rows={5}

@@ -142,17 +142,17 @@ export function PathCard({ path, recommended = false }: PathCardProps) {
         </div>
 
         {/* Title */}
-        <h3 className="text-base font-semibold leading-snug text-foreground">{path.title}</h3>
+        <h3 className="text-base font-semibold leading-snug text-paper-100">{path.title}</h3>
 
         {/* Description */}
         {path.description && (
-          <p className="line-clamp-2 text-xs text-muted-foreground">{path.description}</p>
+          <p className="line-clamp-2 text-xs text-paper-300">{path.description}</p>
         )}
 
         {/* Progress */}
         {!recommended && (
           <div className="mt-auto pt-3">
-            <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+            <div className="mb-1 flex items-center justify-between text-xs text-paper-300">
               <span>
                 {completedLessons} / {path.lessonCount} lessons
               </span>
@@ -163,7 +163,7 @@ export function PathCard({ path, recommended = false }: PathCardProps) {
         )}
 
         {recommended && (
-          <p className="mt-auto pt-3 text-xs text-muted-foreground">
+          <p className="mt-auto pt-3 text-xs text-paper-300">
             {path.lessonCount} lessons &middot; ~{path.estimatedMinutes} min
           </p>
         )}
@@ -173,7 +173,7 @@ export function PathCard({ path, recommended = false }: PathCardProps) {
         {recommended ? (
           <Link
             href={`/learn/${path.slug}`}
-            className="text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-signal hover:underline"
           >
             Get assigned &rarr;
           </Link>

@@ -20,7 +20,7 @@ interface QuestionCardProps {
 export function QuestionCard({ question, selectedIndex, onSelect, groupName }: QuestionCardProps) {
   return (
     <fieldset className="space-y-5">
-      <legend className="block text-balance text-xl font-semibold leading-snug text-foreground sm:text-2xl">
+      <legend className="block text-balance text-xl font-semibold leading-snug text-paper-100 sm:text-2xl">
         {question.text}
       </legend>
 
@@ -33,11 +33,11 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
               key={inputId}
               htmlFor={inputId}
               className={cn(
-                'group relative flex cursor-pointer items-start gap-3 rounded-lg border bg-background px-4 py-3.5 text-sm transition-colors',
+                'group relative flex cursor-pointer items-start gap-3 rounded-lg border bg-ink-900 px-4 py-3.5 text-sm transition-colors',
                 'hover:border-indigo-300 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20',
                 isSelected
                   ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500 dark:border-indigo-400 dark:bg-indigo-950/40 dark:ring-indigo-400'
-                  : 'border-border',
+                  : 'border-ink-600',
               )}
             >
               <input
@@ -54,13 +54,13 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
                   'mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-colors',
                   isSelected
                     ? 'border-indigo-500 bg-indigo-500 text-white dark:border-indigo-400 dark:bg-indigo-400'
-                    : 'border-input bg-background',
+                    : 'border-ink-500 bg-ink-900',
                 )}
                 aria-hidden="true"
               >
                 {isSelected ? <Check size={12} strokeWidth={3} /> : null}
               </span>
-              <span className="flex-1 leading-relaxed text-foreground">{choice}</span>
+              <span className="flex-1 leading-relaxed text-paper-100">{choice}</span>
             </label>
           );
         })}

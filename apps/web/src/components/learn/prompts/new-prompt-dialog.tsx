@@ -148,7 +148,7 @@ export function NewPromptDialog({
               onChange={(e) => setPromptText(e.target.value)}
               className="min-h-[160px] font-mono text-sm resize-y"
             />
-            <p className="text-xs text-muted-foreground">{promptText.length} chars</p>
+            <p className="text-xs text-paper-300">{promptText.length} chars</p>
           </div>
 
           {canShare && (
@@ -159,7 +159,7 @@ export function NewPromptDialog({
                   id="prompt-shared"
                   checked={isShared}
                   onChange={(e) => setIsShared(e.target.checked)}
-                  className="h-4 w-4 rounded border-border accent-primary"
+                  className="h-4 w-4 rounded border-ink-600 accent-primary"
                 />
                 <Label htmlFor="prompt-shared" className="cursor-pointer text-sm font-normal">
                   Share with my organisation

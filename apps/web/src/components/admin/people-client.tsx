@@ -41,7 +41,7 @@ function inviteStatusClass(status: string): string {
     case 'REVOKED':
       return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300';
     default:
-      return 'bg-muted text-muted-foreground border-border';
+      return 'bg-ink-700 text-paper-300 border-ink-600';
   }
 }
 
@@ -88,7 +88,7 @@ function MembersTab({ users, departments, isAdmin, adminCount }: MembersTabProps
       {/* Filter row */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px] max-w-xs">
-          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-paper-300" />
           <Input
             placeholder="Search members…"
             className="pl-8"
@@ -135,40 +135,40 @@ function MembersTab({ users, departments, isAdmin, adminCount }: MembersTabProps
             ))}
           </SelectContent>
         </Select>
-        <span className="ml-auto text-xs text-muted-foreground">
+        <span className="ml-auto text-xs text-paper-300">
           {filtered.length} {filtered.length === 1 ? 'member' : 'members'}
         </span>
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block rounded-lg border border-border overflow-hidden">
+      <div className="hidden md:block rounded-lg border border-ink-600 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-muted/50">
+          <thead className="bg-ink-700/50">
             <tr>
-              <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                 Member
               </th>
-              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                 Role
               </th>
-              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                 Department
               </th>
-              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                 AI Level
               </th>
-              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                 Last active
               </th>
-              <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-paper-300">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border bg-card">
+          <tbody className="divide-y divide-border bg-ink-800">
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center text-sm text-muted-foreground">
+                <td colSpan={6} className="py-12 text-center text-sm text-paper-300">
                   {search || roleFilter !== 'ALL' || deptFilter !== 'ALL'
                     ? 'No members match your filters.'
                     : 'No members yet.'}
@@ -192,7 +192,7 @@ function MembersTab({ users, departments, isAdmin, adminCount }: MembersTabProps
       {/* Mobile card list */}
       <div className="flex flex-col gap-2 md:hidden">
         {paginated.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">No members found.</p>
+          <p className="py-8 text-center text-sm text-paper-300">No members found.</p>
         ) : (
           paginated.map((u) => (
             <UserCard
@@ -217,7 +217,7 @@ function MembersTab({ users, departments, isAdmin, adminCount }: MembersTabProps
           >
             Previous
           </Button>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-paper-300">
             Page {page} of {totalPages}
           </span>
           <Button
@@ -275,13 +275,13 @@ function InvitationsTab({ invites, isAdmin }: InvitationsTabProps) {
 
   if (invites.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-border py-16 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-          <UserPlus className="h-6 w-6 text-muted-foreground" />
+      <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-ink-600 py-16 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink-700">
+          <UserPlus className="h-6 w-6 text-paper-300" />
         </div>
         <div>
-          <p className="text-sm font-medium text-foreground">No invitations yet</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-sm font-medium text-paper-100">No invitations yet</p>
+          <p className="mt-1 text-sm text-paper-300">
             Send one to get started — use the &quot;Invite teammate&quot; button above.
           </p>
         </div>
@@ -290,37 +290,37 @@ function InvitationsTab({ invites, isAdmin }: InvitationsTabProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border">
+    <div className="overflow-hidden rounded-lg border border-ink-600">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+        <thead className="bg-ink-700/50">
           <tr>
-            <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
               Email
             </th>
-            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground hidden sm:table-cell">
+            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300 hidden sm:table-cell">
               Role
             </th>
-            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
               Status
             </th>
-            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground hidden lg:table-cell">
+            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300 hidden lg:table-cell">
               Sent
             </th>
-            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground hidden lg:table-cell">
+            <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300 hidden lg:table-cell">
               Expires
             </th>
             {isAdmin && (
-              <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-paper-300">
                 <span className="sr-only">Actions</span>
               </th>
             )}
           </tr>
         </thead>
-        <tbody className="divide-y divide-border bg-card">
+        <tbody className="divide-y divide-border bg-ink-800">
           {invites.map((inv) => (
-            <tr key={inv.id} className="hover:bg-muted/30 transition-colors">
-              <td className="py-3 pl-4 pr-3 font-medium text-foreground">{inv.email}</td>
-              <td className="px-3 py-3 text-muted-foreground hidden sm:table-cell capitalize">
+            <tr key={inv.id} className="hover:bg-ink-700/30 transition-colors">
+              <td className="py-3 pl-4 pr-3 font-medium text-paper-100">{inv.email}</td>
+              <td className="px-3 py-3 text-paper-300 hidden sm:table-cell capitalize">
                 {inv.role.toLowerCase()}
               </td>
               <td className="px-3 py-3">
@@ -331,10 +331,10 @@ function InvitationsTab({ invites, isAdmin }: InvitationsTabProps) {
                   {inv.status.charAt(0) + inv.status.slice(1).toLowerCase()}
                 </Badge>
               </td>
-              <td className="px-3 py-3 text-muted-foreground hidden lg:table-cell">
+              <td className="px-3 py-3 text-paper-300 hidden lg:table-cell">
                 {formatDate(inv.createdAt)}
               </td>
-              <td className="px-3 py-3 text-muted-foreground hidden lg:table-cell">
+              <td className="px-3 py-3 text-paper-300 hidden lg:table-cell">
                 {formatDate(inv.expiresAt)}
               </td>
               {isAdmin && (
@@ -355,7 +355,7 @@ function InvitationsTab({ invites, isAdmin }: InvitationsTabProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-7 text-xs text-destructive hover:text-destructive gap-1"
+                          className="h-7 text-xs text-danger hover:text-danger gap-1"
                           disabled={loadingId === inv.id}
                           onClick={() => handleRevoke(inv.id, inv.email)}
                         >
@@ -416,8 +416,8 @@ function DepartmentsTab({ depts, isAdmin }: DepartmentsTabProps) {
         )}
 
         {depts.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-border py-16 text-center">
-            <p className="text-sm text-muted-foreground">No departments yet.</p>
+          <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-ink-600 py-16 text-center">
+            <p className="text-sm text-paper-300">No departments yet.</p>
             {isAdmin && (
               <Button size="sm" variant="outline" onClick={() => setAddOpen(true)}>
                 <Plus className="mr-1.5 h-4 w-4" />
@@ -426,28 +426,28 @@ function DepartmentsTab({ depts, isAdmin }: DepartmentsTabProps) {
             )}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border">
+          <div className="overflow-hidden rounded-lg border border-ink-600">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-ink-700/50">
                 <tr>
-                  <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <th className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                     Department
                   </th>
-                  <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-paper-300">
                     Members
                   </th>
                   {isAdmin && (
-                    <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <th className="py-2.5 pl-3 pr-4 text-right text-xs font-semibold uppercase tracking-wide text-paper-300">
                       <span className="sr-only">Actions</span>
                     </th>
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-card">
+              <tbody className="divide-y divide-border bg-ink-800">
                 {depts.map((dept) => (
-                  <tr key={dept.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="py-3 pl-4 pr-3 font-medium text-foreground">{dept.name}</td>
-                    <td className="px-3 py-3 text-muted-foreground">
+                  <tr key={dept.id} className="hover:bg-ink-700/30 transition-colors">
+                    <td className="py-3 pl-4 pr-3 font-medium text-paper-100">{dept.name}</td>
+                    <td className="px-3 py-3 text-paper-300">
                       {dept.memberCount} {dept.memberCount === 1 ? 'member' : 'members'}
                     </td>
                     {isAdmin && (
@@ -465,7 +465,7 @@ function DepartmentsTab({ depts, isAdmin }: DepartmentsTabProps) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 gap-1 text-xs text-destructive hover:text-destructive"
+                            className="h-7 gap-1 text-xs text-danger hover:text-danger"
                             disabled={deletingId === dept.id}
                             onClick={() => handleDelete(dept)}
                           >
@@ -523,8 +523,8 @@ export function PeopleClient({
       {/* Page header */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">People</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-paper-100">People</h1>
+          <p className="mt-1 text-sm text-paper-300">
             {memberList.length} {memberList.length === 1 ? 'member' : 'members'} in {orgName}
           </p>
         </div>
@@ -538,10 +538,10 @@ export function PeopleClient({
 
       {/* Tabs */}
       <Tabs defaultValue="members" className="space-y-4">
-        <TabsList className="border border-border bg-muted/40">
+        <TabsList className="border border-ink-600 bg-ink-700/40">
           <TabsTrigger value="members">
             Members
-            <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
+            <span className="ml-1.5 rounded-full bg-ink-700 px-1.5 py-0.5 text-xs font-medium text-paper-300">
               {memberList.length}
             </span>
           </TabsTrigger>

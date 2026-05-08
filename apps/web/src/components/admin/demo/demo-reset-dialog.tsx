@@ -96,7 +96,7 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-destructive">Reset demo data</DialogTitle>
+          <DialogTitle className="text-danger">Reset demo data</DialogTitle>
           <DialogDescription>
             This wipes ALL data in this org and re-seeds it with fresh demo content shaped around
             the company name you provide. <strong>This action cannot be undone.</strong>
@@ -107,7 +107,7 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
           {/* Company name */}
           <div className="space-y-1.5">
             <Label htmlFor="demo-company-name">
-              Company name <span className="text-destructive">*</span>
+              Company name <span className="text-danger">*</span>
             </Label>
             <Input
               id="demo-company-name"
@@ -143,7 +143,7 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
 
           {/* Seed size */}
           <fieldset className="space-y-2" disabled={loading}>
-            <legend className="text-sm font-medium leading-none text-foreground">Seed size</legend>
+            <legend className="text-sm font-medium leading-none text-paper-100">Seed size</legend>
             <div className="grid grid-cols-3 gap-2">
               {(Object.keys(SEED_SIZE_LABELS) as SeedSize[]).map((size) => (
                 <label
@@ -151,8 +151,8 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
                   className={[
                     'flex cursor-pointer flex-col items-center rounded-lg border px-3 py-2.5 text-center text-sm transition-colors',
                     seedSize === size
-                      ? 'border-primary bg-primary/5 font-medium text-primary'
-                      : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground',
+                      ? 'border-signal bg-signal/5 font-medium text-signal'
+                      : 'border-ink-600 text-paper-300 hover:border-signal/50 hover:text-paper-100',
                     loading ? 'pointer-events-none opacity-60' : '',
                   ]
                     .join(' ')
@@ -179,8 +179,8 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
 
           {/* Destructive confirmation */}
           {companyName.trim().length >= 2 && (
-            <div className="space-y-1.5 rounded-lg border border-destructive/40 bg-destructive/5 p-3">
-              <Label htmlFor="demo-confirm" className="text-sm text-destructive">
+            <div className="space-y-1.5 rounded-lg border border-danger/40 bg-danger/5 p-3">
+              <Label htmlFor="demo-confirm" className="text-sm text-danger">
                 Type <span className="font-mono font-semibold">{companyName.trim()}</span> to
                 confirm
               </Label>
@@ -192,7 +192,7 @@ export function DemoResetDialog({ open, onOpenChange }: DemoResetDialogProps) {
                 placeholder={companyName.trim()}
                 disabled={loading}
                 autoComplete="off"
-                className="border-destructive/50 focus-visible:ring-destructive/50"
+                className="border-danger/50 focus-visible:ring-destructive/50"
               />
             </div>
           )}

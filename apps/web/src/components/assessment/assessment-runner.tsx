@@ -338,7 +338,7 @@ export function AssessmentRunner() {
   if (state.phase === 'idle' || state.phase === 'loading') {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+        <div className="flex flex-col items-center gap-3 text-paper-300">
           <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
           <span className="text-sm">Loading your assessment...</span>
         </div>
@@ -352,7 +352,7 @@ export function AssessmentRunner() {
         <Card>
           <CardContent className="py-8 text-center">
             <h2 className="mb-2 text-lg font-semibold">We couldn&apos;t start your assessment</h2>
-            <p className="mb-6 text-sm text-muted-foreground">{state.errorMessage}</p>
+            <p className="mb-6 text-sm text-paper-300">{state.errorMessage}</p>
             <Button onClick={() => window.location.reload()}>Try again</Button>
           </CardContent>
         </Card>
@@ -397,7 +397,7 @@ export function AssessmentRunner() {
 
       <div className="mt-8 flex-1">
         {state.errorMessage && (
-          <div className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <div className="mb-4 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
             {state.errorMessage}
           </div>
         )}
@@ -416,7 +416,7 @@ export function AssessmentRunner() {
             type="button"
             onClick={handleSkip}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:underline disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-paper-300 hover:text-paper-100 hover:underline disabled:opacity-50"
           >
             <SkipForward size={14} aria-hidden="true" />
             Skip this question

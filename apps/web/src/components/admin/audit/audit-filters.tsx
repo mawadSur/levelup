@@ -94,7 +94,7 @@ export function AuditFilters({ rows }: AuditFiltersProps) {
     <div className="flex flex-wrap items-end gap-3 pb-4">
       {/* Action */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Action</label>
+        <label className="text-xs text-paper-300">Action</label>
         <Select value={action} onValueChange={setAction}>
           <SelectTrigger className="h-8 w-52 text-xs">
             <SelectValue placeholder="All actions" />
@@ -112,7 +112,7 @@ export function AuditFilters({ rows }: AuditFiltersProps) {
 
       {/* Actor */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Actor ID</label>
+        <label className="text-xs text-paper-300">Actor ID</label>
         <Input
           value={actorId}
           onChange={(e) => setActorId(e.target.value)}
@@ -123,7 +123,7 @@ export function AuditFilters({ rows }: AuditFiltersProps) {
 
       {/* Target type */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Target type</label>
+        <label className="text-xs text-paper-300">Target type</label>
         <Select value={targetType} onValueChange={setTargetType}>
           <SelectTrigger className="h-8 w-44 text-xs">
             <SelectValue placeholder="All types" />
@@ -141,24 +141,24 @@ export function AuditFilters({ rows }: AuditFiltersProps) {
 
       {/* Since */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">From</label>
+        <label className="text-xs text-paper-300">From</label>
         <input
           type="date"
           value={since}
           onChange={(e) => setSince(e.target.value)}
-          className="h-8 rounded-md border border-input bg-background px-3 text-xs"
+          className="h-8 rounded-md border border-ink-500 bg-ink-900 px-3 text-xs"
           aria-label="Since date"
         />
       </div>
 
       {/* Until */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">To</label>
+        <label className="text-xs text-paper-300">To</label>
         <input
           type="date"
           value={until}
           onChange={(e) => setUntil(e.target.value)}
-          className="h-8 rounded-md border border-input bg-background px-3 text-xs"
+          className="h-8 rounded-md border border-ink-500 bg-ink-900 px-3 text-xs"
           aria-label="Until date"
         />
       </div>

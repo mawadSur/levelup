@@ -122,7 +122,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
           <OnboardingProvider>
             <div className="flex min-h-screen flex-col">
               {/* Top bar */}
-              <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <header className="sticky top-0 z-50 w-full border-b border-ink-600/40 bg-ink-900/95 backdrop-blur supports-[backdrop-filter]:bg-ink-900/60">
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                   {/* Logo */}
                   <Link href="/learn" aria-label="LevelUp AI Academy home">
@@ -144,8 +144,8 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                           className={cn(
                             'relative rounded-md px-3 py-2 text-sm font-medium transition-colors',
                             isActive
-                              ? 'bg-primary/10 text-primary'
-                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                              ? 'bg-signal/10 text-signal'
+                              : 'text-paper-300 hover:bg-ink-700 hover:text-paper-100',
                           )}
                         >
                           {link.label}
@@ -154,7 +154,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                             {isActive && (
                               <motion.div
                                 layoutId="learner-active-nav-underline"
-                                className="absolute inset-x-2 bottom-0.5 h-[1.5px] rounded-full bg-primary"
+                                className="absolute inset-x-2 bottom-0.5 h-[1.5px] rounded-full bg-signal"
                                 initial={prefersReduced ? false : { opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
@@ -175,11 +175,11 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
-                          className="flex h-9 w-9 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          className="flex h-9 w-9 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
                           aria-label="User menu"
                         >
                           <Avatar className="h-9 w-9">
-                            <AvatarFallback className="bg-primary/15 text-primary text-sm font-semibold">
+                            <AvatarFallback className="bg-signal/15 text-signal text-sm font-semibold">
                               {getInitials(user.name || user.email)}
                             </AvatarFallback>
                           </Avatar>
@@ -188,7 +188,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                       <DropdownMenuContent align="end" className="w-56">
                         <div className="px-3 py-2">
                           <p className="text-sm font-medium leading-none">{user.name}</p>
-                          <p className="mt-1 text-xs text-muted-foreground">{user.email}</p>
+                          <p className="mt-1 text-xs text-paper-300">{user.email}</p>
                         </div>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
@@ -209,7 +209,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
 
                     {/* Hamburger (mobile) */}
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-md md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="flex h-9 w-9 items-center justify-center rounded-md md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
                       aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                       aria-expanded={mobileMenuOpen}
                       onClick={() => setMobileMenuOpen((v) => !v)}
@@ -259,7 +259,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                       initial={prefersReduced ? undefined : 'hidden'}
                       animate={prefersReduced ? undefined : 'visible'}
                       exit={prefersReduced ? undefined : 'exit'}
-                      className="border-t border-border/40 bg-background px-4 pb-4 pt-2 md:hidden"
+                      className="border-t border-ink-600/40 bg-ink-900 px-4 pb-4 pt-2 md:hidden"
                       aria-label="Mobile navigation"
                     >
                       {navLinks.map((link) => {
@@ -275,8 +275,8 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                             className={cn(
                               'block rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
                               isActive
-                                ? 'bg-primary/10 text-primary'
-                                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                                ? 'bg-signal/10 text-signal'
+                                : 'text-paper-300 hover:bg-ink-700 hover:text-paper-100',
                             )}
                           >
                             {link.label}

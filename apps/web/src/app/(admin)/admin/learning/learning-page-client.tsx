@@ -88,8 +88,8 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
       {/* Header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Learning</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Learning</h1>
+          <p className="mt-1 text-sm text-paper-300">
             Assign paths, build custom paths, see who&apos;s learning what.
           </p>
         </div>
@@ -118,8 +118,8 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
         {/* ---- Path catalog ---- */}
         <TabsContent value="catalog">
           {catalogPaths.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border p-12 text-center">
-              <p className="text-muted-foreground">No published paths yet.</p>
+            <div className="rounded-xl border border-dashed border-ink-600 p-12 text-center">
+              <p className="text-paper-300">No published paths yet.</p>
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,8 +138,8 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
         {/* ---- Custom paths ---- */}
         <TabsContent value="custom">
           {customPaths.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border p-12 text-center">
-              <p className="text-muted-foreground">
+            <div className="rounded-xl border border-dashed border-ink-600 p-12 text-center">
+              <p className="text-paper-300">
                 No custom paths yet.{' '}
                 <button
                   type="button"
@@ -151,10 +151,10 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-border">
+            <div className="overflow-hidden rounded-xl border border-ink-600">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border bg-muted/50">
+                  <tr className="border-b border-ink-600 bg-ink-700/50">
                     <th className="px-4 py-3 text-left font-semibold">Title</th>
                     <th className="px-4 py-3 text-left font-semibold">Lessons</th>
                     <th className="px-4 py-3 text-left font-semibold">Published</th>
@@ -163,16 +163,16 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
                 </thead>
                 <tbody className="divide-y divide-border">
                   {customPaths.map((path) => (
-                    <tr key={path.id} className="bg-background hover:bg-muted/30 transition-colors">
+                    <tr key={path.id} className="bg-ink-900 hover:bg-ink-700/30 transition-colors">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-foreground">{path.title}</p>
+                        <p className="font-medium text-paper-100">{path.title}</p>
                         {path.description && (
-                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1">
+                          <p className="mt-0.5 text-xs text-paper-300 line-clamp-1">
                             {path.description}
                           </p>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">{path.lessonCount}</td>
+                      <td className="px-4 py-3 text-paper-300">{path.lessonCount}</td>
                       <td className="px-4 py-3">
                         <button
                           type="button"
@@ -180,7 +180,7 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
                           aria-checked={path.isPublished}
                           onClick={() => handleTogglePublish(path)}
                           className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                            path.isPublished ? 'bg-indigo-600' : 'bg-muted-foreground/30'
+                            path.isPublished ? 'bg-indigo-600' : 'bg-ink-700-foreground/30'
                           }`}
                         >
                           <span
@@ -204,7 +204,7 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="gap-1 text-destructive hover:text-destructive"
+                            className="gap-1 text-danger hover:text-danger"
                             onClick={() => setDeleteTarget(path)}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -238,7 +238,7 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertTriangle className="h-5 w-5 text-danger" />
               Delete path?
             </DialogTitle>
             <DialogDescription>

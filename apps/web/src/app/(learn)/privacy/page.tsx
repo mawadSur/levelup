@@ -49,14 +49,12 @@ export default async function PrivacyPage({ searchParams }: PrivacyPageProps) {
       {/* Header */}
       <div>
         <h1
-          className="text-4xl font-bold tracking-tight text-foreground"
+          className="text-4xl font-bold tracking-tight text-paper-100"
           style={{ fontFamily: 'Fraunces, serif', fontSize: '36px' }}
         >
           Your data
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          Export everything we have. Or close your account.
-        </p>
+        <p className="mt-2 text-paper-300">Export everything we have. Or close your account.</p>
       </div>
 
       {/* Data Export card */}

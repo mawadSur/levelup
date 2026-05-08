@@ -50,9 +50,9 @@ export function CodeCopyButton({ code }: CodeCopyButtonProps) {
           'text-xs font-medium',
           // Subtle oxblood-tinted ghost style
           'border border-transparent',
-          'text-primary/60 hover:text-primary hover:border-primary/30 hover:bg-primary/5',
+          'text-signal/60 hover:text-signal hover:border-signal/30 hover:bg-signal/5',
           'transition-colors duration-150',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal',
           // Float to top-right inside the <pre>
           'absolute right-2 top-2 z-10',
         ].join(' ')}

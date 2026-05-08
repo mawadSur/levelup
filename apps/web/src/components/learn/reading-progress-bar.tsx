@@ -14,7 +14,7 @@ interface ReadingProgressBarProps {
 
 /**
  * Medium-style reading-progress bar.
- * - 2 px tall, oxblood (`bg-primary`), fixed at the very top of the viewport.
+ * - 2 px tall, oxblood (`bg-signal`), fixed at the very top of the viewport.
  * - Fills left-to-right as the user scrolls through the lesson body.
  * - Hidden at scroll position 0 (width stays 0, no empty bar flash).
  * - `transition: width` is suppressed when `prefers-reduced-motion: reduce` is
@@ -90,7 +90,7 @@ export function ReadingProgressBar({ target }: ReadingProgressBarProps) {
         className="fixed left-0 right-0 top-0 z-50 h-0.5"
         style={{ backgroundColor: 'transparent' }}
       >
-        <div className="rpb-fill h-full bg-primary" style={{ width: `${progress}%` }} />
+        <div className="rpb-fill h-full bg-signal" style={{ width: `${progress}%` }} />
       </div>
     </>
   );

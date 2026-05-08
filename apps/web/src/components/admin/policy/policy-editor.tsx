@@ -184,7 +184,7 @@ export function PolicyEditor({ initialPolicy, onPublished }: PolicyEditorProps) 
             />
           </TabsContent>
           <TabsContent value="preview">
-            <div className="min-h-[24rem] rounded-md border border-border bg-background p-4 overflow-auto">
+            <div className="min-h-[24rem] rounded-md border border-ink-600 bg-ink-900 p-4 overflow-auto">
               <MarkdownPreview content={text} />
             </div>
           </TabsContent>

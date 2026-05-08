@@ -14,7 +14,7 @@ export function TopPromptsCard({ prompts }: TopPromptsCardProps) {
           <CardTitle className="text-base font-semibold">Top Cloned Prompts</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No clone activity yet this period.</p>
+          <p className="text-sm text-paper-300">No clone activity yet this period.</p>
         </CardContent>
       </Card>
     );
@@ -24,15 +24,13 @@ export function TopPromptsCard({ prompts }: TopPromptsCardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-base font-semibold">Top Cloned Prompts</CardTitle>
-        <p className="text-xs text-muted-foreground">
-          Most-reused prompts by your team this period.
-        </p>
+        <p className="text-xs text-paper-300">Most-reused prompts by your team this period.</p>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-xs font-medium text-muted-foreground">
+              <tr className="border-b border-ink-600 text-left text-xs font-medium text-paper-300">
                 <th className="px-4 py-2">#</th>
                 <th className="px-4 py-2">Title</th>
                 <th className="px-4 py-2 hidden sm:table-cell">Category</th>
@@ -45,9 +43,9 @@ export function TopPromptsCard({ prompts }: TopPromptsCardProps) {
               {prompts.map((prompt, idx) => (
                 <tr
                   key={prompt.promptId}
-                  className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors"
+                  className="border-b border-ink-600/50 last:border-0 hover:bg-ink-700/30 transition-colors"
                 >
-                  <td className="px-4 py-2.5 text-muted-foreground font-mono text-xs">{idx + 1}</td>
+                  <td className="px-4 py-2.5 text-paper-300 font-mono text-xs">{idx + 1}</td>
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="font-medium truncate max-w-[200px]" title={prompt.title}>
@@ -61,16 +59,16 @@ export function TopPromptsCard({ prompts }: TopPromptsCardProps) {
                     </div>
                   </td>
                   <td className="px-4 py-2.5 hidden sm:table-cell">
-                    <span className="capitalize text-muted-foreground">{prompt.category}</span>
+                    <span className="capitalize text-paper-300">{prompt.category}</span>
                   </td>
-                  <td className="px-4 py-2.5 hidden md:table-cell text-muted-foreground">
+                  <td className="px-4 py-2.5 hidden md:table-cell text-paper-300">
                     {prompt.authorName}
                   </td>
-                  <td className="px-4 py-2.5 hidden lg:table-cell text-muted-foreground">
-                    {prompt.departmentName ?? <span className="text-muted-foreground/50">—</span>}
+                  <td className="px-4 py-2.5 hidden lg:table-cell text-paper-300">
+                    {prompt.departmentName ?? <span className="text-paper-300/50">—</span>}
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <span className="font-semibold tabular-nums text-primary">
+                    <span className="font-semibold tabular-nums text-signal">
                       {prompt.cloneCount}
                     </span>
                   </td>

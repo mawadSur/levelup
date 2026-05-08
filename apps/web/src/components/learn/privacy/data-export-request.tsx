@@ -87,7 +87,7 @@ export function DataExportRequest({ initialRequests }: Props) {
         </Button>
 
         {requests.length === 0 ? (
-          <p className="text-sm text-muted-foreground italic">
+          <p className="text-sm text-paper-300 italic">
             You haven&apos;t exported your data yet. We&apos;ll email you when it&apos;s ready.
           </p>
         ) : (
@@ -100,7 +100,7 @@ export function DataExportRequest({ initialRequests }: Props) {
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <Badge variant={STATUS_VARIANTS[req.status]}>{req.status}</Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-paper-300">
                       {new Date(req.requestedAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -108,13 +108,13 @@ export function DataExportRequest({ initialRequests }: Props) {
                       })}
                     </span>
                     {req.fileSizeBytes !== null && (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-paper-300">
                         {formatBytes(req.fileSizeBytes)}
                       </span>
                     )}
                   </div>
                   {req.status === 'READY' && req.expiresAt && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-paper-300">
                       Expires{' '}
                       {new Date(req.expiresAt).toLocaleDateString('en-US', {
                         month: 'short',
@@ -124,7 +124,7 @@ export function DataExportRequest({ initialRequests }: Props) {
                     </p>
                   )}
                   {req.status === 'FAILED' && req.failedReason && (
-                    <p className="text-xs text-destructive">{req.failedReason}</p>
+                    <p className="text-xs text-danger">{req.failedReason}</p>
                   )}
                 </div>
                 {req.status === 'READY' && (

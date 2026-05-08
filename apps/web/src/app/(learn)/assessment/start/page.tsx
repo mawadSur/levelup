@@ -18,39 +18,31 @@ export default function AssessmentStartPage() {
             </span>
           </div>
 
-          <h1 className="mb-3 text-center text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="mb-3 text-center text-2xl font-bold tracking-tight text-paper-100 sm:text-3xl">
             Your AI Baseline
           </h1>
 
-          <p className="mx-auto mb-7 max-w-sm text-balance text-center text-sm text-muted-foreground">
+          <p className="mx-auto mb-7 max-w-sm text-balance text-center text-sm text-paper-300">
             30 questions, ~5 minutes. We&apos;ll recommend a learning path based on your answers.
             You won&apos;t be graded — this just helps us tailor what you see.
           </p>
 
-          <div className="mx-auto mb-8 max-w-sm space-y-2.5 rounded-lg border bg-muted/30 p-4 text-sm">
+          <div className="mx-auto mb-8 max-w-sm space-y-2.5 rounded-lg border bg-ink-700/30 p-4 text-sm">
             <div className="flex items-start gap-2.5">
-              <Clock
-                size={16}
-                aria-hidden="true"
-                className="mt-0.5 flex-none text-muted-foreground"
-              />
-              <span className="text-muted-foreground">Takes about 5 minutes</span>
+              <Clock size={16} aria-hidden="true" className="mt-0.5 flex-none text-paper-300" />
+              <span className="text-paper-300">Takes about 5 minutes</span>
             </div>
             <div className="flex items-start gap-2.5">
               <CheckCircle2
                 size={16}
                 aria-hidden="true"
-                className="mt-0.5 flex-none text-muted-foreground"
+                className="mt-0.5 flex-none text-paper-300"
               />
-              <span className="text-muted-foreground">Skip anything you&apos;re unsure about</span>
+              <span className="text-paper-300">Skip anything you&apos;re unsure about</span>
             </div>
             <div className="flex items-start gap-2.5">
-              <Sparkles
-                size={16}
-                aria-hidden="true"
-                className="mt-0.5 flex-none text-muted-foreground"
-              />
-              <span className="text-muted-foreground">
+              <Sparkles size={16} aria-hidden="true" className="mt-0.5 flex-none text-paper-300" />
+              <span className="text-paper-300">
                 We use your answers to personalise — nothing more
               </span>
             </div>
@@ -65,7 +57,7 @@ export default function AssessmentStartPage() {
             </Button>
             <Link
               href="/learn"
-              className="text-xs text-muted-foreground hover:text-foreground hover:underline"
+              className="text-xs text-paper-300 hover:text-paper-100 hover:underline"
             >
               Maybe later
             </Link>

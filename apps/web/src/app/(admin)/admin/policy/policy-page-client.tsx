@@ -60,8 +60,8 @@ export function PolicyPageClient({
       {/* Header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Company AI Policy</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Company AI Policy</h1>
+          <p className="mt-1 text-sm text-paper-300">
             Publish your AI policy. Define which tools are approved for which data classes.
           </p>
         </div>
@@ -77,14 +77,14 @@ export function PolicyPageClient({
                 <FileText className="h-5 w-5 text-indigo-600 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <CardTitle className="text-base">Current policy — v{current.version}</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-paper-300 mt-0.5">
                     Published {formatDate(current.publishedAt)}
                   </p>
                 </div>
                 <Badge variant="secondary">Active</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="line-clamp-3 text-sm text-muted-foreground">
+                <p className="line-clamp-3 text-sm text-paper-300">
                   {current.policyText.slice(0, 200)}
                   {current.policyText.length > 200 ? '…' : ''}
                 </p>
@@ -109,9 +109,9 @@ export function PolicyPageClient({
             /* Empty state */
             <Card className="border-dashed border-2">
               <CardContent className="py-12 text-center">
-                <FileText className="mx-auto h-10 w-10 text-muted-foreground/40 mb-3" />
-                <h2 className="text-base font-semibold text-foreground">No policy yet</h2>
-                <p className="mt-1 text-sm text-muted-foreground max-w-xs mx-auto">
+                <FileText className="mx-auto h-10 w-10 text-paper-300/40 mb-3" />
+                <h2 className="text-base font-semibold text-paper-100">No policy yet</h2>
+                <p className="mt-1 text-sm text-paper-300 max-w-xs mx-auto">
                   Adopt the LevelUp sample policy to get started quickly.
                 </p>
                 <Button className="mt-4" onClick={() => setEditorOpen(true)}>
@@ -140,7 +140,7 @@ export function PolicyPageClient({
         <div>
           <Card>
             <CardHeader className="pb-3 flex flex-row items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="h-4 w-4 text-paper-300" />
               <CardTitle className="text-sm font-semibold">Version history</CardTitle>
             </CardHeader>
             <CardContent>
@@ -148,7 +148,7 @@ export function PolicyPageClient({
               {allVersions.length > 0 && (
                 <>
                   <Separator className="my-3" />
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-xs text-paper-300 text-center">
                     Click a version below to view (read-only)
                   </p>
                   <ul className="mt-2 space-y-1">
@@ -180,13 +180,13 @@ export function PolicyPageClient({
             <DialogTitle>
               Policy v{viewVersion?.version}
               {viewVersion?.publishedAt && (
-                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                <span className="ml-2 text-sm font-normal text-paper-300">
                   — {formatDate(viewVersion.publishedAt)}
                 </span>
               )}
             </DialogTitle>
           </DialogHeader>
-          <div className="rounded-md border border-border bg-muted/30 p-4">
+          <div className="rounded-md border border-ink-600 bg-ink-700/30 p-4">
             <MarkdownPreview content={viewVersion?.policyText ?? ''} />
           </div>
         </DialogContent>

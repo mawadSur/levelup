@@ -30,8 +30,8 @@ export default async function IntegrationConnectedPage({ searchParams }: Connect
             <CheckCircle2 className="h-16 w-16 text-green-500" />
           </div>
           <div className="space-y-2">
-            <h1 className="text-xl font-semibold text-foreground">{providerLabel} connected</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-xl font-semibold text-paper-100">{providerLabel} connected</h1>
+            <p className="text-sm text-paper-300">
               Your workspace is now connected to LevelUp AI Academy.
             </p>
           </div>

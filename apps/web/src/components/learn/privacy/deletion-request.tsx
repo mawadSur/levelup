@@ -107,9 +107,9 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
 
   return (
     <>
-      <Card className="border-destructive/40">
+      <Card className="border-danger/40">
         <CardHeader>
-          <CardTitle className="text-destructive">Delete your account</CardTitle>
+          <CardTitle className="text-danger">Delete your account</CardTitle>
           <CardDescription>
             Request permanent deletion of your account and all associated data. You&apos;ll have 30
             days to cancel after confirming via email.
@@ -151,7 +151,7 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
                       <Badge variant={STATUS_VARIANTS[req.status]}>{req.status}</Badge>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-paper-300">
                         Requested{' '}
                         {new Date(req.requestedAt).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -161,7 +161,7 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
                       </span>
                     </div>
                     {(req.status === 'PENDING' || req.status === 'CONFIRMED') && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-paper-300">
                         Scheduled for{' '}
                         {new Date(req.scheduledFor).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -171,9 +171,7 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
                       </p>
                     )}
                     {req.reason && (
-                      <p className="text-xs text-muted-foreground italic">
-                        &ldquo;{req.reason}&rdquo;
-                      </p>
+                      <p className="text-xs text-paper-300 italic">&ldquo;{req.reason}&rdquo;</p>
                     )}
                   </div>
                   {(req.status === 'PENDING' || req.status === 'CONFIRMED') && (
@@ -215,7 +213,7 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
               maxLength={500}
               rows={3}
             />
-            <p className="text-right text-xs text-muted-foreground">{reason.length}/500</p>
+            <p className="text-right text-xs text-paper-300">{reason.length}/500</p>
           </div>
 
           <DialogFooter className="gap-2 sm:gap-0">

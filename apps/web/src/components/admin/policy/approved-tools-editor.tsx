@@ -86,8 +86,8 @@ export function ApprovedToolsEditor({ tiers, onChange }: ApprovedToolsEditorProp
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-sm font-semibold text-foreground">Approved tools</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <h3 className="text-sm font-semibold text-paper-100">Approved tools</h3>
+        <p className="text-xs text-paper-300 mt-0.5">
           Define which tools are approved by tier and data class.
         </p>
       </div>
@@ -109,11 +109,11 @@ export function ApprovedToolsEditor({ tiers, onChange }: ApprovedToolsEditorProp
           </div>
 
           {tier.tools.length === 0 && (
-            <p className="text-xs text-muted-foreground italic">No tools in this tier yet.</p>
+            <p className="text-xs text-paper-300 italic">No tools in this tier yet.</p>
           )}
 
           {tier.tools.map((tool, toolIdx) => (
-            <div key={toolIdx} className="rounded-lg border border-border p-3 space-y-3">
+            <div key={toolIdx} className="rounded-lg border border-ink-600 p-3 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <Label className="text-xs">Tool name</Label>
@@ -147,7 +147,7 @@ export function ApprovedToolsEditor({ tiers, onChange }: ApprovedToolsEditorProp
                         className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
                           active
                             ? 'border-indigo-600 bg-indigo-600 text-white'
-                            : 'border-border text-muted-foreground hover:border-indigo-400'
+                            : 'border-ink-600 text-paper-300 hover:border-indigo-400'
                         }`}
                       >
                         {cls}
@@ -161,7 +161,7 @@ export function ApprovedToolsEditor({ tiers, onChange }: ApprovedToolsEditorProp
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="gap-1 text-destructive hover:text-destructive h-7 px-2 text-xs"
+                  className="gap-1 text-danger hover:text-danger h-7 px-2 text-xs"
                   onClick={() => removeTool(tierIdx, toolIdx)}
                 >
                   <Trash2 className="h-3 w-3" />

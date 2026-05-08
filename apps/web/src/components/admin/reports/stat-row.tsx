@@ -35,13 +35,13 @@ function StatCard({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-paper-300">{title}</CardTitle>
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${iconClass}`}>
           <Icon className="h-4 w-4" aria-hidden />
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold tracking-tight text-foreground">
+        <div className="text-3xl font-bold tracking-tight text-paper-100">
           {tooltip ? (
             <TooltipProvider>
               <Tooltip>
@@ -55,7 +55,7 @@ function StatCard({
             value
           )}
         </div>
-        {sublabel && <p className="mt-1 text-xs text-muted-foreground">{sublabel}</p>}
+        {sublabel && <p className="mt-1 text-xs text-paper-300">{sublabel}</p>}
       </CardContent>
     </Card>
   );

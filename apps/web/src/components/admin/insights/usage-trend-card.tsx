@@ -177,7 +177,7 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
           <CardTitle className="text-base font-semibold">Usage Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No activity data yet for this period.</p>
+          <p className="text-sm text-paper-300">No activity data yet for this period.</p>
         </CardContent>
       </Card>
     );
@@ -210,7 +210,7 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
         <CardTitle className="text-base font-semibold">Usage Trend</CardTitle>
         <div className="flex flex-wrap items-center gap-4 mt-1">
           {SERIES.map((s) => (
-            <div key={s.key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div key={s.key} className="flex items-center gap-1.5 text-xs text-paper-300">
               <span
                 className="inline-block h-0.5 w-5 rounded"
                 style={{ backgroundColor: s.color }}

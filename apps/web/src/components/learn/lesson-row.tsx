@@ -21,7 +21,7 @@ const statusConfig = {
   NOT_STARTED: {
     label: 'Not started',
     variant: 'outline' as const,
-    textClass: 'text-muted-foreground',
+    textClass: 'text-paper-300',
   },
   IN_PROGRESS: { label: 'In progress', variant: 'secondary' as const, textClass: 'text-amber-600' },
   COMPLETED: { label: 'Completed', variant: 'default' as const, textClass: 'text-emerald-600' },
@@ -36,7 +36,9 @@ export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProp
     <div
       className={cn(
         'flex items-center gap-4 rounded-lg border p-4 transition-colors',
-        isCurrent ? 'border-primary/40 bg-primary/5' : 'border-border bg-card hover:bg-accent/30',
+        isCurrent
+          ? 'border-signal/40 bg-signal/5'
+          : 'border-ink-600 bg-ink-800 hover:bg-ink-700/30',
       )}
     >
       {/* Order circle */}
@@ -46,8 +48,8 @@ export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProp
           lesson.status === 'COMPLETED'
             ? 'bg-emerald-100 text-emerald-700'
             : isCurrent
-              ? 'bg-primary/15 text-primary'
-              : 'bg-muted text-muted-foreground',
+              ? 'bg-signal/15 text-signal'
+              : 'bg-ink-700 text-paper-300',
         )}
         aria-hidden="true"
       >
@@ -71,12 +73,12 @@ export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProp
         <p
           className={cn(
             'truncate text-sm font-medium',
-            isCurrent ? 'text-primary' : 'text-foreground',
+            isCurrent ? 'text-signal' : 'text-paper-100',
           )}
         >
           {lesson.title}
         </p>
-        <p className="mt-0.5 text-xs text-muted-foreground">~{lesson.estimatedMinutes} min</p>
+        <p className="mt-0.5 text-xs text-paper-300">~{lesson.estimatedMinutes} min</p>
       </div>
 
       {/* Status badge */}

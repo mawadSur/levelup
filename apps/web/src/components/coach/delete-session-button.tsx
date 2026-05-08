@@ -44,7 +44,7 @@ export function DeleteSessionButton({ sessionId }: DeleteSessionButtonProps) {
         variant="outline"
         size="sm"
         onClick={() => setOpen(true)}
-        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+        className="text-danger hover:bg-danger/10 hover:text-danger"
       >
         <Trash2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
         Delete

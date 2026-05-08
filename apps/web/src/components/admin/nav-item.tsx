@@ -33,8 +33,8 @@ export function NavItem({ href, label, icon: Icon, collapsed = false, badge }: N
       className={cn(
         'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
         isActive
-          ? 'bg-primary text-primary-foreground shadow-sm'
-          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+          ? 'bg-signal text-ink-900 shadow-sm'
+          : 'text-paper-300 hover:bg-ink-700 hover:text-paper-100',
         collapsed && 'justify-center px-2',
       )}
       title={collapsed ? label : undefined}
@@ -42,9 +42,7 @@ export function NavItem({ href, label, icon: Icon, collapsed = false, badge }: N
       <Icon
         className={cn(
           'h-4 w-4 shrink-0',
-          isActive
-            ? 'text-primary-foreground'
-            : 'text-muted-foreground group-hover:text-accent-foreground',
+          isActive ? 'text-ink-900' : 'text-paper-300 group-hover:text-paper-100',
         )}
         aria-hidden="true"
       />
@@ -64,7 +62,7 @@ export function NavItem({ href, label, icon: Icon, collapsed = false, badge }: N
         {isActive && (
           <motion.div
             layoutId="active-nav-underline"
-            className="absolute inset-x-3 bottom-0.5 h-[1.5px] rounded-full bg-primary-foreground/60"
+            className="absolute inset-x-3 bottom-0.5 h-[1.5px] rounded-full bg-ink-900/60"
             initial={prefersReduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -15,7 +15,7 @@ interface DeptBarListProps {
 
 export function DeptBarList({ items, className }: DeptBarListProps) {
   if (items.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No data available.</p>;
+    return <p className="py-6 text-center text-sm text-paper-300">No data available.</p>;
   }
 
   return (
@@ -25,12 +25,10 @@ export function DeptBarList({ items, className }: DeptBarListProps) {
         return (
           <li key={item.name} className="group">
             <div className="mb-1 flex items-center justify-between gap-2">
-              <span className="truncate text-sm font-medium text-foreground">{item.name}</span>
+              <span className="truncate text-sm font-medium text-paper-100">{item.name}</span>
               <div className="flex shrink-0 items-center gap-2">
-                {item.sublabel && (
-                  <span className="text-xs text-muted-foreground">{item.sublabel}</span>
-                )}
-                <span className="w-9 text-right text-xs font-semibold tabular-nums text-foreground">
+                {item.sublabel && <span className="text-xs text-paper-300">{item.sublabel}</span>}
+                <span className="w-9 text-right text-xs font-semibold tabular-nums text-paper-100">
                   {pct}%
                 </span>
               </div>

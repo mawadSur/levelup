@@ -119,8 +119,8 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
 
           {/* Text */}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium leading-snug text-foreground">{title}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">
+            <p className="truncate text-sm font-medium leading-snug text-paper-100">{title}</p>
+            <p className="mt-0.5 text-xs text-paper-300">
               {progress > 0 && !claimed
                 ? `${progress} of ${kindLabel(kind, target)}`
                 : claimed
@@ -132,7 +132,7 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
           {/* Right: status */}
           <div className="relative flex shrink-0 items-center gap-2 pl-2">
             {claimed ? (
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1 text-xs text-paper-300">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden="true" />
                 Claimed
               </span>
@@ -152,7 +152,7 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
                   {floatXp && !prefersReduced && (
                     <motion.span
                       key="xp-float"
-                      className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 select-none text-sm font-bold text-primary"
+                      className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 select-none text-sm font-bold text-signal"
                       initial={{ opacity: 1, y: 0 }}
                       animate={{ opacity: 0, y: -28 }}
                       exit={{}}
@@ -172,7 +172,7 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
                   className="h-1.5"
                   aria-label={`${Math.round(progressPct * 100)}% complete`}
                 />
-                <p className="mt-0.5 text-right text-[10px] text-muted-foreground">
+                <p className="mt-0.5 text-right text-[10px] text-paper-300">
                   {progress}/{target}
                 </p>
               </div>

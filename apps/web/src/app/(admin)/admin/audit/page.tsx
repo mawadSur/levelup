@@ -41,7 +41,7 @@ export default async function AdminAuditPage({ searchParams }: PageProps) {
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Audit Log</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-paper-300">
           A record of all mutating actions performed within your organisation. Scoped to your org —
           use the filters to narrow results.
         </p>

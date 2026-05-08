@@ -44,7 +44,7 @@ export function StepCard({ step, total, copy, primaryCta, onAdvance, onDismiss }
 
       {/* Copy — Fraunces for the first line, InterTight body */}
       <p
-        className="mb-3 pr-12 font-display text-sm font-semibold leading-snug text-[#1A1A1A]"
+        className="mb-3 pr-12 font-serif text-sm font-semibold leading-snug text-[#1A1A1A]"
         style={{ fontFamily: 'var(--font-fraunces, serif)' }}
       >
         {copy}
