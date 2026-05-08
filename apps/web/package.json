@@ -17,6 +17,7 @@
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.3",
     "canvas-confetti": "^1.9.3",
+    "geist": "^1.7.0",
     "lucide-react": "^0.454.0",
     "motion": "^11.18.2",
     "next": "^15.0.3",
