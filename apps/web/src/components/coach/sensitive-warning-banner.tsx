@@ -19,7 +19,7 @@ export function SensitiveWarningBanner({ reason }: SensitiveWarningBannerProps) 
       <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
       <div className="space-y-1">
         <MonoLabel tone="signal" className="text-warning">
-          SENSITIVE INPUT DETECTED — REVIEW BEFORE SENDING
+          SENSITIVE DATA DETECTED — REVIEW BEFORE SENDING
         </MonoLabel>
         <p className="text-body-sm text-paper-100">
           {reason ??
