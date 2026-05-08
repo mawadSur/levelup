@@ -1,12 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef } from 'react';
-import type { MouseEvent } from 'react';
-import { Card, CardContent, CardFooter, Badge, Progress, Button } from '@levelup/ui';
+import { Card, CardContent, CardFooter, Badge, Button, MonoLabel } from '@levelup/ui';
 import { cn } from '@levelup/ui';
-import { motion, useMotionValue, useSpring } from 'motion/react';
-import { useReducedMotion } from '@/lib/motion/use-reduced-motion';
+import { Check } from 'lucide-react';
 
 export interface PathCardData {
   id: string;
@@ -28,161 +25,99 @@ interface PathCardProps {
   recommended?: boolean;
 }
 
-/** Gradient cover based on slug determinism so each path has a consistent colour. */
-function getCoverGradient(slug: string): string {
-  const palette = [
-    'from-violet-500 to-indigo-600',
-    'from-sky-500 to-cyan-600',
-    'from-emerald-500 to-teal-600',
-    'from-amber-500 to-orange-600',
-    'from-rose-500 to-pink-600',
-    'from-fuchsia-500 to-purple-600',
-  ];
+/** Deterministic 2-digit path code derived from the slug. */
+function codeForSlug(slug: string): string {
   let hash = 0;
-  for (let i = 0; i < slug.length; i++) {
-    hash = (hash * 31 + slug.charCodeAt(i)) | 0;
-  }
-  return palette[Math.abs(hash) % palette.length] ?? palette[0]!;
+  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  return String(hash % 100).padStart(2, '0');
 }
 
 function levelLabel(level: string): string {
   const map: Record<string, string> = {
-    BEGINNER: 'Beginner',
-    PRACTITIONER: 'Practitioner',
-    POWER_USER: 'Power User',
-    CHAMPION: 'Champion',
+    BEGINNER: 'BEGINNER',
+    PRACTITIONER: 'PRACTITIONER',
+    POWER_USER: 'POWER USER',
+    CHAMPION: 'CHAMPION',
   };
-  return map[level] ?? level;
+  return map[level] ?? level.toUpperCase();
 }
-
-function levelVariant(level: string): 'default' | 'secondary' | 'outline' {
-  if (level === 'BEGINNER') return 'secondary';
-  if (level === 'CHAMPION') return 'default';
-  return 'outline';
-}
-
-const MAX_TILT = 6; // degrees
 
 export function PathCard({ path, recommended = false }: PathCardProps) {
   const completedLessons = path.completedLessons ?? 0;
   const completionRate = path.completionRate ?? 0;
   const hasProgress = completionRate > 0;
   const isComplete = completionRate >= 100;
+  const code = codeForSlug(path.slug);
 
-  const prefersReduced = useReducedMotion();
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Raw motion values for cursor offset
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-
-  // Spring-damped rotation values
-  const rotateX = useSpring(rawX, { stiffness: 200, damping: 20 });
-  const rotateY = useSpring(rawY, { stiffness: 200, damping: 20 });
-
-  function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
-    if (prefersReduced || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const offsetX = (e.clientX - centerX) / (rect.width / 2);
-    const offsetY = (e.clientY - centerY) / (rect.height / 2);
-    // Invert Y so moving up tilts the top toward you
-    rawX.set(-offsetY * MAX_TILT);
-    rawY.set(offsetX * MAX_TILT);
-  }
-
-  function handleMouseLeave() {
-    rawX.set(0);
-    rawY.set(0);
-  }
-
-  const cardJsx = (
-    <Card
-      className={cn(
-        'flex flex-col overflow-hidden transition-shadow hover:shadow-md',
-        recommended && 'border-dashed opacity-90',
-      )}
-    >
-      {/* Cover */}
-      <div
-        className={cn(
-          'h-28 bg-gradient-to-br',
-          getCoverGradient(path.slug),
-          'relative flex items-end p-4',
-        )}
-        aria-hidden="true"
-      >
-        {isComplete && (
-          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-success shadow-sm">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path
-                d="M2.5 7.5l3 3 6-6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        )}
-      </div>
-
-      <CardContent className="flex flex-1 flex-col gap-2 pt-4">
-        {/* Badges */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant={levelVariant(path.targetLevel)} className="text-xs">
-            {levelLabel(path.targetLevel)}
-          </Badge>
-          {path.targetRole && (
-            <Badge variant="outline" className="text-xs">
-              {path.targetRole}
-            </Badge>
+  return (
+    <Card className={cn('flex flex-col', recommended && 'border-dashed')}>
+      {/* Mono header strip */}
+      <div className="flex items-center justify-between border-b border-ink-600 px-5 py-2.5">
+        <MonoLabel>PATH-{code}</MonoLabel>
+        <div className="flex items-center gap-2">
+          <MonoLabel className="text-paper-300">{levelLabel(path.targetLevel)}</MonoLabel>
+          {isComplete && (
+            <span
+              aria-label="Path complete"
+              className="flex h-5 w-5 items-center justify-center rounded-data bg-success/20"
+            >
+              <Check className="h-3 w-3 text-success" aria-hidden="true" />
+            </span>
           )}
         </div>
+      </div>
 
-        {/* Title */}
-        <h3 className="text-base font-semibold leading-snug text-paper-100">{path.title}</h3>
-
-        {/* Description */}
-        {path.description && (
-          <p className="line-clamp-2 text-xs text-paper-300">{path.description}</p>
+      <CardContent className="flex flex-1 flex-col gap-3 p-5">
+        {path.targetRole && (
+          <div>
+            <Badge variant="default">{path.targetRole}</Badge>
+          </div>
         )}
 
-        {/* Progress */}
+        <h3 className="font-serif text-h2 italic leading-tight text-paper-100">{path.title}</h3>
+
+        {path.description && (
+          <p className="line-clamp-2 text-body-sm text-paper-300">{path.description}</p>
+        )}
+
         {!recommended && (
-          <div className="mt-auto pt-3">
-            <div className="mb-1 flex items-center justify-between text-xs text-paper-300">
+          <div className="mt-auto space-y-1.5 pt-3">
+            <div className="flex items-center justify-between font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
               <span>
-                {completedLessons} / {path.lessonCount} lessons
+                {completedLessons} / {path.lessonCount} LESSONS
               </span>
-              <span>{Math.round(completionRate)}%</span>
+              <span className="text-paper-100">{Math.round(completionRate)}%</span>
             </div>
-            <Progress value={completionRate} className="h-1.5" />
+            <div className="h-1 overflow-hidden rounded-data bg-ink-700">
+              <div
+                className="h-full bg-signal transition-[width] duration-500 ease-mission"
+                style={{ width: `${Math.max(completionRate, 2)}%` }}
+              />
+            </div>
           </div>
         )}
 
         {recommended && (
-          <p className="mt-auto pt-3 text-xs text-paper-300">
-            {path.lessonCount} lessons &middot; ~{path.estimatedMinutes} min
+          <p className="mt-auto pt-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            {path.lessonCount} LESSONS · ~{path.estimatedMinutes} MIN
           </p>
         )}
       </CardContent>
 
-      <CardFooter className="pt-0 pb-4">
+      <CardFooter className="pb-5 pt-0">
         {recommended ? (
           <Link
             href={`/learn/${path.slug}`}
-            className="text-sm font-medium text-signal hover:underline"
+            className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
           >
-            Get assigned &rarr;
+            REQUEST ASSIGNMENT →
           </Link>
         ) : (
           <Button
             asChild
             size="sm"
             className="w-full"
-            variant={hasProgress ? 'default' : 'outline'}
+            variant={hasProgress ? 'primary' : 'secondary'}
           >
             <Link href={`/learn/${path.slug}`}>
               {isComplete ? 'Review' : hasProgress ? 'Continue' : 'Start'}
@@ -191,28 +126,5 @@ export function PathCard({ path, recommended = false }: PathCardProps) {
         )}
       </CardFooter>
     </Card>
-  );
-
-  if (prefersReduced) {
-    return cardJsx;
-  }
-
-  return (
-    <div
-      ref={cardRef}
-      style={{ perspective: '1200px' }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <motion.div
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: 'preserve-3d',
-        }}
-      >
-        {cardJsx}
-      </motion.div>
-    </div>
   );
 }
