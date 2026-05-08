@@ -5,7 +5,7 @@ services:
     rootDir: .
     plan: standard
     region: oregon
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/api...
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/api...
     startCommand: pnpm --filter @levelup/api start
     healthCheckPath: /api/health
     envVars:
@@ -78,7 +78,7 @@ services:
     rootDir: .
     plan: starter
     region: oregon
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/worker...
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/worker...
     startCommand: pnpm --filter @levelup/worker start
     envVars:
       - key: NODE_ENV
