@@ -26,3 +26,6 @@ playwright-report/
 
 # Claude Code scheduled task runtime
 .claude/scheduled_tasks.lock
+
+# Stripe products setup script sidecar (contains real product/price IDs)
+.stripe-products.json

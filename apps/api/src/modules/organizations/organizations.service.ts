@@ -1,10 +1,20 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import type { PrismaService } from '../prisma';
-import { planSeatsFor } from '@levelup/billing';
+import { getPlanLimit, getPlanConfig } from '@levelup/billing';
+import { Plan } from '@levelup/db';
 import { enqueueEmail } from '@levelup/queue';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { UpdateOrgDto } from './dto/update-org.dto';
 import type { CreateOrganizationInput } from '@levelup/types';
+
+// Trial duration drawn from PLAN_CONFIG so the billing package stays the
+// single source of truth.
+function trialDurationDays(): number {
+  const cfg = getPlanConfig(Plan.TRIAL);
+  return !cfg.perSeat && cfg.days ? cfg.days : 14;
+}
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 // ---------------------------------------------------------------------------
 // Simple in-memory rate limiter: 5 org creates per IP per hour.
@@ -41,7 +51,7 @@ export class OrganizationsService {
       where: { organizationId: user.organizationId },
     });
 
-    const seatsLimit = org.planSeats > 0 ? org.planSeats : planSeatsFor(org.plan);
+    const seatsLimit = org.planSeats > 0 ? org.planSeats : getPlanLimit(org.plan);
 
     return {
       id: org.id,
@@ -100,10 +110,18 @@ export class OrganizationsService {
       );
     }
 
+    // New orgs land in TRIAL with 10 seats and a 14-day trialEndsAt.
+    // Stripe is not involved at this stage — the trial-expiry worker job
+    // will archive trials at day 21 if no upgrade happens.
+    const trialEndsAt = new Date(Date.now() + trialDurationDays() * MS_PER_DAY);
+    const trialSeats = getPlanLimit(Plan.TRIAL);
+
     const org = await this.prisma.organization.create({
       data: {
         name: dto.name,
-        plan: 'STARTER',
+        plan: Plan.TRIAL,
+        planSeats: trialSeats,
+        trialEndsAt,
         ...(dto.industry !== undefined && { industry: dto.industry }),
         ...(dto.companySize !== undefined && { companySize: dto.companySize }),
       },
@@ -116,7 +134,8 @@ export class OrganizationsService {
       data: { orgName: org.name, adminName: dto.adminName },
     });
 
-    // Audit log
+    // Audit log — emit both signup and trial-started so analytics can
+    // distinguish between the two events.
     await this.prisma.auditLog.create({
       data: {
         organizationId: org.id,
@@ -128,6 +147,21 @@ export class OrganizationsService {
           industry: dto.industry ?? null,
           companySize: dto.companySize ?? null,
           adminEmail: dto.adminEmail,
+        },
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        organizationId: org.id,
+        actorId: org.id,
+        action: 'org.trial_started',
+        targetType: 'Organization',
+        targetId: org.id,
+        metadata: {
+          trialEndsAt: trialEndsAt.toISOString(),
+          trialSeats,
+          durationDays: trialDurationDays(),
         },
       },
     });
