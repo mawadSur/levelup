@@ -83,3 +83,18 @@ export {
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './components/tooltip';
 
 export { Alert, AlertTitle, AlertDescription } from './components/alert';
+
+export { NumberedSection } from './components/numbered-section';
+export type { NumberedSectionProps } from './components/numbered-section';
+
+export { MonoLabel } from './components/mono-label';
+export type { MonoLabelProps } from './components/mono-label';
+
+export { GridLines } from './components/grid-lines';
+export type { GridLinesProps } from './components/grid-lines';
+
+export { MissionNumber } from './components/mission-number';
+export type { MissionNumberProps } from './components/mission-number';
+
+export { MissionLoadingBar } from './components/mission-loading-bar';
+export type { MissionLoadingBarProps } from './components/mission-loading-bar';
