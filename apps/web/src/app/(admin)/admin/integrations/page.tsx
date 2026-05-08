@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Alert, AlertDescription } from '@levelup/ui';
+import { Alert, AlertDescription, MonoLabel } from '@levelup/ui';
 import { integrations as integrationsApi } from '@/lib/api';
 import { InstallCard } from '@/components/admin/integrations/install-card';
 import type { IntegrationSummary } from '@levelup/types';
@@ -25,18 +25,14 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
   const slackIntegration = integrationList.find((i) => i.provider === 'SLACK') ?? null;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      <div>
-        <h1
-          className="text-[36px] font-bold leading-tight tracking-tight text-paper-100"
-          style={{ fontFamily: 'Fraunces, serif' }}
-        >
-          Integrations
-        </h1>
-        <p className="mt-2 text-sm text-paper-300">
+    <div className="mx-auto max-w-content space-y-8 px-6 py-10">
+      <header className="space-y-2">
+        <MonoLabel>OPS / INTEGRATIONS</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Integrations</h1>
+        <p className="max-w-reading text-body text-paper-300">
           Connect LevelUp to where your team already works.
         </p>
-      </div>
+      </header>
 
       {error && (
         <Alert variant="destructive">

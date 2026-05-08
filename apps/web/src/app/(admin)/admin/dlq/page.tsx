@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Skeleton } from '@levelup/ui';
+import { MonoLabel, Skeleton } from '@levelup/ui';
 import { Suspense } from 'react';
 import { adminOps } from '@/lib/api';
 import { DlqTable } from '@/components/admin/dlq/dlq-table';
@@ -12,20 +12,21 @@ export default async function AdminDlqPage() {
   const rows = await adminOps.listDlq().catch(() => []);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Dead-Letter Queue</h1>
-        <p className="text-sm text-paper-300">
+    <div className="mx-auto max-w-content space-y-8 px-6 py-10">
+      <header className="space-y-2">
+        <MonoLabel>OPS / DLQ</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Dead-letter queue</h1>
+        <p className="max-w-reading text-body text-paper-300">
           Failed BullMQ jobs that exhausted all retry attempts. Use the actions menu to inspect the
           payload, re-enqueue, or permanently remove a row.
         </p>
-      </div>
+      </header>
 
       <Suspense
         fallback={
           <div className="space-y-2">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full rounded-md" />
+              <Skeleton key={i} className="h-10 w-full rounded-sm" />
             ))}
           </div>
         }

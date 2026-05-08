@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Skeleton } from '@levelup/ui';
+import { MonoLabel, Skeleton } from '@levelup/ui';
 import { adminOps } from '@/lib/api';
 import { AuditFilters } from '@/components/admin/audit/audit-filters';
 import { AuditTable } from '@/components/admin/audit/audit-table';
@@ -38,14 +38,15 @@ export default async function AdminAuditPage({ searchParams }: PageProps) {
   }));
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Audit Log</h1>
-        <p className="text-sm text-paper-300">
+    <div className="mx-auto max-w-content space-y-6 px-6 py-10">
+      <header className="space-y-2">
+        <MonoLabel>GOVERNANCE / AUDIT</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Audit log</h1>
+        <p className="max-w-reading text-body text-paper-300">
           A record of all mutating actions performed within your organisation. Scoped to your org —
           use the filters to narrow results.
         </p>
-      </div>
+      </header>
 
       <Suspense
         fallback={

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { anomaly } from '@/lib/api';
 import type { AnomalyAlertDto } from '@/lib/api/anomaly';
+import { MonoLabel } from '@levelup/ui';
 import { AnomalyList } from '@/components/admin/anomalies/anomaly-list';
 
 export const metadata: Metadata = {
@@ -17,14 +18,15 @@ export default async function AnomaliesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-6 space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight text-paper-100">Anomaly alerts</h1>
-        <p className="text-sm text-paper-300">
-          Proactively surfaced risk signals. Hourly scanner detects usage spikes, sensitive-data
+    <div className="mx-auto max-w-content px-6 py-10">
+      <header className="mb-8 space-y-2">
+        <MonoLabel>GOVERNANCE / ANOMALIES</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Anomaly alerts</h1>
+        <p className="max-w-reading text-body text-paper-300">
+          Proactively surfaced risk signals. The hourly scanner detects usage spikes, sensitive-data
           bursts, streak risks, path-builder abuse, and prompt-cloning. Acknowledge to dismiss.
         </p>
-      </div>
+      </header>
       <AnomalyList initialItems={initialItems} />
     </div>
   );
