@@ -34,3 +34,4 @@ export * as demo from './demo';
 export * as insights from './insights';
 export * as anomaly from './anomaly';
 export * as integrations from './integrations';
+export * as governance from './governance';
