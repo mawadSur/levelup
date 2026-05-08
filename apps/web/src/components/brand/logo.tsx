@@ -7,10 +7,10 @@ interface LogoProps {
 
 export function Logo({ size = 'md', className }: LogoProps) {
   const monogramSize = size === 'sm' ? 28 : 36;
-  const wordmarkClass = size === 'sm' ? 'text-base' : 'text-xl';
+  const wordmarkClass = size === 'sm' ? 'text-lg' : 'text-2xl';
 
   return (
-    <span className={cn('inline-flex items-center gap-2', className)}>
+    <span className={cn('inline-flex items-baseline gap-2.5', className)}>
       <svg
         width={monogramSize}
         height={monogramSize}
@@ -18,25 +18,25 @@ export function Logo({ size = 'md', className }: LogoProps) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        className="self-center"
       >
-        <rect width="36" height="36" rx="9" fill="hsl(347 60% 27%)" />
+        <rect width="36" height="36" rx="4" className="fill-signal" />
         <text
-          x="5"
-          y="26"
-          fontFamily="var(--font-display), ui-serif, Georgia, serif"
-          fontSize="17"
-          fontWeight="600"
-          fill="hsl(36 33% 96%)"
-          letterSpacing="-0.5"
+          x="50%"
+          y="56%"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontFamily="var(--font-geist-mono), ui-monospace, monospace"
+          fontSize="14"
+          fontWeight="500"
+          letterSpacing="0.5"
+          className="fill-ink-900"
         >
           LU
         </text>
       </svg>
-      <span
-        className={cn('font-display font-semibold tracking-tight text-foreground', wordmarkClass)}
-        style={{ letterSpacing: '-0.02em' }}
-      >
-        LevelUp
+      <span className={cn('font-serif italic leading-none text-paper-100', wordmarkClass)}>
+        ailevel
       </span>
     </span>
   );

@@ -9,7 +9,7 @@ export default function RootLoading() {
     <div className="flex min-h-screen flex-col">
       {/* Simulated nav bar */}
       <div
-        className="sticky top-0 z-50 h-16 border-b border-border/40 bg-background/95"
+        className="sticky top-0 z-50 h-16 border-b border-ink-500/40 bg-ink-900/95"
         aria-hidden="true"
       >
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -43,7 +43,7 @@ export default function RootLoading() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5"
+              className="flex flex-col gap-3 rounded-md border border-ink-600 bg-ink-800 p-5"
               aria-hidden="true"
             >
               <Skeleton className="h-24 w-full rounded-lg" />
