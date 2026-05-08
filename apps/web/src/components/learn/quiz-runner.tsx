@@ -205,7 +205,7 @@ export function QuizRunner({
       <Card id="quiz" className="mt-12">
         <CardHeader>
           <MonoLabel>QUICK CHECK</MonoLabel>
-          <CardTitle className="font-serif text-h1 italic">Test your understanding.</CardTitle>
+          <CardTitle className="font-serif text-h1 italic">Quick check</CardTitle>
           <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
             {quiz.questions.length} QUESTION{quiz.questions.length !== 1 ? 'S' : ''} · PASS @{' '}
             {quiz.passingScore}%
@@ -213,7 +213,7 @@ export function QuizRunner({
         </CardHeader>
         <CardContent>
           <Button variant="primary" onClick={handleStart}>
-            Begin quick check →
+            Take the quick check
           </Button>
         </CardContent>
       </Card>
@@ -263,7 +263,7 @@ export function QuizRunner({
         <Card id="quiz" className="mt-12">
           <CardHeader>
             <MonoLabel>QUICK CHECK</MonoLabel>
-            <CardTitle className="font-serif text-h1 italic">Test your understanding.</CardTitle>
+            <CardTitle className="font-serif text-h1 italic">Quick check</CardTitle>
             <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
               {quiz.questions.length} QUESTION{quiz.questions.length !== 1 ? 'S' : ''} · PASS @{' '}
               {quiz.passingScore}%
@@ -365,7 +365,7 @@ export function QuizRunner({
                 disabled={!allAnswered || submitting}
                 className="w-full sm:w-auto"
               >
-                {submitting ? 'Submitting…' : 'Submit answers →'}
+                {submitting ? 'Submitting…' : 'Submit answers'}
               </Button>
               {!allAnswered && (
                 <p className="mt-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
@@ -418,7 +418,7 @@ export function QuizRunner({
                 {passed ? 'PASSED' : 'NOT YET'}
               </MonoLabel>
               <CardTitle className="font-serif text-h1 italic">
-                {passed ? 'Lesson complete.' : 'Review and try again.'}
+                {passed ? 'Lesson complete!' : 'Not quite — review and try again'}
               </CardTitle>
               <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                 SCORE {result.score}% · PASS @ {quiz.passingScore}%

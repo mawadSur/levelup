@@ -23,3 +23,6 @@ playwright-report/
 .claude/projects/
 .claude/__claude__/
 .claude/.cache/
+
+# Claude Code scheduled task runtime
+.claude/scheduled_tasks.lock

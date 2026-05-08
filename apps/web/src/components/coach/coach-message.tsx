@@ -1,16 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import {
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  Lightbulb,
-  RotateCw,
-  Save,
-  Sparkles,
-  User,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight, Copy, Lightbulb, RotateCw, Save, Sparkles } from 'lucide-react';
 import { Button, cn, toast } from '@levelup/ui';
 import { SensitiveWarningBanner } from './sensitive-warning-banner';
 
@@ -248,7 +239,7 @@ interface CoachMessageProps {
 export function CoachMessage({ message, canShare, onSavePrompt, onRetry }: CoachMessageProps) {
   if (message.role === 'user') {
     return (
-      <div className="flex flex-col items-end gap-1">
+      <div className="flex flex-col items-end justify-end gap-1">
         <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
           YOU
         </span>
@@ -350,7 +341,7 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
               <div className="flex items-center justify-between border-b border-ink-600 bg-ink-700 px-4 py-2">
                 <span className="inline-flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
                   <Sparkles size={12} aria-hidden="true" />
-                  IMPROVED PROMPT
+                  TRY THIS PROMPT INSTEAD
                 </span>
                 {message.streamingField === 'improvedPrompt' && <TypingDots />}
               </div>
