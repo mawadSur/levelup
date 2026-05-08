@@ -8,6 +8,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { privacy } from '@/lib/api';
+import { MonoLabel, NumberedSection } from '@levelup/ui';
 import { DataExportRequest } from '@/components/learn/privacy/data-export-request';
 import { DeletionRequest } from '@/components/learn/privacy/deletion-request';
 
@@ -45,23 +46,23 @@ export default async function PrivacyPage({ searchParams }: PrivacyPageProps) {
   const deletions = deletionsResult.status === 'fulfilled' ? deletionsResult.value : [];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div>
-        <h1
-          className="text-4xl font-bold tracking-tight text-paper-100"
-          style={{ fontFamily: 'Fraunces, serif', fontSize: '36px' }}
-        >
-          Your data
-        </h1>
-        <p className="mt-2 text-paper-300">Export everything we have. Or close your account.</p>
-      </div>
+    <div className="mx-auto max-w-reading space-y-12 px-6 py-12">
+      <header className="space-y-3">
+        <MonoLabel>OPERATOR DATA · GDPR / CCPA</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Your data.</h1>
+        <p className="text-body-lg text-paper-300">
+          Export everything we have on you, or close your account. Both requests are audited and
+          honoured within 30 days.
+        </p>
+      </header>
 
-      {/* Data Export card */}
-      <DataExportRequest initialRequests={exports} />
+      <NumberedSection numeral="01" eyebrow="DATA EXPORT" className="space-y-4">
+        <DataExportRequest initialRequests={exports} />
+      </NumberedSection>
 
-      {/* Account Deletion card */}
-      <DeletionRequest initialRequests={deletions} showConfirmedToast={confirmed} />
+      <NumberedSection numeral="02" eyebrow="ACCOUNT DELETION" className="space-y-4">
+        <DeletionRequest initialRequests={deletions} showConfirmedToast={confirmed} />
+      </NumberedSection>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { getSessionUser } from '@/lib/auth-client';
 import { PromptFilters } from '@/components/learn/prompts/prompt-filters';
 import { PromptCard } from '@/components/learn/prompts/prompt-card';
 import { NewPromptDialog } from '@/components/learn/prompts/new-prompt-dialog';
-import { Skeleton } from '@levelup/ui';
+import { MonoLabel, Skeleton } from '@levelup/ui';
 import type { Prompt } from '@/lib/api/prompts';
 
 export const metadata: Metadata = {
@@ -88,23 +88,9 @@ async function PromptGrid({
 
   if (filtered.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-ink-600 py-16 text-center">
-        <svg
-          className="mb-4 h-10 w-10 text-paper-300/50"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12h6m-3-3v6M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <p className="text-sm font-medium text-paper-100">No prompts found</p>
-        <p className="mt-1 text-sm text-paper-300">
+      <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-ink-600 py-16 text-center">
+        <MonoLabel className="mb-2 block">NO PROMPTS FOUND</MonoLabel>
+        <p className="max-w-md text-body-sm text-paper-300">
           {scope === 'mine'
             ? 'You have no prompts yet. Create one to get started.'
             : scope === 'org'
@@ -159,13 +145,13 @@ export default async function PromptsPage({ searchParams }: PageProps) {
   const hasDepartment = userDepartmentId !== null;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-paper-100">Prompts</h1>
-          <p className="mt-1 text-paper-300">
-            Reusable prompts that work — yours, your team&apos;s, and our library.
+    <div className="mx-auto max-w-content space-y-10 px-6 py-10">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <MonoLabel>PROMPT LIBRARY</MonoLabel>
+          <h1 className="font-serif text-display-md italic text-paper-100">Prompts</h1>
+          <p className="max-w-reading text-body text-paper-300">
+            Reusable prompts that work — yours, your team&apos;s, and the LevelUp library.
           </p>
         </div>
         <div className="shrink-0">
@@ -175,7 +161,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
             departmentName={departmentName}
           />
         </div>
-      </div>
+      </header>
 
       {/* Filters */}
       <PromptFilters q={q} category={category} scope={scope} hasDepartment={hasDepartment} />

@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  MonoLabel,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -85,8 +86,12 @@ export default async function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header card */}
+    <div className="mx-auto max-w-content space-y-8 px-6 py-10">
+      <header className="space-y-2">
+        <MonoLabel>OPERATOR FILE</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Profile</h1>
+      </header>
+
       <ProfileHeader user={profileUser} aiLevel={meExt?.aiLevel} department={null} />
 
       {/* Tabbed sections */}

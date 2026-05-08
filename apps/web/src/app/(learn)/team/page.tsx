@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { MonoLabel } from '@levelup/ui';
 import { getSessionUser } from '@/lib/auth-client';
 import { users, paths as pathsApi, progress } from '@/lib/api';
 import { TeamTable } from '@/components/learn/team/team-table';
@@ -56,16 +57,16 @@ export default async function TeamPage({ searchParams }: PageProps) {
   const totalCount = teamUsers.length;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-paper-100">Your team</h1>
-          <p className="mt-1 text-paper-300">
-            {totalCount} direct report{totalCount !== 1 ? 's' : ''}
+    <div className="mx-auto max-w-content space-y-8 px-6 py-10">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <MonoLabel>MANAGER VIEW</MonoLabel>
+          <h1 className="font-serif text-display-md italic text-paper-100">Your team</h1>
+          <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            {totalCount} DIRECT REPORT{totalCount !== 1 ? 'S' : ''}
           </p>
         </div>
-      </div>
+      </header>
 
       {/* Filter pills (client) */}
       <TeamFilterPills activeFilter={activeFilter} />

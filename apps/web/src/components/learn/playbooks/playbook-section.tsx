@@ -1,70 +1,52 @@
 import Link from 'next/link';
-import { Card, CardContent, CardFooter, Badge, Button } from '@levelup/ui';
+import { Card, CardContent, CardFooter, Badge, Button, MonoLabel } from '@levelup/ui';
 import type { LearningPath } from '@/lib/api/paths';
 
 interface PlaybookSectionProps {
+  /** Optional — when omitted, the parent NumberedSection provides the heading. */
   title: string;
   description?: string;
   paths: LearningPath[];
 }
 
-/** Deterministic gradient based on path slug. */
-function getCoverGradient(slug: string): string {
-  const palette = [
-    'from-violet-500 to-indigo-600',
-    'from-sky-500 to-cyan-600',
-    'from-emerald-500 to-teal-600',
-    'from-amber-500 to-orange-600',
-    'from-rose-500 to-pink-600',
-    'from-fuchsia-500 to-purple-600',
-  ];
-  let hash = 0;
-  for (let i = 0; i < slug.length; i++) {
-    hash = (hash * 31 + slug.charCodeAt(i)) | 0;
-  }
-  return palette[Math.abs(hash) % palette.length] ?? palette[0]!;
-}
-
-function levelVariant(level: string): 'default' | 'secondary' | 'outline' {
-  if (level === 'BEGINNER') return 'secondary';
-  if (level === 'ADVANCED') return 'default';
-  return 'outline';
-}
-
 function levelLabel(level: string): string {
   const map: Record<string, string> = {
-    BEGINNER: 'Beginner',
-    INTERMEDIATE: 'Intermediate',
-    ADVANCED: 'Advanced',
+    BEGINNER: 'BEGINNER',
+    INTERMEDIATE: 'INTERMEDIATE',
+    ADVANCED: 'ADVANCED',
   };
-  return map[level] ?? level;
+  return map[level] ?? level.toUpperCase();
+}
+
+function codeForSlug(slug: string): string {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  return String(hash % 100).padStart(2, '0');
 }
 
 function PlaybookCard({ path }: { path: LearningPath }) {
   return (
-    <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-md">
-      <div className={`h-24 bg-gradient-to-br ${getCoverGradient(path.slug)}`} aria-hidden="true" />
-      <CardContent className="flex flex-1 flex-col gap-2 pt-4">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant={levelVariant(path.targetLevel)} className="text-xs">
-            {levelLabel(path.targetLevel)}
-          </Badge>
-          {path.targetRole && (
-            <Badge variant="outline" className="text-xs">
-              {path.targetRole}
-            </Badge>
-          )}
-        </div>
-        <h3 className="text-sm font-semibold leading-snug text-paper-100">{path.title}</h3>
-        {path.description && (
-          <p className="line-clamp-2 text-xs text-paper-300">{path.description}</p>
+    <Card className="flex flex-col">
+      <div className="flex items-center justify-between border-b border-ink-600 px-4 py-2">
+        <MonoLabel>PATH-{codeForSlug(path.slug)}</MonoLabel>
+        <MonoLabel className="text-paper-300">{levelLabel(path.targetLevel)}</MonoLabel>
+      </div>
+      <CardContent className="flex flex-1 flex-col gap-2 p-4">
+        {path.targetRole && (
+          <div>
+            <Badge variant="default">{path.targetRole}</Badge>
+          </div>
         )}
-        <p className="mt-auto pt-2 text-xs text-paper-300">
-          {path.lessonCount} lessons &middot; ~{path.estimatedMinutes} min
+        <h3 className="font-serif text-h2 italic leading-snug text-paper-100">{path.title}</h3>
+        {path.description && (
+          <p className="line-clamp-2 text-body-sm text-paper-300">{path.description}</p>
+        )}
+        <p className="mt-auto pt-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          {path.lessonCount} LESSONS · ~{path.estimatedMinutes} MIN
         </p>
       </CardContent>
       <CardFooter className="pb-4 pt-0">
-        <Button asChild size="sm" variant="outline" className="w-full">
+        <Button asChild size="sm" variant="secondary" className="w-full">
           <Link href={`/learn/${path.slug}`}>Read intro</Link>
         </Button>
       </CardFooter>
@@ -75,17 +57,23 @@ function PlaybookCard({ path }: { path: LearningPath }) {
 export function PlaybookSection({ title, description, paths }: PlaybookSectionProps) {
   if (paths.length === 0) return null;
 
+  const heading = title.trim().length > 0;
+
   return (
-    <section aria-labelledby={`section-${title.replace(/\s+/g, '-').toLowerCase()}`}>
-      <div className="mb-4">
-        <h2
-          id={`section-${title.replace(/\s+/g, '-').toLowerCase()}`}
-          className="text-lg font-semibold text-paper-100"
-        >
-          {title}
-        </h2>
-        {description && <p className="mt-0.5 text-sm text-paper-300">{description}</p>}
-      </div>
+    <section
+      aria-labelledby={heading ? `section-${title.replace(/\s+/g, '-').toLowerCase()}` : undefined}
+    >
+      {heading && (
+        <div className="mb-4">
+          <h2
+            id={`section-${title.replace(/\s+/g, '-').toLowerCase()}`}
+            className="font-serif text-h1 italic text-paper-100"
+          >
+            {title}
+          </h2>
+          {description && <p className="mt-1 text-body text-paper-300">{description}</p>}
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {paths.map((path) => (
           <PlaybookCard key={path.id} path={path} />

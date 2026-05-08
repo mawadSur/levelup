@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { MonoLabel, NumberedSection } from '@levelup/ui';
 import { paths as pathsApi } from '@/lib/api';
 import { PlaybookSection } from '@/components/learn/playbooks/playbook-section';
 import type { LearningPath } from '@/lib/api/paths';
@@ -104,57 +105,50 @@ export default async function PlaybooksPage() {
 
   const hasContent = allPaths.length > 0;
 
+  // Show only sections that have at least one path
+  const populatedSections = sections.filter((s) => s.paths.length > 0);
+
   return (
-    <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-paper-100">Playbooks</h1>
-        <p className="mt-1 text-paper-300">
+    <div className="mx-auto max-w-content space-y-12 px-6 py-10">
+      <header className="space-y-2">
+        <MonoLabel>DIRECTORY</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Playbooks</h1>
+        <p className="max-w-reading text-body text-paper-300">
           AI workflows organised by role. Browse, then assign yourself or ask your manager to
           assign.
         </p>
-      </div>
+      </header>
 
       {!hasContent && (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-ink-600 py-20 text-center">
-          <svg
-            className="mb-4 h-12 w-12 text-paper-300/40"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-            />
-          </svg>
-          <p className="text-sm font-medium text-paper-100">No playbooks published yet</p>
-          <p className="mt-1 text-sm text-paper-300">
+        <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-ink-600 py-20 text-center">
+          <MonoLabel className="mb-2 block">NO PLAYBOOKS PUBLISHED YET</MonoLabel>
+          <p className="text-body-sm text-paper-300">
             Your admin is still setting things up. Check back soon.
           </p>
         </div>
       )}
 
-      {/* Role sections */}
-      {sections.map((section) => (
-        <PlaybookSection
+      {populatedSections.map((section, idx) => (
+        <NumberedSection
           key={section.key}
-          title={section.label}
-          description={section.description}
-          paths={section.paths}
-        />
+          numeral={String(idx + 1).padStart(2, '0')}
+          eyebrow={section.label.replace(/^For\s+/, '').toUpperCase()}
+        >
+          <p className="mb-6 max-w-reading text-body text-paper-300">{section.description}</p>
+          <PlaybookSection title="" description="" paths={section.paths} />
+        </NumberedSection>
       ))}
 
-      {/* Foundational (catch-all) */}
       {foundational.length > 0 && (
-        <PlaybookSection
-          title="Foundational"
-          description="Core AI skills every team member benefits from, regardless of role."
-          paths={foundational}
-        />
+        <NumberedSection
+          numeral={String(populatedSections.length + 1).padStart(2, '0')}
+          eyebrow="FOUNDATIONAL"
+        >
+          <p className="mb-6 max-w-reading text-body text-paper-300">
+            Core AI skills every team member benefits from, regardless of role.
+          </p>
+          <PlaybookSection title="" description="" paths={foundational} />
+        </NumberedSection>
       )}
     </div>
   );
