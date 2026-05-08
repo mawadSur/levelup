@@ -15,16 +15,16 @@ export function Toaster(props: ToasterProps) {
       toastOptions={{
         classNames: {
           toast:
-            'group bg-card border border-border/60 text-foreground shadow-lg rounded-lg p-4 font-sans',
-          title: 'font-display text-base tracking-[-0.01em]',
-          description: 'text-sm text-muted-foreground mt-0.5',
-          actionButton:
-            'bg-primary text-primary-foreground rounded-md px-3 py-1.5 text-sm font-medium',
-          cancelButton: 'bg-secondary text-secondary-foreground rounded-md px-3 py-1.5 text-sm',
-          success: 'border-l-4 border-l-primary',
-          error: 'border-l-4 border-l-destructive',
-          warning: 'border-l-4 border-l-[hsl(var(--accent-warm))]',
-          info: 'border-l-4 border-l-muted-foreground',
+            'group bg-ink-800 border border-ink-500 text-paper-100 rounded-md p-4 font-sans shadow-none',
+          title: 'font-sans text-body font-medium text-paper-100',
+          description: 'text-body-sm text-paper-300 mt-0.5',
+          actionButton: 'bg-signal text-ink-900 rounded-sm px-3 py-1.5 text-body-sm font-medium',
+          cancelButton:
+            'bg-transparent border border-ink-500 text-paper-100 rounded-sm px-3 py-1.5 text-body-sm',
+          success: 'border-l-2 border-l-success',
+          error: 'border-l-2 border-l-danger',
+          warning: 'border-l-2 border-l-warning',
+          info: 'border-l-2 border-l-signal',
         },
         ...(props.toastOptions ?? {}),
       }}
