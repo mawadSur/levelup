@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Users, TrendingUp, Mail, AlertTriangle, FlaskConical } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@levelup/ui';
+import { Card, CardContent, MonoLabel, NumberedSection } from '@levelup/ui';
 import { getSessionUser, isDemoOrg } from '@/lib/auth-client';
 import { organizations, reports, invitations } from '@/lib/api';
 import { StatCard } from '@/components/admin/stat-card';
@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 export default async function AdminDashboardPage() {
   const user = await getSessionUser();
 
-  // Fetch all data in parallel — each call fails gracefully
   const [statsResult, reportResult, invitesResult, orgResult] = await Promise.allSettled([
     organizations.getStats(),
     reports.getCompletionReport(),
@@ -31,16 +30,17 @@ export default async function AdminDashboardPage() {
 
   const pendingInvites = inviteList.filter((i) => i.status === 'PENDING');
 
-  const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const today = new Date()
+    .toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+    .toUpperCase();
 
-  const firstName = user?.name?.split(' ').at(0) ?? 'there';
+  const firstName = user?.name?.split(' ').at(0) ?? 'operator';
 
-  // Build department bar items from report
   const deptItems = (report?.byDepartment ?? []).map((d) => ({
     name: d.name,
     value: Math.round(d.completionRate * 100),
@@ -48,13 +48,11 @@ export default async function AdminDashboardPage() {
     sublabel: `${d.memberCount} members`,
   }));
 
-  // OrgStats doesn't expose a byRole breakdown — we show activity stats instead.
-  // A real byRole feed would require a separate endpoint.
   const activityItems =
     stats && stats.totalUsers > 0
       ? [
           {
-            name: 'Active members (last 30 d)',
+            name: 'Active members (30 d)',
             value: stats.activeUsers,
             max: stats.totalUsers,
             sublabel: `${stats.activeUsers} / ${stats.totalUsers}`,
@@ -67,149 +65,176 @@ export default async function AdminDashboardPage() {
         ]
       : [];
 
-  // Demo controls: shown only when NEXT_PUBLIC_DEMO_CONTROLS=on AND the org is
-  // a demo org (name contains "[Demo]"/"Demo" or org ID is in DEMO_ORG_ALLOWLIST).
   const demoControlsEnabled = process.env.NEXT_PUBLIC_DEMO_CONTROLS === 'on';
   const showDemoControls = demoControlsEnabled && org !== null && isDemoOrg(org.name, org.id);
 
+  const totalUsers = stats?.totalUsers ?? 0;
+  const noTeam = stats !== null && totalUsers === 0;
+
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      {/* 1. Header row */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-paper-100">
-          Welcome back, {firstName}
+    <div className="mx-auto max-w-content space-y-12 px-6 py-10">
+      <header className="animate-mission-in space-y-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <MonoLabel>BRIEFING</MonoLabel>
+          <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            {today}
+          </span>
+        </div>
+        <h1 className="font-serif text-display-md italic text-paper-100">
+          Welcome back, {firstName}.
         </h1>
-        <p className="mt-1 text-base text-paper-300">Here&apos;s how your team&apos;s doing.</p>
-        <p className="mt-0.5 text-sm text-paper-300/70">{today}</p>
-      </div>
+        <p className="max-w-reading text-body-lg text-paper-300">
+          A snapshot of your team&apos;s training posture. Tap into any tile for the underlying
+          report.
+        </p>
+      </header>
 
-      {/* 2. Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total team"
-          value={stats?.totalUsers ?? '—'}
-          sublabel={stats ? `${stats.activeUsers} active in last 30 days` : 'Loading…'}
-          icon={Users}
-          iconClassName="bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
-        />
-
-        <StatCard
-          title="Completion rate"
-          value={stats ? `${Math.floor(stats.completionRate * 100)}%` : '—'}
-          sublabel="Across assigned paths"
-          icon={TrendingUp}
-          iconClassName="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
-        />
-
-        <StatCard
-          title="Pending invites"
-          value={pendingInvites.length}
-          sublabel={pendingInvites.length > 0 ? 'Re-send or revoke from People' : 'All caught up'}
-          icon={Mail}
-          iconClassName="bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
-          cta={
-            pendingInvites.length > 0 ? (
-              <Link
-                href="/admin/people"
-                className="text-xs font-medium text-signal underline-offset-4 hover:underline"
-              >
-                View in People →
-              </Link>
-            ) : undefined
-          }
-        />
-
-        <StatCard
-          title="Risk flags"
-          value={stats?.riskFlags ?? '?'}
-          sublabel="Learners needing attention"
-          icon={AlertTriangle}
-          iconClassName="bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400"
-          cta={
+      {noTeam ? (
+        <Card>
+          <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
+            <Users className="h-8 w-8 text-paper-500" aria-hidden="true" />
+            <MonoLabel>NO DATA YET — INVITE YOUR TEAM TO BEGIN</MonoLabel>
+            <p className="max-w-md text-body-sm text-paper-300">
+              Bring your operators online. Each invitation triggers an audited onboarding sequence
+              and unlocks the dashboard.
+            </p>
             <Link
-              href="/admin/reports"
-              className="text-xs font-medium text-signal underline-offset-4 hover:underline"
+              href="/admin/people?invite=open"
+              className="inline-flex h-10 items-center gap-2 rounded-sm bg-signal px-4 font-sans text-body-sm font-medium text-ink-900 transition-colors hover:bg-paper-100"
             >
-              View reports →
+              Invite teammates
             </Link>
-          }
-        />
-      </div>
-
-      {/* 3. Two-column breakdown */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* By department */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold">Completion by department</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {deptItems.length > 0 ? (
-              <DeptBarList items={deptItems} />
-            ) : (
-              <p className="py-6 text-center text-sm text-paper-300">
-                {report === null ? 'Unable to load department data.' : 'No departments set up yet.'}
-              </p>
-            )}
           </CardContent>
         </Card>
-
-        {/* By role / activity */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold">Team activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {activityItems.length > 0 ? (
-              <DeptBarList items={activityItems} />
-            ) : (
-              <p className="py-6 text-center text-sm text-paper-300">
-                {stats === null ? 'Unable to load stats.' : 'No activity data yet.'}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* 4. Quick actions */}
-      <QuickActions />
-
-      {/* 5. Recent activity */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-semibold">Recent activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-700">
-              <TrendingUp className="h-5 w-5 text-paper-300" />
+      ) : (
+        <>
+          <NumberedSection numeral="01" eyebrow="POSTURE" className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard
+                title="Active users"
+                value={stats?.totalUsers ?? '—'}
+                sublabel={stats ? `${stats.activeUsers} active in last 30 d` : 'Stats unavailable'}
+                icon={Users}
+              />
+              <StatCard
+                title="Completion"
+                value={stats ? stats.completionRate : '—'}
+                format="percent"
+                sublabel="Across assigned paths"
+                icon={TrendingUp}
+              />
+              <StatCard
+                title="Pending invites"
+                value={pendingInvites.length}
+                sublabel={
+                  pendingInvites.length > 0 ? 'Re-send or revoke from People' : 'All caught up'
+                }
+                icon={Mail}
+                cta={
+                  pendingInvites.length > 0 ? (
+                    <Link
+                      href="/admin/people"
+                      className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
+                    >
+                      VIEW IN PEOPLE →
+                    </Link>
+                  ) : undefined
+                }
+              />
+              <StatCard
+                title="Risk flags"
+                value={stats?.riskFlags ?? '—'}
+                sublabel="Learners needing attention"
+                icon={AlertTriangle}
+                cta={
+                  <Link
+                    href="/admin/reports"
+                    className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
+                  >
+                    VIEW REPORTS →
+                  </Link>
+                }
+              />
             </div>
-            <p className="text-sm font-medium text-paper-100">Coming soon</p>
-            <p className="text-sm text-paper-300">
-              Live feed of invitation accepts, lesson completions, and certificates will appear
-              here.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+          </NumberedSection>
 
-      {/* 6. Demo controls — only visible on demo orgs when flag is on */}
+          <NumberedSection numeral="02" eyebrow="BREAKDOWN" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center justify-between">
+                    <MonoLabel>BY DEPARTMENT</MonoLabel>
+                    <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      COMPLETION %
+                    </span>
+                  </div>
+                  {deptItems.length > 0 ? (
+                    <DeptBarList items={deptItems} />
+                  ) : (
+                    <p className="py-6 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      {report === null ? 'DEPARTMENT DATA UNAVAILABLE' : 'NO DEPARTMENTS YET'}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center justify-between">
+                    <MonoLabel>TEAM ACTIVITY</MonoLabel>
+                    <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      LAST 30 DAYS
+                    </span>
+                  </div>
+                  {activityItems.length > 0 ? (
+                    <DeptBarList items={activityItems} />
+                  ) : (
+                    <p className="py-6 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      {stats === null ? 'STATS UNAVAILABLE' : 'NO ACTIVITY YET'}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </NumberedSection>
+
+          <NumberedSection numeral="03" eyebrow="QUICK ACTIONS" className="space-y-6">
+            <QuickActions />
+          </NumberedSection>
+
+          <NumberedSection numeral="04" eyebrow="ACTIVITY STREAM" className="space-y-6">
+            <Card>
+              <CardContent className="space-y-3 p-6">
+                <MonoLabel>RECENT EVENTS</MonoLabel>
+                <p className="text-body-sm text-paper-300">
+                  Live feed of invitation accepts, lesson completions, and certificate issuances
+                  will appear here.
+                </p>
+                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                  STATUS · COMING ONLINE
+                </p>
+              </CardContent>
+            </Card>
+          </NumberedSection>
+        </>
+      )}
+
       {showDemoControls && (
-        <Card className="border-amber-300/60 bg-amber-50/40 dark:border-amber-700/40 dark:bg-amber-950/20">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base font-semibold text-amber-700 dark:text-amber-400">
-              <FlaskConical className="h-4 w-4" aria-hidden="true" />
-              Demo controls
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-sm text-paper-300">
-              Wipe and reseed this org with a believable demo snapshot shaped around a
-              prospect&apos;s company name.
-            </p>
-            <DemoControlsCard />
-          </CardContent>
-        </Card>
+        <NumberedSection numeral="99" eyebrow="DEMO CONTROLS">
+          <Card className="border-signal-dim">
+            <CardContent className="space-y-4 p-6">
+              <div className="flex items-center gap-2">
+                <FlaskConical className="h-4 w-4 text-signal" aria-hidden="true" />
+                <MonoLabel tone="signal">SANDBOX MODE</MonoLabel>
+              </div>
+              <p className="text-body-sm text-paper-300">
+                Wipe and reseed this org with a believable demo snapshot shaped around a
+                prospect&apos;s company name.
+              </p>
+              <DemoControlsCard />
+            </CardContent>
+          </Card>
+        </NumberedSection>
       )}
     </div>
   );

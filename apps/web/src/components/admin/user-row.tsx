@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@levelup/ui';
-import { cn } from '@/lib/utils';
 import { users } from '@/lib/api';
 import type { User } from '@/lib/api/users';
 import type { Department } from '@/lib/api/departments';
@@ -42,27 +41,20 @@ export function getInitials(name: string, email: string): string {
   return email.slice(0, 2).toUpperCase();
 }
 
-export function roleBadgeClass(role: string): string {
-  switch (role) {
-    case 'ADMIN':
-      return 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:border-indigo-700';
-    case 'MANAGER':
-      return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600';
-    default:
-      return 'bg-neutral-100 text-neutral-600 border-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700';
-  }
+export function roleBadgeVariant(role: string): 'signal' | 'default' {
+  return role === 'ADMIN' ? 'signal' : 'default';
 }
 
-export function aiLevelBadgeClass(level: string | null): string {
+export function aiLevelBadgeVariant(level: string | null): 'signal' | 'success' | 'default' {
   switch (level) {
     case 'BEGINNER':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300';
+      return 'default';
     case 'INTERMEDIATE':
-      return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300';
+      return 'success';
     case 'ADVANCED':
-      return 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/40 dark:text-violet-300';
+      return 'signal';
     default:
-      return 'bg-ink-700 text-paper-300 border-ink-600';
+      return 'default';
   }
 }
 
@@ -241,22 +233,20 @@ export function UserRow({ user, departments, isCurrentUserAdmin, adminCount }: U
         <td className="py-3 pl-4 pr-3">
           <div className="flex items-center gap-3">
             <Avatar className="h-8 w-8 shrink-0">
-              <AvatarFallback className="bg-signal/10 text-signal text-xs font-semibold">
+              <AvatarFallback className="bg-ink-700 text-paper-100 font-mono text-mono-sm font-semibold">
                 {getInitials(user.name, user.email)}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-paper-100">{user.name}</p>
-              <p className="truncate text-xs text-paper-300">{user.email}</p>
+              <p className="truncate text-body-sm font-medium text-paper-100">{user.name}</p>
+              <p className="truncate font-mono text-mono-sm text-paper-300">{user.email}</p>
             </div>
           </div>
         </td>
 
         {/* Role */}
         <td className="px-3 py-3">
-          <Badge variant="outline" className={cn('text-xs font-medium', roleBadgeClass(user.role))}>
-            {user.role.charAt(0) + user.role.slice(1).toLowerCase()}
-          </Badge>
+          <Badge variant={roleBadgeVariant(user.role)}>{user.role}</Badge>
         </td>
 
         {/* Department */}
@@ -295,14 +285,11 @@ export function UserRow({ user, departments, isCurrentUserAdmin, adminCount }: U
               </SelectContent>
             </Select>
           ) : user.aiLevel ? (
-            <Badge
-              variant="outline"
-              className={cn('text-xs font-medium', aiLevelBadgeClass(user.aiLevel))}
-            >
-              {user.aiLevel.charAt(0) + user.aiLevel.slice(1).toLowerCase()}
-            </Badge>
+            <Badge variant={aiLevelBadgeVariant(user.aiLevel)}>{user.aiLevel}</Badge>
           ) : (
-            <span className="text-xs text-paper-300">Not set</span>
+            <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              NOT SET
+            </span>
           )}
         </td>
 
@@ -346,17 +333,17 @@ export function UserCard({ user, departments, isCurrentUserAdmin, adminCount }: 
 
   return (
     <>
-      <div className="flex flex-col gap-2 rounded-lg border border-ink-600 bg-ink-800 p-4">
+      <div className="flex flex-col gap-3 rounded-md border border-ink-600 bg-ink-800 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 shrink-0">
-              <AvatarFallback className="bg-signal/10 text-signal text-xs font-semibold">
+              <AvatarFallback className="bg-ink-700 text-paper-100 font-mono text-mono-sm font-semibold">
                 {getInitials(user.name, user.email)}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-paper-100">{user.name}</p>
-              <p className="truncate text-xs text-paper-300">{user.email}</p>
+              <p className="truncate text-body-sm font-semibold text-paper-100">{user.name}</p>
+              <p className="truncate font-mono text-mono-sm text-paper-300">{user.email}</p>
             </div>
           </div>
           {isCurrentUserAdmin && (
@@ -369,24 +356,15 @@ export function UserCard({ user, departments, isCurrentUserAdmin, adminCount }: 
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className={cn('text-xs font-medium', roleBadgeClass(user.role))}>
-            {user.role.charAt(0) + user.role.slice(1).toLowerCase()}
-          </Badge>
+          <Badge variant={roleBadgeVariant(user.role)}>{user.role}</Badge>
           {user.aiLevel && (
-            <Badge
-              variant="outline"
-              className={cn('text-xs font-medium', aiLevelBadgeClass(user.aiLevel))}
-            >
-              {user.aiLevel.charAt(0) + user.aiLevel.slice(1).toLowerCase()}
-            </Badge>
+            <Badge variant={aiLevelBadgeVariant(user.aiLevel)}>{user.aiLevel}</Badge>
           )}
-          {deptName && (
-            <span className="rounded-full border border-ink-600 bg-ink-700 px-2.5 py-0.5 text-xs text-paper-300">
-              {deptName}
-            </span>
-          )}
+          {deptName && <Badge variant="default">{deptName.toUpperCase()}</Badge>}
         </div>
-        <p className="text-xs text-paper-300">Last active: {formatDate(user.lastActiveAt)}</p>
+        <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          LAST ACTIVE · {formatDate(user.lastActiveAt).toUpperCase()}
+        </p>
       </div>
 
       <ChangeRoleDialog

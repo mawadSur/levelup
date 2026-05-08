@@ -8,6 +8,7 @@ import {
   Button,
   Input,
   Badge,
+  MonoLabel,
   Select,
   SelectContent,
   SelectItem,
@@ -30,18 +31,17 @@ import { AddDepartmentDialog, EditDepartmentDialog } from './add-department-dial
 /* ------------------------------------------------------------------ */
 /* Helpers                                                              */
 /* ------------------------------------------------------------------ */
-function inviteStatusClass(status: string): string {
+function inviteStatusVariant(status: string): 'signal' | 'success' | 'default' | 'danger' {
   switch (status) {
     case 'PENDING':
-      return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700';
+      return 'signal';
     case 'ACCEPTED':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300';
-    case 'EXPIRED':
-      return 'bg-neutral-100 text-neutral-600 border-neutral-200 dark:bg-neutral-800 dark:text-neutral-400';
+      return 'success';
     case 'REVOKED':
-      return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300';
+      return 'danger';
+    case 'EXPIRED':
     default:
-      return 'bg-ink-700 text-paper-300 border-ink-600';
+      return 'default';
   }
 }
 
@@ -324,12 +324,7 @@ function InvitationsTab({ invites, isAdmin }: InvitationsTabProps) {
                 {inv.role.toLowerCase()}
               </td>
               <td className="px-3 py-3">
-                <Badge
-                  variant="outline"
-                  className={cn('text-xs font-medium', inviteStatusClass(inv.status))}
-                >
-                  {inv.status.charAt(0) + inv.status.slice(1).toLowerCase()}
-                </Badge>
+                <Badge variant={inviteStatusVariant(inv.status)}>{inv.status}</Badge>
               </td>
               <td className="px-3 py-3 text-paper-300 hidden lg:table-cell">
                 {formatDate(inv.createdAt)}
@@ -520,35 +515,35 @@ export function PeopleClient({
 
   return (
     <>
-      {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-paper-100">People</h1>
-          <p className="mt-1 text-sm text-paper-300">
-            {memberList.length} {memberList.length === 1 ? 'member' : 'members'} in {orgName}
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-2">
+          <MonoLabel>ROSTER</MonoLabel>
+          <h1 className="font-serif text-display-md italic text-paper-100">People</h1>
+          <p className="text-body text-paper-300">
+            {memberList.length} {memberList.length === 1 ? 'member' : 'members'} in{' '}
+            <span className="text-paper-100">{orgName}</span>
           </p>
         </div>
         {isAdmin && (
-          <Button onClick={() => setInviteOpen(true)}>
+          <Button variant="primary" onClick={() => setInviteOpen(true)}>
             <UserPlus className="mr-2 h-4 w-4" />
             Invite teammate
           </Button>
         )}
-      </div>
+      </header>
 
-      {/* Tabs */}
-      <Tabs defaultValue="members" className="space-y-4">
-        <TabsList className="border border-ink-600 bg-ink-700/40">
+      <Tabs defaultValue="members" className="space-y-6">
+        <TabsList>
           <TabsTrigger value="members">
             Members
-            <span className="ml-1.5 rounded-full bg-ink-700 px-1.5 py-0.5 text-xs font-medium text-paper-300">
+            <span className="ml-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
               {memberList.length}
             </span>
           </TabsTrigger>
           <TabsTrigger value="invitations">
             Invitations
             {inviteList.filter((i) => i.status === 'PENDING').length > 0 && (
-              <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+              <span className="ml-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
                 {inviteList.filter((i) => i.status === 'PENDING').length}
               </span>
             )}

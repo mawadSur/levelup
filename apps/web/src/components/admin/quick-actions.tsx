@@ -1,67 +1,64 @@
 import Link from 'next/link';
-import { UserPlus, GraduationCap, FileText } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@levelup/ui';
+import { UserPlus, GraduationCap, FileText, ArrowRight } from 'lucide-react';
+import { Button, Card, CardContent, MonoLabel } from '@levelup/ui';
+
+const ACTIONS = [
+  {
+    href: '/admin/people?invite=open',
+    eyebrow: 'PEOPLE',
+    title: 'Invite a teammate',
+    description: 'Send an email invite to join your org.',
+    icon: UserPlus,
+  },
+  {
+    href: '/admin/learning',
+    eyebrow: 'LEARNING',
+    title: 'Assign a learning path',
+    description: 'Distribute curated AI training to a department or role.',
+    icon: GraduationCap,
+  },
+  {
+    href: '/admin/policy',
+    eyebrow: 'GOVERNANCE',
+    title: 'Update AI policy',
+    description: 'Publish the rules of engagement for AI usage.',
+    icon: FileText,
+  },
+] as const;
 
 export function QuickActions() {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">Quick actions</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {/* Invite teammate — links to people page with invite dialog open */}
-          <Link
-            href="/admin/people?invite=open"
-            className="group flex flex-col items-center gap-3 rounded-xl border border-ink-600 bg-ink-800 p-4 text-center transition-all hover:border-signal/50 hover:bg-signal/5 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-signal/10 text-signal transition-colors group-hover:bg-signal group-hover:text-ink-900">
-              <UserPlus className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-paper-100">Invite a teammate</p>
-              <p className="mt-0.5 text-xs text-paper-300">Send an email invite to join your org</p>
-            </div>
-          </Link>
-
-          {/* Assign learning path */}
-          <Link
-            href="/admin/learning"
-            className="group flex flex-col items-center gap-3 rounded-xl border border-ink-600 bg-ink-800 p-4 text-center transition-all hover:border-signal/50 hover:bg-signal/5 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-signal/10 text-signal transition-colors group-hover:bg-signal group-hover:text-ink-900">
-              <GraduationCap className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-paper-100">Assign a learning path</p>
-              <p className="mt-0.5 text-xs text-paper-300">Assign AI courses to your team</p>
-            </div>
-          </Link>
-
-          {/* Upload AI policy */}
-          <Link
-            href="/admin/policy"
-            className="group flex flex-col items-center gap-3 rounded-xl border border-ink-600 bg-ink-800 p-4 text-center transition-all hover:border-signal/50 hover:bg-signal/5 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-signal/10 text-signal transition-colors group-hover:bg-signal group-hover:text-ink-900">
-              <FileText className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-paper-100">Upload AI policy</p>
-              <p className="mt-0.5 text-xs text-paper-300">
-                Share your company&apos;s AI usage policy
-              </p>
-            </div>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {ACTIONS.map(({ href, eyebrow, title, description, icon: Icon }) => (
+        <Link key={href} href={href} className="group block focus-visible:outline-none">
+          <Card className="h-full">
+            <CardContent className="flex h-full flex-col gap-4 p-5">
+              <div className="flex items-center justify-between">
+                <MonoLabel>{eyebrow}</MonoLabel>
+                <Icon className="h-4 w-4 text-paper-500" aria-hidden="true" />
+              </div>
+              <div className="flex-1 space-y-2">
+                <h3 className="font-serif text-h2 italic text-paper-100">{title}</h3>
+                <p className="text-body-sm text-paper-300">{description}</p>
+              </div>
+              <div className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal transition-colors group-hover:text-paper-100">
+                <span>OPEN</span>
+                <ArrowRight
+                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
+    </div>
   );
 }
 
 export function QuickActionsButton() {
   return (
-    <Button asChild>
+    <Button asChild variant="primary">
       <Link href="/admin/people?invite=open">
         <UserPlus className="mr-2 h-4 w-4" />
         Invite teammate
