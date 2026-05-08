@@ -7,53 +7,40 @@ import { cn } from '../lib/cn';
 
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md',
-    'font-display font-medium tracking-[-0.01em]',
-    'text-sm ring-offset-background',
-    'transition-all duration-150',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap',
+    'font-sans font-medium text-body-sm',
+    'rounded-sm',
+    'transition-colors duration-150 ease-mission',
     'disabled:pointer-events-none disabled:opacity-50',
     '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
-    'motion-reduce:transition-none motion-reduce:transform-none',
+    'motion-reduce:transition-none',
   ].join(' '),
   {
     variants: {
       variant: {
-        default: [
-          'bg-primary text-primary-foreground',
-          'shadow-[inset_0_1px_0_0_hsl(0_0%_100%/0.12),inset_0_-1px_0_0_hsl(0_0%_0%/0.1)]',
-          'hover:-translate-y-[1px] hover:shadow-md',
-          'active:translate-y-0 active:shadow-sm',
-        ].join(' '),
-        destructive: [
-          'bg-destructive text-destructive-foreground',
-          'shadow-[inset_0_1px_0_0_hsl(0_0%_100%/0.1)]',
-          'hover:bg-destructive/90 hover:-translate-y-[1px] hover:shadow-md',
-          'active:translate-y-0',
-        ].join(' '),
-        outline: [
-          'border border-input bg-background',
-          'shadow-[inset_0_1px_0_0_hsl(0_0%_100%/0.06)]',
-          'hover:bg-secondary hover:text-secondary-foreground',
-          'focus-visible:ring-ring',
-        ].join(' '),
-        secondary: ['bg-secondary text-secondary-foreground', 'hover:bg-secondary/80'].join(' '),
-        ghost: ['hover:bg-secondary/60 hover:text-foreground'].join(' '),
-        link: [
-          'text-primary underline-offset-4',
-          'hover:underline hover:text-primary',
-          'shadow-none',
-        ].join(' '),
+        primary: ['bg-signal text-ink-900', 'hover:bg-paper-100 hover:text-ink-900'].join(' '),
+        secondary: ['bg-transparent border border-ink-500 text-paper-100', 'hover:bg-ink-700'].join(
+          ' ',
+        ),
+        ghost: ['bg-transparent text-paper-100', 'hover:bg-ink-700'].join(' '),
+        danger: ['bg-danger text-paper-100', 'hover:bg-danger/90'].join(' '),
+        // Back-compat aliases — keep callers from breaking until migrated.
+        default: ['bg-signal text-ink-900', 'hover:bg-paper-100 hover:text-ink-900'].join(' '),
+        destructive: ['bg-danger text-paper-100', 'hover:bg-danger/90'].join(' '),
+        outline: ['bg-transparent border border-ink-500 text-paper-100', 'hover:bg-ink-700'].join(
+          ' ',
+        ),
+        link: 'bg-transparent text-signal hover:underline underline-offset-4',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        sm: 'h-9 px-3 text-body-sm',
+        lg: 'h-11 px-6',
         icon: 'h-10 w-10',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'primary',
       size: 'default',
     },
   },
