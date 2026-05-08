@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import { Logo } from '@/components/brand/logo';
-import { Separator } from '@levelup/ui';
+import { MonoLabel } from '@levelup/ui';
 
-const FOOTER_LINKS = [
+const FOOTER_COLUMNS = [
   {
     heading: 'Product',
     links: [
       { label: 'Pricing', href: '/pricing' },
       { label: 'Request a demo', href: '/sign-up' },
+      { label: 'Sign in', href: '/sign-in' },
     ],
   },
   {
@@ -19,69 +19,62 @@ const FOOTER_LINKS = [
     ],
   },
   {
-    heading: 'Resources',
-    links: [
-      { label: 'Documentation', href: '/docs' },
-      { label: 'Changelog', href: '/changelog' },
-      { label: 'Blog', href: '/blog' },
-    ],
-  },
-  {
     heading: 'Legal',
     links: [
-      { label: 'Privacy policy', href: '/legal/privacy' },
-      { label: 'Terms of service', href: '/legal/terms' },
+      { label: 'Privacy', href: '/legal/privacy' },
+      { label: 'Terms', href: '/legal/terms' },
       { label: 'Security', href: '/legal/security' },
     ],
   },
 ];
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-background border-t border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-          {/* Brand column */}
-          <div className="lg:col-span-1">
-            <Link href="/" aria-label="LevelUp AI Academy home">
-              <Logo size="sm" />
+    <footer className="border-t border-ink-600 bg-ink-900">
+      <div className="mx-auto max-w-content px-6 py-20 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.3fr,2fr]">
+          <div className="space-y-4">
+            <Link href="/" aria-label="LevelUp AI Academy home" className="block">
+              <span className="font-serif text-5xl leading-none text-paper-100">ailevel</span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xs">
-              Enterprise AI training designed for real roles, with real measurement.
+            <p className="max-w-xs font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              Editorial AI training, instrumented for the enterprise.
+            </p>
+            <p className="max-w-xs text-body-sm text-paper-300">
+              Train every employee to use AI safely, effectively, and measurably in 30 days.
             </p>
           </div>
 
-          {/* Link columns */}
-          {FOOTER_LINKS.map(({ heading, links }) => (
-            <div key={heading}>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-foreground">
-                {heading}
-              </h3>
-              <ul className="space-y-3">
-                {links.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="grid grid-cols-3 gap-8">
+            {FOOTER_COLUMNS.map(({ heading, links }) => (
+              <div key={heading}>
+                <MonoLabel className="mb-5 block text-paper-500">{heading}</MonoLabel>
+                <ul className="space-y-3">
+                  {links.map(({ label, href }) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300 transition-colors hover:text-paper-100"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <Separator className="my-10" />
-
-        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} LevelUp AI Academy. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground/60">
-            Built for the teams that actually have to get this done.
-          </p>
+        <div className="mt-16 border-t border-ink-600 pt-8">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <MonoLabel className="text-paper-500">
+              &copy; {year} LEVELUP AI ACADEMY · ALL RIGHTS RESERVED
+            </MonoLabel>
+            <MonoLabel className="text-paper-500">MISSION BRIEF · VOL. I · 2026.05</MonoLabel>
+          </div>
         </div>
       </div>
     </footer>
