@@ -4,6 +4,7 @@ export {
   Role,
   AiLevel,
   Plan,
+  BillingInterval,
   LessonStatus,
   AssessmentType,
   InvitationStatus,

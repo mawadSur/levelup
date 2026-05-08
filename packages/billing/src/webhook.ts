@@ -1,12 +1,10 @@
 import type Stripe from 'stripe';
 import { billingConfig, isStubMode } from './config';
 import { getStripe } from './stripe';
-import { planFromPriceId } from './plan';
+import { planAndIntervalFromPriceId } from './plan';
 import type { ParsedBillingEvent } from './types';
-import type { Plan } from '@levelup/db';
-
-// Plan is a string enum — its values are the string literals themselves.
-// We use it both as a type and as a runtime value set for validation.
+import type { Plan} from '@levelup/db';
+import { BillingInterval } from '@levelup/db';
 
 // NOTE: Stripe SDK v17 changed the Invoice object — subscriptions are now
 // referenced via `invoice.parent` (type 'subscription_details') rather than
@@ -50,14 +48,30 @@ export function verifyWebhook(rawBody: string | Buffer, signature: string): Stri
 }
 
 // ---------------------------------------------------------------------------
-// Helper: extract Plan from a subscription's items
+// Helper: extract Plan + Interval + quantity from a subscription's first item
 // ---------------------------------------------------------------------------
 
-function planFromSubscription(subscription: Stripe.Subscription): Plan | null {
+interface ResolvedSubscriptionItem {
+  plan: Plan;
+  interval: BillingInterval;
+  priceId: string;
+  quantity: number;
+}
+
+function resolveSubscriptionItem(
+  subscription: Stripe.Subscription,
+): ResolvedSubscriptionItem | null {
   const firstItem = subscription.items.data[0];
   if (!firstItem) return null;
   const priceId = firstItem.price.id;
-  return planFromPriceId(priceId);
+  const resolved = planAndIntervalFromPriceId(priceId);
+  if (!resolved) return null;
+  return {
+    plan: resolved.plan,
+    interval: resolved.interval,
+    priceId,
+    quantity: firstItem.quantity ?? 1,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -67,7 +81,7 @@ function planFromSubscription(subscription: Stripe.Subscription): Plan | null {
 /**
  * Maps a verified Stripe.Event into a typed ParsedBillingEvent.
  *
- * Handles the following Stripe events:
+ * Handles:
  *   - customer.subscription.created
  *   - customer.subscription.updated
  *   - customer.subscription.deleted
@@ -81,8 +95,8 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
   switch (event.type) {
     case 'customer.subscription.created': {
       const subscription = event.data.object as Stripe.Subscription;
-      const plan = planFromSubscription(subscription);
-      if (!plan) return { type: 'unknown', raw: event };
+      const resolved = resolveSubscriptionItem(subscription);
+      if (!resolved) return { type: 'unknown', raw: event };
 
       const organizationId = subscription.metadata?.['organizationId'];
       if (!organizationId) return { type: 'unknown', raw: event };
@@ -90,7 +104,11 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
       return {
         type: 'subscription.created',
         organizationId,
-        plan,
+        plan: resolved.plan,
+        interval: resolved.interval,
+        quantity: resolved.quantity,
+        priceId: resolved.priceId,
+        status: subscription.status,
         subscriptionId: subscription.id,
         customerId:
           typeof subscription.customer === 'string'
@@ -101,8 +119,8 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
 
     case 'customer.subscription.updated': {
       const subscription = event.data.object as Stripe.Subscription;
-      const plan = planFromSubscription(subscription);
-      if (!plan) return { type: 'unknown', raw: event };
+      const resolved = resolveSubscriptionItem(subscription);
+      if (!resolved) return { type: 'unknown', raw: event };
 
       const organizationId = subscription.metadata?.['organizationId'];
       if (!organizationId) return { type: 'unknown', raw: event };
@@ -110,7 +128,10 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
       return {
         type: 'subscription.updated',
         organizationId,
-        plan,
+        plan: resolved.plan,
+        interval: resolved.interval,
+        quantity: resolved.quantity,
+        priceId: resolved.priceId,
         subscriptionId: subscription.id,
         status: subscription.status,
       };
@@ -141,6 +162,9 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
       const plan: Plan | null = metaPlan ?? null;
       if (!plan) return { type: 'unknown', raw: event };
 
+      const metaInterval = session.metadata?.['interval'] as BillingInterval | undefined;
+      const interval: BillingInterval = metaInterval ?? BillingInterval.MONTHLY;
+
       const customerId =
         typeof session.customer === 'string' ? session.customer : (session.customer?.id ?? null);
       if (!customerId) return { type: 'unknown', raw: event };
@@ -149,6 +173,7 @@ export function parseEvent(event: Stripe.Event): ParsedBillingEvent {
         type: 'checkout.completed',
         organizationId,
         plan,
+        interval,
         customerId,
       };
     }

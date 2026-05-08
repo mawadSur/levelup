@@ -1,5 +1,5 @@
-// Re-export Plan enum from @levelup/db for consumer convenience
-export { Plan } from '@levelup/db';
+// Re-export Plan + BillingInterval enums from @levelup/db for consumer convenience
+export { Plan, BillingInterval } from '@levelup/db';
 
 // Types
 export type {
@@ -16,17 +16,23 @@ export type {
   InvoicePaymentFailedEvent,
   UnknownBillingEvent,
   ParsedBillingEvent,
+  SeatProrationPreview,
 } from './types';
 
 // Config utilities
-export { billingConfig, isStubMode, priceToPlan, planToPrice } from './config';
+export { billingConfig, isStubMode, priceToPlan, planToPrice, getStripePriceId } from './config';
 export type { BillingConfig } from './config';
 
 // Stripe singleton
 export { getStripe } from './stripe';
 
 // Checkout
-export { createCheckoutSession, createBillingPortalSession } from './checkout';
+export {
+  createCheckoutSession,
+  createBillingPortalSession,
+  previewSeatProration,
+  updateSubscriptionQuantity,
+} from './checkout';
 
 // Customer
 export { ensureCustomer } from './customer';
@@ -35,4 +41,18 @@ export { ensureCustomer } from './customer';
 export { verifyWebhook, parseEvent } from './webhook';
 
 // Plan utilities
-export { planFromPriceId, planSeatsFor, isWithinSeatLimit, priceFor } from './plan';
+export {
+  PLAN_CONFIG,
+  getPlanConfig,
+  getPlanLimit,
+  isPerSeat,
+  requiresSales,
+  getMonthlyPrice,
+  getCyclePrice,
+  planFromPriceId,
+  planAndIntervalFromPriceId,
+  planSeatsFor,
+  isWithinSeatLimit,
+  priceFor,
+} from './plan';
+export type { PlanConfig, FlatPlanConfig, PerSeatPlanConfig } from './plan';

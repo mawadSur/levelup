@@ -4,6 +4,7 @@ import type {
   CheckoutSessionResult,
   BillingPortalSessionResult,
   EnsureCustomerResult,
+  SeatProrationPreview,
 } from './types';
 
 // ---------------------------------------------------------------------------
@@ -59,5 +60,24 @@ export function stubEnsureCustomer(
   return {
     customerId: `cus_stub_${organizationId}`,
     created: !existingCustomerId,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Stub seat proration
+// ---------------------------------------------------------------------------
+
+/**
+ * Stub seat proration: charges $12 per added seat as a deterministic
+ * estimate. Real Stripe applies a more nuanced calculation based on remaining
+ * cycle time — the stub is just for local dev parity.
+ */
+export function stubSeatProration(newQuantity: number): SeatProrationPreview {
+  warnStubOnce();
+  return {
+    amountDueCents: Math.max(0, newQuantity) * 1200,
+    currency: 'usd',
+    prorationDate: Math.floor(Date.now() / 1000),
+    newQuantity,
   };
 }
