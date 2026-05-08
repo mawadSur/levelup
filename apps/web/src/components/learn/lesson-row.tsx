@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Check } from 'lucide-react';
 import { Badge, Button } from '@levelup/ui';
 import { cn } from '@levelup/ui';
 
@@ -18,13 +19,9 @@ interface LessonRowProps {
 }
 
 const statusConfig = {
-  NOT_STARTED: {
-    label: 'Not started',
-    variant: 'outline' as const,
-    textClass: 'text-paper-300',
-  },
-  IN_PROGRESS: { label: 'In progress', variant: 'secondary' as const, textClass: 'text-warning' },
-  COMPLETED: { label: 'Completed', variant: 'default' as const, textClass: 'text-success' },
+  NOT_STARTED: { label: 'NOT STARTED', variant: 'default' as const },
+  IN_PROGRESS: { label: 'IN PROGRESS', variant: 'signal' as const },
+  COMPLETED: { label: 'COMPLETED', variant: 'success' as const },
 };
 
 export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProps) {
@@ -35,62 +32,48 @@ export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProp
   return (
     <div
       className={cn(
-        'flex items-center gap-4 rounded-lg border p-4 transition-colors',
-        isCurrent
-          ? 'border-signal/40 bg-signal/5'
-          : 'border-ink-600 bg-ink-800 hover:bg-ink-700/30',
+        'flex items-center gap-4 rounded-md border bg-ink-800 px-4 py-3 transition-colors',
+        isCurrent ? 'border-signal-dim bg-ink-800' : 'border-ink-600 hover:border-signal-dim',
       )}
     >
-      {/* Order circle */}
+      {/* Mono lesson number / completion glyph */}
       <div
         className={cn(
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+          'flex h-9 w-9 shrink-0 items-center justify-center rounded-data border font-mono text-mono uppercase tracking-[0.05em] tabular-nums',
           lesson.status === 'COMPLETED'
-            ? 'bg-success/15 text-success'
+            ? 'border-success/40 bg-success/15 text-success'
             : isCurrent
-              ? 'bg-signal/15 text-signal'
-              : 'bg-ink-700 text-paper-300',
+              ? 'border-signal-dim bg-ink-700 text-signal'
+              : 'border-ink-500 bg-ink-700 text-paper-300',
         )}
         aria-hidden="true"
       >
         {lesson.status === 'COMPLETED' ? (
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path
-              d="M3 8l3.5 3.5L13 5"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Check className="h-4 w-4" aria-hidden="true" />
         ) : (
-          lesson.order
+          String(lesson.order).padStart(2, '0')
         )}
       </div>
 
-      {/* Title + meta */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p
           className={cn(
-            'truncate text-sm font-medium',
-            isCurrent ? 'text-signal' : 'text-paper-100',
+            'truncate text-body font-medium',
+            isCurrent ? 'text-paper-100' : 'text-paper-100',
           )}
         >
           {lesson.title}
         </p>
-        <p className="mt-0.5 text-xs text-paper-300">~{lesson.estimatedMinutes} min</p>
+        <p className="mt-0.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          ~{lesson.estimatedMinutes} MIN
+        </p>
       </div>
 
-      {/* Status badge */}
-      <Badge
-        variant={config.variant}
-        className={cn('hidden sm:inline-flex text-xs', config.textClass)}
-      >
+      <Badge variant={config.variant} className="hidden sm:inline-flex">
         {config.label}
       </Badge>
 
-      {/* Action button */}
-      <Button asChild size="sm" variant={lesson.status === 'IN_PROGRESS' ? 'default' : 'outline'}>
+      <Button asChild size="sm" variant={lesson.status === 'IN_PROGRESS' ? 'primary' : 'secondary'}>
         <Link href={`/learn/${pathSlug}/${lesson.slug}`}>{buttonLabel}</Link>
       </Button>
     </div>

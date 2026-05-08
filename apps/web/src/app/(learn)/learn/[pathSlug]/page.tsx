@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Badge, Card, CardContent, Progress } from '@levelup/ui';
+import { Badge, Card, CardContent, MissionNumber, MonoLabel } from '@levelup/ui';
 import { paths, lessons, progress } from '@/lib/api';
 import { LessonRow } from '@/components/learn/lesson-row';
 import type { LessonRowData } from '@/components/learn/lesson-row';
@@ -77,11 +77,10 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
   const isPathComplete = completionRate >= 100;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      {/* Back link */}
+    <div className="mx-auto max-w-content px-6 py-10">
       <Link
         href="/learn"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-paper-300 hover:text-paper-100 transition-colors"
+        className="mb-8 inline-flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500 transition-colors hover:text-paper-100"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path
@@ -92,50 +91,50 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
             strokeLinejoin="round"
           />
         </svg>
-        Back to learning
+        BACK TO LEARNING
       </Link>
 
-      {/* Path header */}
-      <div className="mb-8 space-y-3">
+      <header className="mb-10 space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline">{pathData.targetLevel}</Badge>
-          {pathData.targetRole && <Badge variant="secondary">{pathData.targetRole}</Badge>}
+          <MonoLabel>PATH</MonoLabel>
+          <Badge variant="default">{pathData.targetLevel}</Badge>
+          {pathData.targetRole && <Badge variant="default">{pathData.targetRole}</Badge>}
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-paper-100">{pathData.title}</h1>
+        <h1 className="font-serif text-display-md italic text-paper-100">{pathData.title}</h1>
         {pathData.description && (
-          <p className="max-w-2xl text-paper-300 leading-relaxed">{pathData.description}</p>
+          <p className="max-w-reading text-body-lg text-paper-300">{pathData.description}</p>
         )}
-        <p className="text-sm text-paper-300">
-          ~{pathData.estimatedMinutes} min &middot; {sortedLessons.length} lessons
+        <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          ~{pathData.estimatedMinutes} MIN · {sortedLessons.length} LESSONS
         </p>
-      </div>
+      </header>
 
-      {/* Not assigned CTA */}
       {isNotAssigned && (
-        <Card className="mb-8 border-warning/50 bg-warning/10/50">
-          <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-semibold text-paper-100">You&apos;re not assigned to this path</p>
-              <p className="mt-0.5 text-sm text-paper-300">
-                Ask your manager to assign you to <strong>{pathData.title}</strong>.
+        <Card className="mb-10 border-warning/40 bg-warning/10">
+          <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <MonoLabel className="text-warning">UNASSIGNED</MonoLabel>
+              <p className="text-body font-medium text-paper-100">
+                You&apos;re not assigned to this path.
+              </p>
+              <p className="text-body-sm text-paper-300">
+                Ask your manager to assign you to{' '}
+                <em className="text-paper-100">{pathData.title}</em>.
               </p>
             </div>
             <Link
               href="/learn"
-              className="shrink-0 text-sm font-medium text-signal hover:underline"
+              className="shrink-0 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
             >
-              Back to my paths &rarr;
+              BACK TO MY PATHS →
             </Link>
           </CardContent>
         </Card>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
-        {/* Lessons list */}
+      <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
         <div>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-paper-300">
-            Lessons
-          </h2>
+          <MonoLabel className="mb-4 block">LESSONS</MonoLabel>
           <div className="space-y-3">
             {sortedLessons.map((lesson) => {
               const lp = progressByLessonId.get(lesson.id);
@@ -158,74 +157,76 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
               );
             })}
             {sortedLessons.length === 0 && (
-              <p className="rounded-lg border border-dashed border-ink-600 p-8 text-center text-sm text-paper-300">
-                No lessons published yet.
+              <p className="rounded-md border border-dashed border-ink-600 p-8 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                NO LESSONS PUBLISHED YET
               </p>
             )}
           </div>
         </div>
 
-        {/* Sidebar */}
         {!isNotAssigned && (
           <aside className="space-y-4">
             <Card>
-              <CardContent className="space-y-4 pt-6">
-                <div>
-                  <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="font-medium text-paper-100">Your progress</span>
-                    <span className="font-semibold text-paper-100">
-                      {Math.round(completionRate)}%
-                    </span>
+              <CardContent className="space-y-4 p-5">
+                <div className="space-y-2">
+                  <MonoLabel>YOUR PROGRESS</MonoLabel>
+                  <div className="flex items-baseline justify-between">
+                    <p className="font-serif text-display-md tabular-nums text-paper-100">
+                      <MissionNumber value={completionRate / 100} format="percent" />
+                    </p>
                   </div>
-                  <Progress value={completionRate} className="h-2.5" />
-                  <p className="mt-1.5 text-xs text-paper-300">
-                    {completedCount} of {totalLessons} lessons completed
+                  <div className="h-1 overflow-hidden rounded-data bg-ink-700">
+                    <div
+                      className="h-full bg-signal transition-[width] duration-500 ease-mission"
+                      style={{ width: `${Math.max(completionRate, 2)}%` }}
+                    />
+                  </div>
+                  <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    {completedCount} / {totalLessons} LESSONS COMPLETE
                   </p>
                 </div>
 
                 {isPathComplete ? (
-                  <div className="rounded-lg border border-success/40/50 bg-success/10/50 p-3 text-center">
-                    <p className="text-sm font-semibold text-success">Certificate earned!</p>
+                  <div className="rounded-sm border border-success/40 bg-success/10 p-3 text-center">
+                    <MonoLabel className="text-success">CERTIFICATE EARNED</MonoLabel>
                     <Link
                       href={`/certificates?path=${pathData.id}`}
-                      className="mt-1 text-xs text-signal hover:underline"
+                      className="mt-1 block font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
                     >
-                      View certificate &rarr;
+                      VIEW CERTIFICATE →
                     </Link>
                   </div>
                 ) : (
-                  <div className="rounded-lg bg-ink-700 p-3">
-                    <p className="text-xs text-paper-300">
-                      Complete all lessons to earn your certificate.
-                    </p>
-                  </div>
+                  <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    COMPLETE ALL LESSONS TO EARN A CERTIFICATE.
+                  </p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="pt-6">
-                <p className="text-xs font-semibold uppercase tracking-wider text-paper-300 mb-2">
-                  Path details
-                </p>
-                <dl className="space-y-1.5 text-sm">
+              <CardContent className="space-y-3 p-5">
+                <MonoLabel>PATH DETAILS</MonoLabel>
+                <dl className="space-y-1.5 font-mono text-mono-sm uppercase tracking-[0.05em]">
                   <div className="flex justify-between">
-                    <dt className="text-paper-300">Level</dt>
-                    <dd className="font-medium text-paper-100">{pathData.targetLevel}</dd>
+                    <dt className="text-paper-500">LEVEL</dt>
+                    <dd className="text-paper-100">{pathData.targetLevel}</dd>
                   </div>
                   {pathData.targetRole && (
                     <div className="flex justify-between">
-                      <dt className="text-paper-300">Role</dt>
-                      <dd className="font-medium text-paper-100">{pathData.targetRole}</dd>
+                      <dt className="text-paper-500">ROLE</dt>
+                      <dd className="text-paper-100">{pathData.targetRole}</dd>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <dt className="text-paper-300">Duration</dt>
-                    <dd className="font-medium text-paper-100">~{pathData.estimatedMinutes} min</dd>
+                    <dt className="text-paper-500">DURATION</dt>
+                    <dd className="tabular-nums text-paper-100">
+                      ~{pathData.estimatedMinutes} MIN
+                    </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-paper-300">Lessons</dt>
-                    <dd className="font-medium text-paper-100">{sortedLessons.length}</dd>
+                    <dt className="text-paper-500">LESSONS</dt>
+                    <dd className="tabular-nums text-paper-100">{sortedLessons.length}</dd>
                   </div>
                 </dl>
               </CardContent>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '@levelup/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, MonoLabel } from '@levelup/ui';
 import { cn } from '@levelup/ui';
 import { quizzes } from '@/lib/api';
 import type { Quiz, QuizAttempt } from '@/lib/api/quizzes';
@@ -202,16 +202,19 @@ export function QuizRunner({
 
   if (state.phase === 'idle') {
     return (
-      <Card id="quiz" className="mt-10">
+      <Card id="quiz" className="mt-12">
         <CardHeader>
-          <CardTitle className="text-lg">Quick check</CardTitle>
-          <p className="text-sm text-paper-300">
-            {quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''} &middot;
-            passing score {quiz.passingScore}%
+          <MonoLabel>QUICK CHECK</MonoLabel>
+          <CardTitle className="font-serif text-h1 italic">Test your understanding.</CardTitle>
+          <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            {quiz.questions.length} QUESTION{quiz.questions.length !== 1 ? 'S' : ''} · PASS @{' '}
+            {quiz.passingScore}%
           </p>
         </CardHeader>
         <CardContent>
-          <Button onClick={handleStart}>Take the quick check</Button>
+          <Button variant="primary" onClick={handleStart}>
+            Begin quick check →
+          </Button>
         </CardContent>
       </Card>
     );
@@ -257,12 +260,13 @@ export function QuizRunner({
     return (
       <>
         <style>{QUIZ_KEYFRAMES}</style>
-        <Card id="quiz" className="mt-10">
+        <Card id="quiz" className="mt-12">
           <CardHeader>
-            <CardTitle className="text-lg">Quick check</CardTitle>
-            <p className="text-sm text-paper-300">
-              {quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''} &middot;
-              passing score {quiz.passingScore}%
+            <MonoLabel>QUICK CHECK</MonoLabel>
+            <CardTitle className="font-serif text-h1 italic">Test your understanding.</CardTitle>
+            <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              {quiz.questions.length} QUESTION{quiz.questions.length !== 1 ? 'S' : ''} · PASS @{' '}
+              {quiz.passingScore}%
             </p>
           </CardHeader>
           <CardContent className="space-y-8">
@@ -282,15 +286,21 @@ export function QuizRunner({
                   </legend>
 
                   {/* Visible question text — also provides the aria-labelledby target */}
+                  <div className="flex items-baseline gap-3">
+                    <MonoLabel className="text-paper-500">
+                      {String(qi + 1).padStart(2, '0')} /{' '}
+                      {String(quiz.questions.length).padStart(2, '0')}
+                    </MonoLabel>
+                  </div>
                   <p
                     id={promptId}
-                    className="text-sm font-semibold text-paper-100 leading-snug"
+                    className="font-serif text-h2 italic leading-snug text-paper-100"
                     aria-hidden="true"
                   >
-                    {qi + 1}. {q.text}
+                    {q.text}
                   </p>
 
-                  <div role="radiogroup" aria-labelledby={promptId} className="space-y-2 pl-1">
+                  <div role="radiogroup" aria-labelledby={promptId} className="space-y-2">
                     {q.choices.map((choice, ci) => {
                       const isSelected = answers[qi] === ci;
                       const inputId = `quiz-${q.id}-choice-${ci}`;
@@ -299,29 +309,21 @@ export function QuizRunner({
                           key={ci}
                           htmlFor={inputId}
                           className={cn(
-                            // Base card
-                            'relative flex cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm',
-                            // Transition for selection state
-                            'transition-[border-color,box-shadow,transform] duration-[180ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]',
+                            'relative flex cursor-pointer items-start gap-3 rounded-sm border bg-ink-800 px-4 py-3 text-body-sm',
+                            'transition-colors duration-150 ease-mission',
                             isSelected
-                              ? [
-                                  // Oxblood (primary) selected border, 2px
-                                  'border-2 border-signal',
-                                  // Soft inner shadow
-                                  'shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]',
-                                  // Slight scale up
-                                  'scale-[1.02]',
-                                  'bg-signal/5 font-medium text-signal',
-                                ].join(' ')
-                              : 'border-ink-600 bg-ink-800 hover:border-signal/40 hover:bg-ink-700/20',
+                              ? 'border-signal bg-ink-800 ring-1 ring-signal text-paper-100'
+                              : 'border-ink-600 hover:border-signal-dim',
                             submitting && 'pointer-events-none opacity-70',
                           )}
                         >
-                          {/* Letter label — Fraunces italic, oxblood, semi-opaque */}
+                          {/* Letter label — mono, signal when selected */}
                           <span
                             className={cn(
-                              'shrink-0 font-serif italic text-[14px] leading-none',
-                              isSelected ? 'text-signal/80' : 'text-signal/40',
+                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-data border font-mono text-mono-sm uppercase tracking-[0.05em]',
+                              isSelected
+                                ? 'border-signal bg-signal text-ink-900'
+                                : 'border-ink-500 text-paper-300',
                             )}
                             aria-hidden="true"
                           >
@@ -358,14 +360,17 @@ export function QuizRunner({
 
             <div className="pt-2">
               <Button
+                variant="primary"
                 onClick={handleSubmit}
                 disabled={!allAnswered || submitting}
                 className="w-full sm:w-auto"
               >
-                {submitting ? 'Submitting…' : 'Submit answers'}
+                {submitting ? 'Submitting…' : 'Submit answers →'}
               </Button>
               {!allAnswered && (
-                <p className="mt-2 text-xs text-paper-300">Answer all questions to submit.</p>
+                <p className="mt-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                  ANSWER ALL QUESTIONS TO SUBMIT
+                </p>
               )}
             </div>
           </CardContent>
@@ -396,28 +401,27 @@ export function QuizRunner({
         nextLessonHref={nextLessonHref ?? undefined}
       />
       <style>{QUIZ_KEYFRAMES}</style>
-      <Card
-        id="quiz"
-        className={cn('mt-10 border-2', passed ? 'border-success/50' : 'border-danger/40')}
-      >
+      <Card id="quiz" className={cn('mt-12', passed ? 'border-success/40' : 'border-danger/40')}>
         <CardHeader>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-full text-lg',
+                'flex h-10 w-10 items-center justify-center rounded-data text-lg',
                 passed ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger',
               )}
               aria-hidden="true"
             >
               {passed ? '✓' : '✗'}
             </div>
-            <div>
-              <CardTitle className="text-lg">
-                {passed ? 'Lesson complete!' : 'Not quite — review and try again'}
+            <div className="space-y-1">
+              <MonoLabel tone={passed ? 'success' : 'danger'}>
+                {passed ? 'PASSED' : 'NOT YET'}
+              </MonoLabel>
+              <CardTitle className="font-serif text-h1 italic">
+                {passed ? 'Lesson complete.' : 'Review and try again.'}
               </CardTitle>
-              <p className="text-sm text-paper-300">
-                Score: <span className="font-semibold">{result.score}%</span> (passing:{' '}
-                {quiz.passingScore}%)
+              <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                SCORE {result.score}% · PASS @ {quiz.passingScore}%
               </p>
             </div>
           </div>
@@ -485,7 +489,7 @@ export function QuizRunner({
                                 ].join(' '),
                               isWrongChoice &&
                                 [
-                                  'border-accent-warm bg-ink-700-warm/10 text-paper-100',
+                                  'border-danger bg-danger/10 text-paper-100',
                                   'transition-colors duration-150',
                                 ].join(' '),
                               !wasChosen && 'border-ink-600 bg-transparent text-paper-300',

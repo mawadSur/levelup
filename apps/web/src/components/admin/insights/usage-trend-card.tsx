@@ -2,28 +2,26 @@
 
 import { useState, useCallback } from 'react';
 import type { UsageTrendBucket } from '@levelup/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@levelup/ui';
+import { Card, CardContent, MonoLabel } from '@levelup/ui';
 
 interface UsageTrendCardProps {
   buckets: UsageTrendBucket[];
 }
 
 // ---------------------------------------------------------------------------
-// Design tokens for the two chart series
+// Mission Brief palette — signal-amber primary, paper-300 for the secondary line.
 // ---------------------------------------------------------------------------
 const SERIES = [
   {
     key: 'coachInvocations' as const,
     label: 'Coach sessions',
-    // oxblood
-    color: '#7c2323',
+    color: 'rgb(255 179 0)', // signal
     strokeWidth: 2,
   },
   {
     key: 'lessonsCompleted' as const,
     label: 'Lessons completed',
-    // warm-amber
-    color: '#d97706',
+    color: 'rgb(169 166 160)', // paper-300
     strokeWidth: 2,
   },
 ] as const;
@@ -116,20 +114,21 @@ function HoverOverlay({ hovX, hov, maxValue, viewW, padTop, plotH, padRight }: H
         <rect
           width={boxW}
           height={boxH}
-          rx={6}
-          fill="hsl(var(--card))"
-          stroke="hsl(var(--border))"
+          rx={4}
+          fill="rgb(14 16 25)"
+          stroke="rgb(34 40 56)"
           strokeWidth={1}
         />
         <text
           x={boxPad}
           y={18}
           fontSize={10}
-          fill="currentColor"
-          fillOpacity={0.55}
+          fontFamily="var(--font-geist-mono), ui-monospace, monospace"
+          letterSpacing={0.5}
+          fill="rgb(169 166 160)"
           fontWeight={500}
         >
-          {formatDayLabel(hov.bucketStart)}
+          {formatDayLabel(hov.bucketStart).toUpperCase()}
         </text>
         {SERIES.map((s, si) => (
           <g key={s.key} transform={`translate(${boxPad}, ${30 + si * 18})`}>
@@ -173,11 +172,11 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
   if (buckets.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-semibold">Usage Trend</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-paper-300">No activity data yet for this period.</p>
+        <CardContent className="space-y-2 p-6">
+          <MonoLabel>USAGE TREND</MonoLabel>
+          <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            NO ACTIVITY DATA YET FOR THIS PERIOD
+          </p>
         </CardContent>
       </Card>
     );
@@ -206,22 +205,27 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">Usage Trend</CardTitle>
-        <div className="flex flex-wrap items-center gap-4 mt-1">
-          {SERIES.map((s) => (
-            <div key={s.key} className="flex items-center gap-1.5 text-xs text-paper-300">
-              <span
-                className="inline-block h-0.5 w-5 rounded"
-                style={{ backgroundColor: s.color }}
-                aria-hidden="true"
-              />
-              {s.label}
-            </div>
-          ))}
+      <CardContent className="space-y-3 px-6 pt-6">
+        <div className="flex items-center justify-between gap-4">
+          <MonoLabel>USAGE TREND · 30 DAYS</MonoLabel>
+          <div className="flex flex-wrap items-center gap-4">
+            {SERIES.map((s) => (
+              <div
+                key={s.key}
+                className="flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300"
+              >
+                <span
+                  className="inline-block h-0.5 w-5"
+                  style={{ backgroundColor: s.color }}
+                  aria-hidden="true"
+                />
+                {s.label.toUpperCase()}
+              </div>
+            ))}
+          </div>
         </div>
-      </CardHeader>
-      <CardContent className="px-2 pb-4">
+      </CardContent>
+      <CardContent className="px-2 pb-4 pt-0">
         <svg
           viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
           className="w-full h-auto select-none"
@@ -240,17 +244,17 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
                   y1={y}
                   x2={VIEW_W - PAD.right}
                   y2={y}
-                  stroke="currentColor"
-                  strokeOpacity={0.08}
+                  stroke="rgb(34 40 56)"
                   strokeWidth={1}
                 />
                 <text
                   x={PAD.left - 4}
                   y={y + 4}
                   textAnchor="end"
-                  fontSize={10}
-                  fill="currentColor"
-                  fillOpacity={0.4}
+                  fontSize={9}
+                  fontFamily="var(--font-geist-mono), ui-monospace, monospace"
+                  letterSpacing={0.5}
+                  fill="rgb(92 90 86)"
                 >
                   {Math.round(maxValue * frac)}
                 </text>
@@ -267,11 +271,12 @@ export function UsageTrendCard({ buckets }: UsageTrendCardProps) {
                 x={x}
                 y={VIEW_H - 4}
                 textAnchor="middle"
-                fontSize={10}
-                fill="currentColor"
-                fillOpacity={0.4}
+                fontSize={9}
+                fontFamily="var(--font-geist-mono), ui-monospace, monospace"
+                letterSpacing={0.5}
+                fill="rgb(92 90 86)"
               >
-                {label}
+                {label.toUpperCase()}
               </text>
             );
           })}

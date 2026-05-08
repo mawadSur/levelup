@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Button, Badge } from '@levelup/ui';
+import { Button, Badge, MonoLabel } from '@levelup/ui';
 import { paths, lessons, quizzes, progress } from '@/lib/api';
 import { MarkdownView } from '@/components/learn/markdown-view';
 import { QuizRunner } from '@/components/learn/quiz-runner';
@@ -125,12 +125,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
       {/* Reading progress bar — tracks scroll through the lesson article */}
       <ReadingProgressBar target="#lesson-article" />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Back link + lesson hero — animated fade-up entrance */}
+      <div className="mx-auto max-w-content px-6 py-10">
         <LessonHeroFade>
           <Link
             href={`/learn/${pathSlug}`}
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-paper-300 hover:text-paper-100 transition-colors"
+            className="mb-8 inline-flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500 transition-colors hover:text-paper-100"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path
@@ -141,43 +140,33 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 strokeLinejoin="round"
               />
             </svg>
-            {pathData.title}
+            {pathData.title.toUpperCase()}
           </Link>
         </LessonHeroFade>
 
-        {/* Mobile TOC jump */}
         <MobileTocSelect
           pathSlug={pathSlug}
           lessons={tocLessons.map((l) => ({ slug: l.slug, title: l.title, order: l.order }))}
           currentLessonSlug={lessonSlug}
         />
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
-          {/* Main column */}
-          <article id="lesson-article" className="min-w-0">
-            {/* Lesson header — wrapped in hero fade */}
-            <LessonHeroFade className="mb-8 space-y-2">
+        <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
+          <article id="lesson-article" className="mx-auto min-w-0 max-w-reading">
+            <LessonHeroFade className="mb-10 space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline" className="text-xs">
-                  Lesson {currentLesson.order}
-                </Badge>
-                <span className="text-xs text-paper-300">
-                  ~{currentLesson.estimatedMinutes} min
+                <MonoLabel>LESSON {String(currentLesson.order).padStart(2, '0')}</MonoLabel>
+                <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                  ~{currentLesson.estimatedMinutes} MIN
                 </span>
-                {isCompleted && (
-                  <Badge variant="default" className="text-xs bg-success">
-                    Completed
-                  </Badge>
-                )}
+                {isCompleted && <Badge variant="success">COMPLETED</Badge>}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-paper-100 sm:text-3xl">
+              <h1 className="font-serif text-display-md italic leading-tight text-paper-100">
                 {currentLesson.title}
               </h1>
             </LessonHeroFade>
 
-            {/* Video embed */}
             {youtubeEmbedUrl && (
-              <div className="mb-8 aspect-video w-full overflow-hidden rounded-xl border border-ink-600 bg-ink-700">
+              <div className="mb-8 aspect-video w-full overflow-hidden rounded-md border border-ink-600 bg-ink-800">
                 <iframe
                   src={youtubeEmbedUrl}
                   title={`Video: ${currentLesson.title}`}
@@ -189,44 +178,38 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </div>
             )}
 
-            {/* Lesson body */}
             {content ? (
               <MarkdownView content={content} className="pb-8" />
             ) : (
-              <div className="rounded-lg border border-dashed border-ink-600 p-10 text-center text-paper-300">
-                <p className="text-sm">Lesson content coming soon.</p>
+              <div className="rounded-md border border-dashed border-ink-600 p-10 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                LESSON CONTENT COMING SOON
               </div>
             )}
 
-            {/* End-of-lesson actions */}
-            <div className="mt-8 border-t border-ink-600 pt-8">
-              {/* No quiz, not complete: show "Mark as read" */}
+            <div className="mt-10 border-t border-ink-600 pt-8">
               {!quizData && !isCompleted && (
                 <MarkLessonReadButton lessonId={currentLesson.id} nextHref={nextLessonHref} />
               )}
 
-              {/* Has quiz, not passed: invite to quiz */}
               {quizData && !isCompleted && !hasPassedQuiz && (
                 <div className="flex flex-wrap items-center gap-4">
-                  <Button asChild variant="default">
+                  <Button asChild variant="primary">
                     <a href="#quiz">Take the quick check</a>
                   </Button>
-                  <span className="text-sm text-paper-300">
-                    Pass the quiz to mark this lesson complete.
+                  <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    PASS THE QUIZ TO MARK COMPLETE
                   </span>
                 </div>
               )}
 
-              {/* Completed without quiz: offer next lesson */}
               {isCompleted && !quizData && nextLessonHref && (
-                <Button asChild>
-                  <Link href={nextLessonHref}>Next lesson &rarr;</Link>
+                <Button asChild variant="primary">
+                  <Link href={nextLessonHref}>Next lesson →</Link>
                 </Button>
               )}
 
-              {/* Completed without quiz: end of path */}
               {isCompleted && !quizData && !nextLessonHref && (
-                <div className="flex items-center gap-2 text-sm font-medium text-success">
+                <div className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-success">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path
                       d="M3 8l3.5 3.5L13 5"
@@ -236,11 +219,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  Path complete! Check your certificate in{' '}
-                  <Link href="/learn" className="underline underline-offset-2">
-                    your paths
+                  PATH COMPLETE — VIEW YOUR CERTIFICATE IN{' '}
+                  <Link href="/learn" className="underline">
+                    YOUR PATHS
                   </Link>
-                  .
                 </div>
               )}
             </div>
