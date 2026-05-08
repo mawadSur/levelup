@@ -51,6 +51,13 @@ export function Hero() {
   );
 }
 
+function nowUtc(): string {
+  const d = new Date();
+  const hh = String(d.getUTCHours()).padStart(2, '0');
+  const mm = String(d.getUTCMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
 function TelemetryCard() {
   const rows: Array<{
     idx: string;
@@ -104,7 +111,7 @@ function TelemetryCard() {
           <span className="h-2 w-2 animate-pulse rounded-full bg-signal" aria-hidden />
           <MonoLabel className="text-paper-300">TELEMETRY · LIVE</MonoLabel>
         </div>
-        <MonoLabel className="text-paper-500">14:22 UTC</MonoLabel>
+        <MonoLabel className="text-paper-500">{nowUtc()} UTC</MonoLabel>
       </div>
 
       <ul className="space-y-1">
