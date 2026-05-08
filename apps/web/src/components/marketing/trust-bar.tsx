@@ -1,28 +1,24 @@
-'use client';
+import { MonoLabel } from '@levelup/ui';
 
-import { ScrollReveal } from '@/lib/motion/scroll-reveal';
-import { Stagger, ScrollItem } from '@/lib/motion/stagger';
-
-const LOGOS = ['Acme Co', 'Northwind', 'Riverstone Health', 'Cohort Capital', 'Helix Insurance'];
+const LOGOS = ['ACME CO', 'NORTHWIND', 'RIVERSTONE HEALTH', 'COHORT CAPITAL', 'HELIX INSURANCE'];
 
 export function TrustBar() {
   return (
-    <section className="border-y border-border bg-muted/30 py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <p className="mb-8 text-center text-sm font-medium uppercase tracking-widest text-muted-foreground">
-            Built for HR, IT, and L&D teams at
-          </p>
-        </ScrollReveal>
-        <Stagger className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
-          {LOGOS.map((name) => (
-            <ScrollItem key={name}>
-              <span className="font-semibold text-lg tracking-tight text-muted-foreground/60 transition-colors duration-200 hover:text-muted-foreground">
+    <section className="border-b border-ink-600 bg-ink-900">
+      <div className="mx-auto max-w-content px-6 py-12 lg:px-8">
+        <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-10">
+          <MonoLabel className="shrink-0 text-paper-500">FIELDED WITH HR · IT · L&D AT</MonoLabel>
+          <div className="flex flex-1 flex-wrap items-baseline gap-x-10 gap-y-3">
+            {LOGOS.map((name) => (
+              <span
+                key={name}
+                className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300"
+              >
                 {name}
               </span>
-            </ScrollItem>
-          ))}
-        </Stagger>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
