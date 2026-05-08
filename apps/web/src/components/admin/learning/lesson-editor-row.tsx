@@ -46,7 +46,7 @@ export function LessonEditorRow({
       aria-pressed={isActive}
       className={`flex cursor-pointer items-center gap-2 rounded-lg border px-2 py-2 text-sm transition-colors ${
         isActive
-          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30'
+          ? 'border-signal bg-signal/10 dark:bg-ink-800/30'
           : 'border-ink-600 bg-ink-900 hover:bg-ink-700/40'
       }`}
     >

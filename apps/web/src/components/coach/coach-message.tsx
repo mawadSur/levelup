@@ -177,9 +177,9 @@ function MiniMarkdown({ text }: { text: string }) {
 function TypingDots() {
   return (
     <span className="inline-flex items-center gap-0.5 align-middle" aria-label="Coach is typing">
-      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500 [animation-delay:0ms]" />
-      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500 [animation-delay:150ms]" />
-      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500 [animation-delay:300ms]" />
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal [animation-delay:0ms]" />
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal [animation-delay:150ms]" />
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-signal [animation-delay:300ms]" />
     </span>
   );
 }
@@ -295,7 +295,7 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
 
   return (
     <div className="flex items-start gap-3">
-      <span className="mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
+      <span className="mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/15 text-signal dark:bg-ink-800/50 dark:text-signal">
         <Sparkles size={14} aria-hidden="true" />
       </span>
 
@@ -347,8 +347,8 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
         {hasImproved && (
           <SectionReveal>
             <div className="overflow-hidden rounded-2xl border bg-ink-900">
-              <div className="flex items-center justify-between border-b bg-indigo-50/40 px-4 py-2 dark:bg-indigo-950/20">
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+              <div className="flex items-center justify-between border-b bg-signal/10/40 px-4 py-2 dark:bg-ink-800/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-signal-dim dark:text-signal">
                   <Sparkles size={12} aria-hidden="true" />
                   Try this prompt instead
                 </span>
@@ -410,7 +410,7 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
                 'flex items-start gap-3 rounded-xl border border-dashed bg-ink-700/20 px-4 py-3',
               )}
             >
-              <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-950/40 dark:text-amber-300">
+              <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-warning/15 text-warning bg-warning/10/40 dark:text-warning">
                 <Lightbulb size={12} aria-hidden="true" />
               </span>
               <div className="flex-1">

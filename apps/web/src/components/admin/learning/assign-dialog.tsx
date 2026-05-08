@@ -197,7 +197,7 @@ export function AssignDialog({ path, users, departments, open, onOpenChange }: A
                     >
                       <div
                         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-                          selected ? 'border-indigo-600 bg-indigo-600' : 'border-ink-600'
+                          selected ? 'border-signal bg-signal' : 'border-ink-600'
                         }`}
                       >
                         {selected && <Check className="h-3 w-3 text-white" />}

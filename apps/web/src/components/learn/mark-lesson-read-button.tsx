@@ -29,7 +29,7 @@ export function MarkLessonReadButton({ lessonId, nextHref }: MarkLessonReadButto
   if (state === 'done') {
     return (
       <div className="flex flex-wrap items-center gap-4">
-        <span className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+        <span className="flex items-center gap-2 text-sm font-medium text-success">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path
               d="M3 8l3.5 3.5L13 5"

@@ -33,11 +33,9 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
               key={inputId}
               htmlFor={inputId}
               className={cn(
-                'group relative flex cursor-pointer items-start gap-3 rounded-lg border bg-ink-900 px-4 py-3.5 text-sm transition-colors',
-                'hover:border-indigo-300 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20',
-                isSelected
-                  ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500 dark:border-indigo-400 dark:bg-indigo-950/40 dark:ring-indigo-400'
-                  : 'border-ink-600',
+                'group relative flex cursor-pointer items-start gap-3 rounded-sm border bg-ink-900 px-4 py-3.5 text-body-sm transition-colors',
+                'hover:border-signal/55 hover:bg-ink-800',
+                isSelected ? 'border-signal bg-ink-800 ring-1 ring-signal' : 'border-ink-600',
               )}
             >
               <input
@@ -53,7 +51,7 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
                 className={cn(
                   'mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-colors',
                   isSelected
-                    ? 'border-indigo-500 bg-indigo-500 text-white dark:border-indigo-400 dark:bg-indigo-400'
+                    ? 'border-signal bg-signal text-white dark:border-signal/55 dark:bg-signal/55'
                     : 'border-ink-500 bg-ink-900',
                 )}
                 aria-hidden="true"

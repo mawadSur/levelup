@@ -23,11 +23,11 @@ const KIND_META: Record<
   DailyQuestKind,
   { Icon: React.ElementType; bg: string; fg: string; label: string }
 > = {
-  lesson: { Icon: BookOpen, bg: 'bg-blue-100', fg: 'text-blue-600', label: 'Lesson' },
-  coach: { Icon: MessageSquareText, bg: 'bg-violet-100', fg: 'text-violet-600', label: 'Coach' },
-  prompt: { Icon: BookmarkPlus, bg: 'bg-emerald-100', fg: 'text-emerald-600', label: 'Prompt' },
-  quiz: { Icon: Target, bg: 'bg-amber-100', fg: 'text-amber-600', label: 'Quiz' },
-  streak: { Icon: Flame, bg: 'bg-orange-100', fg: 'text-orange-600', label: 'Streak' },
+  lesson: { Icon: BookOpen, bg: 'bg-ink-700', fg: 'text-paper-100', label: 'Lesson' },
+  coach: { Icon: MessageSquareText, bg: 'bg-ink-700', fg: 'text-paper-100', label: 'Coach' },
+  prompt: { Icon: BookmarkPlus, bg: 'bg-success/15', fg: 'text-success', label: 'Prompt' },
+  quiz: { Icon: Target, bg: 'bg-warning/15', fg: 'text-warning', label: 'Quiz' },
+  streak: { Icon: Flame, bg: 'bg-warning/15', fg: 'text-warning', label: 'Streak' },
 };
 
 function kindLabel(kind: DailyQuestKind, target: number): string {
@@ -133,7 +133,7 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
           <div className="relative flex shrink-0 items-center gap-2 pl-2">
             {claimed ? (
               <span className="flex items-center gap-1 text-xs text-paper-300">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden="true" />
+                <CheckCircle2 className="h-4 w-4 text-success" aria-hidden="true" />
                 Claimed
               </span>
             ) : isReady ? (

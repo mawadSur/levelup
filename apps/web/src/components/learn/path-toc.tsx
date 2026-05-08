@@ -53,7 +53,7 @@ export function PathToc({
                     className={cn(
                       'flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold',
                       lesson.status === 'COMPLETED'
-                        ? 'bg-emerald-100 text-emerald-600'
+                        ? 'bg-success/15 text-success'
                         : isCurrent
                           ? 'bg-signal/20 text-signal'
                           : 'bg-ink-700 text-paper-300',

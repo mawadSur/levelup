@@ -398,14 +398,14 @@ export function QuizRunner({
       <style>{QUIZ_KEYFRAMES}</style>
       <Card
         id="quiz"
-        className={cn('mt-10 border-2', passed ? 'border-emerald-500/50' : 'border-danger/40')}
+        className={cn('mt-10 border-2', passed ? 'border-success/50' : 'border-danger/40')}
       >
         <CardHeader>
           <div className="flex items-center gap-3">
             <div
               className={cn(
                 'flex h-10 w-10 items-center justify-center rounded-full text-lg',
-                passed ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600',
+                passed ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger',
               )}
               aria-hidden="true"
             >

@@ -195,7 +195,7 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
         {/* Header */}
         <header className="space-y-1">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+            <Sparkles className="h-6 w-6 text-signal" aria-hidden="true" />
             <h1 className="text-2xl font-bold tracking-tight text-paper-100">
               Build a path with AI
             </h1>
@@ -290,7 +290,7 @@ export function PathBuilderForm({ initialRecent }: PathBuilderFormProps) {
                   type="button"
                   onClick={() => handleSelectRecent(r)}
                   className={`w-full rounded-lg border p-3 text-left text-sm transition-colors hover:bg-ink-700/50 ${
-                    active?.id === r.id ? 'border-indigo-500' : 'border-ink-600'
+                    active?.id === r.id ? 'border-signal' : 'border-ink-600'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -394,7 +394,7 @@ function GeneratingPanel() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
-          <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
+          <Loader2 className="h-4 w-4 animate-spin text-signal" />
           Generating your path
         </CardTitle>
       </CardHeader>
@@ -412,7 +412,7 @@ function GeneratingPanel() {
                 transition={{ delay: i * 0.4, duration: 0.3 }}
                 className="flex items-center gap-2 text-sm"
               >
-                <Loader2 className="h-3 w-3 animate-spin text-indigo-500" />
+                <Loader2 className="h-3 w-3 animate-spin text-signal" />
                 <span>{step}</span>
               </motion.li>
             ))}
@@ -440,7 +440,7 @@ function ReadyPanel({ draft, accepting, onAccept, onEdit, acceptedPathId }: Read
         <div className="flex items-start justify-between gap-3">
           <div>
             <CardTitle className="flex items-center gap-2 text-base">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
               Draft ready
             </CardTitle>
             <p className="mt-2 text-lg font-semibold text-paper-100">{draft.title}</p>
@@ -684,7 +684,7 @@ function StatusBadge({ status }: { status: PathGenerationStatusValue }) {
       );
     case 'READY':
       return (
-        <Badge variant="default" className="gap-1 bg-emerald-600">
+        <Badge variant="default" className="gap-1 bg-success">
           <CheckCircle2 className="h-3 w-3" />
           Ready
         </Badge>

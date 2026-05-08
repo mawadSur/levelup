@@ -90,10 +90,10 @@ export function StreakCallout({ streak, earnedToday, nextLessonHref }: StreakCal
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             aria-hidden="true"
           >
-            <Flame className="h-5 w-5 text-orange-500" />
+            <Flame className="h-5 w-5 text-warning" />
           </motion.div>
         ) : (
-          <Flame className="h-5 w-5 text-orange-500" aria-hidden="true" />
+          <Flame className="h-5 w-5 text-warning" aria-hidden="true" />
         )}
       </div>
 

@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  MonoLabel,
   Separator,
 } from '@levelup/ui';
 import type { PolicyVersion } from '@/lib/api/policies';
@@ -56,16 +57,14 @@ export function PolicyPageClient({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Company AI Policy</h1>
-          <p className="mt-1 text-sm text-paper-300">
-            Publish your AI policy. Define which tools are approved for which data classes.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-content px-6 py-10">
+      <header className="mb-8 space-y-2">
+        <MonoLabel>GOVERNANCE</MonoLabel>
+        <h1 className="font-serif text-display-md italic text-paper-100">Company AI Policy</h1>
+        <p className="max-w-reading text-body text-paper-300">
+          Publish your AI policy. Define which tools are approved for which data classes.
+        </p>
+      </header>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left column — current policy + editor */}
@@ -74,47 +73,44 @@ export function PolicyPageClient({
           {current ? (
             <Card>
               <CardHeader className="flex flex-row items-center gap-3 pb-3">
-                <FileText className="h-5 w-5 text-indigo-600 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <CardTitle className="text-base">Current policy — v{current.version}</CardTitle>
-                  <p className="text-xs text-paper-300 mt-0.5">
-                    Published {formatDate(current.publishedAt)}
+                <FileText className="h-5 w-5 shrink-0 text-signal" aria-hidden="true" />
+                <div className="min-w-0 flex-1">
+                  <MonoLabel>CURRENT POLICY · v{current.version}</MonoLabel>
+                  <CardTitle className="mt-1 font-serif text-h2 italic text-paper-100">
+                    Active rules of engagement
+                  </CardTitle>
+                  <p className="mt-1 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    PUBLISHED {formatDate(current.publishedAt).toUpperCase()}
                   </p>
                 </div>
-                <Badge variant="secondary">Active</Badge>
+                <Badge variant="signal">ACTIVE</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="line-clamp-3 text-sm text-paper-300">
+                <p className="line-clamp-3 text-body-sm text-paper-300">
                   {current.policyText.slice(0, 200)}
                   {current.policyText.length > 200 ? '…' : ''}
                 </p>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5"
-                    onClick={() => setViewVersion(current)}
-                  >
+                  <Button variant="secondary" size="sm" onClick={() => setViewVersion(current)}>
                     <Eye className="h-4 w-4" />
                     View
                   </Button>
-                  <Button size="sm" className="gap-1.5" onClick={() => setEditorOpen(true)}>
+                  <Button variant="primary" size="sm" onClick={() => setEditorOpen(true)}>
                     <ChevronRight className="h-4 w-4" />
-                    Edit & republish
+                    Edit &amp; republish
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ) : (
-            /* Empty state */
-            <Card className="border-dashed border-2">
-              <CardContent className="py-12 text-center">
-                <FileText className="mx-auto h-10 w-10 text-paper-300/40 mb-3" />
-                <h2 className="text-base font-semibold text-paper-100">No policy yet</h2>
-                <p className="mt-1 text-sm text-paper-300 max-w-xs mx-auto">
+            <Card className="border-dashed">
+              <CardContent className="space-y-4 py-12 text-center">
+                <FileText className="mx-auto h-10 w-10 text-paper-500" aria-hidden="true" />
+                <MonoLabel>NO POLICY YET</MonoLabel>
+                <p className="mx-auto max-w-xs text-body-sm text-paper-300">
                   Adopt the LevelUp sample policy to get started quickly.
                 </p>
-                <Button className="mt-4" onClick={() => setEditorOpen(true)}>
+                <Button variant="primary" onClick={() => setEditorOpen(true)}>
                   Create AI policy
                 </Button>
               </CardContent>
@@ -139,17 +135,17 @@ export function PolicyPageClient({
         {/* Right column — history */}
         <div>
           <Card>
-            <CardHeader className="pb-3 flex flex-row items-center gap-2">
-              <Clock className="h-4 w-4 text-paper-300" />
-              <CardTitle className="text-sm font-semibold">Version history</CardTitle>
+            <CardHeader className="flex flex-row items-center gap-2 pb-3">
+              <Clock className="h-4 w-4 text-paper-500" aria-hidden="true" />
+              <MonoLabel>VERSION HISTORY</MonoLabel>
             </CardHeader>
             <CardContent>
               <PolicyHistoryList policies={allVersions} currentId={current?.id ?? null} />
               {allVersions.length > 0 && (
                 <>
                   <Separator className="my-3" />
-                  <p className="text-xs text-paper-300 text-center">
-                    Click a version below to view (read-only)
+                  <p className="text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    SELECT A VERSION TO VIEW (READ-ONLY)
                   </p>
                   <ul className="mt-2 space-y-1">
                     {[...allVersions]
@@ -159,9 +155,9 @@ export function PolicyPageClient({
                           <button
                             type="button"
                             onClick={() => setViewVersion(v)}
-                            className="w-full text-left rounded px-2 py-1 text-xs text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-colors"
+                            className="w-full rounded-sm px-2 py-1 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-signal transition-colors hover:bg-ink-700 hover:text-paper-100"
                           >
-                            View v{v.version} &rarr;
+                            VIEW v{v.version} →
                           </button>
                         </li>
                       ))}

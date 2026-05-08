@@ -6,14 +6,13 @@ import { Plus, Pencil, Trash2, AlertTriangle, Sparkles } from 'lucide-react';
 import {
   Badge,
   Button,
-  Card,
-  CardContent,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  MonoLabel,
   Separator,
   Tabs,
   TabsContent,
@@ -84,28 +83,28 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Learning</h1>
-          <p className="mt-1 text-sm text-paper-300">
-            Assign paths, build custom paths, see who&apos;s learning what.
+    <div className="mx-auto max-w-content px-6 py-10">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <MonoLabel>CURRICULUM</MonoLabel>
+          <h1 className="font-serif text-display-md italic text-paper-100">Learning paths</h1>
+          <p className="max-w-reading text-body text-paper-300">
+            Assign paths, build custom curricula, and watch who&apos;s training.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Button asChild variant="outline" className="gap-2">
+          <Button asChild variant="secondary">
             <Link href="/admin/learning/build">
               <Sparkles className="h-4 w-4" />
               Build with AI
             </Link>
           </Button>
-          <Button className="gap-2" onClick={() => setCreateOpen(true)}>
+          <Button variant="primary" onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4" />
             Create custom path
           </Button>
         </div>
-      </div>
+      </header>
 
       {/* Tabs */}
       <Tabs defaultValue="catalog">
@@ -118,8 +117,8 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
         {/* ---- Path catalog ---- */}
         <TabsContent value="catalog">
           {catalogPaths.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-ink-600 p-12 text-center">
-              <p className="text-paper-300">No published paths yet.</p>
+            <div className="rounded-md border border-dashed border-ink-600 p-12 text-center">
+              <MonoLabel>NO PUBLISHED PATHS YET</MonoLabel>
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,63 +137,79 @@ export function LearningPageClient({ initialPaths, users, departments }: Learnin
         {/* ---- Custom paths ---- */}
         <TabsContent value="custom">
           {customPaths.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-ink-600 p-12 text-center">
-              <p className="text-paper-300">
-                No custom paths yet.{' '}
-                <button
-                  type="button"
-                  className="text-indigo-600 underline hover:no-underline"
-                  onClick={() => setCreateOpen(true)}
-                >
-                  Create one
-                </button>
-              </p>
+            <div className="rounded-md border border-dashed border-ink-600 p-12 text-center">
+              <MonoLabel className="block">NO CUSTOM PATHS YET</MonoLabel>
+              <button
+                type="button"
+                className="mt-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal hover:text-paper-100"
+                onClick={() => setCreateOpen(true)}
+              >
+                CREATE ONE →
+              </button>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-ink-600">
-              <table className="w-full text-sm">
+            <div className="overflow-hidden rounded-md border border-ink-600">
+              <table className="w-full text-body-sm">
                 <thead>
-                  <tr className="border-b border-ink-600 bg-ink-700/50">
-                    <th className="px-4 py-3 text-left font-semibold">Title</th>
-                    <th className="px-4 py-3 text-left font-semibold">Lessons</th>
-                    <th className="px-4 py-3 text-left font-semibold">Published</th>
-                    <th className="px-4 py-3 text-right font-semibold">Actions</th>
+                  <tr className="border-b border-ink-600 bg-ink-800">
+                    <th className="px-4 py-2.5 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      Title
+                    </th>
+                    <th className="px-4 py-2.5 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      Lessons
+                    </th>
+                    <th className="px-4 py-2.5 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      Status
+                    </th>
+                    <th className="px-4 py-2.5 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      <span className="sr-only">Actions</span>
+                    </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
+                <tbody className="divide-y divide-ink-600">
                   {customPaths.map((path) => (
-                    <tr key={path.id} className="bg-ink-900 hover:bg-ink-700/30 transition-colors">
+                    <tr key={path.id} className="bg-ink-900 transition-colors hover:bg-ink-800">
                       <td className="px-4 py-3">
                         <p className="font-medium text-paper-100">{path.title}</p>
                         {path.description && (
-                          <p className="mt-0.5 text-xs text-paper-300 line-clamp-1">
+                          <p className="mt-0.5 text-body-sm text-paper-300 line-clamp-1">
                             {path.description}
                           </p>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-paper-300">{path.lessonCount}</td>
+                      <td className="px-4 py-3 font-mono text-mono-sm tabular-nums text-paper-300">
+                        {path.lessonCount}
+                      </td>
                       <td className="px-4 py-3">
                         <button
                           type="button"
                           role="switch"
                           aria-checked={path.isPublished}
                           onClick={() => handleTogglePublish(path)}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                            path.isPublished ? 'bg-indigo-600' : 'bg-ink-700-foreground/30'
+                          className={`relative inline-flex h-5 w-9 items-center rounded-data transition-colors ${
+                            path.isPublished ? 'bg-signal' : 'bg-ink-700'
                           }`}
                         >
                           <span
-                            className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform ${
-                              path.isPublished ? 'translate-x-4' : 'translate-x-0.5'
+                            className={`inline-block h-3.5 w-3.5 rounded-data transition-transform ${
+                              path.isPublished
+                                ? 'translate-x-4 bg-ink-900'
+                                : 'translate-x-0.5 bg-paper-300'
                             }`}
                           />
                           <span className="sr-only">
                             {path.isPublished ? 'Published' : 'Draft'}
                           </span>
                         </button>
+                        <Badge
+                          variant={path.isPublished ? 'signal' : 'default'}
+                          className="ml-3 align-middle"
+                        >
+                          {path.isPublished ? 'PUBLISHED' : 'DRAFT'}
+                        </Badge>
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1">
                           <Button asChild variant="ghost" size="sm">
                             <Link href={`/admin/learning/${path.id}/edit`} className="gap-1">
                               <Pencil className="h-3.5 w-3.5" />

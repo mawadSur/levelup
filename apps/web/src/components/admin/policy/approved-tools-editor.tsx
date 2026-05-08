@@ -146,8 +146,8 @@ export function ApprovedToolsEditor({ tiers, onChange }: ApprovedToolsEditorProp
                         onClick={() => toggleClass(tierIdx, toolIdx, cls)}
                         className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
                           active
-                            ? 'border-indigo-600 bg-indigo-600 text-white'
-                            : 'border-ink-600 text-paper-300 hover:border-indigo-400'
+                            ? 'border-signal bg-signal text-white'
+                            : 'border-ink-600 text-paper-300 hover:border-signal/55'
                         }`}
                       >
                         {cls}

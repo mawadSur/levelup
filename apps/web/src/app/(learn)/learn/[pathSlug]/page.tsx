@@ -112,7 +112,7 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
 
       {/* Not assigned CTA */}
       {isNotAssigned && (
-        <Card className="mb-8 border-amber-300/50 bg-amber-50/50">
+        <Card className="mb-8 border-warning/50 bg-warning/10/50">
           <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-semibold text-paper-100">You&apos;re not assigned to this path</p>
@@ -184,8 +184,8 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
                 </div>
 
                 {isPathComplete ? (
-                  <div className="rounded-lg border border-emerald-300/50 bg-emerald-50/50 p-3 text-center">
-                    <p className="text-sm font-semibold text-emerald-700">Certificate earned!</p>
+                  <div className="rounded-lg border border-success/40/50 bg-success/10/50 p-3 text-center">
+                    <p className="text-sm font-semibold text-success">Certificate earned!</p>
                     <Link
                       href={`/certificates?path=${pathData.id}`}
                       className="mt-1 text-xs text-signal hover:underline"

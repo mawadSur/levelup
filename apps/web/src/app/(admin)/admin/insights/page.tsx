@@ -64,7 +64,7 @@ export default async function AdminInsightsPage() {
           value={totals.xpEarned}
           sublabel="last 30 days"
           icon={Zap}
-          iconClassName="bg-emerald-500/10 text-emerald-600"
+          iconClassName="bg-success/10 text-success"
         />
       </div>
 

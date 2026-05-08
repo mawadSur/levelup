@@ -113,7 +113,7 @@ export function ResultSummary() {
     <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
       {/* Hero */}
       <div className="text-center">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-signal/15 px-3 py-1 text-xs font-medium text-signal-dim dark:bg-ink-800/50 dark:text-signal">
           <Sparkles size={14} aria-hidden="true" />
           Assessment complete
         </div>

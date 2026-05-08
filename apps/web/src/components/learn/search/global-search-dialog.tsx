@@ -177,7 +177,7 @@ export function GlobalSearchDialog({ open, onOpenChange }: GlobalSearchDialogPro
 
         {/* Stub-mode banner */}
         {stub && (
-          <div className="px-4 py-2 bg-amber-50 dark:bg-amber-950 border-b text-xs text-amber-700 dark:text-amber-300">
+          <div className="px-4 py-2 bg-warning/10 bg-warning/10 border-b text-xs text-warning dark:text-warning">
             Search relevance is limited without semantic search.
           </div>
         )}

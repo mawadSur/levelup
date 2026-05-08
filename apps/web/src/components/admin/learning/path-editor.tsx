@@ -235,7 +235,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
             setTitle(e.target.value);
             markDirty();
           }}
-          className="flex-1 bg-transparent text-sm font-semibold text-paper-100 outline-none ring-0 focus:ring-1 focus:ring-indigo-500 rounded px-1 py-0.5"
+          className="flex-1 bg-transparent text-sm font-semibold text-paper-100 outline-none ring-0 focus:ring-1 focus:ring-signal rounded px-1 py-0.5"
           aria-label="Path title"
           maxLength={200}
         />
@@ -257,7 +257,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
             aria-checked={isPublished}
             onClick={handlePublishToggle}
             className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
-              isPublished ? 'bg-indigo-600' : 'bg-ink-700-foreground/30'
+              isPublished ? 'bg-signal' : 'bg-ink-700'
             }`}
           >
             <span

@@ -1,5 +1,5 @@
 import { ShieldAlert } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@levelup/ui';
+import { MonoLabel } from '@levelup/ui';
 
 interface SensitiveWarningBannerProps {
   reason?: string;
@@ -12,16 +12,20 @@ interface SensitiveWarningBannerProps {
  */
 export function SensitiveWarningBanner({ reason }: SensitiveWarningBannerProps) {
   return (
-    <Alert
-      variant="destructive"
-      className="border-amber-300 bg-amber-50 text-amber-900 [&>svg]:text-amber-700 dark:border-amber-700/40 dark:bg-amber-950/40 dark:text-amber-200 dark:[&>svg]:text-amber-300"
+    <div
+      role="alert"
+      className="flex items-start gap-3 rounded-sm border border-warning/40 bg-warning/10 px-4 py-3"
     >
-      <ShieldAlert className="h-4 w-4" aria-hidden="true" />
-      <AlertTitle>Sensitive data detected</AlertTitle>
-      <AlertDescription>
-        {reason ??
-          'Your prompt looks like it may contain sensitive information (PII, secrets, or customer data). Consider redacting it before sharing with public AI tools.'}
-      </AlertDescription>
-    </Alert>
+      <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
+      <div className="space-y-1">
+        <MonoLabel tone="signal" className="text-warning">
+          SENSITIVE INPUT DETECTED — REVIEW BEFORE SENDING
+        </MonoLabel>
+        <p className="text-body-sm text-paper-100">
+          {reason ??
+            'Your prompt looks like it may contain sensitive information (PII, secrets, or customer data). Consider redacting before sharing with public AI tools.'}
+        </p>
+      </div>
+    </div>
   );
 }

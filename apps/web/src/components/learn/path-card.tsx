@@ -114,7 +114,7 @@ export function PathCard({ path, recommended = false }: PathCardProps) {
         aria-hidden="true"
       >
         {isComplete && (
-          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-emerald-600 shadow-sm">
+          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-success shadow-sm">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path
                 d="M2.5 7.5l3 3 6-6"

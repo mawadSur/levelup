@@ -63,41 +63,43 @@ export function PeriodSelector({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {/* Period pills */}
-      <div className="flex rounded-lg border border-ink-600 bg-ink-700/30 p-1 gap-1">
-        {PERIOD_OPTIONS.map(({ label, value }) => (
+      {/* Period pills — sharp data-radius mono row */}
+      <div className="flex gap-0 overflow-hidden rounded-data border border-ink-600">
+        {PERIOD_OPTIONS.map(({ label, value }, idx) => (
           <button
             key={value}
             type="button"
             onClick={() => onPeriodChange(value)}
-            className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+            className={`relative px-3 py-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] transition-colors ${
+              idx > 0 ? 'border-l border-ink-600' : ''
+            } ${
               period === value
-                ? 'bg-ink-900 shadow-sm text-paper-100'
-                : 'text-paper-300 hover:text-paper-100'
+                ? 'bg-signal text-ink-900'
+                : 'bg-ink-800 text-paper-300 hover:bg-ink-700 hover:text-paper-100'
             }`}
           >
-            {label}
+            {label.toUpperCase()}
           </button>
         ))}
       </div>
 
       {/* Custom date range inputs */}
       {period === 'custom' && (
-        <div className="flex items-center gap-2 text-sm">
-          <Calendar className="h-4 w-4 text-paper-300" />
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-paper-500" aria-hidden="true" />
           <input
             type="date"
             value={customStart}
             onChange={(e) => onCustomChange?.(e.target.value, customEnd)}
-            className="rounded-md border border-ink-600 bg-ink-900 px-2 py-1 text-sm text-paper-100"
+            className="rounded-sm border border-ink-500 bg-transparent px-2 py-1 font-mono text-mono-sm text-paper-100"
             aria-label="Start date"
           />
-          <span className="text-paper-300">—</span>
+          <span className="font-mono text-mono-sm text-paper-500">—</span>
           <input
             type="date"
             value={customEnd}
             onChange={(e) => onCustomChange?.(customStart, e.target.value)}
-            className="rounded-md border border-ink-600 bg-ink-900 px-2 py-1 text-sm text-paper-100"
+            className="rounded-sm border border-ink-500 bg-transparent px-2 py-1 font-mono text-mono-sm text-paper-100"
             aria-label="End date"
           />
         </div>
@@ -105,20 +107,13 @@ export function PeriodSelector({
 
       <div className="flex-1" />
 
-      {/* Export button */}
-      <Button
-        variant="outline"
-        size="sm"
-        className="gap-2"
-        onClick={handleExport}
-        disabled={exporting}
-      >
+      <Button variant="secondary" size="sm" onClick={handleExport} disabled={exporting}>
         {exporting ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
         ) : (
-          <Download className="h-4 w-4" />
+          <Download className="h-4 w-4" aria-hidden="true" />
         )}
-        Export CSV
+        <span className="font-mono text-mono-sm uppercase tracking-[0.05em]">EXPORT CSV</span>
       </Button>
     </div>
   );

@@ -117,7 +117,7 @@ export function QuizEditor({ quiz, onChange }: QuizEditorProps) {
                     name={`correct-${qi}`}
                     checked={question.correctIndex === ci}
                     onChange={() => updateQuestion(qi, { correctIndex: ci })}
-                    className="h-3.5 w-3.5 shrink-0 accent-indigo-600"
+                    className="h-3.5 w-3.5 shrink-0 accent-signal"
                     aria-label={`Choice ${ci + 1} is correct`}
                   />
                   <Input

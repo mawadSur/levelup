@@ -104,7 +104,7 @@ export default async function CoachHistoryPage() {
             <li key={c.id}>
               <Link
                 href={`/coach?c=${encodeURIComponent(c.id)}`}
-                className="block rounded-lg border bg-ink-900 p-4 transition-colors hover:border-indigo-300 hover:bg-indigo-50/30 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/10"
+                className="block rounded-lg border bg-ink-900 p-4 transition-colors hover:border-signal/35 hover:bg-signal/10/30 dark:hover:border-signal-dim dark:hover:bg-ink-800/10"
               >
                 <div className="mb-1 flex items-center justify-between gap-3">
                   <span className="text-xs text-paper-300">{formatDate(c.updatedAt)}</span>

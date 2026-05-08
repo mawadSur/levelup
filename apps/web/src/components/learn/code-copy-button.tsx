@@ -58,7 +58,7 @@ export function CodeCopyButton({ code }: CodeCopyButtonProps) {
         ].join(' ')}
       >
         {copied ? (
-          <Check size={14} aria-hidden="true" className="ccb-bounce text-emerald-600" />
+          <Check size={14} aria-hidden="true" className="ccb-bounce text-success" />
         ) : (
           <Copy size={14} aria-hidden="true" />
         )}

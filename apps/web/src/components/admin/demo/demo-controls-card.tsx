@@ -15,7 +15,7 @@ export function DemoControlsCard() {
     <>
       <Button
         variant="outline"
-        className="border-amber-400 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-400 dark:hover:bg-amber-950"
+        className="border-warning text-warning hover:bg-warning/15 dark:border-warning dark:text-warning dark:hover:bg-warning/15"
         onClick={() => setOpen(true)}
       >
         Reset demo data…

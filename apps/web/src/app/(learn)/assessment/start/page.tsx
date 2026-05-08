@@ -13,7 +13,7 @@ export default function AssessmentStartPage() {
       <Card>
         <CardContent className="pt-8 pb-8">
           <div className="mb-5 flex justify-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-signal/15 text-signal dark:bg-ink-800/50 dark:text-signal">
               <Sparkles size={22} aria-hidden="true" />
             </span>
           </div>

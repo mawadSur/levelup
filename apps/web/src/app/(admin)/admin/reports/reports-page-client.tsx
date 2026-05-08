@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Separator } from '@levelup/ui';
+import { Card, CardContent, MonoLabel, NumberedSection, Separator } from '@levelup/ui';
 import type { CompletionReport, DeptHeatmapCell, RiskFlag } from '@/lib/api/reports';
 import { PeriodSelector, type Period } from '@/components/admin/reports/period-selector';
 import { StatRow } from '@/components/admin/reports/stat-row';
@@ -26,12 +26,12 @@ export function ReportsPageClient({
   const [customEnd, setCustomEnd] = React.useState('');
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="space-y-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-paper-100">Reports</h1>
-          <p className="mt-1 text-sm text-paper-300">
+    <div className="mx-auto max-w-content space-y-12 px-6 py-10">
+      <header className="space-y-4">
+        <div className="space-y-2">
+          <MonoLabel>TELEMETRY</MonoLabel>
+          <h1 className="font-serif text-display-md italic text-paper-100">Reports</h1>
+          <p className="max-w-reading text-body text-paper-300">
             Monitor learning progress, identify skill gaps, and act on risk signals.
           </p>
         </div>
@@ -45,57 +45,53 @@ export function ReportsPageClient({
             setCustomEnd(e);
           }}
         />
-      </div>
+      </header>
 
-      {/* Stat row */}
-      <StatRow report={completionReport} riskFlags={riskFlags} />
+      <NumberedSection numeral="01" eyebrow="OVERVIEW" className="space-y-4">
+        <StatRow report={completionReport} riskFlags={riskFlags} />
+      </NumberedSection>
 
-      {/* Department skill heatmap */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Department skill heatmap</CardTitle>
-          <p className="text-xs text-paper-300 mt-0.5">
-            Cells show member count. Color intensity = completion rate.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <SkillsHeatmap cells={heatmapCells} />
-        </CardContent>
-      </Card>
-
-      {/* Completion bars — 2-column on md+ */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <NumberedSection numeral="02" eyebrow="SKILL HEATMAP" className="space-y-4">
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">By department</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DeptCompletionBars byDepartment={completionReport.byDepartment} />
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-end justify-between gap-3">
+              <div className="space-y-1">
+                <MonoLabel>BY DEPARTMENT × SKILL</MonoLabel>
+                <p className="text-body-sm text-paper-300">
+                  Cells show member count. Color intensity tracks completion rate.
+                </p>
+              </div>
+            </div>
+            <SkillsHeatmap cells={heatmapCells} />
           </CardContent>
         </Card>
+      </NumberedSection>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">By path</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PathCompletionBars byPath={completionReport.byPath} />
-          </CardContent>
-        </Card>
-      </div>
+      <NumberedSection numeral="03" eyebrow="COMPLETION BREAKDOWN" className="space-y-4">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardContent className="space-y-4 p-6">
+              <MonoLabel>BY DEPARTMENT</MonoLabel>
+              <DeptCompletionBars byDepartment={completionReport.byDepartment} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="space-y-4 p-6">
+              <MonoLabel>BY PATH</MonoLabel>
+              <PathCompletionBars byPath={completionReport.byPath} />
+            </CardContent>
+          </Card>
+        </div>
+      </NumberedSection>
 
       <Separator />
 
-      {/* Risk flags */}
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold text-paper-100">Risk flags</h2>
-          <p className="text-sm text-paper-300">
-            Top 20 users by severity. Click a name to view their profile.
-          </p>
-        </div>
+      <NumberedSection numeral="04" eyebrow="RISK FLAGS" className="space-y-4">
+        <p className="max-w-reading text-body-sm text-paper-300">
+          Top 20 users by severity. Click a name to drill into their profile.
+        </p>
         <RiskFlagsTable flags={riskFlags} />
-      </div>
+      </NumberedSection>
     </div>
   );
 }

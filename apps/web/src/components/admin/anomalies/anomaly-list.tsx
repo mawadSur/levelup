@@ -17,7 +17,7 @@ const SEVERITY_ORDER: AnomalySeverityValue[] = ['HIGH', 'MEDIUM', 'LOW'];
 
 const SEVERITY_COLORS: Record<AnomalySeverityValue, string> = {
   HIGH: 'bg-danger text-danger-foreground',
-  MEDIUM: 'bg-orange-500 text-white',
+  MEDIUM: 'bg-warning text-white',
   LOW: 'bg-ink-700 text-paper-300',
 };
 
@@ -114,7 +114,7 @@ export function AnomalyList({ initialItems }: AnomalyListProps) {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-ink-600 py-16 text-center">
-        <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+        <CheckCircle2 className="h-10 w-10 text-success" />
         <div>
           <p className="font-semibold text-paper-100">No unacknowledged alerts</p>
           <p className="mt-1 text-sm text-paper-300">

@@ -4,10 +4,6 @@ interface SkillsHeatmapProps {
   cells: DeptHeatmapCell[];
 }
 
-// ---------------------------------------------------------------------------
-// Build matrix from flat cells
-// ---------------------------------------------------------------------------
-
 interface MatrixData {
   departments: string[];
   paths: string[];
@@ -32,27 +28,27 @@ function buildMatrix(cells: DeptHeatmapCell[]): MatrixData {
   return { departments: deptOrder, paths: pathOrder, grid };
 }
 
-// ---------------------------------------------------------------------------
-// Color scaling — indigo intensity by completion rate
-// ---------------------------------------------------------------------------
-
-function cellColor(rate: number): string {
-  if (rate >= 0.9) return 'bg-indigo-900 text-white';
-  if (rate >= 0.75) return 'bg-indigo-700 text-white';
-  if (rate >= 0.6) return 'bg-indigo-500 text-white';
-  if (rate >= 0.45) return 'bg-indigo-300 text-indigo-900';
-  if (rate >= 0.3) return 'bg-indigo-200 text-indigo-900';
-  if (rate >= 0.15) return 'bg-indigo-100 text-indigo-900';
-  return 'bg-indigo-50 text-indigo-900';
+/**
+ * Heatmap cell intensity — danger at low completion, paper-100 mid, signal at high.
+ * The hierarchy reads "more amber = better" without leaving the Mission Brief palette.
+ */
+function cellStyle(rate: number): string {
+  if (rate >= 0.9) return 'bg-signal text-ink-900';
+  if (rate >= 0.75) return 'bg-signal/75 text-ink-900';
+  if (rate >= 0.6) return 'bg-signal/55 text-ink-900';
+  if (rate >= 0.45) return 'bg-signal/35 text-paper-100';
+  if (rate >= 0.3) return 'bg-ink-700 text-paper-100';
+  if (rate >= 0.15) return 'bg-ink-700 text-paper-300';
+  return 'bg-danger/30 text-paper-100';
 }
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
 export function SkillsHeatmap({ cells }: SkillsHeatmapProps) {
   if (cells.length === 0) {
-    return <p className="text-sm text-paper-300 italic">No heatmap data available.</p>;
+    return (
+      <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+        NO HEATMAP DATA AVAILABLE
+      </p>
+    );
   }
 
   const { departments, paths, grid } = buildMatrix(cells);
@@ -60,59 +56,62 @@ export function SkillsHeatmap({ cells }: SkillsHeatmapProps) {
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto">
-        <table className="min-w-max text-xs border-collapse">
+        <table className="min-w-max border-collapse text-body-sm">
           <thead>
             <tr>
-              <th className="sticky left-0 z-10 bg-ink-900 px-3 py-2 text-left font-semibold text-paper-300 min-w-[140px]">
+              <th className="sticky left-0 z-10 min-w-[140px] bg-ink-800 px-3 py-2 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                 Department
               </th>
               {paths.map((p) => (
                 <th
                   key={p}
-                  className="px-3 py-2 text-center font-semibold text-paper-300 max-w-[120px]"
+                  className="max-w-[120px] px-3 py-2 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
                 >
-                  <span title={p} className="block truncate max-w-[100px]">
+                  <span title={p} className="block max-w-[100px] truncate">
                     {p}
                   </span>
                 </th>
               ))}
-              <th className="px-3 py-2 text-center font-semibold text-paper-300">Total</th>
+              <th className="px-3 py-2 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                Total
+              </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-ink-600">
             {departments.map((dept, deptIdx) => {
               const rowCells = grid[deptIdx] ?? [];
               const total = rowCells.reduce((sum, c) => sum + (c?.memberCount ?? 0), 0);
               return (
-                <tr key={dept} className="hover:bg-ink-700/30 transition-colors">
-                  <td className="sticky left-0 z-10 bg-ink-900 px-3 py-2 font-medium text-paper-100">
+                <tr key={dept} className="transition-colors hover:bg-ink-800">
+                  <td className="sticky left-0 z-10 bg-ink-900 px-3 py-2 text-body-sm font-medium text-paper-100">
                     {dept}
                   </td>
                   {rowCells.map((cell, pathIdx) => (
                     <td key={pathIdx} className="px-1.5 py-1.5 text-center">
                       {cell ? (
                         <div
-                          className={`rounded px-2 py-1.5 font-semibold tabular-nums transition-colors ${cellColor(cell.completionRate)}`}
+                          className={`rounded-data px-2 py-1.5 font-mono text-mono-sm font-semibold tabular-nums transition-colors ${cellStyle(cell.completionRate)}`}
                           title={`${Math.round(cell.completionRate * 100)}% completion · ${cell.memberCount} members`}
                         >
                           {cell.memberCount}
                         </div>
                       ) : (
-                        <div className="rounded bg-ink-700/40 px-2 py-1.5 text-paper-300/40">—</div>
+                        <div className="rounded-data bg-ink-700 px-2 py-1.5 font-mono text-mono-sm text-paper-500">
+                          —
+                        </div>
                       )}
                     </td>
                   ))}
-                  <td className="px-3 py-2 text-center font-semibold tabular-nums text-paper-100">
+                  <td className="px-3 py-2 text-center font-mono text-mono-sm font-semibold tabular-nums text-paper-100">
                     {total}
                   </td>
                 </tr>
               );
             })}
           </tbody>
-          {/* Totals row */}
           <tfoot>
-            <tr className="border-t-2 border-ink-600 bg-ink-700/30">
-              <td className="sticky left-0 z-10 bg-ink-700/30 px-3 py-2 font-semibold text-paper-100">
+            <tr className="border-t-2 border-ink-600 bg-ink-800">
+              <td className="sticky left-0 z-10 bg-ink-800 px-3 py-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-100">
                 Totals
               </td>
               {paths.map((_, pathIdx) => {
@@ -123,13 +122,13 @@ export function SkillsHeatmap({ cells }: SkillsHeatmapProps) {
                 return (
                   <td
                     key={pathIdx}
-                    className="px-3 py-2 text-center font-semibold tabular-nums text-paper-100"
+                    className="px-3 py-2 text-center font-mono text-mono-sm font-semibold tabular-nums text-paper-100"
                   >
                     {colTotal}
                   </td>
                 );
               })}
-              <td className="px-3 py-2 text-center font-bold tabular-nums text-paper-100">
+              <td className="px-3 py-2 text-center font-mono text-mono-sm font-bold tabular-nums text-signal">
                 {cells.reduce((sum, c) => sum + c.memberCount, 0)}
               </td>
             </tr>
@@ -137,20 +136,19 @@ export function SkillsHeatmap({ cells }: SkillsHeatmapProps) {
         </table>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-3 text-xs text-paper-300">
-        <span>Completion rate:</span>
+      <div className="flex flex-wrap items-center gap-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+        <span>COMPLETION:</span>
         {[
-          { label: '0–15%', cls: 'bg-indigo-50' },
-          { label: '15–30%', cls: 'bg-indigo-100' },
-          { label: '30–45%', cls: 'bg-indigo-200' },
-          { label: '45–60%', cls: 'bg-indigo-300' },
-          { label: '60–75%', cls: 'bg-indigo-500' },
-          { label: '75–90%', cls: 'bg-indigo-700' },
-          { label: '90%+', cls: 'bg-indigo-900' },
+          { label: '<15%', cls: 'bg-danger/30' },
+          { label: '15–30%', cls: 'bg-ink-700' },
+          { label: '30–45%', cls: 'bg-signal/35' },
+          { label: '45–60%', cls: 'bg-signal/55' },
+          { label: '60–75%', cls: 'bg-signal/75' },
+          { label: '75–90%', cls: 'bg-signal/75' },
+          { label: '90%+', cls: 'bg-signal' },
         ].map(({ label, cls }) => (
-          <span key={label} className="flex items-center gap-1">
-            <span className={`inline-block h-3 w-5 rounded ${cls} border border-ink-600`} />
+          <span key={label} className="flex items-center gap-1.5">
+            <span className={`inline-block h-3 w-5 rounded-data border border-ink-600 ${cls}`} />
             {label}
           </span>
         ))}

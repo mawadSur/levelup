@@ -98,7 +98,7 @@ export default async function CoachHistoryDetailPage({ params }: PageProps) {
                     className={
                       isUser
                         ? 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/10 text-signal'
-                        : 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300'
+                        : 'mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/15 text-signal dark:bg-ink-800/50 dark:text-signal'
                     }
                     aria-hidden="true"
                   >

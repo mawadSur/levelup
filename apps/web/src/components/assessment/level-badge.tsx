@@ -6,6 +6,7 @@ export type AiLevel = 'BEGINNER' | 'PRACTITIONER' | 'POWER_USER' | 'CHAMPION';
 interface LevelMeta {
   label: string;
   icon: LucideIcon;
+  /** Mission Brief intensity scale: default → success → signal-dim → signal */
   classes: string;
 }
 
@@ -13,26 +14,22 @@ const LEVELS: Record<AiLevel, LevelMeta> = {
   BEGINNER: {
     label: 'Beginner',
     icon: Sprout,
-    classes:
-      'bg-emerald-100 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-900/30 dark:text-emerald-300 dark:ring-emerald-400/20',
+    classes: 'border-ink-500 text-paper-100',
   },
   PRACTITIONER: {
     label: 'Practitioner',
     icon: Compass,
-    classes:
-      'bg-sky-100 text-sky-700 ring-sky-600/20 dark:bg-sky-900/30 dark:text-sky-300 dark:ring-sky-400/20',
+    classes: 'border-success/40 text-success',
   },
   POWER_USER: {
-    label: 'Power User',
+    label: 'Power user',
     icon: Rocket,
-    classes:
-      'bg-violet-100 text-violet-700 ring-violet-600/20 dark:bg-violet-900/30 dark:text-violet-300 dark:ring-violet-400/20',
+    classes: 'border-signal-dim text-signal-dim',
   },
   CHAMPION: {
     label: 'Champion',
     icon: Crown,
-    classes:
-      'bg-amber-100 text-amber-700 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-300 dark:ring-amber-400/20',
+    classes: 'border-signal text-signal',
   },
 };
 
@@ -48,17 +45,17 @@ export function LevelBadge({ level, size = 'md', className }: LevelBadgeProps) {
 
   const sizeClasses =
     size === 'lg'
-      ? 'text-base px-3.5 py-1.5 gap-2'
+      ? 'text-mono px-3.5 py-1.5 gap-2'
       : size === 'sm'
-        ? 'text-xs px-2 py-0.5 gap-1'
-        : 'text-sm px-2.5 py-1 gap-1.5';
+        ? 'text-mono-sm px-2 py-0.5 gap-1'
+        : 'text-mono-sm px-2.5 py-1 gap-1.5';
 
-  const iconSize = size === 'lg' ? 18 : size === 'sm' ? 12 : 14;
+  const iconSize = size === 'lg' ? 16 : size === 'sm' ? 12 : 14;
 
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full font-medium ring-1 ring-inset',
+        'inline-flex items-center rounded-data border bg-transparent font-mono uppercase tracking-[0.05em]',
         meta.classes,
         sizeClasses,
         className,

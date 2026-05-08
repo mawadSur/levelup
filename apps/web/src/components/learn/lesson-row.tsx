@@ -23,8 +23,8 @@ const statusConfig = {
     variant: 'outline' as const,
     textClass: 'text-paper-300',
   },
-  IN_PROGRESS: { label: 'In progress', variant: 'secondary' as const, textClass: 'text-amber-600' },
-  COMPLETED: { label: 'Completed', variant: 'default' as const, textClass: 'text-emerald-600' },
+  IN_PROGRESS: { label: 'In progress', variant: 'secondary' as const, textClass: 'text-warning' },
+  COMPLETED: { label: 'Completed', variant: 'default' as const, textClass: 'text-success' },
 };
 
 export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProps) {
@@ -46,7 +46,7 @@ export function LessonRow({ lesson, pathSlug, isCurrent = false }: LessonRowProp
         className={cn(
           'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold',
           lesson.status === 'COMPLETED'
-            ? 'bg-emerald-100 text-emerald-700'
+            ? 'bg-success/15 text-success'
             : isCurrent
               ? 'bg-signal/15 text-signal'
               : 'bg-ink-700 text-paper-300',

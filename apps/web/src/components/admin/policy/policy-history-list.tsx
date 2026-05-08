@@ -37,11 +37,11 @@ export function PolicyHistoryList({ policies, currentId }: PolicyHistoryListProp
           <li
             key={p.id}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
-              isCurrent ? 'bg-indigo-50 dark:bg-indigo-950/30' : 'hover:bg-ink-700/50'
+              isCurrent ? 'bg-signal/10 dark:bg-ink-800/30' : 'hover:bg-ink-700/50'
             }`}
           >
             {isCurrent ? (
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-indigo-600" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-signal" />
             ) : (
               <Clock className="h-4 w-4 shrink-0 text-paper-300" />
             )}

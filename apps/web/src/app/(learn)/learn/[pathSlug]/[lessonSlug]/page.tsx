@@ -165,7 +165,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   ~{currentLesson.estimatedMinutes} min
                 </span>
                 {isCompleted && (
-                  <Badge variant="default" className="text-xs bg-emerald-600">
+                  <Badge variant="default" className="text-xs bg-success">
                     Completed
                   </Badge>
                 )}
@@ -226,7 +226,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
               {/* Completed without quiz: end of path */}
               {isCompleted && !quizData && !nextLessonHref && (
-                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+                <div className="flex items-center gap-2 text-sm font-medium text-success">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path
                       d="M3 8l3.5 3.5L13 5"
