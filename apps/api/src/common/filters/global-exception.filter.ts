@@ -8,6 +8,7 @@ type ErrorBody = {
     code: string;
     message: string;
     requestId: string;
+    [key: string]: unknown;
   };
 };
 
@@ -29,20 +30,31 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code = 'INTERNAL_SERVER_ERROR';
     let message = 'An unexpected error occurred';
+    let extras: Record<string, unknown> = {};
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const responseBody = exception.getResponse();
       code = exception.name ?? 'HTTP_EXCEPTION';
+
       if (typeof responseBody === 'string') {
         message = responseBody;
-      } else if (
-        typeof responseBody === 'object' &&
-        responseBody !== null &&
-        'message' in responseBody
-      ) {
-        const raw = (responseBody as Record<string, unknown>)['message'];
-        message = Array.isArray(raw) ? raw.join('; ') : String(raw);
+      } else if (typeof responseBody === 'object' && responseBody !== null) {
+        const obj = responseBody as Record<string, unknown>;
+
+        if (typeof obj['code'] === 'string') {
+          code = obj['code'];
+        }
+        if ('message' in obj) {
+          const raw = obj['message'];
+          message = Array.isArray(raw) ? raw.join('; ') : String(raw);
+        }
+        for (const [key, value] of Object.entries(obj)) {
+          if (key === 'code' || key === 'message' || key === 'statusCode' || key === 'error') {
+            continue;
+          }
+          extras[key] = value;
+        }
       }
     } else if (exception instanceof Error) {
       message = exception.message;
@@ -52,7 +64,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     }
 
     const body: ErrorBody = {
-      error: { code, message, requestId },
+      error: { code, message, requestId, ...extras },
     };
 
     res.status(status).json(body);
