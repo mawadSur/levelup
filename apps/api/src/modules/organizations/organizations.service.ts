@@ -127,11 +127,17 @@ export class OrganizationsService {
       },
     });
 
-    // Send welcome email (fire-and-forget — do not block org creation)
-    await enqueueEmail({
+    // Send welcome email — TRULY fire-and-forget. The await was a bug; if
+    // Redis (BullMQ) is unreachable, queue.add() hangs forever (ioredis
+    // retries indefinitely under maxRetriesPerRequest:null) and signup
+    // never completes. Losing a welcome email is far better than blocking
+    // signup.
+    enqueueEmail({
       to: dto.adminEmail,
       templateKey: 'welcome',
       data: { orgName: org.name, adminName: dto.adminName },
+    }).catch((err) => {
+      console.warn('[organizations] welcome email enqueue failed:', err);
     });
 
     // Audit log — emit both signup and trial-started so analytics can

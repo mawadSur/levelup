@@ -40,6 +40,24 @@ function logRedisDownOnce(err: unknown): void {
   console.error('[queue] rate-limit Redis unavailable — failing open for this process:', message);
 }
 
+/**
+ * Hard timeout for Redis ops in this guard path. ioredis is configured with
+ * `maxRetriesPerRequest: null` (BullMQ requirement) which means a hung
+ * connection retries forever and never throws — making await never resolve.
+ * Without this race we'd hang every rate-limited request indefinitely when
+ * Redis is unreachable.
+ */
+const RATE_LIMIT_TIMEOUT_MS = 500;
+
+function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`[queue] ${label} timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
+
 export async function checkRateLimit(opts: CheckRateLimitOptions): Promise<RateLimitResult> {
   const now = Date.now();
   const windowMs = opts.windowSeconds * 1000;
@@ -49,11 +67,15 @@ export async function checkRateLimit(opts: CheckRateLimitOptions): Promise<RateL
 
   try {
     const redis = getConnection();
-    const count = await redis.incr(redisKey);
+    const count = await withTimeout(redis.incr(redisKey), RATE_LIMIT_TIMEOUT_MS, 'rate-limit INCR');
     if (count === 1) {
       // Slightly longer than the window so we never lose the counter to a
       // race between INCR and EXPIRE landing at the boundary.
-      await redis.pexpire(redisKey, windowMs + 1000);
+      await withTimeout(
+        redis.pexpire(redisKey, windowMs + 1000),
+        RATE_LIMIT_TIMEOUT_MS,
+        'rate-limit PEXPIRE',
+      );
     }
     const remaining = Math.max(0, opts.limit - count);
     return { allowed: count <= opts.limit, remaining, resetAt };
