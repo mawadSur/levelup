@@ -248,14 +248,12 @@ interface CoachMessageProps {
 export function CoachMessage({ message, canShare, onSavePrompt, onRetry }: CoachMessageProps) {
   if (message.role === 'user') {
     return (
-      <div className="flex justify-end">
-        <div className="flex max-w-[85%] flex-row-reverse items-start gap-3">
-          <span className="mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/10 text-signal">
-            <User size={14} aria-hidden="true" />
-          </span>
-          <div className="rounded-2xl rounded-tr-sm bg-signal px-4 py-2.5 text-sm text-ink-900">
-            <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-          </div>
+      <div className="flex flex-col items-end gap-1">
+        <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          YOU
+        </span>
+        <div className="max-w-[85%] rounded-md border border-ink-600 bg-ink-700 px-4 py-2.5 text-body-sm text-paper-100">
+          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
         </div>
       </div>
     );
@@ -294,11 +292,11 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
   }
 
   return (
-    <div className="flex items-start gap-3">
-      <span className="mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/15 text-signal dark:bg-ink-800/50 dark:text-signal">
-        <Sparkles size={14} aria-hidden="true" />
+    <div className="flex flex-col items-start gap-1">
+      <span className="flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
+        <Sparkles size={12} aria-hidden="true" />
+        COACH
       </span>
-
       <div className="min-w-0 flex-1 space-y-3">
         {message.errorMessage && (
           <div className="rounded-lg border border-danger/40 bg-danger/10 p-3 text-sm text-danger">
@@ -320,16 +318,18 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
         )}
 
         {isEmpty && !message.errorMessage && (
-          <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm border bg-ink-900 px-4 py-3 text-sm text-paper-300">
+          <div className="flex items-center gap-2 rounded-md border border-ink-600 bg-ink-800 px-4 py-3 text-body-sm text-paper-300">
             <TypingDots />
-            <span>Coach is thinking...</span>
+            <span className="font-mono text-mono-sm uppercase tracking-[0.05em]">
+              COACH IS THINKING…
+            </span>
           </div>
         )}
 
         {/* 1. Explanation — per-character fade reveal during streaming */}
         {hasExplanation && (
           <SectionReveal>
-            <div className="rounded-2xl rounded-tl-sm border bg-ink-900 px-4 py-3">
+            <div className="rounded-md border border-ink-600 bg-ink-800 px-4 py-3">
               <ExplanationRenderer
                 text={message.explanation}
                 isStreaming={message.streamingField === 'explanation'}
@@ -346,18 +346,18 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
         {/* 2. Improved prompt */}
         {hasImproved && (
           <SectionReveal>
-            <div className="overflow-hidden rounded-2xl border bg-ink-900">
-              <div className="flex items-center justify-between border-b bg-signal/10/40 px-4 py-2 dark:bg-ink-800/20">
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-signal-dim dark:text-signal">
+            <div className="overflow-hidden rounded-md border border-ink-600 bg-ink-800">
+              <div className="flex items-center justify-between border-b border-ink-600 bg-ink-700 px-4 py-2">
+                <span className="inline-flex items-center gap-1.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
                   <Sparkles size={12} aria-hidden="true" />
-                  Try this prompt instead
+                  IMPROVED PROMPT
                 </span>
                 {message.streamingField === 'improvedPrompt' && <TypingDots />}
               </div>
-              <pre className="max-h-72 overflow-auto whitespace-pre-wrap px-4 py-3 font-mono text-xs leading-relaxed text-paper-100">
+              <pre className="max-h-72 overflow-auto whitespace-pre-wrap px-4 py-3 font-mono text-mono leading-relaxed text-paper-100">
                 {message.improvedPrompt}
               </pre>
-              <div className="flex flex-wrap items-center gap-2 border-t bg-ink-700/30 px-3 py-2">
+              <div className="flex flex-wrap items-center gap-2 border-t border-ink-600 bg-ink-900 px-3 py-2">
                 <Button size="sm" variant="ghost" onClick={handleCopy}>
                   <Copy className="mr-1.5 h-3 w-3" aria-hidden="true" />
                   Copy
@@ -378,11 +378,11 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
         {/* 3. Why it works (collapsed) */}
         {hasWhy && (
           <SectionReveal>
-            <div className="rounded-xl border bg-ink-900">
+            <div className="rounded-md border border-ink-600 bg-ink-800">
               <button
                 type="button"
                 onClick={() => setShowWhy((v) => !v)}
-                className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-medium text-paper-300 hover:bg-ink-700/30"
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-left font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300 hover:bg-ink-700"
                 aria-expanded={showWhy}
               >
                 {showWhy ? (
@@ -390,11 +390,11 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
                 ) : (
                   <ChevronRight size={14} aria-hidden="true" />
                 )}
-                <span className="flex-1">Why it works</span>
+                <span className="flex-1">WHY IT WORKS</span>
                 {message.streamingField === 'whyItWorks' && <TypingDots />}
               </button>
               {showWhy && (
-                <div className="border-t px-4 py-3">
+                <div className="border-t border-ink-600 px-4 py-3">
                   <MiniMarkdown text={message.whyItWorks} />
                 </div>
               )}
@@ -407,15 +407,15 @@ function AssistantBubble({ message, onSavePrompt, onRetry }: AssistantBubbleProp
           <SectionReveal>
             <div
               className={cn(
-                'flex items-start gap-3 rounded-xl border border-dashed bg-ink-700/20 px-4 py-3',
+                'flex items-start gap-3 rounded-md border border-signal-dim bg-ink-800 px-4 py-3',
               )}
             >
-              <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-warning/15 text-warning bg-warning/10/40 dark:text-warning">
+              <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-data bg-signal/15 text-signal">
                 <Lightbulb size={12} aria-hidden="true" />
               </span>
-              <div className="flex-1">
-                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wider text-paper-300">
-                  Next best action
+              <div className="flex-1 space-y-1">
+                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
+                  NEXT ACTION
                 </p>
                 <MiniMarkdown text={message.nextAction} />
                 {message.streamingField === 'nextAction' && (

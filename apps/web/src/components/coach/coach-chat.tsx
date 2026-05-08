@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Send, Square } from 'lucide-react';
-import { Button, Textarea, toast } from '@levelup/ui';
+import { Button, MonoLabel, Textarea, toast } from '@levelup/ui';
 import { coach } from '@/lib/api';
 import type { ConversationDetail, CoachStreamEvent } from '@/lib/api/coach';
 import {
@@ -544,18 +544,21 @@ export function CoachChat({
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Header */}
-      <header className="flex-none border-b bg-ink-900/95 px-4 py-3 backdrop-blur sm:px-6">
+      <header className="flex-none border-b border-ink-600 bg-ink-900/95 px-4 py-3 backdrop-blur sm:px-6">
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-base font-semibold text-paper-100">AI Coach</h1>
-            <p className="text-xs text-paper-300">
-              Ask anything. We&apos;ll improve your prompts and flag sensitive data.
+          <div className="min-w-0 space-y-1">
+            <MonoLabel>AI COACH · ACTIVE</MonoLabel>
+            <h1 className="font-serif text-h2 italic text-paper-100">
+              Ask anything. I&apos;ll sharpen your prompt.
+            </h1>
+            <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              SENSITIVE INPUTS ARE FLAGGED — NEVER BLOCKED
             </p>
           </div>
           {(messages.length > 0 || currentConversationId) && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleNewConversation}
               className="flex-none"
@@ -572,13 +575,14 @@ export function CoachChat({
         <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
           {messages.length === 0 ? (
             <div className="py-8">
-              <h2 className="mb-1 text-lg font-semibold text-paper-100">Try asking...</h2>
-              <p className="mb-5 text-sm text-paper-300">
+              <MonoLabel className="mb-3 block">EXAMPLE PROMPTS</MonoLabel>
+              <h2 className="mb-1 font-serif text-h1 italic text-paper-100">Try asking…</h2>
+              <p className="mb-6 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                 {user.department
-                  ? `Tailored for the ${user.department} team.`
-                  : 'Pick one to get started.'}
+                  ? `TAILORED FOR ${user.department.toUpperCase()}`
+                  : 'PICK ONE TO BEGIN'}
               </p>
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {suggestions.map((s) => (
                   <PromptSuggestionCard
                     key={s}
@@ -610,7 +614,7 @@ export function CoachChat({
       </div>
 
       {/* Composer */}
-      <div className="flex-none border-t bg-ink-900 px-4 py-3 sm:px-6">
+      <div className="flex-none border-t border-ink-600 bg-ink-900 px-4 py-3 sm:px-6">
         <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-3xl items-end gap-2">
           <div className="flex-1">
             <Textarea
@@ -628,8 +632,8 @@ export function CoachChat({
               maxLength={8000}
               className="resize-none py-2 text-sm leading-relaxed"
             />
-            <p className="mt-1 px-0.5 text-[10px] text-paper-300">
-              Cmd/Ctrl + Enter to send. Don&apos;t paste customer PII or secrets.
+            <p className="mt-1.5 px-0.5 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              ⌘/CTRL + ENTER · NEVER PASTE PII OR SECRETS
             </p>
           </div>
           <VoiceControls
@@ -650,7 +654,7 @@ export function CoachChat({
           {isStreaming ? (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={handleStop}
               className="h-10 px-3"
               aria-label="Stop"
@@ -661,6 +665,7 @@ export function CoachChat({
           ) : (
             <Button
               type="submit"
+              variant="primary"
               disabled={input.trim().length === 0}
               className="h-10 px-3"
               aria-label="Send"

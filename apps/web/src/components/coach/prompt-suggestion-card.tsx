@@ -1,6 +1,7 @@
 'use client';
 
-import { Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { MonoLabel } from '@levelup/ui';
 
 interface PromptSuggestionCardProps {
   text: string;
@@ -8,20 +9,26 @@ interface PromptSuggestionCardProps {
 }
 
 /**
- * Marked 'use client' because it needs an onClick handler. Visually it's a
- * compact, tappable card.
+ * Mission-Brief example prompt card. Categorical mono label + body, with a
+ * subtle arrow on hover. Used in the empty-state grid above the composer.
  */
 export function PromptSuggestionCard({ text, onPick }: PromptSuggestionCardProps) {
+  // Derive a category from the leading verb (best-effort, used as a mono label).
+  const firstWord = text.split(/[\s.]/)[0]?.toUpperCase() ?? 'PROMPT';
   return (
     <button
       type="button"
       onClick={() => onPick(text)}
-      className="group flex w-full items-start gap-3 rounded-lg border bg-ink-900 p-4 text-left text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:border-signal/35 hover:shadow-md dark:hover:border-signal-dim"
+      className="group flex w-full flex-col gap-2 rounded-md border border-ink-600 bg-ink-800 p-4 text-left text-body-sm transition-colors duration-150 ease-mission hover:border-signal-dim"
     >
-      <span className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-signal/15 text-signal transition-colors group-hover:bg-signal group-hover:text-white dark:bg-ink-800/50 dark:text-signal">
-        <Sparkles size={14} aria-hidden="true" />
-      </span>
-      <span className="flex-1 leading-relaxed text-paper-100">{text}</span>
+      <div className="flex items-center justify-between">
+        <MonoLabel>{firstWord}</MonoLabel>
+        <ArrowRight
+          className="h-3.5 w-3.5 text-paper-500 transition-transform group-hover:translate-x-0.5 group-hover:text-signal"
+          aria-hidden="true"
+        />
+      </div>
+      <span className="text-paper-100">{text}</span>
     </button>
   );
 }
