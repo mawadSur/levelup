@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Separator } from '@levelup/ui';
+import { MonoLabel, NumberedSection } from '@levelup/ui';
 
 const FAQS = [
   {
@@ -33,41 +33,39 @@ const FAQS = [
 interface FaqItemProps {
   q: string;
   a: string;
+  numeral: string;
   isOpen: boolean;
   onToggle: () => void;
 }
 
-function FaqItem({ q, a, isOpen, onToggle }: FaqItemProps) {
+function FaqItem({ q, a, numeral, isOpen, onToggle }: FaqItemProps) {
   return (
-    <div>
+    <div className="border-b border-ink-600 last:border-b-0">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-start justify-between gap-4 py-5 text-left"
+        className="flex w-full items-baseline gap-6 py-6 text-left transition-colors hover:bg-ink-800"
         aria-expanded={isOpen}
       >
-        <span className="text-base font-semibold text-foreground">{q}</span>
+        <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+          {numeral}
+        </span>
+        <span className="flex-1 text-body-lg text-paper-100">{q}</span>
         <span
-          aria-hidden="true"
-          className="mt-0.5 shrink-0 text-muted-foreground transition-transform duration-200"
-          style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}
+          aria-hidden
+          className={`shrink-0 font-mono text-2xl leading-none text-signal transition-transform duration-200 ${
+            isOpen ? 'rotate-45' : ''
+          }`}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path
-              d="M9 4v10M4 9h10"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-            />
-          </svg>
+          +
         </span>
       </button>
       <div
         aria-hidden={!isOpen}
-        className="overflow-hidden transition-all duration-200"
-        style={{ maxHeight: isOpen ? '500px' : '0px' }}
+        className="overflow-hidden transition-all duration-200 ease-mission"
+        style={{ maxHeight: isOpen ? '600px' : '0px' }}
       >
-        <p className="pb-5 text-sm leading-relaxed text-muted-foreground">{a}</p>
+        <p className="max-w-reading pb-6 pl-12 text-body-sm text-paper-300">{a}</p>
       </div>
     </div>
   );
@@ -77,29 +75,38 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-20 sm:py-28 bg-background" id="faq">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-14 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Frequently asked questions
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Answers to the questions that come up in every pilot call.
-          </p>
-        </div>
+    <div id="faq" className="border-b border-ink-600 bg-ink-900 py-24 lg:py-32">
+      <div className="mx-auto max-w-content px-6 lg:px-8">
+        <NumberedSection numeral="VI." eyebrow="THE QUESTIONS">
+          <div className="mb-14 grid gap-8 lg:grid-cols-[5fr,7fr] lg:items-end">
+            <h2 className="font-serif text-display-lg text-paper-100">
+              Asked in <em className="italic text-paper-300">every pilot call.</em>
+            </h2>
+            <p className="text-body-lg text-paper-300">
+              The six questions we hear most from L&D leaders, IT directors, and HR Ops. Plain
+              answers, no marketing fog.
+            </p>
+          </div>
 
-        <div className="divide-y divide-border">
-          {FAQS.map(({ q, a }, i) => (
-            <FaqItem
-              key={q}
-              q={q}
-              a={a}
-              isOpen={openIndex === i}
-              onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-            />
-          ))}
-        </div>
+          <div className="border-y border-ink-600">
+            {FAQS.map(({ q, a }, i) => (
+              <FaqItem
+                key={q}
+                q={q}
+                a={a}
+                numeral={String(i + 1).padStart(2, '0')}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            ))}
+          </div>
+
+          <div className="mt-10 flex items-center justify-between">
+            <MonoLabel className="text-paper-500">END OF FAQ</MonoLabel>
+            <MonoLabel className="text-paper-500">06 / 06</MonoLabel>
+          </div>
+        </NumberedSection>
       </div>
-    </section>
+    </div>
   );
 }

@@ -17,10 +17,11 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: {
-    default: 'LevelUp AI Academy',
-    template: '%s | LevelUp AI Academy',
+    default: 'LevelUp AI Academy — Train every operator',
+    template: '%s · LevelUp AI Academy',
   },
-  description: 'Train every employee to use AI safely, effectively, and measurably in 30 days.',
+  description:
+    'A role-based AI curriculum, an in-context coach, and a reporting instrument your CIO will actually open. Pilot in thirty days. Prove the ROI by week three.',
   icons: {
     icon: '/favicon.svg',
   },

@@ -1,55 +1,54 @@
-'use client';
-
 import Link from 'next/link';
-import { Button } from '@levelup/ui';
-import { ScrollReveal } from '@/lib/motion/scroll-reveal';
-import { Stagger, ScrollItem } from '@/lib/motion/stagger';
-import { scaleIn } from '@/lib/motion/variants';
+import { Button, GridLines, MonoLabel, NumberedSection } from '@levelup/ui';
 
 export function FinalCta() {
   return (
-    <section className="py-20 sm:py-28 bg-indigo-600">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        <ScrollReveal>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Train your team in 30 days.
-            <br />
-            We&apos;ll prove the ROI by week&nbsp;3.
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-indigo-100">
-            Most organizations see measurable improvement in AI task quality within three weeks of
-            launch. We can show you the before-and-after data from similar teams in your industry.
-          </p>
-        </ScrollReveal>
+    <div className="relative overflow-hidden border-b border-ink-600 bg-ink-900 py-24 lg:py-32">
+      <GridLines dense />
 
-        <Stagger className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <ScrollItem variants={scaleIn}>
-            <Button
-              asChild
-              size="lg"
-              className="w-full bg-white text-indigo-700 hover:bg-indigo-50 sm:w-auto"
-            >
-              <Link href="/sign-up">Get a demo</Link>
-            </Button>
-          </ScrollItem>
-          <ScrollItem variants={scaleIn}>
-            <Button
-              asChild
-              variant="ghost"
-              size="lg"
-              className="w-full text-white hover:bg-indigo-500 hover:text-white sm:w-auto"
-            >
-              <Link href="/pricing">See full pricing</Link>
-            </Button>
-          </ScrollItem>
-        </Stagger>
+      <div className="relative mx-auto max-w-content px-6 lg:px-8">
+        <NumberedSection numeral="VII." eyebrow="THE NEXT STEP">
+          <div className="grid gap-12 lg:grid-cols-[7fr,5fr] lg:items-end">
+            <div>
+              <h2 className="font-serif text-display-xl text-paper-100">
+                Train your team in <em className="italic text-signal">thirty</em> days.
+                <br />
+                Prove the ROI by week three.
+              </h2>
+              <p className="mt-8 max-w-reading text-body-lg text-paper-300">
+                Most organizations see measurable improvement in AI task quality within three weeks
+                of launch. We can show you the before-and-after data from similar teams in your
+                industry.
+              </p>
+            </div>
 
-        <ScrollReveal delay={0.3}>
-          <p className="mt-5 text-sm text-indigo-200">
-            No procurement paperwork to start a pilot. Average setup: 3 days.
-          </p>
-        </ScrollReveal>
+            <div className="rounded-md border border-ink-600 bg-ink-800 p-8">
+              <MonoLabel tone="signal" className="mb-6 block">
+                READY TO ENROLL
+              </MonoLabel>
+              <div className="space-y-3">
+                <Button asChild variant="primary" size="lg" className="w-full">
+                  <Link href="/sign-up">REQUEST DEMO →</Link>
+                </Button>
+                <Button asChild variant="secondary" size="lg" className="w-full">
+                  <Link href="/pricing">SEE FULL PRICING</Link>
+                </Button>
+              </div>
+              <div className="mt-6 space-y-2 border-t border-ink-600 pt-5">
+                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300">
+                  · NO PROCUREMENT TO START A PILOT
+                </p>
+                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300">
+                  · AVERAGE SETUP: 3 DAYS
+                </p>
+                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300">
+                  · 14-DAY TRIAL · CANCEL ANY TIME
+                </p>
+              </div>
+            </div>
+          </div>
+        </NumberedSection>
       </div>
-    </section>
+    </div>
   );
 }
