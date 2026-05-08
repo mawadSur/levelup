@@ -32,6 +32,7 @@ import { managerDigestHandler } from './jobs/manager-digest.js';
 import { handleAuditCleanup } from './jobs/audit-cleanup.js';
 import { pathGenerationHandler } from './jobs/path-generation.js';
 import { anomalyScanHandler } from './jobs/anomaly-scan.js';
+import { handleGovernanceReport } from './jobs/governance-report.js';
 import { attachDlqListener } from './jobs/dlq.js';
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -129,6 +130,15 @@ function boot(): void {
   registerWorker(
     'anomaly-scan',
     createWorker('anomaly-scan', anomalyScanHandler, { concurrency: 1 }),
+    1,
+  );
+
+  // governance-report — concurrency 1: PDF generation is CPU-bound, and a
+  // single CISO-facing operator request shouldn't be able to starve the
+  // worker pool. If queue depth becomes a problem, raise this gradually.
+  registerWorker(
+    'governance-report',
+    createWorker('governance-report', handleGovernanceReport, { concurrency: 1 }),
     1,
   );
 }
