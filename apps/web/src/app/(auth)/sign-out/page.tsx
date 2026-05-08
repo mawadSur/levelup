@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { MonoLabel } from '@levelup/ui';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
 import { auth } from '@/lib/api';
 
@@ -14,7 +15,6 @@ export default function SignOutPage() {
     let cancelled = false;
     async function run() {
       try {
-        // Best-effort audit-log on the API; fire-and-forget.
         await auth.signOut().catch(() => undefined);
       } catch {
         // ignore
@@ -39,5 +39,26 @@ export default function SignOutPage() {
     };
   }, [router]);
 
-  return <div className="text-sm text-muted-foreground">Signing you out…</div>;
+  return (
+    <div className="space-y-6 text-center">
+      <MonoLabel className="block text-paper-500">MISSION BRIEF / SIGN OUT</MonoLabel>
+      <h1 className="font-serif text-display-md text-paper-100">
+        <em className="italic text-signal">Session terminated.</em>
+      </h1>
+      <p className="text-body-sm text-paper-300">
+        Returning you to the sign-in console&hellip;
+      </p>
+      <div className="flex justify-center gap-2 pt-2">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-signal" />
+        <span
+          className="h-2 w-2 animate-pulse rounded-full bg-signal"
+          style={{ animationDelay: '0.15s' }}
+        />
+        <span
+          className="h-2 w-2 animate-pulse rounded-full bg-signal"
+          style={{ animationDelay: '0.3s' }}
+        />
+      </div>
+    </div>
+  );
 }

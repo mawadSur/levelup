@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Label, Alert, AlertDescription } from '@levelup/ui';
+import { Button, Input, Label, Alert, AlertDescription, AlertTitle, MonoLabel } from '@levelup/ui';
 import { acceptInvitationSchema } from '@levelup/types';
 import { apiPost } from '@/lib/api';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
@@ -18,15 +18,6 @@ interface AcceptInvitationResponse {
   email: string;
 }
 
-/**
- * Two-step invitation acceptance:
- *   1. POST /api/auth/accept-invitation — creates / updates the User row in
- *      the invited org. Server returns the canonical email.
- *   2. (Real Supabase) supabase.auth.signUp({ email, password }) so the user
- *      gets a Supabase Auth identity. The first authenticated request to the
- *      API attaches `supabaseUserId` to the freshly-created row.
- *   3. (Stub mode) skip the Supabase call and dev-bypass instead.
- */
 export function AcceptInvitationForm({
   token,
   defaultRedirect = '/learn',
@@ -61,7 +52,6 @@ export function AcceptInvitationForm({
 
     setLoading(true);
     try {
-      // Step 1
       const accepted = await apiPost<typeof parsed.data, AcceptInvitationResponse>(
         '/auth/accept-invitation',
         parsed.data!,
@@ -86,10 +76,6 @@ export function AcceptInvitationForm({
     }
   }
 
-  /**
-   * Sign in the freshly-accepted user. Returns the role string for
-   * post-login routing.
-   */
   async function postSignIn(email: string): Promise<string | null> {
     if (stubMode) {
       const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
@@ -103,9 +89,6 @@ export function AcceptInvitationForm({
     }
 
     const supabase = getSupabaseBrowserClient();
-    // SignUp will succeed on a fresh user, or return an "already registered"
-    // error if the user previously had an account. In that case fall through
-    // to a password sign-in.
     const { error: signUpErr } = await supabase.auth.signUp({
       email,
       password,
@@ -124,15 +107,20 @@ export function AcceptInvitationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
       {apiError && (
         <Alert variant="destructive">
+          <AlertTitle>
+            <MonoLabel tone="danger">INVITATION ERROR</MonoLabel>
+          </AlertTitle>
           <AlertDescription>{apiError}</AlertDescription>
         </Alert>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="full-name">Your full name</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="full-name">
+          <MonoLabel>YOUR FULL NAME</MonoLabel>
+        </Label>
         <Input
           id="full-name"
           placeholder="Jane Smith"
@@ -141,12 +129,14 @@ export function AcceptInvitationForm({
           onChange={(e) => setName(e.target.value)}
           disabled={loading}
         />
-        {fieldError && <p className="text-xs text-destructive">{fieldError}</p>}
+        {fieldError && <MonoLabel tone="danger">! {fieldError.toUpperCase()}</MonoLabel>}
       </div>
 
       {!stubMode && (
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="invite-password">Set a password</Label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="invite-password">
+            <MonoLabel>SET PASSWORD</MonoLabel>
+          </Label>
           <Input
             id="invite-password"
             type="password"
@@ -159,8 +149,8 @@ export function AcceptInvitationForm({
         </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Accepting…' : 'Accept invitation'}
+      <Button type="submit" variant="primary" size="lg" className="w-full" disabled={loading}>
+        {loading ? 'ACCEPTING…' : 'ACCEPT INVITATION →'}
       </Button>
     </form>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Label, Alert, AlertDescription } from '@levelup/ui';
+import { Button, Input, Label, Alert, AlertDescription, AlertTitle, MonoLabel } from '@levelup/ui';
 import { createOrganizationSchema } from '@levelup/types';
 import { apiPost } from '@/lib/api';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
@@ -64,15 +64,12 @@ export function SignUpForm() {
 
     setLoading(true);
     try {
-      // Step 1: create the org. The API endpoint is unauthenticated for the
-      // bootstrap-an-org case (admin doesn't exist yet).
       const data = await apiPost<typeof parsed.data, CreateOrgResponse>(
         '/organizations',
         parsed.data,
       );
 
       if (!stubMode) {
-        // Step 2: register the admin in Supabase Auth.
         const supabase = getSupabaseBrowserClient();
         const { error: signUpErr } = await supabase.auth.signUp({
           email: adminEmail,
@@ -91,7 +88,6 @@ export function SignUpForm() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong';
       if (message.includes('404')) {
-        // The bootstrap endpoint is implicit — fall back to /sign-in.
         if (typeof window !== 'undefined') {
           window.localStorage.setItem('levelup_org_hint', orgName);
         }
@@ -105,15 +101,20 @@ export function SignUpForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
       {apiError && (
         <Alert variant="destructive">
+          <AlertTitle>
+            <MonoLabel tone="danger">PROVISIONING FAILED</MonoLabel>
+          </AlertTitle>
           <AlertDescription>{apiError}</AlertDescription>
         </Alert>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="org-name">Organization name</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="org-name">
+          <MonoLabel>ORGANIZATION NAME</MonoLabel>
+        </Label>
         <Input
           id="org-name"
           placeholder="Acme Corp"
@@ -121,11 +122,15 @@ export function SignUpForm() {
           onChange={(e) => setOrgName(e.target.value)}
           disabled={loading}
         />
-        {fieldErrors.name && <p className="text-xs text-destructive">{fieldErrors.name}</p>}
+        {fieldErrors.name && (
+          <MonoLabel tone="danger">! {fieldErrors.name.toUpperCase()}</MonoLabel>
+        )}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="admin-name">Your full name</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="admin-name">
+          <MonoLabel>YOUR FULL NAME</MonoLabel>
+        </Label>
         <Input
           id="admin-name"
           placeholder="Jane Smith"
@@ -135,29 +140,33 @@ export function SignUpForm() {
           disabled={loading}
         />
         {fieldErrors.adminName && (
-          <p className="text-xs text-destructive">{fieldErrors.adminName}</p>
+          <MonoLabel tone="danger">! {fieldErrors.adminName.toUpperCase()}</MonoLabel>
         )}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="admin-email">Work email</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="admin-email">
+          <MonoLabel>WORK EMAIL</MonoLabel>
+        </Label>
         <Input
           id="admin-email"
           type="email"
-          placeholder="you@company.com"
+          placeholder="commander@company.com"
           autoComplete="email"
           value={adminEmail}
           onChange={(e) => setAdminEmail(e.target.value)}
           disabled={loading}
         />
         {fieldErrors.adminEmail && (
-          <p className="text-xs text-destructive">{fieldErrors.adminEmail}</p>
+          <MonoLabel tone="danger">! {fieldErrors.adminEmail.toUpperCase()}</MonoLabel>
         )}
       </div>
 
       {!stubMode && (
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password">Password</Label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="password">
+            <MonoLabel>PASSWORD</MonoLabel>
+          </Label>
           <Input
             id="password"
             type="password"
@@ -169,13 +178,13 @@ export function SignUpForm() {
             required
           />
           {fieldErrors.password && (
-            <p className="text-xs text-destructive">{fieldErrors.password}</p>
+            <MonoLabel tone="danger">! {fieldErrors.password.toUpperCase()}</MonoLabel>
           )}
         </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Creating organization…' : 'Create organization'}
+      <Button type="submit" variant="primary" size="lg" className="w-full" disabled={loading}>
+        {loading ? 'PROVISIONING…' : 'CREATE ORGANIZATION →'}
       </Button>
     </form>
   );

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@levelup/ui';
-import { Button, Alert, AlertDescription } from '@levelup/ui';
+import { Button, MonoLabel } from '@levelup/ui';
 
 export const metadata: Metadata = {
   title: 'Sign-in error',
@@ -31,39 +30,50 @@ export default async function CallbackErrorPage({ searchParams }: CallbackErrorP
       : 'An unknown error occurred during sign-in.');
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl">Sign-in failed</CardTitle>
-        <CardDescription>We couldn&apos;t complete your sign-in. Please try again.</CardDescription>
-      </CardHeader>
+    <div className="space-y-10">
+      <div>
+        <MonoLabel tone="danger" className="mb-4 block">
+          MISSION BRIEF / FAULT
+        </MonoLabel>
+        <h1 className="font-serif text-display-md text-paper-100">
+          Something <em className="italic text-danger">disconnected.</em>
+        </h1>
+        <p className="mt-3 text-body-sm text-paper-300">
+          We could not complete your sign-in. The handshake with your identity provider failed
+          partway through.
+        </p>
+      </div>
 
-      <CardContent className="flex flex-col gap-4">
-        <Alert variant="destructive">
-          <AlertDescription>{friendlyMessage}</AlertDescription>
-        </Alert>
+      <div className="border border-danger/40 bg-ink-800 p-6">
+        <div className="mb-4 flex items-center justify-between border-b border-ink-600 pb-3">
+          <MonoLabel tone="danger">FAULT REPORT</MonoLabel>
+          <MonoLabel className="text-paper-500">
+            CODE · {code ? code.toUpperCase() : 'UNKNOWN'}
+          </MonoLabel>
+        </div>
+        <p className="text-body-sm text-paper-100">{friendlyMessage}</p>
+      </div>
 
-        {code && (
-          <p className="text-xs text-muted-foreground">
-            Error code: <code className="rounded bg-muted px-1 py-0.5 font-mono">{code}</code>
-          </p>
-        )}
-
-        <Button asChild className="w-full">
-          <Link href="/sign-in">Try signing in again</Link>
+      <div className="space-y-3">
+        <Button asChild variant="primary" size="lg" className="w-full">
+          <Link href="/sign-in">RETRY SIGN-IN →</Link>
         </Button>
-      </CardContent>
+        <Button asChild variant="secondary" className="w-full">
+          <Link href="/">RETURN HOME</Link>
+        </Button>
+      </div>
 
-      <CardFooter className="flex justify-center border-t pt-4">
-        <p className="text-sm text-muted-foreground">
-          Need help?{' '}
+      <div className="border-t border-ink-600 pt-6">
+        <MonoLabel className="block text-paper-500">NEED HELP?</MonoLabel>
+        <p className="mt-2 text-body-sm text-paper-300">
           <a
             href="mailto:support@levelup.example"
-            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+            className="font-mono uppercase tracking-[0.05em] text-signal underline-offset-4 hover:underline"
           >
-            Contact support
+            CONTACT SUPPORT →
           </a>
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

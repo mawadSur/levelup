@@ -1,16 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@levelup/ui';
-import { Badge } from '@levelup/ui';
+import { MonoLabel } from '@levelup/ui';
 import { AcceptInvitationForm } from '@/components/auth/accept-invitation-form';
 
 export const metadata: Metadata = {
   title: 'Accept invitation',
 };
 
-// ---------------------------------------------------------------------------
-// Preview shape returned by GET /api/invitations/preview/:token
-// ---------------------------------------------------------------------------
 interface InvitationPreview {
   inviterName: string;
   orgName: string;
@@ -40,65 +36,73 @@ export default async function AcceptInvitationPage({ searchParams }: AcceptInvit
 
   if (!token) {
     return (
-      <Card className="shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl">Invitation not found</CardTitle>
-          <CardDescription>This link appears to be missing an invitation token.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            If you received an invitation email, make sure you clicked the full link. Otherwise, ask
-            your admin to resend the invitation.
+      <div className="space-y-8">
+        <div>
+          <MonoLabel className="mb-4 block text-paper-500">
+            MISSION BRIEF / INVITATION
+          </MonoLabel>
+          <h1 className="font-serif text-display-md text-paper-100">
+            <em className="italic text-danger">Token missing.</em>
+          </h1>
+          <p className="mt-3 text-body-sm text-paper-300">
+            This link appears to be missing an invitation token. If you received an invitation
+            email, make sure you clicked the full link. Otherwise, ask your admin to resend.
           </p>
-        </CardContent>
-        <CardFooter className="flex justify-center border-t pt-4">
+        </div>
+        <div className="border-t border-ink-600 pt-6">
           <Link
             href="/sign-in"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+            className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal underline-offset-4 hover:underline"
           >
-            Back to sign in
+            BACK TO SIGN IN →
           </Link>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   const preview = await fetchInvitationPreview(token);
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl">You've been invited</CardTitle>
+    <div className="space-y-10">
+      <div>
+        <MonoLabel className="mb-4 block text-paper-500">MISSION BRIEF / INVITATION</MonoLabel>
+        <h1 className="font-serif text-display-md text-paper-100">
+          You&apos;ve been <em className="italic text-signal">drafted.</em>
+        </h1>
         {preview ? (
-          <CardDescription>
-            <span className="font-medium text-foreground">{preview.inviterName}</span> invited you
-            to <span className="font-medium text-foreground">{preview.orgName}</span> as{' '}
-            <Badge variant="secondary" className="align-middle text-xs">
-              {preview.role}
-            </Badge>
-          </CardDescription>
+          <div className="mt-5 space-y-3 border border-ink-600 bg-ink-800 p-5">
+            <MonoLabel tone="signal" className="block">
+              JOINING: {preview.orgName.toUpperCase()}
+            </MonoLabel>
+            <p className="text-body-sm text-paper-300">
+              <span className="text-paper-100">{preview.inviterName}</span> has invited you as a{' '}
+              <span className="text-paper-100">{preview.role.toLowerCase()}</span>.
+            </p>
+            <MonoLabel className="block text-paper-500">
+              EMAIL: {preview.email.toUpperCase()}
+            </MonoLabel>
+          </div>
         ) : (
-          <CardDescription>
+          <p className="mt-3 text-body-sm text-paper-300">
             Enter your name to create your account and join your team.
-          </CardDescription>
+          </p>
         )}
-      </CardHeader>
+      </div>
 
-      <CardContent>
-        <AcceptInvitationForm token={token} defaultRedirect={redirect ?? '/learn'} />
-      </CardContent>
+      <AcceptInvitationForm token={token} defaultRedirect={redirect ?? '/learn'} />
 
-      <CardFooter className="flex justify-center border-t pt-4">
-        <p className="text-sm text-muted-foreground">
-          Already have an account?{' '}
+      <div className="border-t border-ink-600 pt-6">
+        <MonoLabel className="block text-paper-500">ALREADY HAVE AN ACCOUNT?</MonoLabel>
+        <p className="mt-2 text-body-sm text-paper-300">
           <Link
             href="/sign-in"
-            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+            className="font-mono uppercase tracking-[0.05em] text-signal underline-offset-4 hover:underline"
           >
-            Sign in →
+            SIGN IN →
           </Link>
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
