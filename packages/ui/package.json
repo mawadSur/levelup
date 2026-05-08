@@ -10,11 +10,14 @@
       "default": "./src/index.ts"
     },
     "./styles": "./src/styles/globals.css",
-    "./tailwind.config": "./tailwind.config.ts"
+    "./styles/kapitus": "./src/styles/kapitus.css",
+    "./tailwind.config": "./tailwind.config.ts",
+    "./kapitus-tailwind-preset": "./kapitus-tailwind-preset.ts"
   },
   "files": [
     "src",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    "kapitus-tailwind-preset.ts"
   ],
   "sideEffects": [
     "**/*.css"

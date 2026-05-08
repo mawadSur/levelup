@@ -1,0 +1,141 @@
+/*
+ * Kapitus client theme — class-scoped tokens.
+ * Loaded ONLY by the /clients/kapitus route group via the scoped layout.
+ * Selectors target `.kapitus` (and its descendants), never `:root`,
+ * so Mission Brief tokens in globals.css remain untouched.
+ */
+
+.kapitus {
+  /* Foundation */
+  --kp-paper: 255 255 255;
+  --kp-mist: 248 250 252;
+  --kp-fog: 241 245 249;
+  --kp-rule: 226 232 240;
+  --kp-rule-strong: 203 213 225;
+
+  /* Ink */
+  --kp-ink: 15 23 42;
+  --kp-ink-soft: 51 65 85;
+  --kp-ink-mute: 100 116 139;
+  --kp-ink-faint: 148 163 184;
+
+  /* Brand */
+  --kp-navy: 11 36 71;
+  --kp-navy-deep: 7 22 44;
+  --kp-blue: 30 64 175;
+  --kp-blue-soft: 219 234 254;
+  --kp-cta: 14 165 233;
+
+  /* Semantic */
+  --kp-success: 22 163 74;
+  --kp-warning: 217 119 6;
+  --kp-danger: 220 38 38;
+  --kp-info: 14 165 233;
+
+  /* Radius */
+  --kp-radius-sm: 6px;
+  --kp-radius-md: 10px;
+  --kp-radius-lg: 16px;
+  --kp-radius-pill: 9999px;
+
+  /* Shadow */
+  --kp-shadow-sm:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --kp-shadow-md:
+    0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+
+  /* Containers */
+  --kp-container: 1240px;
+  --kp-reading: 680px;
+
+  /* Easing */
+  --kp-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  background-color: rgb(var(--kp-paper));
+  color: rgb(var(--kp-ink));
+  font-family: var(--font-inter-tight), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings:
+    'cv11' on,
+    'ss01' on;
+}
+
+.kapitus *,
+.kapitus *::before,
+.kapitus *::after {
+  border-color: rgb(var(--kp-rule));
+}
+
+.kapitus ::selection {
+  background-color: rgb(var(--kp-blue) / 0.18);
+  color: rgb(var(--kp-ink));
+}
+
+.kapitus *:focus-visible {
+  outline: 2px solid rgb(var(--kp-blue));
+  outline-offset: 2px;
+}
+
+/* Typography utilities */
+.kapitus .kp-display {
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.kapitus .kp-h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.kapitus .kp-h2 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.kapitus .kp-h3 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.kapitus .kp-eyebrow {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kapitus .kp-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.kapitus .kp-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.kapitus .kp-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.kapitus .kp-data {
+  font-family: ui-monospace, 'SF Mono', 'Geist Mono', Menlo, monospace;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
