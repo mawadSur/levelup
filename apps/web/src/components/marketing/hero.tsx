@@ -7,32 +7,29 @@ export function Hero() {
     <section className="relative grain overflow-hidden border-b border-ink-600 bg-ink-900">
       <GridLines />
 
-      <div className="relative mx-auto max-w-content px-6 pb-24 pt-8 sm:pt-12 lg:px-8 lg:pb-32 lg:pt-16">
+      <div className="relative mx-auto max-w-content px-6 pb-12 pt-6 sm:pt-8 lg:px-8 lg:pb-16 lg:pt-10">
         {/* Eyebrow */}
-        <div className="mb-12 flex items-baseline gap-4 animate-mission-in">
+        <div className="mb-6 flex items-baseline gap-4 animate-mission-in lg:mb-8">
           <MonoLabel className="text-paper-500">MISSION BRIEF / VOL. I</MonoLabel>
           <span className="h-px flex-1 max-w-[12rem] bg-ink-500" aria-hidden />
           <MonoLabel tone="signal">2026.05 · ENROLLMENT OPEN</MonoLabel>
         </div>
 
-        <div className="grid grid-cols-1 items-end gap-16 lg:grid-cols-[3fr,2fr] lg:gap-12">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-[3fr,2fr] lg:gap-12">
           {/* Headline column */}
           <div className="animate-mission-in delay-75">
-            <h1 className="font-serif text-display-xl text-paper-100">
-              Train every operator
-              <br />
-              to use AI <em className="font-serif italic text-signal">safely</em>,{' '}
-              <em className="font-serif italic text-paper-100">effectively</em>,
-              <br />
-              and measurably.
+            <h1 className="font-serif text-display-lg text-paper-100">
+              Train every operator to use AI{' '}
+              <em className="font-serif italic text-signal">safely</em>,{' '}
+              <em className="font-serif italic text-paper-100">effectively</em>, and measurably.
             </h1>
 
-            <p className="mt-8 max-w-reading text-body-lg text-paper-300">
+            <p className="mt-6 max-w-reading text-body-lg text-paper-300">
               A role-based curriculum, an in-context coach, and a reporting instrument your CIO will
               actually open. Pilot in thirty days, prove the ROI by week three.
             </p>
 
-            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <Button asChild variant="primary" size="lg">
                 <Link href="/sign-up">REQUEST DEMO →</Link>
               </Button>
@@ -41,7 +38,7 @@ export function Hero() {
               </Button>
             </div>
 
-            <p className="mt-6 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+            <p className="mt-4 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
               NO PROCUREMENT · 14-DAY TRIAL · CANCEL ANY TIME
             </p>
           </div>
