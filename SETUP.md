@@ -32,7 +32,14 @@ This codebase tolerates `PLACEHOLDER_*` values for every external integration �
 
 ### API + Worker — Render (recommended) or Fly
 
-**Render:** apply `render.yaml` (at repo root) via Blueprints. Two services come up: `levelup-api` (web) and `levelup-worker` (worker). Set the `sync: false` env vars after first deploy.
+**Render:** full step-by-step in [`docs/runbooks/render-deploy.md`](./docs/runbooks/render-deploy.md). Quick version:
+1. Provision Upstash Redis in `us-west-2` (free tier is fine).
+2. Open https://dashboard.render.com/blueprints → New Blueprint → connect `mawadSur/levelup` → Apply. Render reads `render.yaml` at repo root and creates two services: `levelup-api` + `levelup-worker`.
+3. Paste `sync: false` env vars from `.env`. `CERT_SIGNING_SECRET` auto-generates on the API and the worker reads it via `fromService`.
+4. Run `pnpm exec tsx scripts/setup-stripe-products.ts` (test mode default; `--live` for prod) to provision Stripe products + prices. Paste output `STRIPE_PRICE_*` values into Render's API service.
+5. Wire the Stripe webhook to `https://<api-url>/api/webhooks/stripe` in Stripe dashboard, paste signing secret as `STRIPE_WEBHOOK_SECRET`.
+6. Update Vercel `NEXT_PUBLIC_API_URL` to the Render API URL, redeploy web.
+7. Monitor with `RENDER_API_KEY=rnd_xxx ./scripts/render-status.sh` (returns non-zero on unhealthy).
 
 **Fly:** `infra/fly.api.toml` and `infra/fly.worker.toml` plus `Dockerfile.api` / `Dockerfile.worker`. From the repo root:
 
