@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { Prisma } from '@levelup/db';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { AiLevel, Badge, Role } from '@levelup/db';
 import type { UpdateProfileDto } from './dto/update-profile.dto';

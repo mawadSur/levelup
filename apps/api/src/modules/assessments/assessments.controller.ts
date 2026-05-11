@@ -4,7 +4,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { AssessmentsService } from './assessments.service';
+import type { AssessmentsService } from './assessments.service';
 import { startAssessmentSchema } from './dto/start-assessment.dto';
 import type { StartAssessmentDto } from './dto/start-assessment.dto';
 import { submitAssessmentDtoSchema } from './dto/submit-assessment.dto';

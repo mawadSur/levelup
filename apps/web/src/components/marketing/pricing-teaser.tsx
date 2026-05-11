@@ -38,12 +38,7 @@ const TEASER_PLANS = [
     description: 'Mid-market with SSO + custom paths. 100–500 seats.',
     price: '$15/SEAT/MO',
     priceCaption: 'PER-SEAT · MONTHLY',
-    features: [
-      'Everything in Team',
-      'SSO / SAML',
-      'Advanced analytics',
-      'Priority support',
-    ],
+    features: ['Everything in Team', 'SSO / SAML', 'Advanced analytics', 'Priority support'],
     cta: 'CHECKOUT →',
     ctaHref: '/sign-up?plan=growth&interval=monthly&seats=150',
     highlight: false,

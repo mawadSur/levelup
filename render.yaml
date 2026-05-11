@@ -14,6 +14,10 @@ services:
       - key: API_PORT
         value: 4000
 
+      # White-label client — drives cert PDF + email branding.
+      - key: CLIENT
+        value: kapitus
+
       # Postgres (Supabase pooler)
       - key: DATABASE_URL
         sync: false
@@ -83,6 +87,10 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+
+      # White-label client — drives cert PDF + email branding.
+      - key: CLIENT
+        value: kapitus
 
       - key: DATABASE_URL
         sync: false

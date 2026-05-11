@@ -15,6 +15,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/render';
 import { AssessmentRunner } from '../assessment-runner';
+import type * as LibApiModule from '@/lib/api';
 import type { Assessment, AssessmentItem } from '@/lib/api/assessments';
 import type { AssessmentResult } from '@levelup/types';
 
@@ -44,12 +45,12 @@ const mockStartAssessment = vi.fn<(type: string) => Promise<Assessment>>();
 const mockSubmitAssessment =
   vi.fn<
     (
-      input: Parameters<typeof import('@/lib/api').assessments.submitAssessment>[0],
+      input: Parameters<(typeof LibApiModule)['assessments']['submitAssessment']>[0],
     ) => Promise<AssessmentResult>
   >();
 
 vi.mock('@/lib/api', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@/lib/api')>();
+  const original = await importOriginal<typeof LibApiModule>();
   return {
     ...original,
     assessments: {

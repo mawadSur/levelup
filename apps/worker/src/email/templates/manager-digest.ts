@@ -14,6 +14,8 @@
  *   periodLabel         - Human-readable period, e.g. "Apr 28 – May 4, 2026"
  */
 
+import { academyName } from '../../config.js';
+
 export interface RiskFlag {
   label: string;
   count: number;
@@ -82,7 +84,7 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
       <tr>
         <td style="background-color:#1E40AF;padding:32px 40px;">
           <p style="margin:0 0 4px;color:#93C5FD;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Weekly Digest</p>
-          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:bold;">LevelUp AI Academy</p>
+          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:bold;">${academyName}</p>
         </td>
       </tr>
 
@@ -143,7 +145,7 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
       <tr>
         <td style="padding:20px 40px;border-top:1px solid #E5E7EB;text-align:center;">
           <p style="margin:0;font-size:12px;color:#9CA3AF;">
-            &copy; ${new Date().getFullYear()} LevelUp AI Academy. You receive this because you're a manager in ${escapeHtml(data.orgName)}.
+            &copy; ${new Date().getFullYear()} ${academyName}. You receive this because you're a manager in ${escapeHtml(data.orgName)}.
           </p>
         </td>
       </tr>
@@ -170,7 +172,7 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
     `View the full report:`,
     reportsUrl,
     ``,
-    `-- LevelUp AI Academy`,
+    `-- ${academyName}`,
   ].join('\n');
 
   return { subject, html, text };

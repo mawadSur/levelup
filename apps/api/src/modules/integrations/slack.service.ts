@@ -8,8 +8,8 @@ import {
   exchangeCode,
   type KnownBlock,
 } from '@levelup/integrations-slack';
-import { PrismaService } from '../prisma';
-import { IntegrationsService } from './integrations.service';
+import type { PrismaService } from '../prisma';
+import type { IntegrationsService } from './integrations.service';
 import type { SlashCommandPayload } from './dto';
 
 /**

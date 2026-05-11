@@ -26,9 +26,7 @@ export function RiskByDeptTable({ rows, windowDays }: RiskByDeptTableProps) {
     return (
       <Card>
         <CardContent className="py-10 text-center">
-          <MonoLabel className="text-paper-500">
-            NO DEPARTMENTS WITH ACTIVE HEADCOUNT
-          </MonoLabel>
+          <MonoLabel className="text-paper-500">NO DEPARTMENTS WITH ACTIVE HEADCOUNT</MonoLabel>
         </CardContent>
       </Card>
     );
@@ -41,25 +39,46 @@ export function RiskByDeptTable({ rows, windowDays }: RiskByDeptTableProps) {
           <table className="min-w-full text-left">
             <thead>
               <tr className="border-b border-ink-600">
-                <th scope="col" className="px-5 py-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-5 py-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Department
                 </th>
-                <th scope="col" className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Headcount
                 </th>
-                <th scope="col" className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   DAU {windowDays}d
                 </th>
-                <th scope="col" className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Triggers {windowDays}d
                 </th>
-                <th scope="col" className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Policy %
                 </th>
-                <th scope="col" className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Risk
                 </th>
-                <th scope="col" className="px-5 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                <th
+                  scope="col"
+                  className="px-5 py-3 text-right font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"
+                >
                   Trend
                 </th>
               </tr>
@@ -70,9 +89,7 @@ export function RiskByDeptTable({ rows, windowDays }: RiskByDeptTableProps) {
                   key={row.departmentId ?? '__unassigned'}
                   className="border-b border-ink-700 last:border-b-0"
                 >
-                  <td className="px-5 py-3 text-body-sm text-paper-100">
-                    {row.departmentName}
-                  </td>
+                  <td className="px-5 py-3 text-body-sm text-paper-100">{row.departmentName}</td>
                   <td className="px-3 py-3 text-right font-mono text-mono-sm tabular-nums text-paper-300">
                     {row.headcount}
                   </td>
@@ -99,9 +116,7 @@ export function RiskByDeptTable({ rows, windowDays }: RiskByDeptTableProps) {
                     {row.riskScore}
                   </td>
                   <td className="px-5 py-3">
-                    <span className="flex items-center justify-end">
-                      {trendIcon(row.trend)}
-                    </span>
+                    <span className="flex items-center justify-end">{trendIcon(row.trend)}</span>
                   </td>
                 </tr>
               ))}

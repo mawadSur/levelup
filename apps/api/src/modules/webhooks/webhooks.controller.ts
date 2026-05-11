@@ -11,8 +11,8 @@ import type { Request } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { verifyWebhook, parseEvent, isStubMode } from '@levelup/billing';
 import { Prisma } from '@levelup/db';
-import { BillingService } from '../billing/billing.service';
-import { PrismaService } from '../prisma';
+import type { BillingService } from '../billing/billing.service';
+import type { PrismaService } from '../prisma';
 
 interface RawBodyRequest extends Request {
   rawBody?: Buffer;

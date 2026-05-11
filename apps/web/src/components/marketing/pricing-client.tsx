@@ -213,9 +213,7 @@ export function PricingClient() {
               ]}
               cta={
                 <Button asChild variant="primary" className="w-full">
-                  <Link
-                    href={`/sign-up?plan=team&interval=${intervalLower}&seats=${teamSeats}`}
-                  >
+                  <Link href={`/sign-up?plan=team&interval=${intervalLower}&seats=${teamSeats}`}>
                     CHECKOUT →
                   </Link>
                 </Button>

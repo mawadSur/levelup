@@ -36,6 +36,7 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://levelup:levelup@localhost:5432/levelup?schema=public
+      DIRECT_DATABASE_URL: postgresql://levelup:levelup@localhost:5432/levelup?schema=public
       REDIS_URL: redis://localhost:6379
       OPENAI_API_KEY: PLACEHOLDER_openai_key
       WORKOS_API_KEY: PLACEHOLDER_workos_key

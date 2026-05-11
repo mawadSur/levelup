@@ -1,12 +1,14 @@
 /**
  * "welcome" email template.
  *
- * Subject: Welcome to LevelUp AI Academy
+ * Subject: Welcome to ${academyName}
  *
  * Expected data fields:
  *   userName   - Recipient display name
  *   appUrl     - Base app URL
  */
+
+import { academyName } from '../../config.js';
 
 export interface WelcomeEmailData {
   userName: string;
@@ -23,7 +25,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
   const assessmentUrl = `${data.appUrl}/assessments/baseline`;
   const learnUrl = `${data.appUrl}/learn`;
 
-  const subject = 'Welcome to LevelUp AI Academy';
+  const subject = `Welcome to ${academyName}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -40,7 +42,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
       <!-- Header -->
       <tr>
         <td style="background-color:#1E40AF;padding:32px 40px;text-align:center;">
-          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">LevelUp AI Academy</p>
+          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">${academyName}</p>
         </td>
       </tr>
 
@@ -51,7 +53,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
             Welcome, ${escapeHtml(data.userName)}! &#128640;
           </h1>
           <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#374151;">
-            You're all set on LevelUp AI Academy. We'll help you and your team build
+            You're all set on ${academyName}. We'll help you and your team build
             practical AI skills at the right level for your role.
           </p>
           <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#374151;">
@@ -91,7 +93,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
       <tr>
         <td style="padding:20px 40px;border-top:1px solid #E5E7EB;text-align:center;">
           <p style="margin:0;font-size:12px;color:#9CA3AF;">
-            &copy; ${new Date().getFullYear()} LevelUp AI Academy. All rights reserved.
+            &copy; ${new Date().getFullYear()} ${academyName}. All rights reserved.
           </p>
         </td>
       </tr>
@@ -105,7 +107,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
   const text = [
     `Welcome, ${data.userName}!`,
     ``,
-    `You're all set on LevelUp AI Academy.`,
+    `You're all set on ${academyName}.`,
     ``,
     `Start with a short baseline assessment (about 5 minutes) so we can`,
     `personalise your learning path:`,
@@ -114,7 +116,7 @@ export function renderWelcome(data: WelcomeEmailData): RenderedEmail {
     `Or browse learning paths directly:`,
     learnUrl,
     ``,
-    `-- LevelUp AI Academy`,
+    `-- ${academyName}`,
   ].join('\n');
 
   return { subject, html, text };

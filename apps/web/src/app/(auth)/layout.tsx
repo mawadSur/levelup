@@ -1,7 +1,20 @@
 import Link from 'next/link';
 import { GridLines, MonoLabel } from '@levelup/ui';
+import { IS_KAPITUS } from '@/lib/client';
+import { KapitusNav } from '@/components/kapitus/nav';
+import { KapitusFooter } from '@/components/kapitus/footer';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  if (IS_KAPITUS) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <KapitusNav />
+        <main className="flex-1">{children}</main>
+        <KapitusFooter />
+      </div>
+    );
+  }
+
   return (
     <div className="relative grid min-h-screen grid-cols-1 bg-ink-900 text-paper-100 lg:grid-cols-2">
       {/* LEFT — editorial decorative panel */}

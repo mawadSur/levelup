@@ -3,6 +3,7 @@ import { Alert, AlertDescription, MonoLabel } from '@levelup/ui';
 import { integrations as integrationsApi } from '@/lib/api';
 import { InstallCard } from '@/components/admin/integrations/install-card';
 import type { IntegrationSummary } from '@levelup/types';
+import { brand } from '@/lib/client';
 
 export const metadata: Metadata = {
   title: 'Integrations',
@@ -30,7 +31,7 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
         <MonoLabel>OPS / INTEGRATIONS</MonoLabel>
         <h1 className="font-serif text-display-md italic text-paper-100">Integrations</h1>
         <p className="max-w-reading text-body text-paper-300">
-          Connect LevelUp to where your team already works.
+          Connect {brand.shortName} to where your team already works.
         </p>
       </header>
 

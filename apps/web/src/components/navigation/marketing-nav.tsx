@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { Button, MonoLabel } from '@levelup/ui';
 
-const NAV_LINK_CLASS =
-  'text-body-sm text-paper-300 transition-colors hover:text-paper-100';
+const NAV_LINK_CLASS = 'text-body-sm text-paper-300 transition-colors hover:text-paper-100';
 
 export function MarketingNav() {
   return (

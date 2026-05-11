@@ -78,7 +78,7 @@ const RARITY_ICON_COLOR: Record<Rarity, string> = {
 
 // LEGENDARY gets a gradient border via a wrapper technique:
 // we add a gradient background on the outer ring and mask the inner area.
-function LegendaryRing({ children }: { children: React.ReactNode }) {
+function LegendaryRing({ children: _children }: { children: React.ReactNode }) {
   return (
     <span
       aria-hidden

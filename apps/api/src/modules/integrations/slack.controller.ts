@@ -9,7 +9,7 @@ import { Public } from '../../common/decorators/public.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { SlackSignatureGuard } from './slack-signature.guard';
-import { SlackService } from './slack.service';
+import type { SlackService } from './slack.service';
 import { SLACK_DEFAULT_SCOPES } from './slack.service';
 import {
   slashCommandPayloadSchema,

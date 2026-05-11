@@ -1,6 +1,14 @@
 'use client';
 
-import { Badge, Button, Dialog, DialogContent, DialogHeader, DialogTitle, MonoLabel } from '@levelup/ui';
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  MonoLabel,
+} from '@levelup/ui';
 import type { TriggerFeedItem } from '@/lib/api/governance';
 
 interface TriggerDetailModalProps {
@@ -12,14 +20,20 @@ interface TriggerDetailModalProps {
 
 function categoryVariant(category: string): 'signal' | 'success' | 'danger' | 'default' {
   const upper = category.toUpperCase();
-  if (upper.includes('CREDENTIAL') || upper.includes('SECRET') || upper.includes('KEY')) return 'danger';
+  if (upper.includes('CREDENTIAL') || upper.includes('SECRET') || upper.includes('KEY'))
+    return 'danger';
   if (upper.includes('PII') || upper.includes('PHI')) return 'danger';
   if (upper.includes('FINANCIAL') || upper.includes('SSN')) return 'danger';
   if (upper === 'GENERAL') return 'default';
   return 'signal';
 }
 
-export function TriggerDetailModal({ item, open, onOpenChange, onAssign }: TriggerDetailModalProps) {
+export function TriggerDetailModal({
+  item,
+  open,
+  onOpenChange,
+  onAssign,
+}: TriggerDetailModalProps) {
   if (!item) return null;
 
   const occurred = new Date(item.occurredAt);

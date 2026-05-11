@@ -1,7 +1,7 @@
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { Catch, HttpException, HttpStatus } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { AppLogger } from '../logger/app-logger.service';
+import type { AppLogger } from '../logger/app-logger.service';
 
 type ErrorBody = {
   error: {
@@ -30,7 +30,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code = 'INTERNAL_SERVER_ERROR';
     let message = 'An unexpected error occurred';
-    let extras: Record<string, unknown> = {};
+    const extras: Record<string, unknown> = {};
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();

@@ -15,7 +15,6 @@ process.env['NODE_ENV'] = 'test';
 
 import { describe, it, expect } from 'vitest';
 import { hasRole, assertRole, RolePriority } from '../rbac.js';
-import type { Role } from '../rbac.js';
 
 // ============================================================================
 // RolePriority

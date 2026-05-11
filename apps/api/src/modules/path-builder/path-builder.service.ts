@@ -23,7 +23,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import { enqueuePathGeneration } from '@levelup/queue';
 import type { AiLevel, Prisma } from '@levelup/db';
 import { type LearningPath, type PathGenerationRequest } from '@levelup/db';

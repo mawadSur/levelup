@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import type { PrismaService } from '../prisma/prisma.service';
 import {
   verifyAccessToken,
   signStubAccessToken,
@@ -10,7 +10,7 @@ import {
   type SessionPayload,
 } from '@levelup/auth-client';
 import { InvitationStatus, Role } from '@levelup/db';
-import type { User, Organization } from '@levelup/db';
+import type { User, Organization, Prisma } from '@levelup/db';
 import type { AcceptInvitationInput } from './dto/sign-in.dto';
 
 export interface UpsertResult {
@@ -334,7 +334,7 @@ export class AuthService {
           organizationId: entry.organizationId,
           actorId: entry.actorId ?? undefined,
           action: entry.action,
-          metadata: entry.metadata as import('@levelup/db').Prisma.InputJsonValue,
+          metadata: entry.metadata as Prisma.InputJsonValue,
         },
       });
     } catch (err: unknown) {

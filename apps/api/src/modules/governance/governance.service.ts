@@ -25,7 +25,7 @@ import { Prisma } from '@levelup/db';
 import { enqueueGovernanceReport, getQueue } from '@levelup/queue';
 import { randomUUID } from 'node:crypto';
 import { getGovernanceReportSignedUrl } from '@levelup/storage';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { GenerateReportDto, TriggerFeedQueryDto } from './dto/governance-query.dto';
 
@@ -106,7 +106,6 @@ export interface PolicyCoverageResponse {
 // Service
 // ---------------------------------------------------------------------------
 
-const SENSITIVE_BURST_WINDOW_DAYS = 30;
 const HIGH_RISK_TRIGGER_THRESHOLD = 3;
 
 const DAY_MS = 24 * 60 * 60 * 1000;

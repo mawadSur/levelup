@@ -3,7 +3,7 @@ import { billingConfig, isStubMode } from './config';
 import { getStripe } from './stripe';
 import { planAndIntervalFromPriceId } from './plan';
 import type { ParsedBillingEvent } from './types';
-import type { Plan} from '@levelup/db';
+import type { Plan } from '@levelup/db';
 import { BillingInterval } from '@levelup/db';
 
 // NOTE: Stripe SDK v17 changed the Invoice object — subscriptions are now

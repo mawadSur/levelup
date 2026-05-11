@@ -1,7 +1,8 @@
 import { ImageResponse } from 'next/og';
+import { brand } from '@/lib/client';
 
 export const runtime = 'edge';
-export const alt = 'LevelUp AI Academy — Verified Certificate';
+export const alt = `${brand.name} — Verified Certificate`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -170,7 +171,7 @@ export default async function Image({ params }: { params: { hash: string } }) {
               textTransform: 'uppercase',
             }}
           >
-            LevelUp AI Academy
+            {brand.name}
           </div>
         </div>
       </div>,
@@ -327,7 +328,7 @@ export default async function Image({ params }: { params: { hash: string } }) {
             textTransform: 'uppercase',
           }}
         >
-          Verified by LevelUp AI Academy
+          Verified by {brand.name}
         </div>
       </div>
     </div>,

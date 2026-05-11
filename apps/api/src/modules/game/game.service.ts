@@ -14,7 +14,7 @@ import type {
   LeaderboardPeriod,
   LeaderboardScope,
 } from '@levelup/types';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import { levelFromXp, xpToNextLevel } from './level-curve';
 import { xpForKind } from './xp-rules';
 import { applyDailyActivity, crossedThreshold, startOfUtcDay } from './streak';

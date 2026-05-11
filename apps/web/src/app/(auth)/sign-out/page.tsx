@@ -45,9 +45,7 @@ export default function SignOutPage() {
       <h1 className="font-serif text-display-md text-paper-100">
         <em className="italic text-signal">Session terminated.</em>
       </h1>
-      <p className="text-body-sm text-paper-300">
-        Returning you to the sign-in console&hellip;
-      </p>
+      <p className="text-body-sm text-paper-300">Returning you to the sign-in console&hellip;</p>
       <div className="flex justify-center gap-2 pt-2">
         <span className="h-2 w-2 animate-pulse rounded-full bg-signal" />
         <span

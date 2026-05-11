@@ -21,7 +21,7 @@ import type { CoachOutput, CoachStreamChunk } from '@levelup/llm';
 import { transcribeAudio, synthesizeSpeech } from '@levelup/llm';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { CoachService } from './coach.service';
+import type { CoachService } from './coach.service';
 import { RateLimitGuard } from './rate-limit.guard';
 import { coachInvokeBodySchema, type CoachInvokeBody } from './dto/coach-request.dto';
 

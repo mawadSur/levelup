@@ -9,7 +9,6 @@ import {
   BADGE_CATALOG,
   RARITY_ORDER,
   RARITY_LABELS,
-  findBadgeDef,
   type BadgeDef,
   type Rarity,
 } from './badge-catalog';

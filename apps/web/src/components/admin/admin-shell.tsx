@@ -37,6 +37,10 @@ import {
 import { NavItem } from './nav-item';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider } from '@/lib/analytics/posthog-provider';
+import { brand, IS_KAPITUS } from '@/lib/client';
+
+const SEAL = IS_KAPITUS ? 'K' : 'LU';
+const WORDMARK = IS_KAPITUS ? brand.shortName : 'LevelUp';
 
 /** Minimal user shape passed from the server layout — avoids importing server-only auth-client. */
 export interface ShellUser {
@@ -146,16 +150,26 @@ function Sidebar({
       >
         <Link
           href="/admin"
-          aria-label="LevelUp AI Academy — admin home"
+          aria-label={`${brand.name} — admin home`}
           className="flex items-center gap-2"
         >
           <span
             aria-hidden="true"
             className="flex h-7 w-7 items-center justify-center rounded-sm bg-signal font-mono text-mono-sm font-semibold text-ink-900"
           >
-            LU
+            {SEAL}
           </span>
-          {!collapsed && <span className="font-serif text-h3 italic text-paper-100">LevelUp</span>}
+          {!collapsed && (
+            <span
+              className={
+                IS_KAPITUS
+                  ? 'text-h3 font-semibold text-paper-100'
+                  : 'font-serif text-h3 italic text-paper-100'
+              }
+            >
+              {WORDMARK}
+            </span>
+          )}
         </Link>
       </div>
 

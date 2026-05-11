@@ -18,6 +18,7 @@ import {
 } from '@levelup/ui';
 import type { PolicyVersion } from '@/lib/api/policies';
 import { PolicyEditor } from '@/components/admin/policy/policy-editor';
+import { brand } from '@/lib/client';
 import { PolicyHistoryList } from '@/components/admin/policy/policy-history-list';
 import { MarkdownPreview } from '@/components/admin/policy/markdown-preview';
 
@@ -108,7 +109,7 @@ export function PolicyPageClient({
                 <FileText className="mx-auto h-10 w-10 text-paper-500" aria-hidden="true" />
                 <MonoLabel>NO POLICY YET</MonoLabel>
                 <p className="mx-auto max-w-xs text-body-sm text-paper-300">
-                  Adopt the LevelUp sample policy to get started quickly.
+                  Adopt the {brand.shortName} sample policy to get started quickly.
                 </p>
                 <Button variant="primary" onClick={() => setEditorOpen(true)}>
                   Create AI policy

@@ -74,10 +74,7 @@ export function DashboardMock() {
                 { label: 'AVG SCORE', value: '84%' },
                 { label: 'CERT READY', value: '01' },
               ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="border border-ink-600 bg-ink-900 p-2 text-center"
-                >
+                <div key={label} className="border border-ink-600 bg-ink-900 p-2 text-center">
                   <p className="font-serif text-base text-paper-100 tabular-nums">{value}</p>
                   <MonoLabel className="mt-1 block text-paper-500">{label}</MonoLabel>
                 </div>

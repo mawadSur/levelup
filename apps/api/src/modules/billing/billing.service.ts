@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import { getPlanLimit, isWithinSeatLimit } from '@levelup/billing';
 import type { Plan, BillingInterval } from '@levelup/db';
 

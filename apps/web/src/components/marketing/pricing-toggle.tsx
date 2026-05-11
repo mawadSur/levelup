@@ -45,9 +45,7 @@ export function PricingToggle({
           aria-hidden
           className={cn(
             'ml-2 inline-flex items-center px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.05em] rounded-data',
-            value === 'ANNUAL'
-              ? 'bg-ink-900 text-signal'
-              : 'bg-ink-700 text-paper-300',
+            value === 'ANNUAL' ? 'bg-ink-900 text-signal' : 'bg-ink-700 text-paper-300',
           )}
         >
           {annualSavingsLabel}
@@ -76,9 +74,7 @@ function ToggleOption({ active, onClick, ariaLabel, children }: ToggleOptionProp
         'inline-flex items-center px-4 py-2 font-mono text-mono-sm uppercase tracking-[0.05em] rounded-sm',
         'transition-colors duration-150 ease-mission',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-signal',
-        active
-          ? 'bg-signal text-ink-900'
-          : 'bg-transparent text-paper-300 hover:text-paper-100',
+        active ? 'bg-signal text-ink-900' : 'bg-transparent text-paper-300 hover:text-paper-100',
       )}
     >
       {children}

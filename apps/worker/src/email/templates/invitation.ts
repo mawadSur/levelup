@@ -1,7 +1,7 @@
 /**
  * "invitation" email template.
  *
- * Subject: You're invited to {orgName}'s LevelUp AI Academy
+ * Subject: You're invited to {orgName}'s ${academyName}
  *
  * Expected data fields:
  *   orgName    - Organisation name
@@ -11,6 +11,8 @@
  *   role       - Role being granted (EMPLOYEE | MANAGER | ADMIN)
  *   appUrl     - Base app URL (injected from config)
  */
+
+import { academyName } from '../../config.js';
 
 export interface InvitationData {
   orgName: string;
@@ -36,7 +38,7 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
     day: 'numeric',
   });
 
-  const subject = `You're invited to ${data.orgName}'s LevelUp AI Academy`;
+  const subject = `You're invited to ${data.orgName}'s ${academyName}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -53,7 +55,7 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
       <!-- Header -->
       <tr>
         <td style="background-color:#1E40AF;padding:32px 40px;text-align:center;">
-          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">LevelUp AI Academy</p>
+          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">${academyName}</p>
         </td>
       </tr>
 
@@ -63,11 +65,11 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
           <h1 style="margin:0 0 16px;font-size:24px;color:#111827;">You're invited!</h1>
           <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#374151;">
             <strong>${escapeHtml(data.inviterName)}</strong> has invited you to join
-            <strong>${escapeHtml(data.orgName)}</strong> on LevelUp AI Academy as a
+            <strong>${escapeHtml(data.orgName)}</strong> on ${academyName} as a
             <strong>${escapeHtml(data.role.toLowerCase())}</strong>.
           </p>
           <p style="margin:0 0 28px;font-size:15px;line-height:1.6;color:#374151;">
-            LevelUp AI Academy helps your team build practical AI skills through structured
+            ${academyName} helps your team build practical AI skills through structured
             learning paths, assessments, and certifications — tailored to your organisation.
           </p>
 
@@ -100,7 +102,7 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
       <tr>
         <td style="padding:20px 40px;border-top:1px solid #E5E7EB;text-align:center;">
           <p style="margin:0;font-size:12px;color:#9CA3AF;">
-            &copy; ${new Date().getFullYear()} LevelUp AI Academy. All rights reserved.
+            &copy; ${new Date().getFullYear()} ${academyName}. All rights reserved.
           </p>
         </td>
       </tr>
@@ -112,9 +114,9 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
 </html>`;
 
   const text = [
-    `You're invited to ${data.orgName}'s LevelUp AI Academy`,
+    `You're invited to ${data.orgName}'s ${academyName}`,
     ``,
-    `${data.inviterName} has invited you to join ${data.orgName} on LevelUp AI Academy`,
+    `${data.inviterName} has invited you to join ${data.orgName} on ${academyName}`,
     `as a ${data.role.toLowerCase()}.`,
     ``,
     `Accept your invitation here:`,
@@ -124,7 +126,7 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
     ``,
     `If you did not expect this email you can safely ignore it.`,
     ``,
-    `-- LevelUp AI Academy`,
+    `-- ${academyName}`,
   ].join('\n');
 
   return { subject, html, text };

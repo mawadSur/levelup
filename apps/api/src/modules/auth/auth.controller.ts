@@ -16,7 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { AuthService } from './auth.service';
+import type { AuthService } from './auth.service';
 import { acceptInvitationSchema } from './dto/sign-in.dto';
 import type {
   AcceptInvitationInput,

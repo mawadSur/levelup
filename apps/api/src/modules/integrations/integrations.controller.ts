@@ -7,8 +7,8 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { IntegrationsService } from './integrations.service';
-import { SlackService } from './slack.service';
+import type { IntegrationsService } from './integrations.service';
+import type { SlackService } from './slack.service';
 
 /**
  * Generic integration listing/management endpoints.

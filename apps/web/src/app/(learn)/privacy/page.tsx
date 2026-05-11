@@ -13,7 +13,7 @@ import { DataExportRequest } from '@/components/learn/privacy/data-export-reques
 import { DeletionRequest } from '@/components/learn/privacy/deletion-request';
 
 export const metadata: Metadata = {
-  title: 'Your data — LevelUp AI Academy',
+  title: 'Your data',
 };
 
 interface PrivacyPageProps {

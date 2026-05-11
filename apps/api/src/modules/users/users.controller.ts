@@ -6,7 +6,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { AiLevel, Role } from '@levelup/db';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { UsersService } from './users.service';
+import type { UsersService } from './users.service';
 import { updateProfileSchema } from './dto/update-profile.dto';
 import type { UpdateProfileDto } from './dto/update-profile.dto';
 import { updateRoleSchema } from './dto/update-role.dto';

@@ -63,7 +63,7 @@ export function PathEditor({ pathId, initialPath }: PathEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = React.useState(initialPath.title);
-  const [description, setDescription] = React.useState(initialPath.description ?? '');
+  const [description, _setDescription] = React.useState(initialPath.description ?? '');
   const [isPublished, setIsPublished] = React.useState(initialPath.isPublished);
   const [lessons, setLessons] = React.useState<PathEditorLesson[]>(initialPath.lessons);
   const [selectedKey, setSelectedKey] = React.useState<string | null>(

@@ -21,7 +21,7 @@ import { CertificatesList } from '@/components/learn/profile/certificates-list';
 import { BadgeWall } from '@/components/learn/achievements/badge-wall';
 
 export const metadata: Metadata = {
-  title: 'Profile — LevelUp AI Academy',
+  title: 'Profile',
 };
 
 // ---------------------------------------------------------------------------

@@ -22,10 +22,7 @@ import {
 import { invitations, billing } from '@/lib/api';
 import { isApiError } from '@/lib/api/errors';
 import type { Department } from '@/lib/api/departments';
-import {
-  SeatAddOnModal,
-  type SeatAddOnReason,
-} from './seat-add-on-modal';
+import { SeatAddOnModal, type SeatAddOnReason } from './seat-add-on-modal';
 
 interface InviteDialogProps {
   open: boolean;
@@ -252,9 +249,11 @@ export function InviteDialog({ open, onOpenChange, departments }: InviteDialogPr
 // Helpers
 // ---------------------------------------------------------------------------
 
-async function safeBillingMe(): Promise<
-  { currentSeats: number; planSeats: number; planName: string } | null
-> {
+async function safeBillingMe(): Promise<{
+  currentSeats: number;
+  planSeats: number;
+  planName: string;
+} | null> {
   try {
     const info = await billing.getMyBilling();
     return {

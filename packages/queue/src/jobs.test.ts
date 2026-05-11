@@ -34,6 +34,7 @@ describe('JOBS catalog', () => {
     'path-generation',
     'anomaly-scan',
     'governance-report',
+    'trial-expiry-check',
   ];
 
   it('has exactly the expected number of entries', () => {

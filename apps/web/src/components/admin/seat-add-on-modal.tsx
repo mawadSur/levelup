@@ -57,13 +57,7 @@ export function SeatAddOnModal({
   onConfirmed,
 }: SeatAddOnModalProps) {
   if (reason === 'TRIAL_EXPIRED') {
-    return (
-      <TrialExpiredView
-        open={open}
-        pendingEmail={pendingEmail}
-        onOpenChange={onOpenChange}
-      />
-    );
+    return <TrialExpiredView open={open} pendingEmail={pendingEmail} onOpenChange={onOpenChange} />;
   }
   return (
     <PlanLimitView
@@ -136,7 +130,7 @@ function PlanLimitView({
   }, [bump, open]);
 
   const newTotalSeats =
-    typeof planSeats === 'number' ? planSeats + bump : preview?.newQuantity ?? bump;
+    typeof planSeats === 'number' ? planSeats + bump : (preview?.newQuantity ?? bump);
 
   const proratedDollars = preview ? preview.amountDueCents / 100 : 0;
 
@@ -165,8 +159,8 @@ function PlanLimitView({
               <>
                 Your{' '}
                 {planName ? <span className="font-mono uppercase">{planName}</span> : 'current'}{' '}
-                plan is at <strong>{currentSeats}</strong> of <strong>{planSeats}</strong> seats.
-                To invite <strong>{pendingEmail || 'this teammate'}</strong>, add seats below.
+                plan is at <strong>{currentSeats}</strong> of <strong>{planSeats}</strong> seats. To
+                invite <strong>{pendingEmail || 'this teammate'}</strong>, add seats below.
               </>
             ) : (
               <>
@@ -265,13 +259,10 @@ function TrialExpiredView({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="space-y-2">
           <MonoLabel tone="signal">TRIAL EXPIRED</MonoLabel>
-          <DialogTitle className="font-serif text-h1 italic">
-            Your trial has expired.
-          </DialogTitle>
+          <DialogTitle className="font-serif text-h1 italic">Your trial has expired.</DialogTitle>
           <DialogDescription>
-            Upgrade to a paid plan to invite{' '}
-            <strong>{pendingEmail || 'new teammates'}</strong> and unlock admin actions again.
-            Nothing has been deleted.
+            Upgrade to a paid plan to invite <strong>{pendingEmail || 'new teammates'}</strong> and
+            unlock admin actions again. Nothing has been deleted.
           </DialogDescription>
         </DialogHeader>
 

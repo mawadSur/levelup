@@ -84,10 +84,30 @@ export function DashboardMockGovernance() {
             </div>
             <div className="border border-ink-600 bg-ink-900">
               {[
-                { time: '14:22', user: 'USER_A91C28', category: 'CREDENTIALS', tone: 'border-danger text-danger' },
-                { time: '13:47', user: 'USER_F0B3E1', category: 'PII', tone: 'border-danger text-danger' },
-                { time: '12:58', user: 'USER_2D7C4A', category: 'INTERNAL_DATA', tone: 'border-signal-dim text-signal' },
-                { time: '11:12', user: 'USER_88FA21', category: 'PII', tone: 'border-danger text-danger' },
+                {
+                  time: '14:22',
+                  user: 'USER_A91C28',
+                  category: 'CREDENTIALS',
+                  tone: 'border-danger text-danger',
+                },
+                {
+                  time: '13:47',
+                  user: 'USER_F0B3E1',
+                  category: 'PII',
+                  tone: 'border-danger text-danger',
+                },
+                {
+                  time: '12:58',
+                  user: 'USER_2D7C4A',
+                  category: 'INTERNAL_DATA',
+                  tone: 'border-signal-dim text-signal',
+                },
+                {
+                  time: '11:12',
+                  user: 'USER_88FA21',
+                  category: 'PII',
+                  tone: 'border-danger text-danger',
+                },
               ].map((row) => (
                 <div
                   key={`${row.time}-${row.user}`}

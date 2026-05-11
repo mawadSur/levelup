@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -7,7 +7,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { OrganizationsService } from './organizations.service';
+import type { OrganizationsService } from './organizations.service';
 import { updateOrgSchema } from './dto/update-org.dto';
 import type { UpdateOrgDto } from './dto/update-org.dto';
 import { createOrganizationSchema } from '@levelup/types';

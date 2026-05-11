@@ -13,6 +13,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/render';
 import { CoachMessage } from '../coach-message';
+import type * as LevelupUiModule from '@levelup/ui';
 import type { UserMessage, AssistantMessage } from '../coach-message';
 
 // ---------------------------------------------------------------------------
@@ -20,7 +21,7 @@ import type { UserMessage, AssistantMessage } from '../coach-message';
 // the copy button, and onSavePrompt is a passed-in callback)
 // ---------------------------------------------------------------------------
 vi.mock('@levelup/ui', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@levelup/ui')>();
+  const original = await importOriginal<typeof LevelupUiModule>();
   return {
     ...original,
     toast: {

@@ -33,6 +33,7 @@ This codebase tolerates `PLACEHOLDER_*` values for every external integration �
 ### API + Worker — Render (recommended) or Fly
 
 **Render:** full step-by-step in [`docs/runbooks/render-deploy.md`](./docs/runbooks/render-deploy.md). Quick version:
+
 1. Provision Upstash Redis in `us-west-2` (free tier is fine).
 2. Open https://dashboard.render.com/blueprints → New Blueprint → connect `mawadSur/levelup` → Apply. Render reads `render.yaml` at repo root and creates two services: `levelup-api` + `levelup-worker`.
 3. Paste `sync: false` env vars from `.env`. `CERT_SIGNING_SECRET` auto-generates on the API and the worker reads it via `fromService`.

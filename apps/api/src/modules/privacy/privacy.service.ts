@@ -15,7 +15,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import type { DataExportRequest, DeletionRequest, Prisma } from '@levelup/db';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { enqueueDataExport, enqueueEmail } from '@levelup/queue';
 
@@ -23,7 +23,6 @@ import { enqueueDataExport, enqueueEmail } from '@levelup/queue';
 // Constants
 // ---------------------------------------------------------------------------
 
-const EXPORT_EXPIRY_DAYS = 7;
 const DELETION_GRACE_DAYS = 30;
 
 const APP_URL = process.env['APP_URL'] ?? 'http://localhost:3000';

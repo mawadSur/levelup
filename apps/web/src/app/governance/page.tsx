@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Activity, ClipboardCheck, FileText, ShieldCheck } from 'lucide-react';
 import { Button, Card, CardContent, MonoLabel, NumberedSection } from '@levelup/ui';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
@@ -7,9 +8,10 @@ import { Footer } from '@/components/marketing/footer';
 import { GovernanceHero } from '@/components/marketing/governance-hero';
 import { GovernanceEvidence } from '@/components/marketing/governance-evidence';
 import { GovernanceSecurity } from '@/components/marketing/governance-security';
+import { IS_KAPITUS } from '@/lib/client';
 
 export const metadata: Metadata = {
-  title: 'AI Governance — LevelUp AI Academy',
+  title: 'AI Governance',
   description:
     'Capture every prompt. Classify the sensitive ones. Train the people who triggered them. Quarterly evidence reports your auditor will accept.',
 };
@@ -59,6 +61,10 @@ const WHAT_YOU_GET = [
 ];
 
 export default function GovernanceMarketingPage() {
+  if (IS_KAPITUS) {
+    notFound();
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-ink-900 text-paper-100">
       <MarketingNav />
@@ -163,13 +169,11 @@ export default function GovernanceMarketingPage() {
         <section className="border-b border-ink-600 bg-ink-900">
           <div className="mx-auto max-w-content px-6 py-20 lg:px-8 lg:py-28">
             <NumberedSection numeral="V." eyebrow="SECURITY POSTURE" className="space-y-10">
-              <h2 className="font-serif text-display-md italic text-paper-100">
-                The honest list.
-              </h2>
+              <h2 className="font-serif text-display-md italic text-paper-100">The honest list.</h2>
               <p className="max-w-reading text-body-lg text-paper-300">
                 We&apos;d rather tell you what&apos;s shipped than what&apos;s on a slide. Status is
-                refreshed against the live posture; gaps are listed because we&apos;d rather you
-                ask the question now than during procurement.
+                refreshed against the live posture; gaps are listed because we&apos;d rather you ask
+                the question now than during procurement.
               </p>
               <GovernanceSecurity />
             </NumberedSection>
@@ -186,16 +190,20 @@ export default function GovernanceMarketingPage() {
                   Show us your AI policy. We&apos;ll show you what you can prove next quarter.
                 </h2>
                 <p className="mt-6 max-w-reading text-body-lg text-paper-300">
-                  No procurement. No deck. We connect a sandbox tenant in front of you, walk
-                  through the dashboard with one of our security engineers, and leave you with a
-                  sample evidence report from your real policy.
+                  No procurement. No deck. We connect a sandbox tenant in front of you, walk through
+                  the dashboard with one of our security engineers, and leave you with a sample
+                  evidence report from your real policy.
                 </p>
                 <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                   <Button asChild variant="primary" size="lg">
                     <Link href="/sign-up?intent=governance">REQUEST CISO BRIEFING →</Link>
                   </Button>
                   <Button asChild variant="secondary" size="lg">
-                    <a href="/governance/sample-report.pdf" target="_blank" rel="noreferrer noopener">
+                    <a
+                      href="/governance/sample-report.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
                       VIEW SAMPLE REPORT
                     </a>
                   </Button>

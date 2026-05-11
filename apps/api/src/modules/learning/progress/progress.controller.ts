@@ -5,7 +5,7 @@ import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
 import { getTeamProgressBodySchema, type GetTeamProgressBody } from '@levelup/types';
-import { ProgressService } from './progress.service';
+import type { ProgressService } from './progress.service';
 
 @Controller('progress')
 @UseGuards(RoleGuard)

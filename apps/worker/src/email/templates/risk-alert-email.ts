@@ -13,6 +13,8 @@
  *   periodDays      - Rolling window size in days (typically 30)
  */
 
+import { academyName } from '../../config.js';
+
 export interface RiskAlertEmailData {
   managerName: string;
   learnerName: string;
@@ -47,7 +49,7 @@ export function renderRiskAlertEmail(data: RiskAlertEmailData): RenderedEmail {
       <tr>
         <td style="background-color:#7c1c1c;padding:32px 40px;">
           <p style="margin:0 0 4px;color:#fca5a5;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Risk Alert</p>
-          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:bold;">LevelUp AI Academy</p>
+          <p style="margin:0;color:#ffffff;font-size:20px;font-weight:bold;">${academyName}</p>
         </td>
       </tr>
 
@@ -95,7 +97,7 @@ export function renderRiskAlertEmail(data: RiskAlertEmailData): RenderedEmail {
       <tr>
         <td style="padding:20px 40px;border-top:1px solid #E5E7EB;text-align:center;">
           <p style="margin:0;font-size:12px;color:#9CA3AF;">
-            &copy; ${new Date().getFullYear()} LevelUp AI Academy. You receive this because you are a manager in your organisation.
+            &copy; ${new Date().getFullYear()} ${academyName}. You receive this because you are a manager in your organisation.
           </p>
         </td>
       </tr>
@@ -107,7 +109,7 @@ export function renderRiskAlertEmail(data: RiskAlertEmailData): RenderedEmail {
 </html>`;
 
   const text = [
-    `RISK ALERT — LevelUp AI Academy`,
+    `RISK ALERT — ${academyName}`,
     ``,
     `Hi ${data.managerName},`,
     ``,
@@ -119,7 +121,7 @@ export function renderRiskAlertEmail(data: RiskAlertEmailData): RenderedEmail {
     `  - Which tools are they using outside our approved list?`,
     `  - Is there a workflow we should adapt to make safe usage the easy path?`,
     ``,
-    `-- LevelUp AI Academy`,
+    `-- ${academyName}`,
   ].join('\n');
 
   return { subject, html, text };
