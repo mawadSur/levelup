@@ -94,7 +94,9 @@ export function EvidenceExportCard({
               <FileText className="h-5 w-5 text-signal" aria-hidden="true" />
             </div>
             <div className="flex-1">
-              <MonoLabel className="text-paper-500">{defaultPeriodLabel.toUpperCase()} · EVIDENCE</MonoLabel>
+              <MonoLabel className="text-paper-500">
+                {defaultPeriodLabel.toUpperCase()} · EVIDENCE
+              </MonoLabel>
               <h3 className="mt-1 font-serif text-h3 italic text-paper-100">
                 AI Governance Report
               </h3>
@@ -155,9 +157,7 @@ export function EvidenceExportCard({
               >
                 STATUS · {status.toUpperCase()}
               </MonoLabel>
-              {errorMsg && (
-                <span className="font-mono text-mono-sm text-danger">— {errorMsg}</span>
-              )}
+              {errorMsg && <span className="font-mono text-mono-sm text-danger">— {errorMsg}</span>}
             </div>
           )}
         </CardContent>

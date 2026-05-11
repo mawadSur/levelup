@@ -66,9 +66,7 @@ interface RawErrorBody {
   code?: string;
   requestId?: string;
   // Nested envelope (current standard)
-  error?:
-    | string
-    | { code?: string; message?: string; requestId?: string; [k: string]: unknown };
+  error?: string | { code?: string; message?: string; requestId?: string; [k: string]: unknown };
 }
 
 function extractErrorFields(raw: RawErrorBody): {

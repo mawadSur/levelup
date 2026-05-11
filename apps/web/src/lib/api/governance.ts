@@ -83,7 +83,9 @@ export async function getTriggerFeed(limit = 50): Promise<TriggerFeedResponse> {
   return apiGet<TriggerFeedResponse>('/governance/trigger-feed', { params: { limit } });
 }
 
-export async function generateReport(input: GenerateReportInput = {}): Promise<ReportRequestResponse> {
+export async function generateReport(
+  input: GenerateReportInput = {},
+): Promise<ReportRequestResponse> {
   return apiPost<GenerateReportInput, ReportRequestResponse>('/governance/report', input);
 }
 

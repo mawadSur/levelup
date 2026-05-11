@@ -19,10 +19,10 @@ export function GovernanceHero() {
           </h1>
 
           <p className="mt-8 max-w-reading text-body-lg text-paper-300">
-            LevelUp captures every AI prompt, classifies the sensitive ones in real time, and
-            trains the people who triggered them — without surveilling individuals. Your auditor
-            gets a quarterly evidence binder. Your finance lead gets one line in the budget
-            instead of five.
+            LevelUp captures every AI prompt, classifies the sensitive ones in real time, and trains
+            the people who triggered them — without surveilling individuals. Your auditor gets a
+            quarterly evidence binder. Your finance lead gets one line in the budget instead of
+            five.
           </p>
 
           <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">

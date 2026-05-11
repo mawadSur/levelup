@@ -61,7 +61,9 @@ async function main() {
   }
 
   const total = await prisma.assessmentItem.count();
-  console.log(`✓ assessment-bank seeded: ${created} created, ${skipped} skipped, ${total} total in DB`);
+  console.log(
+    `✓ assessment-bank seeded: ${created} created, ${skipped} skipped, ${total} total in DB`,
+  );
 
   await prisma.$disconnect();
 }

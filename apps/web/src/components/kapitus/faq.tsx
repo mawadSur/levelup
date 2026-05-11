@@ -65,20 +65,14 @@ export function KapitusFaq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section
-      id="faq"
-      className="scroll-mt-20 border-b border-kp-rule bg-kp-paper py-20 lg:py-24"
-    >
+    <section id="faq" className="scroll-mt-20 border-b border-kp-rule bg-kp-paper py-20 lg:py-24">
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
           <div>
             <p className="kp-eyebrow text-kp-purple">FAQ</p>
-            <h2 className="kp-h1 mt-3 text-kp-ink">
-              Questions Kapitus leaders ask first.
-            </h2>
+            <h2 className="kp-h1 mt-3 text-kp-ink">Questions Kapitus leaders ask first.</h2>
             <p className="kp-body mt-5 text-kp-ink-soft">
-              Plain answers, written for L&amp;D and compliance leaders &mdash;
-              not for marketing.
+              Plain answers, written for L&amp;D and compliance leaders &mdash; not for marketing.
             </p>
           </div>
 

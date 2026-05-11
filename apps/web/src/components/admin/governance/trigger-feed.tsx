@@ -11,7 +11,8 @@ interface TriggerFeedProps {
 
 function categoryVariant(category: string): 'signal' | 'success' | 'danger' | 'default' {
   const upper = category.toUpperCase();
-  if (upper.includes('CREDENTIAL') || upper.includes('SECRET') || upper.includes('KEY')) return 'danger';
+  if (upper.includes('CREDENTIAL') || upper.includes('SECRET') || upper.includes('KEY'))
+    return 'danger';
   if (upper.includes('PII') || upper.includes('PHI')) return 'danger';
   if (upper.includes('FINANCIAL') || upper.includes('SSN')) return 'danger';
   if (upper === 'GENERAL') return 'default';

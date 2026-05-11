@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: 'What happens if our headcount drops?',
-    a: 'You can downgrade seat count on the next renewal directly from the billing portal. Mid-cycle reductions don\'t refund, but the saved capacity rolls over until renewal. Switching tiers (e.g. Growth → Team) is supported any time the new tier still fits your headcount.',
+    a: "You can downgrade seat count on the next renewal directly from the billing portal. Mid-cycle reductions don't refund, but the saved capacity rolls over until renewal. Switching tiers (e.g. Growth → Team) is supported any time the new tier still fits your headcount.",
   },
   {
     q: 'Do you offer SSO?',
@@ -87,7 +87,9 @@ export function PricingFaq() {
 
       <div className="mt-10 flex items-center justify-between">
         <MonoLabel className="text-paper-500">END OF FAQ</MonoLabel>
-        <MonoLabel className="text-paper-500">{String(FAQS.length).padStart(2, '0')} / {String(FAQS.length).padStart(2, '0')}</MonoLabel>
+        <MonoLabel className="text-paper-500">
+          {String(FAQS.length).padStart(2, '0')} / {String(FAQS.length).padStart(2, '0')}
+        </MonoLabel>
       </div>
     </div>
   );

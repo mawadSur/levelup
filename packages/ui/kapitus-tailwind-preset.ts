@@ -77,10 +77,8 @@ export const kapitusPreset = {
         'kp-pill': '9999px',
       },
       boxShadow: {
-        'kp-sm':
-          '0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06)',
-        'kp-md':
-          '0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.06)',
+        'kp-sm': '0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06)',
+        'kp-md': '0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.06)',
       },
       maxWidth: {
         'kp-container': '1240px',

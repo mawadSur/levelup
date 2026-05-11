@@ -38,12 +38,7 @@ export function PostureCard({
           <MonoLabel className="block">{title.toUpperCase()}</MonoLabel>
           {Icon && <Icon className="h-4 w-4 shrink-0 text-paper-500" aria-hidden="true" />}
         </div>
-        <div
-          className={cn(
-            'font-serif text-display-md tabular-nums',
-            TONE_CLASSES[tone],
-          )}
-        >
+        <div className={cn('font-serif text-display-md tabular-nums', TONE_CLASSES[tone])}>
           {isNumeric ? <MissionNumber value={numeric} format={format} /> : value}
         </div>
         {sublabel && (

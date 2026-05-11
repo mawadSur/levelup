@@ -111,9 +111,7 @@ export default async function AdminGovernancePage() {
           <AnomalyList initialItems={securityAnomalies} />
         ) : (
           <div className="rounded-md border border-dashed border-ink-600 px-6 py-10 text-center">
-            <MonoLabel className="text-paper-500">
-              NO SECURITY-RELEVANT ANOMALIES OPEN
-            </MonoLabel>
+            <MonoLabel className="text-paper-500">NO SECURITY-RELEVANT ANOMALIES OPEN</MonoLabel>
           </div>
         )}
       </NumberedSection>

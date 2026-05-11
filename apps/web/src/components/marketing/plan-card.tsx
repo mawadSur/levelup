@@ -85,9 +85,7 @@ export function PlanCard({
         <p className="mt-3 text-body-sm text-paper-300 max-w-reading">{description}</p>
       </div>
 
-      {seatControl ? (
-        <div className="mb-6 border-t border-ink-600 pt-5">{seatControl}</div>
-      ) : null}
+      {seatControl ? <div className="mb-6 border-t border-ink-600 pt-5">{seatControl}</div> : null}
 
       {total ? (
         <div

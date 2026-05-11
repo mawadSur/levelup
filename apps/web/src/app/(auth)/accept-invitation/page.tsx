@@ -38,9 +38,7 @@ export default async function AcceptInvitationPage({ searchParams }: AcceptInvit
     return (
       <div className="space-y-8">
         <div>
-          <MonoLabel className="mb-4 block text-paper-500">
-            MISSION BRIEF / INVITATION
-          </MonoLabel>
+          <MonoLabel className="mb-4 block text-paper-500">MISSION BRIEF / INVITATION</MonoLabel>
           <h1 className="font-serif text-display-md text-paper-100">
             <em className="italic text-danger">Token missing.</em>
           </h1>

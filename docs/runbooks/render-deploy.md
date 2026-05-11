@@ -20,7 +20,7 @@ Step-by-step for shipping the LevelUp API + worker to Render. The Render API req
 
 1. Open https://dashboard.render.com/blueprints
 2. Click **New Blueprint Instance**
-3. **Connect GitHub** if you haven't — *Configure account* → grant Render access to `mawadSur/levelup`
+3. **Connect GitHub** if you haven't — _Configure account_ → grant Render access to `mawadSur/levelup`
 4. Pick the `levelup` repo, branch `main`. Render auto-detects `render.yaml` at the repo root.
 5. Click **Apply** at the bottom of the detected service list. Render shows two services it'll create: `levelup-api` (web) + `levelup-worker` (worker)
 
@@ -28,22 +28,22 @@ Step-by-step for shipping the LevelUp API + worker to Render. The Render API req
 
 Render lists every `sync: false` env var that needs a value. Paste from `.env`:
 
-| Var | Both services | Source |
-|---|---|---|
-| `DATABASE_URL` | both | `.env` (Supabase pooler 6543) |
-| `DIRECT_DATABASE_URL` | both | `.env` (Supabase pooler 5432) |
-| `REDIS_URL` | both | step 1 (Upstash, prefer `rediss://`) |
-| `SUPABASE_URL` | both | `https://uozxalbkvrmlbgjirjbb.supabase.co` |
-| `SUPABASE_SERVICE_ROLE_KEY` | both | `.env` |
-| `OPENAI_API_KEY` | both | `.env` |
-| `RESEND_API_KEY` | both | resend.com (verify domain `ailevel.app` first) |
-| `RESEND_FROM_EMAIL` | both | `hello@ailevel.app` (or whatever you verify) |
-| `SUPABASE_ANON_KEY` | api only | `.env` |
-| `SUPABASE_JWT_SECRET` | api only | leave blank (project uses JWKS) |
-| `STRIPE_SECRET_KEY` | api only | `.env` (start with **test** key, switch to live later) |
-| `STRIPE_WEBHOOK_SECRET` | api only | leave blank for now — set in step 7 |
-| `STRIPE_PRICE_*` (6 vars) | api only | run `scripts/setup-stripe-products.ts` first (step 6) |
-| `NEXT_PUBLIC_API_URL` | api only | leave blank — set after step 5 |
+| Var                         | Both services | Source                                                 |
+| --------------------------- | ------------- | ------------------------------------------------------ |
+| `DATABASE_URL`              | both          | `.env` (Supabase pooler 6543)                          |
+| `DIRECT_DATABASE_URL`       | both          | `.env` (Supabase pooler 5432)                          |
+| `REDIS_URL`                 | both          | step 1 (Upstash, prefer `rediss://`)                   |
+| `SUPABASE_URL`              | both          | `https://uozxalbkvrmlbgjirjbb.supabase.co`             |
+| `SUPABASE_SERVICE_ROLE_KEY` | both          | `.env`                                                 |
+| `OPENAI_API_KEY`            | both          | `.env`                                                 |
+| `RESEND_API_KEY`            | both          | resend.com (verify domain `ailevel.app` first)         |
+| `RESEND_FROM_EMAIL`         | both          | `hello@ailevel.app` (or whatever you verify)           |
+| `SUPABASE_ANON_KEY`         | api only      | `.env`                                                 |
+| `SUPABASE_JWT_SECRET`       | api only      | leave blank (project uses JWKS)                        |
+| `STRIPE_SECRET_KEY`         | api only      | `.env` (start with **test** key, switch to live later) |
+| `STRIPE_WEBHOOK_SECRET`     | api only      | leave blank for now — set in step 7                    |
+| `STRIPE_PRICE_*` (6 vars)   | api only      | run `scripts/setup-stripe-products.ts` first (step 6)  |
+| `NEXT_PUBLIC_API_URL`       | api only      | leave blank — set after step 5                         |
 
 Render auto-generates `CERT_SIGNING_SECRET` (and `SESSION_SECRET`) on the API service; the worker reads `CERT_SIGNING_SECRET` via `fromService` so they stay in sync.
 
@@ -52,6 +52,7 @@ Render auto-generates `CERT_SIGNING_SECRET` (and `SESSION_SECRET`) on the API se
 Render builds both services. Watch logs in the dashboard.
 
 Common first-build failures and fixes:
+
 - **`pnpm install --frozen-lockfile` fails** — the lockfile is out of sync. Push `pnpm install && git add pnpm-lock.yaml && git commit -m "chore: update lockfile" && git push`. Render rebuilds automatically.
 - **`prisma generate` fails** — `DATABASE_URL` is missing. Re-paste in env settings.
 - **API health check `/api/health` returns 5xx** — env var missing at boot. Service logs show which one. Add it, click **Manual Deploy → Deploy latest commit**.
