@@ -93,16 +93,16 @@ export default async function AdminDashboardPage() {
         <Card>
           <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
             <Users className="h-8 w-8 text-paper-500" aria-hidden="true" />
-            <MonoLabel>NO DATA YET — INVITE YOUR TEAM TO BEGIN</MonoLabel>
+            <MonoLabel>NO DATA YET — ENROLL EMPLOYEES TO BEGIN</MonoLabel>
             <p className="max-w-md text-body-sm text-paper-300">
-              Bring your operators online. Each invitation triggers an audited onboarding sequence
-              and unlocks the dashboard.
+              Enroll Kapitus employees into the academy. Each enrollment triggers an audited
+              onboarding sequence and starts populating this dashboard.
             </p>
             <Link
               href="/admin/people?invite=open"
               className="inline-flex h-10 items-center gap-2 rounded-sm bg-signal px-4 font-sans text-body-sm font-medium text-ink-900 transition-colors hover:bg-paper-100"
             >
-              Invite teammates
+              Enroll employees
             </Link>
           </CardContent>
         </Card>
@@ -124,7 +124,7 @@ export default async function AdminDashboardPage() {
                 icon={TrendingUp}
               />
               <StatCard
-                title="Pending invites"
+                title="Pending enrollments"
                 value={pendingInvites.length}
                 sublabel={
                   pendingInvites.length > 0 ? 'Re-send or revoke from People' : 'All caught up'

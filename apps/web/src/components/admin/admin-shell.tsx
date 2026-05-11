@@ -10,7 +10,6 @@ import {
   BarChart2,
   BarChart3,
   FileText,
-  CreditCard,
   Flag,
   Menu,
   X,
@@ -99,7 +98,6 @@ const NAV_GROUPS: ReadonlyArray<NavGroup> = [
     items: [
       { href: '/admin/integrations', label: 'Integrations', icon: Plug },
       { href: '/admin/dlq', label: 'DLQ', icon: Activity },
-      { href: '/admin/billing', label: 'Billing', icon: CreditCard },
     ],
   },
 ];

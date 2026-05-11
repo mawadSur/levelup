@@ -139,3 +139,45 @@
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Authed-shell theme bridge.
+ *
+ * The admin + learn surfaces were built against Mission Brief tokens
+ * (--ink-*, --paper-*, --signal*). Re-skinning each component to use
+ * --kp-* would touch hundreds of class strings. Instead, we redefine
+ * the Mission Brief CSS variables inside the .kapitus scope so existing
+ * Tailwind classes (bg-ink-900, text-paper-100, bg-signal, etc.)
+ * automatically resolve to Kapitus values for any descendant.
+ *
+ * Result: `bg-ink-900` → white. `bg-signal` → Kapitus purple. `text-paper-100` → slate-900.
+ * Mission Brief routes (non-.kapitus) keep the original dark editorial palette.
+ */
+.kapitus {
+  /* Surface stack — dark → light remap */
+  --ink-900: var(--kp-paper);
+  --ink-800: var(--kp-mist);
+  --ink-700: var(--kp-fog);
+  --ink-600: var(--kp-rule);
+  --ink-500: var(--kp-rule-strong);
+
+  /* Text stack — invert so dark text reads on light surfaces */
+  --paper-100: var(--kp-ink);
+  --paper-300: var(--kp-ink-soft);
+  --paper-500: var(--kp-ink-mute);
+
+  /* Brand accent — amber → Kapitus purple */
+  --signal: var(--kp-purple);
+  --signal-dim: var(--kp-purple-deep);
+
+  /* Semantic — pull through Kapitus equivalents */
+  --success: var(--kp-success);
+  --warning: var(--kp-warning);
+  --danger: var(--kp-danger);
+}
+
+/* signal-on-signal buttons used "text-ink-900" for contrast (black text on
+ * amber). After the remap, that becomes white text on purple — but Tailwind
+ * resolves `text-ink-900` to the *new* ink-900 (white), so contrast holds.
+ * If anything renders unreadable, swap that specific class for `text-paper-100`
+ * which now means dark-on-light. */

@@ -14,10 +14,10 @@ export function KapitusSignInPanel({
     <div className="bg-kp-mist py-16 lg:py-24">
       <div className="mx-auto w-full max-w-md px-6 sm:px-8">
         <div className="rounded-kp-lg border border-kp-rule bg-kp-paper p-8 shadow-kp-sm sm:p-10">
-          <p className="kp-eyebrow text-kp-purple">For Kapitus</p>
+          <p className="kp-eyebrow text-kp-purple">Kapitus AI Academy</p>
           <h1 className="kp-h1 mt-3 text-kp-ink">Welcome back.</h1>
           <p className="kp-body mt-3 text-kp-ink-soft">
-            Sign in to manage your team&rsquo;s AI training and governance.
+            Sign in with your Kapitus account to pick up where you left off.
           </p>
 
           <div className="mt-8">
@@ -57,10 +57,11 @@ export function KapitusSignUpPanel() {
     <div className="bg-kp-mist py-16 lg:py-24">
       <div className="mx-auto w-full max-w-xl px-6 sm:px-8">
         <div className="rounded-kp-lg border border-kp-rule bg-kp-paper p-8 shadow-kp-sm sm:p-10">
-          <p className="kp-eyebrow text-kp-purple">For Kapitus</p>
-          <h1 className="kp-h1 mt-3 text-kp-ink">Create your account.</h1>
+          <p className="kp-eyebrow text-kp-purple">Kapitus AI Academy</p>
+          <h1 className="kp-h1 mt-3 text-kp-ink">Enroll in the academy.</h1>
           <p className="kp-body mt-3 text-kp-ink-soft">
-            Stand up your workspace. Invite your team after you sign in.
+            One enrollment unlocks every learning path, the AI coach, and your progress dashboard.
+            Takes about 90 seconds.
           </p>
 
           <div className="mt-8">
@@ -81,7 +82,7 @@ export function KapitusSignUpPanel() {
         </div>
 
         <p className="kp-body-sm mt-6 text-center text-kp-ink-mute">
-          Your data is processed under our standard DPA. Industry pre-set to Financial services.
+          Use your Kapitus email. Your progress stays inside Kapitus.
         </p>
       </div>
     </div>

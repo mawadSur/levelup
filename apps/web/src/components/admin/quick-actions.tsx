@@ -6,8 +6,8 @@ const ACTIONS = [
   {
     href: '/admin/people?invite=open',
     eyebrow: 'PEOPLE',
-    title: 'Invite a teammate',
-    description: 'Send an email invite to join your org.',
+    title: 'Enroll an employee',
+    description: 'Send a Kapitus employee an enrollment email.',
     icon: UserPlus,
   },
   {
@@ -61,7 +61,7 @@ export function QuickActionsButton() {
     <Button asChild variant="primary">
       <Link href="/admin/people?invite=open">
         <UserPlus className="mr-2 h-4 w-4" />
-        Invite teammate
+        Enroll employee
       </Link>
     </Button>
   );

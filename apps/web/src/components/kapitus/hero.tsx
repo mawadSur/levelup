@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ShieldCheck, FileBarChart, BadgeCheck } from 'lucide-react';
+import { kRoutes } from './routes';
 
 export function KapitusHero() {
   return (
@@ -8,36 +9,36 @@ export function KapitusHero() {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div>
             <span className="kp-eyebrow inline-flex rounded-kp-pill bg-white/10 px-3 py-1 text-white">
-              For Kapitus · AI training with guardrails
+              Kapitus AI Academy
             </span>
 
             <h1 className="kp-display mt-6 text-white">
-              AI training that protects your loan applicants&rsquo; data.
+              Use AI safely in your day-to-day at Kapitus.
             </h1>
 
             <p className="kp-body-lg mt-6 max-w-kp-reading text-white/80">
-              LevelUp trains every Kapitus employee to use ChatGPT, Claude, and your internal AI
-              tools safely &mdash; with real-time guardrails on customer financial data, audit-ready
-              evidence reports, and a curriculum tuned for lenders, underwriters, and operations.
+              Role-based training, an in-context coach, and live guardrails on customer financial
+              data &mdash; tuned for lenders, underwriters, and operations. Enroll today and start
+              your first lesson in under five minutes.
             </p>
 
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <Link
-                href="mailto:hello@ailevel.app?subject=Kapitus%20%E2%80%94%2030-min%20audit"
+                href={kRoutes.signUp}
                 className="inline-flex items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 py-3 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                Schedule A 30-Min Audit
+                Enroll Now
               </Link>
               <Link
-                href="#evidence"
+                href={kRoutes.howItWorks}
                 className="inline-flex items-center justify-center rounded-kp-sm border border-white/30 bg-transparent px-6 py-3 text-base font-medium text-white transition-colors duration-200 ease-kp-out hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                View Sample Governance Report
+                See How It Works
               </Link>
             </div>
 
             <p className="kp-data mt-6 text-white/60">
-              GLBA-aligned &middot; SOC 2 in progress &middot; 30-day pilot available
+              Included for all Kapitus employees &middot; GLBA-aligned &middot; SOC 2 in progress
             </p>
           </div>
 
@@ -93,7 +94,7 @@ function HeroVisual() {
       </div>
 
       <p className="kp-body-sm mt-4 text-center text-white/60">
-        Sample dashboard &middot; available post-pilot
+        Your progress dashboard &middot; updated weekly
       </p>
     </div>
   );

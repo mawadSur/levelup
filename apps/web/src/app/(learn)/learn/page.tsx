@@ -71,7 +71,7 @@ export default async function LearnPage() {
     .filter((p) => !userAiLevel || p.targetLevel === userAiLevel)
     .slice(0, 3) as PathWithProgress[];
 
-  const firstName = me?.name?.split(' ')[0] ?? 'operator';
+  const firstName = me?.name?.split(' ')[0] ?? 'learner';
 
   const continueTarget =
     assignedPaths.find((p) => (p.completionRate ?? 0) > 0 && (p.completionRate ?? 0) < 100) ?? null;
@@ -115,7 +115,7 @@ export default async function LearnPage() {
 
       {/* Hero greeting */}
       <header className="animate-mission-in space-y-3">
-        <MonoLabel>OPERATOR BRIEF</MonoLabel>
+        <MonoLabel>YOUR LEARNING</MonoLabel>
         <h1 className="font-serif text-display-md italic text-paper-100">Hi, {firstName}.</h1>
         <p className="max-w-reading text-body-lg text-paper-300">
           {completedThisMonth > 0 ? (

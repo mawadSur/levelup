@@ -88,7 +88,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-content space-y-8 px-6 py-10">
       <header className="space-y-2">
-        <MonoLabel>OPERATOR FILE</MonoLabel>
+        <MonoLabel>YOUR PROFILE</MonoLabel>
         <h1 className="font-serif text-display-md italic text-paper-100">Profile</h1>
       </header>
 

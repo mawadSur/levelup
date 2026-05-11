@@ -3,9 +3,9 @@ import { kRoutes } from './routes';
 import { brand } from '@/lib/client';
 
 const NAV_LINKS = [
-  { label: 'Solutions', href: kRoutes.howItWorks },
-  { label: 'Why us', href: kRoutes.evidence },
-  { label: 'Pricing', href: kRoutes.pricing },
+  { label: 'How it works', href: kRoutes.howItWorks },
+  { label: 'Why we built this', href: kRoutes.evidence },
+  { label: 'What you get', href: kRoutes.pricing },
   { label: 'About', href: kRoutes.hero },
 ];
 
@@ -44,7 +44,7 @@ export function KapitusNav() {
             href={kRoutes.signUp}
             className="inline-flex h-11 items-center rounded-kp-sm bg-kp-purple-deep px-5 text-sm font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
           >
-            Apply Now
+            Enroll
           </Link>
         </div>
       </div>

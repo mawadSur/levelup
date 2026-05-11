@@ -16,15 +16,32 @@ interface CreateOrgResponse {
 const FIELD_INPUT =
   'h-11 w-full rounded-kp-sm border border-kp-rule-strong bg-kp-paper px-3.5 text-base text-kp-ink placeholder:text-kp-ink-faint shadow-[inset_0_1px_0_rgba(15,23,42,0.02)] transition-colors duration-150 ease-kp-out focus:border-kp-purple focus:outline focus:outline-2 focus:outline-offset-1 focus:outline-kp-purple/30 disabled:cursor-not-allowed disabled:opacity-60';
 
+const DEPARTMENTS = [
+  'Lending',
+  'Underwriting',
+  'Compliance',
+  'Operations',
+  'Sales',
+  'Customer Support',
+  'Human Resources',
+  'Marketing',
+  'Finance',
+  'Engineering',
+  'Other',
+];
+
+const ROLES = ['Employee', 'Manager'] as const;
+type RoleOption = (typeof ROLES)[number];
+
 export function KapitusSignUpForm() {
   const router = useRouter();
   const stubMode = !isSupabaseConfiguredOnClient();
 
-  const [orgName, setOrgName] = useState('');
-  const [adminName, setAdminName] = useState('');
-  const [adminEmail, setAdminEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [companySize, setCompanySize] = useState('');
+  const [department, setDepartment] = useState('');
+  const [role, setRole] = useState<RoleOption>('Employee');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -34,10 +51,13 @@ export function KapitusSignUpForm() {
     setFieldErrors({});
     setApiError('');
 
+    // The Kapitus academy is single-tenant — the org is implicit. Internally
+    // we still need a name + adminEmail to satisfy the API contract, so the
+    // org name is hard-coded and the user's email/name flow through as-is.
     const parsed = createOrganizationSchema.safeParse({
-      name: orgName,
-      adminName,
-      adminEmail,
+      name: 'Kapitus',
+      adminName: fullName,
+      adminEmail: email,
     });
 
     if (!parsed.success) {
@@ -45,10 +65,19 @@ export function KapitusSignUpForm() {
       for (const issue of parsed.error.issues) {
         const field = issue.path[0];
         if (typeof field === 'string' && !errors[field]) {
-          errors[field] = issue.message;
+          // Re-key the API field names to our UI field names so the right
+          // input gets highlighted.
+          const uiKey =
+            field === 'adminName' ? 'fullName' : field === 'adminEmail' ? 'email' : field;
+          errors[uiKey] = issue.message;
         }
       }
       setFieldErrors(errors);
+      return;
+    }
+
+    if (department.length === 0) {
+      setFieldErrors({ department: 'Pick the team that best matches your role.' });
       return;
     }
 
@@ -67,15 +96,16 @@ export function KapitusSignUpForm() {
       if (!stubMode) {
         const supabase = getSupabaseBrowserClient();
         const { error: signUpErr } = await supabase.auth.signUp({
-          email: adminEmail,
+          email,
           password,
           options: {
             data: {
-              full_name: adminName,
+              full_name: fullName,
               org_id: data.id,
               industry: 'FINANCIAL_SERVICES',
               intent: 'kapitus',
-              company_size: companySize,
+              department,
+              employee_role: role,
             },
           },
         });
@@ -92,10 +122,7 @@ export function KapitusSignUpForm() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong';
       if (message.includes('404')) {
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem('levelup_org_hint', orgName);
-        }
-        router.push(`${kRoutes.signIn}?redirect=%2Fadmin&email=${encodeURIComponent(adminEmail)}`);
+        router.push(`${kRoutes.signIn}?redirect=%2Flearn&email=${encodeURIComponent(email)}`);
       } else {
         setApiError(message);
       }
@@ -109,67 +136,68 @@ export function KapitusSignUpForm() {
       {apiError && (
         <div className="rounded-kp-sm border border-kp-danger/30 bg-[rgb(var(--kp-danger)_/_0.05)] px-4 py-3">
           <p className="kp-body-sm font-semibold text-kp-danger">
-            We couldn&rsquo;t create that account.
+            We couldn&rsquo;t enroll you just yet.
           </p>
           <p className="kp-body-sm mt-1 text-kp-ink-soft">{apiError}</p>
         </div>
       )}
 
-      <Field label="Organization name" htmlFor="kp-org-name" error={fieldErrors.name}>
+      <Field label="Full name" htmlFor="kp-full-name" error={fieldErrors.fullName}>
         <input
-          id="kp-org-name"
-          className={FIELD_INPUT}
-          placeholder="Kapitus"
-          value={orgName}
-          onChange={(e) => setOrgName(e.target.value)}
-          disabled={loading}
-        />
-      </Field>
-
-      <Field label="Your full name" htmlFor="kp-admin-name" error={fieldErrors.adminName}>
-        <input
-          id="kp-admin-name"
+          id="kp-full-name"
           className={FIELD_INPUT}
           placeholder="Jane Smith"
           autoComplete="name"
-          value={adminName}
-          onChange={(e) => setAdminName(e.target.value)}
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
           disabled={loading}
         />
       </Field>
 
-      <Field label="Work email" htmlFor="kp-admin-email" error={fieldErrors.adminEmail}>
+      <Field label="Kapitus email" htmlFor="kp-email" error={fieldErrors.email}>
         <input
-          id="kp-admin-email"
+          id="kp-email"
           type="email"
           className={FIELD_INPUT}
           placeholder="you@kapitus.com"
           autoComplete="email"
-          value={adminEmail}
-          onChange={(e) => setAdminEmail(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
         />
       </Field>
 
-      <Field label="Company size" htmlFor="kp-company-size" hint="Optional">
-        <input
-          id="kp-company-size"
+      <Field label="Department" htmlFor="kp-department" error={fieldErrors.department}>
+        <select
+          id="kp-department"
           className={FIELD_INPUT}
-          placeholder="e.g. 120 employees"
-          value={companySize}
-          onChange={(e) => setCompanySize(e.target.value)}
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
           disabled={loading}
-        />
+        >
+          <option value="">Pick your department…</option>
+          {DEPARTMENTS.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
       </Field>
 
-      <Field label="Industry" htmlFor="kp-industry" hint="Pre-filled">
-        <input
-          id="kp-industry"
-          className={`${FIELD_INPUT} bg-kp-mist text-kp-ink-soft`}
-          value="Financial services"
-          readOnly
-          aria-readonly="true"
-        />
+      <Field label="Your role" htmlFor="kp-role" hint="Pick Manager if you have direct reports">
+        <select
+          id="kp-role"
+          className={FIELD_INPUT}
+          value={role}
+          onChange={(e) => setRole(e.target.value as RoleOption)}
+          disabled={loading}
+        >
+          {ROLES.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
       </Field>
 
       {!stubMode && (
@@ -195,7 +223,7 @@ export function KapitusSignUpForm() {
         disabled={loading}
         className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-kp-sm bg-kp-purple-deep px-6 text-base font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {loading ? 'Creating Account…' : 'Create Account'}
+        {loading ? 'Enrolling…' : 'Enroll'}
       </button>
     </form>
   );

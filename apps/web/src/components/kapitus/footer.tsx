@@ -4,15 +4,15 @@ import { brand } from '@/lib/client';
 
 const FOOTER_COLUMNS = [
   {
-    heading: 'Product',
+    heading: 'Academy',
     links: [
       { label: 'Overview', href: kRoutes.home },
-      { label: 'Pricing', href: kRoutes.pricing },
+      { label: 'Enroll', href: kRoutes.signUp },
       { label: 'Sign in', href: kRoutes.signIn },
     ],
   },
   {
-    heading: 'Solutions',
+    heading: 'Learning paths',
     links: [
       { label: 'For lenders', href: `${kRoutes.home}#roles` },
       { label: 'For underwriters', href: `${kRoutes.home}#roles` },
@@ -29,12 +29,12 @@ const FOOTER_COLUMNS = [
     ],
   },
   {
-    heading: 'Company',
+    heading: 'Help',
     links: [
-      { label: 'About', href: kRoutes.hero },
+      { label: 'About this academy', href: kRoutes.hero },
       {
-        label: 'Contact',
-        href: 'mailto:hello@ailevel.app?subject=Kapitus%20engagement',
+        label: 'Contact L&D',
+        href: 'mailto:learning@kapitus.com?subject=AI%20Academy%20question',
       },
     ],
   },
@@ -91,7 +91,7 @@ export function KapitusFooter() {
           <p className="kp-body-sm text-kp-ink-mute">
             &copy; {year} {brand.name}. All rights reserved.
           </p>
-          <p className="kp-body-sm text-kp-ink-mute">Built with care for finance teams.</p>
+          <p className="kp-body-sm text-kp-ink-mute">Built for Kapitus employees.</p>
         </div>
       </div>
     </footer>

@@ -27,5 +27,11 @@ playwright-report/
 # Claude Code scheduled task runtime
 .claude/scheduled_tasks.lock
 
+# Ruflo / claude-flow swarm + memory runtime state
+.claude-flow/
+.swarm/
+ruvector.db
+ruvector.db-*
+
 # Stripe products setup script sidecar (contains real product/price IDs)
 .stripe-products.json

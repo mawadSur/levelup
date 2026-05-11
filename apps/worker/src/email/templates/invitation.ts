@@ -38,7 +38,10 @@ export function renderInvitation(data: InvitationData): RenderedEmail {
     day: 'numeric',
   });
 
-  const subject = `You're invited to ${data.orgName}'s ${academyName}`;
+  const orgIsAcademy = academyName.toLowerCase().includes(data.orgName.toLowerCase());
+  const subject = orgIsAcademy
+    ? `You're enrolled in the ${academyName}`
+    : `You're invited to ${data.orgName}'s ${academyName}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">

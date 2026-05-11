@@ -283,14 +283,15 @@ const PATHS: SeedPath[] = [
 ];
 
 async function main() {
+  const isKapitus = (process.env.CLIENT ?? '').toLowerCase() === 'kapitus';
   const org = await prisma.organization.upsert({
     where: { id: 'demo-org' },
     update: {},
     create: {
       id: 'demo-org',
-      name: 'Demo Co',
-      industry: 'Software',
-      companySize: '51-200',
+      name: isKapitus ? 'Kapitus' : 'Demo Co',
+      industry: isKapitus ? 'Financial Services' : 'Software',
+      companySize: isKapitus ? '201-1000' : '51-200',
       plan: Plan.GROWTH,
       planSeats: 100,
     },

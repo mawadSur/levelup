@@ -44,10 +44,8 @@ export function KapitusProblemStats() {
     <section id="problem" className="border-b border-kp-rule bg-kp-mist py-20 lg:py-24">
       <div className="mx-auto max-w-kp-container px-6 sm:px-8 lg:px-12">
         <div className="max-w-kp-reading">
-          <p className="kp-eyebrow text-kp-purple">The exposure</p>
-          <h2 className="kp-h1 mt-3 text-kp-ink">
-            The exposure your training program is supposed to prevent.
-          </h2>
+          <p className="kp-eyebrow text-kp-purple">Why this matters</p>
+          <h2 className="kp-h1 mt-3 text-kp-ink">The risks AI training helps you avoid.</h2>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
