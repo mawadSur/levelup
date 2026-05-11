@@ -16,6 +16,7 @@ import { KapitusHero } from '@/components/kapitus/hero';
 import { KapitusProblemStats } from '@/components/kapitus/problem-stats';
 import { KapitusHowItWorks } from '@/components/kapitus/how-it-works';
 import { KapitusRoles } from '@/components/kapitus/roles';
+import { KapitusLearnMore } from '@/components/kapitus/learn-more';
 import { KapitusGovernanceMock } from '@/components/kapitus/governance-mock';
 import { KapitusPricing } from '@/components/kapitus/pricing';
 import { KapitusFaq } from '@/components/kapitus/faq';
@@ -31,6 +32,7 @@ export default function HomePage() {
           <KapitusProblemStats />
           <KapitusHowItWorks />
           <KapitusRoles />
+          <KapitusLearnMore />
           <KapitusGovernanceMock />
           <KapitusPricing />
           <KapitusFaq />
