@@ -1,0 +1,41 @@
+{
+  "title": "The Compliance Officer's Job With AI — Check",
+  "questions": [
+    {
+      "prompt": "Which best describes the compliance function's relationship to AI use at Kapitus?",
+      "choices": [
+        "Compliance is the primary user of AI tools and produces most of the AI-drafted output at Kapitus",
+        "Compliance is the supervisor of AI use — vetting tools, reviewing AI-drafted communications, and handling incidents",
+        "Compliance owns AI policy only; the use, review, and incident response sit entirely within the business lines",
+        "Compliance should avoid AI tools entirely to preserve independence from the business"
+      ],
+      "correctIndex": 1,
+      "explanation": "The compliance officer's role is supervisory — vet tools, review communications, respond to incidents, and own the policy lifecycle. Compliance officers may use AI themselves for leverage on their own work, but their primary relationship to AI at Kapitus is as the reviewer and guardrail, not the primary operational user.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A department head emails you saying the AI Acceptable Use Policy is 'overkill' because Kapitus already has a CMS program, an FCRA-FCBA compliance manual, and a GLBA Safeguards program. What is the most defensible response?",
+      "choices": [
+        "Agree and fold the AI guidance into the existing GLBA Safeguards documentation to avoid duplication",
+        "Disagree because AI introduces new categories of risk (fluent-but-wrong output, fragmented audit trail, wide data egress) that the existing programs do not specifically address, even though the underlying lifecycle is the same",
+        "Disagree because AI is regulated by a separate body of law that does not overlap with FCRA, ECOA, or GLBA",
+        "Agree because AI tools are not yet supervised by federal regulators, so a standalone policy is premature"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both options 1 and 2 are plausibly correct positions. The right answer is option 2: AI's distinct properties — fluent confident output, fragmented audit trail by default, and wide data-egress surface — warrant a standalone program even though the write/train/enforce/audit lifecycle is identical to your existing CMS. Folding AI guidance into existing programs sounds efficient but obscures the new risks. Option 3 is wrong (the same statutes apply) and option 4 is wrong (CFPB and other regulators are very much engaged).",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which of the four phases of the AI policy lifecycle is most directly fed by AI incidents?",
+      "choices": [
+        "Write — the policy is rewritten from scratch after each incident",
+        "Train — incidents trigger immediate retraining of the involved employee but do not change the program",
+        "Enforce — incidents trigger access restrictions but do not loop back into the lifecycle",
+        "Audit — incidents are evidence from the audit phase that feeds back into write and train"
+      ],
+      "correctIndex": 3,
+      "explanation": "Incidents surface during the audit phase (sampling, log review, escalation from the business) and feed the highest-signal evidence back into the write phase (policy updates) and train phase (curriculum updates). That feedback loop is what makes the program improve over time. Rewriting the policy from scratch is disproportionate; restricting access alone closes the immediate gap but does not improve the program.",
+      "orderIndex": 3
+    }
+  ]
+}

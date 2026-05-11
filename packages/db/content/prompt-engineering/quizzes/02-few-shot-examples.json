@@ -1,0 +1,41 @@
+{
+  "title": "Few-Shot Examples — Check",
+  "questions": [
+    {
+      "prompt": "You're getting decent but generic decline letters from the AI, and you want them to match your personal voice. You have ten minutes. Which is the highest-leverage move?",
+      "choices": [
+        "Add a paragraph of detailed instructions describing your voice in adjectives ('warm but firm, brief but personal, direct but not curt')",
+        "Switch to a more advanced model and re-run the same prompt",
+        "Paste three real decline letters you've sent and were happy with, then ask for a new one in the same voice",
+        "Re-run the prompt ten times and pick whichever output happens to sound most like you"
+      ],
+      "correctIndex": 2,
+      "explanation": "Few-shot beats detailed adjective-based instructions almost every time for matching tone and voice. 'Warm but firm' is vague; three concrete examples are unambiguous. Three examples is the sweet spot — enough to show range, not so many that you're spending tokens for diminishing returns.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You've been pasting five examples into your prompts and the output is suddenly worse than when you used three. What's the most likely diagnosis?",
+      "choices": [
+        "Five examples is over the model's context window limit, so it's ignoring some of them",
+        "More examples always reduce quality; the model gets confused by too much data",
+        "Two of your five examples disagree with each other in tone or length, so the model is averaging across the contradiction and producing something that matches none of them",
+        "You need to add ten more examples to outweigh the noise of the existing ones"
+      ],
+      "correctIndex": 2,
+      "explanation": "Contradictory examples are the consistent failure mode of few-shot prompting. The model treats your examples as the pattern to continue. If they disagree, the resulting average matches none of them. The fix is to read your examples as a group and drop or edit any outlier before pasting.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which task is LEAST likely to benefit from adding few-shot examples to the prompt?",
+      "choices": [
+        "Drafting a borrower follow-up email where you have a specific voice you want the AI to match",
+        "Categorizing inbound applications into one of five risk tiers using your firm's specific definitions",
+        "Asking the AI to calculate a debt-service-coverage ratio given revenue and existing debt service",
+        "Producing meeting notes from a transcript in a fixed internal format"
+      ],
+      "correctIndex": 2,
+      "explanation": "DSCR is a single deterministic calculation with one correct answer; examples don't help and waste tokens. Few-shot pays off where there's a *pattern* to demonstrate — voice, classification criteria, formatting conventions. For a mechanical calculation, an explicit formula or step-by-step instruction is the right tool.",
+      "orderIndex": 3
+    }
+  ]
+}

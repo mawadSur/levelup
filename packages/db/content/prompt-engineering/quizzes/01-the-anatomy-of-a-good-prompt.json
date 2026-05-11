@@ -1,0 +1,41 @@
+{
+  "title": "The Anatomy of a Good Prompt — Check",
+  "questions": [
+    {
+      "prompt": "A colleague claims their prompts get better results because they say 'please' and end with 'thank you'. What's the most accurate response?",
+      "choices": [
+        "They're correct — politeness measurably improves output quality across all models",
+        "Politeness is irrelevant to output quality; clarity and structural specificity are what move the needle",
+        "Politeness only helps with certain models, so they may be right depending on which one they're using",
+        "Politeness hurts output quality by wasting tokens, so they should stop"
+      ],
+      "correctIndex": 1,
+      "explanation": "Models have no preferences and don't reward courtesy. What changes output quality is unambiguous specification of context, task, constraints, examples, and output format. Politeness isn't harmful — it's just inert.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You're drafting a follow-up email to a borrower who has gone quiet. Your first prompt produces an email that's the right tone but mentions a 'special discount' you never offered. What's the highest-leverage fix to the prompt?",
+      "choices": [
+        "Add 'be more accurate' to the prompt and re-run",
+        "Add an explicit constraint: 'do not mention discounts, promotions, or any pricing terms not provided in this prompt'",
+        "Switch to a different AI tool, since this one is hallucinating",
+        "Re-run the same prompt several times and pick the response that doesn't mention a discount"
+      ],
+      "correctIndex": 1,
+      "explanation": "The avoid-list is one of the most under-used components of a good prompt. When the model invents something, telling it explicitly what not to do is faster and more reliable than re-rolling or adding vague accuracy instructions.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Compare two prompts for the same task. Prompt A: 'Write a professional decline letter to a small business owner.' Prompt B (same plus): 'Recipient: 6-month-old retail shop, $9K monthly revenue, requested $50K. Length: under 120 words. Tone: warm, no marketing language. Avoid: any mention of competitors or future re-application. Output: email body only, no subject, no signature.' Which best characterizes the trade-off?",
+      "choices": [
+        "Prompt A is better because it gives the model creative freedom; Prompt B over-constrains and produces mechanical output",
+        "Both prompts will produce roughly equivalent output because modern models infer the missing details",
+        "Prompt B is longer, which is the point — pinning down context, constraints, and output format dramatically narrows the response into a usable band",
+        "Prompt B is better for new users; experienced users should use shorter prompts like A"
+      ],
+      "correctIndex": 2,
+      "explanation": "The amateur instinct is to keep prompts short to give the model 'freedom.' The professional instinct is the opposite: more constraint produces more usable output. Longer, more specified prompts force the response into a narrower, much more shippable band.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "GLBA, ECOA, FCRA in Plain English — Check",
+  "questions": [
+    {
+      "prompt": "An underwriter asks an AI assistant: 'Given this applicant's file, should I approve the deal?' The AI returns a recommendation with three reasons. The underwriter agrees and approves. What's the ECOA problem here?",
+      "choices": [
+        "There isn't one — the underwriter made the final call, so it's fine",
+        "The reasoning behind the decision must be auditable and defensible by a human underwriter against the actual file. Outsourcing the recommendation to an AI puts a black-box system inside a regulated decision, and the reasons in any future adverse action notice may not match what's actually in the file",
+        "ECOA only applies to declines, so an approval is exempt",
+        "The problem is purely about data privacy, not about the decision itself"
+      ],
+      "correctIndex": 1,
+      "explanation": "ECOA cares about the process. The decision and its reasons must come from a human underwriter and be defensible from the file. AI is fine for organizing or summarizing; it is not fine inside the decision path itself.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You're drafting a courtesy email to an applicant who was just declined. You want to be transparent and helpful. Which of these is the line that crosses an FCRA rule?",
+      "choices": [
+        "'We're unable to extend an offer at this time based on our underwriting review.'",
+        "'Your formal adverse action notice will arrive separately and lists the specific reasons.'",
+        "'Unfortunately your 612 FICO score is below our current threshold — once that improves, please reapply.'",
+        "'If you have questions about reapplying in the future, your account manager is happy to talk through it.'"
+      ],
+      "correctIndex": 2,
+      "explanation": "FCRA has specific rules about credit-score disclosures. Quoting a credit score in a casual employee email — outside the proper adverse action notice template — can trigger obligations that the email did not satisfy. Credit-score disclosure belongs in the formal notice, not in friendly follow-ups.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which one-sentence summary best captures GLBA's relevance to AI use at Kapitus?",
+      "choices": [
+        "GLBA bans the use of AI tools by financial institutions",
+        "GLBA requires us to keep applicant nonpublic personal information inside our safeguarded boundary, which means consumer AI tools — which are third parties without a data-processing agreement — are not appropriate for NPI",
+        "GLBA only applies to publicly traded financial institutions, so it doesn't affect Kapitus",
+        "GLBA only governs how we disclose our privacy policy, not where data actually goes"
+      ],
+      "correctIndex": 1,
+      "explanation": "GLBA's safeguards rule is the key piece for AI decisions: NPI cannot be shared with a third party without proper agreements in place. Consumer AI tools are third parties, and the absence of a data-processing agreement is exactly what makes them off-limits for NPI.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "The Comms Capstone — Check",
+  "questions": [
+    {
+      "prompt": "A borrower disputes a $75 fee. You sit down to draft a response. What is the correct first step in the five-prompt workflow?",
+      "choices": [
+        "Open ChatGPT and ask it to draft a generic fee-dispute response",
+        "Open the borrower's file and gather facts — is the fee in the agreement, when was it charged, was the borrower notified in advance, is the account current, are there call notes? Only after you have the facts do you go to AI",
+        "Forward the complaint to your manager and wait for instructions",
+        "Reply immediately apologizing and offering a refund before you know the facts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Facts first, AI second. The model can only draft well if you supply verified facts. Drafting before you know whether the fee is authorized, when it was charged, and whether the borrower was warned will produce a letter you cannot stand behind.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "After AI drafts your initial response, what is the most useful next prompt?",
+      "choices": [
+        "'Make it shorter.'",
+        "'Make it more friendly.'",
+        "'Review the draft above for these specific risks: (a) dropped disclosures, (b) admissions of legal violations or quantified damages, (c) promises of outcomes I have not authorized, (d) changed numbers or dates. List each risk with the exact sentence.'",
+        "'Rewrite the whole letter from scratch in a different voice.'"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI is genuinely good at auditing its own output when you give it a specific risk checklist. A targeted compliance-pass prompt surfaces the issues you most need to catch. Generic instructions like 'make it shorter' don't engage the model's review capability.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Your final AI-assisted complaint response looks clean. Compliance review for this kind of straightforward fee dispute is technically optional under your team's policy. What is the right judgment call?",
+      "choices": [
+        "Skip review — AI handled the compliance pass already",
+        "Skip review — the borrower wants a fast response and you've followed the workflow",
+        "Route the draft through your team's standard review path anyway, with the original complaint and your fact-gathering notes attached. AI drafting does not replace human review; it just makes the review faster because the draft is already in good shape",
+        "Send it now and route to compliance after the fact"
+      ],
+      "correctIndex": 2,
+      "explanation": "AI's compliance pass surfaces risks; it does not replace the human reviewer who knows your portfolio, your prior complaint patterns, and the borrower's account history. The five-prompt workflow ends with human review, not because the AI is untrustworthy on this one letter, but because the discipline is what keeps the system safe over thousands of letters.",
+      "orderIndex": 3
+    }
+  ]
+}

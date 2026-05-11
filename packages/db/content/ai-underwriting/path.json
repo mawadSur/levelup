@@ -1,0 +1,9 @@
+{
+  "slug": "ai-underwriting",
+  "title": "AI for Underwriting",
+  "description": "Use AI to synthesize complex credit decisions safely: capital structure summaries, income reconciliation, committee memos, and the bias traps every underwriter must spot.",
+  "targetRole": "EMPLOYEE",
+  "targetLevel": "PRACTITIONER",
+  "isPublished": true,
+  "orderIndex": 11
+}

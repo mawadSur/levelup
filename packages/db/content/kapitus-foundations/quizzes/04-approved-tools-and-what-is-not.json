@@ -1,0 +1,41 @@
+{
+  "title": "Approved Tools and What Is Not — Check",
+  "questions": [
+    {
+      "prompt": "A broker partner sends you a PDF deal package with an applicant's W2, bank statements, and a credit pull. You want to summarize it before you forward it to underwriting. Which tool is the right one?",
+      "choices": [
+        "ChatGPT free — you'll delete the chat right after",
+        "Your personal Claude.ai account, since you're being careful and won't save anything",
+        "Kapitus-approved Claude Enterprise (Tier-A) — it's the only category cleared for Restricted data, which is what this package is",
+        "Microsoft Copilot in our M365 tenant (Tier-B) — it's enterprise, so it should be fine"
+      ],
+      "correctIndex": 2,
+      "explanation": "W2s, bank statements, and credit pulls are Restricted (regulated NPI under GLBA and FCRA). Restricted data can only go into Tier-A tools that have been explicitly cleared for it. Tier-B is enterprise but not cleared for the regulated-data tier; consumer tools aren't cleared at all.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A coworker says, 'Our enterprise ChatGPT seat is Tier-B, so I can paste anything into it that isn't a credit report — including this list of every deal in the Q3 pipeline with applicant business names.' What's the issue with that reasoning?",
+      "choices": [
+        "There isn't one — Tier-B handles Confidential data, and a pipeline list is Confidential",
+        "Applicant business names tied to deal information start to look like NPI under GLBA's broad definition — if a named applicant is connected to financial details from their application, that's the Restricted tier, not Confidential. The pipeline list needs Tier-A or it needs the applicant identifiers stripped first",
+        "Tier-B isn't allowed for any pipeline data at all",
+        "ChatGPT is never approved at Kapitus regardless of the seat type"
+      ],
+      "correctIndex": 1,
+      "explanation": "GLBA's NPI definition is broader than most people think. The fact that 'Applicant X applied with us for $200K and is in underwriting' ties a named party to financial information from their application — that's nonpublic personal information. The document needs Tier-A, or you strip the identifiers and then it's properly Confidential and Tier-B is fine.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You discover a brand-new AI tool through a LinkedIn ad. It's free, has glowing reviews, and you'd like to try it on a small task — rewriting a published blog post snippet to be punchier. What's the right move?",
+      "choices": [
+        "Use it freely with any Kapitus content since the task itself is harmless",
+        "Treat it as Tier-C by default until classified otherwise. Use only Public data — the published blog snippet is fine. Then mention it to IT or your manager so it can be properly classified before anyone uses it for anything more sensitive",
+        "Skip the tool entirely — new tools are never allowed at Kapitus",
+        "Run it as Tier-A since the vendor's website claims they're 'enterprise-grade'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Vendor marketing isn't a classification. Default to Tier-C for any unknown tool. Public data is safe to use with it for an experiment. Looping in IT or your manager lets the tool be properly diligenced before anyone uses it on Internal, Confidential, or Restricted content.",
+      "orderIndex": 3
+    }
+  ]
+}

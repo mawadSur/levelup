@@ -1,0 +1,41 @@
+{
+  "title": "Redacting Before Pasting — Check",
+  "questions": [
+    {
+      "prompt": "Which of the following is acceptable to include in a prompt to a general-purpose AI chatbot?",
+      "choices": [
+        "The applicant's full name and last 4 of their SSN, since 4 digits alone aren't identifying",
+        "An image of the applicant's bank statement with the account number blacked out with a marker",
+        "'Applicant A's last 3 months of business bank statements show an average daily balance of approximately $40k, two NSF events, and consistent weekly inflows.'",
+        "The applicant's business name and the exact dollar amount of their requested loan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Option C describes the underwriting-relevant facts using a generic placeholder and rounded figures — exactly what AI needs to be useful. The other three each leak identifying data: name+SSN-last-4 is identifying together, marker redaction on an image is rarely sufficient and the PDF metadata may still contain identifiers, and a business name plus an exact loan amount is a unique combination.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An applicant sends you a paystub PDF. Underwriting needs to know whether income is stable. You want AI to help you draft a one-line summary for the file. What is the right way to proceed?",
+      "choices": [
+        "Upload the PDF to the chatbot and ask 'is this income stable?'",
+        "Copy and paste the text of the paystub into the chatbot, then ask for a summary",
+        "Read the paystub yourself. Then prompt AI with: 'Applicant A's paystubs show gross pay of about $X biweekly, YTD roughly 9x that, single employer. Draft a one-line summary for the underwriting note.'",
+        "Forward the original PDF to underwriting and ask them to summarize it instead of using AI"
+      ],
+      "correctIndex": 2,
+      "explanation": "Option C is the placeholder pattern applied: you do the reading, you extract the underwriting-relevant facts, you anonymize them, then you use AI for the writing task. A and B both expose the full document including name, employer, and employee ID. D is correct that AI isn't strictly required, but it's a refusal to do the job AI is genuinely useful for; the goal of this path is to do this work efficiently and safely, not to avoid AI entirely.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You're about to paste a prompt into ChatGPT and you scan it for the five-second check. The prompt mentions 'Applicant A,' avoids any SSN or account number, and uses rounded figures. But it also says 'this is for loan file LN-2025-04412 in our system.' Is that safe to send?",
+      "choices": [
+        "Yes — the internal loan number is meaningless outside Kapitus and can't be used to identify anyone",
+        "Yes — only externally-recognizable identifiers like SSN matter; internal IDs are fine",
+        "No — Kapitus's internal loan numbers are identifying when combined with any other detail in the same prompt, and they tie the AI conversation log to a specific Kapitus record. Remove it.",
+        "Yes, but only if the chatbot has an enterprise data agreement with Kapitus"
+      ],
+      "correctIndex": 2,
+      "explanation": "Internal loan numbers feel innocuous because they're meaningless outside the company, but they're identifiers — they create a deterministic link between an external chatbot transcript and a specific Kapitus file. Combined with any other detail in the same conversation, they make the conversation traceable to one applicant. Strip them. The five-second check exists for exactly this case.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "The Refinement Loop — Check",
+  "questions": [
+    {
+      "prompt": "The AI just produced a borrower-follow-up email that's 80% great but has two tone problems in the second paragraph. What's the professional next move?",
+      "choices": [
+        "Open the response in your editor and fix the two tone problems by hand — it's faster than re-prompting",
+        "Identify exactly what's wrong, add a constraint to the prompt that would have prevented the tone problem, and re-run",
+        "Re-run the same prompt several times and ship the version with the fewest issues",
+        "Switch to a more advanced model and re-run"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hand-editing the output is the amateur move: it loses the information about what went wrong and produces a one-off result. The professional move is to fix the prompt instead, so every future run is better. Hand-edit only at the very end, when the prompt is doing as much as it can.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You need to send a one-sentence reply to a borrower confirming a phone call time tomorrow, where most of the context (the time, the borrower's preferred number, what you discussed last week) is in your head and not in any document. Should you use AI for this?",
+      "choices": [
+        "Yes — feed all the context into a careful prompt with constraints and examples for a high-quality output",
+        "Yes — AI is faster than typing for any task longer than five words",
+        "No — by the time you've typed the context into a prompt, you've written the email. This is a case where the input is mostly context only you have, and you should just write it yourself",
+        "No — AI shouldn't be used for borrower communications under any circumstances"
+      ],
+      "correctIndex": 2,
+      "explanation": "A Specialist-tier user recognizes the categories of task where the refinement loop is the wrong tool. When the response is shorter than the necessary prompt context, when the audience is one person you know well, or when the input is mostly context only you have — just write it. Knowing when to put the AI down is part of the skill.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "After three iterations of refinement, your prompt for 'CRM note from email thread' produces consistently great output. You'll need this task again next week. What's the highest-leverage thing to do right now?",
+      "choices": [
+        "Nothing — you'll remember the prompt structure when you need it next time",
+        "Save the prompt to a personal prompt library (text file, Notion page, wherever you keep notes) with a clear label and notes on what variables to fill in",
+        "Memorize the prompt by re-running it five more times",
+        "Share the prompt with the entire company via email immediately"
+      ],
+      "correctIndex": 1,
+      "explanation": "A personal prompt library is the highest-leverage thing a power user can build, and almost no one does it. After a few months your library covers most of your repetitive work and your first-iteration quality jumps because you're not starting from zero. It's also the artifact that lets you share what works with teammates — but the first step is just capturing it.",
+      "orderIndex": 3
+    }
+  ]
+}

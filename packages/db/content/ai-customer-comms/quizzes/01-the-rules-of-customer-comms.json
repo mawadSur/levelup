@@ -1,0 +1,41 @@
+{
+  "title": "The Rules of Customer Comms — Check",
+  "questions": [
+    {
+      "prompt": "You decline a small-business loan application based partly on a credit report from Experian. Which combination of items must the adverse action notice include?",
+      "choices": [
+        "Just the principal reason for the decline — the credit bureau is optional",
+        "The principal reason for the decline, the bureau's name and contact info, the borrower's right to a free copy of the report within 60 days, and the right to dispute",
+        "Only the bureau name and a generic ECOA notice — specific reasons are not required",
+        "A statement that the decision was 'risk-based' and a phone number for general questions"
+      ],
+      "correctIndex": 1,
+      "explanation": "ECOA and FCRA together require a specific principal reason, identification of the credit bureau used, notice of the right to a free report within 60 days, and notice of the right to dispute. Dropping any of these is a compliance failure that AI-assisted rewrites commonly cause.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An AI-assisted rewrite of a payment notice removes the phrase 'You have 30 days from the date of this notice to dispute the amount owed.' The rest of the letter still reads cleanly. What is the right response?",
+      "choices": [
+        "Send it — the borrower can call if they want to dispute",
+        "Send it — that phrase is legal jargon and not strictly required",
+        "Restore the phrase verbatim before sending; the dispute timeline is a required disclosure and shortening or removing it is a violation",
+        "Replace the phrase with 'contact us anytime' to keep the tone friendly"
+      ],
+      "correctIndex": 2,
+      "explanation": "Required disclosures must be present in their full, approved form. Plain-English rewrites are for surrounding context, not the legal disclosure language itself. The 30-day dispute window is a specific timeline that cannot be summarized away.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A coworker says, 'AI lets us push more letters through review faster because the writing is cleaner.' What is the most accurate response?",
+      "choices": [
+        "Agreed — cleaner writing means fewer compliance issues, so review can speed up",
+        "AI lowers the cost of producing fluent text, which usually means more drafts hit review and each one risks quietly dropping a required element. Review needs to be at least as careful, not less",
+        "AI only writes correctly when the original is correct, so review is irrelevant",
+        "Review is a legacy process and should be replaced by AI self-checking"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fluent output is not the same as compliant output. AI tends to summarize disclosures into oblivion in pursuit of clarity, so reviewers must specifically check that required elements survived the rewrite. The bar goes up, not down.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "The Loan Officer Capstone — Check",
+  "questions": [
+    {
+      "prompt": "Across the full applicant relationship in this lesson, what is the single most important invariant the loan officer maintained?",
+      "choices": [
+        "Every prompt was under 100 words",
+        "AI was used for drafting, summarizing, and rewording — but every decision (approve, decline, what reasons to cite) stayed with humans and Kapitus's systems",
+        "The loan officer used the same chatbot for every prompt to maintain context across the relationship",
+        "Every email was sent within 24 hours of the prior step"
+      ],
+      "correctIndex": 1,
+      "explanation": "The mental model from lesson 1 — AI as drafting assistant, never decision-maker — is the thread connecting all five prompts. Length and speed are nice; using one chatbot continuously is actively unhelpful (it accumulates context that may include identifying data). The invariant worth protecting is the separation between AI-assisted drafting and human-and-Kapitus-system decisions.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Underwriting declines an applicant. You sit down to draft the decline letter. Which approach in the capstone workflow correctly threads the needle on ECOA, FCRA, and AI safety?",
+      "choices": [
+        "Ask AI to 'write a complete ECOA-compliant decline letter' for an applicant whose business is too new in a risky industry — let the model handle reasons, bureau disclosure, and tone in one pass",
+        "Provide AI the exact approved reason codes verbatim, ask it to draft only the warm cover paragraph and to forbid paraphrasing or adding reasons, then paste the cover into Kapitus's adverse action template which contains the verbatim reason codes and regulatory disclosures",
+        "Skip AI entirely for any decline letter — the regulatory risk is too high to use AI at any step",
+        "Draft the decline letter manually, then ask AI to 'review it for ECOA violations' before sending"
+      ],
+      "correctIndex": 1,
+      "explanation": "Option B is the integrated pattern: AI handles tone (where it's good), Kapitus's template handles reason codes and regulatory disclosures (where AI would hallucinate). Option A asks AI to generate the riskiest content — reason wording and FCRA disclosures. Option C is overcorrection and gives up a legitimate productivity gain on the cover paragraph. Option D is the trap — asking AI to 'review for ECOA' treats AI as a compliance reviewer, which it isn't, and the model will return a confident-sounding pass even on a non-compliant letter.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You're writing the underwriting file summary for a completed applicant package. You've extracted the relevant facts as anonymized bullets and asked AI to draft a 4-sentence summary 'sticking to facts only, no judgment.' The output reads accurately but includes the sentence: 'The applicant's deposit pattern and balance trajectory suggest this is a financially sound operation suitable for the requested product.' What's the correct response?",
+      "choices": [
+        "Send it — accurate and well-written summaries are the goal",
+        "Send it after replacing 'suitable for the requested product' with 'a strong candidate for approval'",
+        "Strip the judgment sentence entirely. The summary should restate facts (deposit pattern, balance trajectory) without inferring whether the applicant is 'financially sound' or 'suitable' — those are underwriting calls, not summary content.",
+        "Send it but flag the sentence to underwriting as 'AI's recommendation'"
+      ],
+      "correctIndex": 2,
+      "explanation": "The summary-vs-decision distinction from lesson 5 lives or dies on this question. 'Financially sound' and 'suitable for the product' are judgment claims, not summary facts — they belong to underwriting, not to the loan officer's file note, and certainly not to AI. The fix is to strip the sentence and replace it with the underlying facts. Sending it with an 'AI's recommendation' flag is worse, not better — it elevates AI output to a quasi-recommendation it shouldn't have.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "Chain-of-Thought and Reasoning — Check",
+  "questions": [
+    {
+      "prompt": "Why does asking a model to 'think step by step' before answering tend to produce better answers on complex tasks?",
+      "choices": [
+        "The instruction triggers a separate, more powerful reasoning system inside the model",
+        "The model's reasoning tokens become part of the input shaping the final answer, so the conclusion has to be consistent with the analysis it just generated",
+        "The model interprets 'step by step' as a request for higher accuracy and increases its internal confidence threshold",
+        "It slows down generation, which gives the model more compute time per token"
+      ],
+      "correctIndex": 1,
+      "explanation": "There's no separate reasoning module and no internal 'accuracy mode.' The mechanism is concrete: forcing the model to emit reasoning first means those reasoning tokens are in context when it generates the final answer, and the answer is structurally constrained to be consistent with what came before it.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You ask an AI 'What's the formula for debt service coverage ratio?' and someone suggests adding 'think step by step' to the prompt. Should you?",
+      "choices": [
+        "Yes — chain-of-thought always improves accuracy, even on simple lookups",
+        "Yes, but only if you also add three examples to the prompt",
+        "No — there's nothing to reason about on a single-fact lookup, so CoT just produces meandering filler before the answer and wastes tokens",
+        "No — chain-of-thought is only useful in API contexts, not chat interfaces"
+      ],
+      "correctIndex": 2,
+      "explanation": "CoT is the right tool for tasks that involve multi-factor judgment or interacting variables. Simple lookups, single-step transformations, and creative tasks where you want commitment rather than deliberation don't benefit — and the extra tokens dilute the actual answer.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You're reviewing a borderline MCA application and want a second opinion from the AI. Which prompt structure is most likely to produce a recommendation you'd actually want in the file?",
+      "choices": [
+        "Paste the bank statement summary and ask 'Should we approve this loan? Yes or no.'",
+        "Paste the summary and ask 'Walk through your reasoning before recommending.' Leave the steps unspecified.",
+        "Paste the summary and ask the model to evaluate (1) revenue trend, (2) daily debit load as % of deposits, (3) stacking risk, (4) any other signals, then conclude with APPROVE / DECLINE / ESCALATE and one sentence of justification",
+        "Paste the summary and ask for a one-paragraph recommendation in a confident, decisive tone"
+      ],
+      "correctIndex": 2,
+      "explanation": "Structured chain-of-thought — specifying the steps you want the model to work through — is almost always better than open-ended 'think step by step.' You're using your domain expertise to set the agenda, forcing the model to consider categories you care about rather than the ones that happen to come to mind. The final recommendation is also auditable against the analysis above it.",
+      "orderIndex": 3
+    }
+  ]
+}

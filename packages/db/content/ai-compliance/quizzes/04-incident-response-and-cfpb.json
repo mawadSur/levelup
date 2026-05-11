@@ -1,0 +1,41 @@
+{
+  "title": "Incident Response and CFPB — Check",
+  "questions": [
+    {
+      "prompt": "A sales rep tells you they pasted a single applicant's bank statement (including account number and balance history) into a free consumer AI tool to 'help summarize the cash flow' for a deal memo. The applicant has not been declined. The rep deleted the chat immediately afterward. How should this be classified?",
+      "choices": [
+        "Not an incident — the chat was deleted and the data was not used to make an adverse decision",
+        "Not an incident — only adverse-action workflows trigger AI disclosure obligations",
+        "An incident — unauthorized disclosure of NPI under GLBA occurred at the moment of paste, regardless of the chat being deleted or the application's outcome",
+        "An incident only if the AI vendor confirms the data was retained or accessed"
+      ],
+      "correctIndex": 2,
+      "explanation": "The disclosure occurred when the data left Kapitus's controlled environment. Deletion by the user does not retract the disclosure (the vendor's systems may still have the data), and the outcome of the application is irrelevant to the GLBA analysis. Whether the vendor retained or accessed the data matters for remediation and scope but not for classification — option 4 inverts the analysis. This is an incident and must be logged, scoped, and remediated regardless.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A bulk-paste incident has been confirmed: a former employee pasted spreadsheets containing identifying information for approximately 850 applicants into a consumer AI tool over a six-week period before leaving Kapitus. Which notification regime is most clearly triggered?",
+      "choices": [
+        "CFPB direct breach notification — required for any AI incident involving more than 100 consumers",
+        "GLBA Safeguards Rule notification to the FTC — the 'notification event' threshold of 500 consumers is exceeded; notification is required as soon as possible and no later than 30 days after discovery",
+        "No regulatory notification — internal documentation only, since the employee has separated from Kapitus",
+        "SEC breach notification under Regulation S-P — required because Kapitus is a registered investment adviser"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 2024-effective GLBA Safeguards Rule amendments require notification to the FTC of a 'notification event' involving unauthorized acquisition of unencrypted customer information for 500 or more consumers. The 850-applicant scope clears that threshold. Option 1 is wrong because the CFPB does not run an FTC-style threshold-based breach notification regime; option 3 is wrong because the employee's separation does not extinguish Kapitus's notification obligation; option 4 is wrong because Kapitus is a lender, not a registered investment adviser. State-law notifications may also apply on top of the FTC notification.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which AI-related artifact most clearly falls inside Kapitus's record retention obligation for an adverse action decision?",
+      "choices": [
+        "The employee's personal browser history showing they visited the AI tool's website",
+        "The prompts and responses from the approved AI drafting tool that produced the final adverse action letter, retained for the same period as the underlying loan file",
+        "Marketing copy drafted by AI for the Kapitus website that mentions adverse action notices in general terms",
+        "An AI vendor's marketing claim that they 'don't retain logs' — captured in the vendor file"
+      ],
+      "correctIndex": 1,
+      "explanation": "The prompts and responses that produced the final adverse action letter are decision-relevant intermediate drafts and fall within the retention obligation for the underlying decision. That is why Lesson 2's vendor questionnaire requires audit-trail retrievability — without it, you cannot meet the retention obligation. Browser history, marketing copy, and vendor marketing claims are not records of the adverse action decision.",
+      "orderIndex": 3
+    }
+  ]
+}

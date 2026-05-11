@@ -1,0 +1,9 @@
+{
+  "slug": "prompt-engineering",
+  "title": "Prompt Engineering",
+  "description": "The real techniques: structured outputs, few-shot examples, chain-of-thought reasoning, and the refinement loop. For Kapitus power users who've outgrown the basics.",
+  "targetRole": "EMPLOYEE",
+  "targetLevel": "POWER_USER",
+  "isPublished": true,
+  "orderIndex": 20
+}

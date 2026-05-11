@@ -1,0 +1,41 @@
+{
+  "title": "Applicant Follow-Up Emails — Check",
+  "questions": [
+    {
+      "prompt": "You're drafting a follow-up to an applicant who hasn't responded in a week. Which of the following prompts is safe to paste into a general-purpose AI chatbot?",
+      "choices": [
+        "'Draft a follow-up to Maria Gonzalez (SSN 555-12-3456) about her $50k application — she hasn't responded since 5/3.'",
+        "'Draft a polite, firm follow-up to a small-business applicant who hasn't responded in 7 business days about missing documentation. Under 100 words.'",
+        "'Here's the full email thread with the applicant — draft a follow-up that picks up where this left off.' (thread pasted below)",
+        "'Draft a follow-up about loan #LN-2024-08813 in our system.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "The second prompt describes the situation without identifying the applicant or the loan. The first pastes an SSN. The third pastes a full thread that almost certainly contains identifying data. The fourth references a Kapitus internal loan number, which is also identifying when combined with anything else.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An applicant submitted 3 of 4 bank statements and you need the fourth. You want AI to help you draft the follow-up. Which version of the prompt is best?",
+      "choices": [
+        "'Draft a follow-up to Smith's Auto Repair about their missing November 2025 bank statement for their $40k working capital application.'",
+        "'Draft a short, warm follow-up to a small-business applicant who is missing one month of bank statements. Acknowledge they're busy. Under 80 words.'",
+        "'Draft an email demanding the November bank statement immediately or we will close the file.'",
+        "'Pull the missing-document follow-up template from my last email and rewrite it for this applicant.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Option B uses the placeholder pattern — no business name, no specific month, no loan amount — and still produces a usable draft. A leaks identifying details. C is too harsh for a first follow-up and the situation type wasn't specified. D asks the chatbot to retrieve something it has no access to, which it will fabricate.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "After AI drafts your follow-up email, what is the right final step before sending?",
+      "choices": [
+        "Send it as-is — the model already produced clean, professional text",
+        "Forward the draft to your manager for approval on every applicant email",
+        "Paste it into the applicant's record in Kapitus's system, add the applicant's real name and details, then send from your email client",
+        "Send the draft back to the AI and ask it to 'verify it complies with ECOA' before sending"
+      ],
+      "correctIndex": 2,
+      "explanation": "The drafting happens generically inside the AI tool; the personalization happens inside Kapitus's systems where the data already lives. Asking AI to verify ECOA compliance is exactly the kind of decision-making AI should not do — that comes in lesson 3.",
+      "orderIndex": 3
+    }
+  ]
+}

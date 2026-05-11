@@ -1,0 +1,41 @@
+{
+  "title": "The Committee Memo Pattern — Check",
+  "questions": [
+    {
+      "prompt": "Of the four sections of a committee memo — deal overview, risk summary, mitigants, recommendation — which is the section the lesson identifies as one you must always write yourself, without AI assistance, including no AI-polishing of your own draft?",
+      "choices": [
+        "Deal overview — because it is the first thing committee reads and sets the tone",
+        "Risk summary — because the choice and ordering of risks is your judgment",
+        "Mitigants — because inventing mitigants is the highest-risk model failure mode",
+        "Recommendation — because it integrates factors only you have access to and is the part of the memo with your name on it in a way the rest is not"
+      ],
+      "correctIndex": 3,
+      "explanation": "All four sections involve judgment, but the recommendation is the one the lesson explicitly walls off from AI — including from polishing your own draft. The risk summary and mitigants involve judgment in selection and ordering, but AI can expand your bullets into prose if you constrain it tightly. The recommendation integrates portfolio context, broker history, and other factors that do not live in the file. Even AI cleanup of your own recommendation prose lets the model's voice influence the call.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You give AI four risk bullets and ask it to expand each into memo prose. The output contains a fifth risk paragraph the model added on its own — a generic 'industry headwinds' paragraph. Two underwriters disagree on what to do. Which response is correct?",
+      "choices": [
+        "Keep the fifth paragraph if industry headwinds are real for this applicant; the model surfaced a risk you had not articulated",
+        "Cut the fifth paragraph; you did not identify it as a risk, the model added genre filler, and any risk in the memo must be one you have decided belongs there",
+        "Keep the fifth paragraph but move it to the bottom of the section so the committee can weight it appropriately",
+        "Cut the fifth paragraph and add a note to your work file thanking the model for the catch"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson is explicit: the model is not allowed to add risks you did not list. The first option is tempting — what if it really is a risk? — but the right path if industry headwinds are genuinely material is for you to add them as a fifth bullet and re-run the expansion, not for the model to inject them. The discipline matters because the model adds generic genre filler on most expansions; relaxing the rule here is how the memo drifts toward the model's voice rather than yours.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Your AI-drafted risk summary describes a guarantor's prior bankruptcy as 'an event in the obligor's credit history.' Your original bullet said 'prior bankruptcy, unresolved in our file.' Which of the following best describes what happened and the right response?",
+      "choices": [
+        "The model used more professional language; keep the rewrite as it reads better at committee",
+        "The model softened the language toward genre-typical credit memo prose, removing the 'unresolved in our file' qualifier that flags a real diligence gap; rewrite to restore the bite",
+        "The model substituted 'event' for 'bankruptcy' to avoid prejudicing the committee; keep the softer language for fair-lending reasons",
+        "The model dropped the qualifier because unresolved file gaps are a workflow issue, not a credit risk; keep the rewrite and address the gap separately"
+      ],
+      "correctIndex": 1,
+      "explanation": "This is the 'do not soften' failure mode from the lesson. 'Unresolved in our file' is the specific, load-bearing part of the original — it tells the committee there is a known gap in diligence. The rewrite reads more 'professional' precisely because the model is producing prose that matches what credit memos usually sound like, which by default smooths over concrete issues. Fair-lending considerations don't apply to internal risk language about a specific obligor's specific event. Restore the bite.",
+      "orderIndex": 3
+    }
+  ]
+}

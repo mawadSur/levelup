@@ -1,0 +1,41 @@
+{
+  "title": "Document Summarization Safely — Check",
+  "questions": [
+    {
+      "prompt": "An applicant sends you 40 pages of bank statements. What is the right first step before doing anything with AI?",
+      "choices": [
+        "Upload the PDF to the chatbot so it can do the heavy lifting of reading the whole document",
+        "Read the statements yourself, extract the underwriting-relevant facts (avg daily balance, NSF count, deposit pattern, etc.) as anonymized bullets, then hand the bullets to AI for write-up",
+        "Forward the PDF to underwriting and let them figure it out",
+        "Ask the chatbot 'what should I look for in a bank statement?' and then read the document with its guidance"
+      ],
+      "correctIndex": 1,
+      "explanation": "Option B is the safe summarization workflow: you do the reading and extraction (where identifiers and document-level oddities surface), AI does the writing (where it's actually useful). Uploading the full PDF leaks the entire document. Bouncing it to underwriting forfeits the speedup AI provides. Asking the chatbot generic guidance is fine, but it's not the first step on this specific applicant's file.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You give AI an anonymized set of bullet points from an applicant's bank statements and ask for a 4-sentence summary. The draft comes back: 'Applicant A maintains a healthy average daily balance of approximately $42k with manageable NSF activity. Deposit patterns suggest a stable revenue base, indicating the applicant is well-positioned for the requested working-capital product.' Should you use this summary?",
+      "choices": [
+        "Yes — it's clear, concise, and captures the picture",
+        "Yes, but only after replacing 'approximately' with the exact figures",
+        "No — it has crossed from summary into decision/judgment ('healthy,' 'manageable,' 'well-positioned for the product'). Rewrite it to stick to facts only, and let underwriting apply the judgment.",
+        "No — it's too short; a 4-sentence summary should expand to at least 8 sentences"
+      ],
+      "correctIndex": 2,
+      "explanation": "The draft uses judgment words — 'healthy,' 'manageable,' 'well-positioned' — that turn a summary into an underwriting recommendation. Loan officers summarize; underwriters decide. The fix is to strip the judgment and restate the facts: 'Applicant A's average daily balance over the period was approximately $42k, with 2 NSF events. Deposits arrived weekly at an average of $85k per week. Lowest balance was $11k in February.' Underwriting reads that and applies the judgment.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "An applicant submits a credit report along with their bank statements. You need a summary for the file. Which approach is correct?",
+      "choices": [
+        "Redact the names and account numbers from the credit report, then paste the rest into the chatbot for summarization",
+        "Use AI to summarize the bank statements via the anonymized-bullets pattern, but do not use AI to summarize the credit report — handle credit data inside Kapitus's systems or escalate the underwriter-relevant question to underwriting",
+        "Combine both documents and ask the chatbot for a unified summary so the underwriter has one consistent view",
+        "Skip AI for both — credit reports are sensitive, so by extension bank statements are too"
+      ],
+      "correctIndex": 1,
+      "explanation": "Credit report data is the most regulated data on a loan officer's desk. Even with redaction, summarizing it through a third-party chatbot creates FCRA exposure that bank statement summarization doesn't. Bank statements are summarizable via the anonymized-bullets workflow; credit reports stay in-system. Treating bank statements as off-limits because credit reports are is overcorrection — you'd lose the entire AI productivity benefit unnecessarily.",
+      "orderIndex": 3
+    }
+  ]
+}

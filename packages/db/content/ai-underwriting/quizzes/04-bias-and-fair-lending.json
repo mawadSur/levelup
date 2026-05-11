@@ -1,0 +1,41 @@
+{
+  "title": "Bias and Fair Lending — Check",
+  "questions": [
+    {
+      "prompt": "You drafted a decline letter citing a specific debt-service-coverage shortfall with a dollar figure. You ask AI to 'make it more decisive.' The rewrite drops the specific figure and replaces 'insufficient cash flow given current obligations' with 'the applicant's profile does not align with our credit standards.' What is the principal fair-lending problem with the rewrite?",
+      "choices": [
+        "The rewrite is too short; ECOA requires decline letters to be at least one page",
+        "The rewrite removes the specific principal reason for adverse action, which ECOA requires be stated specifically enough that the applicant and a regulator can verify it against the file",
+        "The rewrite uses the phrase 'credit standards,' which is a trademarked term that requires disclosure",
+        "Nothing — vague decline language is preferred because it gives the applicant less basis to challenge the decision"
+      ],
+      "correctIndex": 1,
+      "explanation": "ECOA requires the principal reason(s) for adverse action to be specific. 'Does not align with our credit standards' is a vague generality; the original quantitative DSCR shortfall was a principal reason. The fourth option is the trap that gets shops in trouble — vague language is not protective, it is non-compliant. Specificity is the rule. The first and third options are fabrications.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Two underwriters are debating whether to add 'time in business was a contributing factor' to a decline letter. The AI-polished version dropped this language to make the letter tighter; the original draft included it. Which underwriter is correct?",
+      "choices": [
+        "Drop it — including secondary reasons opens the letter up to additional scrutiny and the cash flow reason alone is sufficient",
+        "Keep it — if time-in-business was a real contributing reason in the credit decision, ECOA requires it to be disclosed in the adverse action notice",
+        "Drop it — only the single most important reason should appear in a decline letter; multiple reasons confuse the applicant",
+        "Keep it — but soften it to 'the overall business profile' to avoid singling out any specific factor"
+      ],
+      "correctIndex": 1,
+      "explanation": "ECOA / Regulation B requires the principal reason(s) — plural where applicable — to be disclosed. If time-in-business genuinely contributed, omitting it understates the basis for the decline and creates a mismatch between the file and the letter that an audit will catch. The first and third options reflect a common misconception that fewer reasons reduce risk; they increase risk. The fourth option introduces the kind of vague phrasing that itself violates the specificity rule.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "An underwriter wants to use AI to summarize an applicant's email correspondence for the credit file. The email mentions in passing that the principal's spouse recently went on disability, and that the family is consolidating accounts as a result. What should the underwriter do before pasting the email into the AI Coach?",
+      "choices": [
+        "Paste it as-is; AI Coach logs the prompt, which protects the underwriter if questions arise later",
+        "Paste it as-is, but instruct the model to ignore family and disability information in its summary",
+        "Redact the references to the spouse's disability and the family financial arrangement, since these touch protected-class status and have no legitimate role in the credit file",
+        "Paste it as-is but ask the model to flag any protected-class information so the underwriter can decide what to do"
+      ],
+      "correctIndex": 2,
+      "explanation": "Protected-class information (here, disability status and marital/family financial arrangements) should not be in the AI prompt at all. The fact that the AI Coach logs prompts is exactly why option one is dangerous, not protective — it puts protected-class data into a permanent log. Instructing the model to 'ignore' or 'flag' protected information still requires the data to enter the prompt. The correct move is to remove it before the data leaves your machine. Two options look reasonable here; the lesson is clear that 'never enters the prompt' is the standard.",
+      "orderIndex": 3
+    }
+  ]
+}

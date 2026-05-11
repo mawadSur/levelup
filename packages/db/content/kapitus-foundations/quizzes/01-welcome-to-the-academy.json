@@ -1,0 +1,41 @@
+{
+  "title": "Welcome to the Academy — Check",
+  "questions": [
+    {
+      "prompt": "Which of these tasks is the best fit for AI help at Kapitus today, before you've completed any role-specific training?",
+      "choices": [
+        "Drafting an adverse action letter to an applicant who was just declined",
+        "Tightening a clunky paragraph in an internal memo you've already written",
+        "Pasting an applicant's credit report into ChatGPT to summarize the highlights",
+        "Asking AI whether a given deal should be approved based on the file"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rewriting your own non-sensitive prose is exactly the kind of work AI handles well with minimal risk. The other three either involve regulated applicant data, a credit decision, or a customer-facing legal notice — all of which require more than Apprentice-level training.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A coworker says, 'AI is bad at math, so it's safe to use it for everything except spreadsheets.' Why is that the wrong takeaway at a lender like Kapitus?",
+      "choices": [
+        "AI is actually good at math, so the rule doesn't apply",
+        "The biggest risks at a lender are about regulated data and regulated decisions, not arithmetic — a confidently-written sentence containing an applicant's SSN is far more dangerous than a wrong sum",
+        "Spreadsheets are the only safe AI use case at a lender",
+        "AI is equally risky on every task, so there's no useful distinction to make"
+      ],
+      "correctIndex": 1,
+      "explanation": "At a regulated lender, the dominant risks are around handling restricted data (PII, credit info) and around AI being in the path of a credit decision. Math errors are easy to catch; a PII leak or a fair-lending exposure is not.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "What does it mean to graduate from the Foundations path?",
+      "choices": [
+        "You're certified to use AI for any task at Kapitus including credit decisions",
+        "You can name the four data classes with real Kapitus examples, recite the 30-second version of GLBA/ECOA/FCRA, and have drafted at least one safe prompt for your own work",
+        "You've been granted Hero-tier access in the Academy",
+        "You no longer need to ask before using a new AI tool"
+      ],
+      "correctIndex": 1,
+      "explanation": "Foundations is the Apprentice rung. Graduating means you can place Kapitus data into the right class, recite the regulatory basics, and have practiced one safe prompt. It does not authorize you for credit decisions or remove the 'ask before using a new tool' habit.",
+      "orderIndex": 3
+    }
+  ]
+}

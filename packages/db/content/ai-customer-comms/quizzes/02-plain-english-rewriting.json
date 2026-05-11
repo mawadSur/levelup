@@ -1,0 +1,41 @@
+{
+  "title": "Plain-English Rewriting — Check",
+  "questions": [
+    {
+      "prompt": "An AI rewrites 'a returned-payment fee of $35.00 has been assessed' as 'a small fee has been added to your account.' Which problem does this create?",
+      "choices": [
+        "No problem — 'small fee' is clearer for a 9th-grade reader",
+        "The dollar amount is gone, so the borrower cannot verify the charge or pay the correct total. The borrower also no longer knows what kind of fee it is, which weakens the disclosure",
+        "It is too formal — 'small fee' should be replaced with 'tiny fee'",
+        "The problem is only that it doesn't mention the date"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plain English does not mean removing specifics. The exact amount ($35) and the type of fee (returned-payment) are part of the required disclosure. Replacing them with 'a small fee' is both unhelpful to the borrower and non-compliant.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of the following is the strongest plain-English rewriting prompt to give an AI tool?",
+      "choices": [
+        "'Make this shorter and easier to read.'",
+        "'Translate this into customer-friendly language.'",
+        "'Rewrite for a 9th-grade reading level, active voice, short sentences. Keep every dollar amount, date, deadline, and percentage exactly as written. Keep the paragraph in quotes verbatim — that is approved disclosure language and cannot be changed. Do not soften must or will to may or should.'",
+        "'Write this like a friendly text message from a friend.'"
+      ],
+      "correctIndex": 2,
+      "explanation": "A strong prompt sets the standard (9th-grade, active voice, short sentences), names what cannot be changed (numbers, dates, the quoted disclosure block), and forbids the specific drifts that cause problems (softening obligations). The other prompts leave all four traps wide open.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "An adverse action letter currently reads: 'Your application was declined because your business has been operating for less than the minimum time we require for this product.' An AI rewrite suggests: 'Your business is too new for this loan.' What is the tone-and-compliance judgment?",
+      "choices": [
+        "The rewrite is better — it is shorter and easier to read, so we should always prefer it",
+        "Both are equivalent — the meaning is identical",
+        "The rewrite is friendlier but loses specificity. 'Too new' is vague enough that the borrower may not understand what to fix or that the issue is time-in-business specifically. Keep the original wording or tighten it without losing the principal reason",
+        "The rewrite is worse only because it uses 'too' which is informal"
+      ],
+      "correctIndex": 2,
+      "explanation": "ECOA requires the principal reason in terms specific enough for the borrower to understand and act on. 'Too new' loses the precise reason (time in business below the product minimum). Plain English does not mean dropping the specificity that makes a reason meaningful.",
+      "orderIndex": 3
+    }
+  ]
+}

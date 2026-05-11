@@ -1,0 +1,41 @@
+{
+  "title": "Reconciling Conflicting Income — Check",
+  "questions": [
+    {
+      "prompt": "An applicant has W2 income of $120k, tax returns averaging $85k after depreciation and home-office deductions, and recent paystubs annualizing to $145k. Which prompt to AI is most consistent with the lesson's pattern?",
+      "choices": [
+        "'Given these three income figures, what qualifying income should I use?'",
+        "'Lay out each income signal in a table with source, period, gross figure, adjustments visible, and timing factors. Do not propose a qualifying figure or recommend which to weight.'",
+        "'The applicant's true income is probably somewhere between $85k and $145k. Help me pick a defensible midpoint.'",
+        "'Annualize the paystub and tell me if it is consistent with the W2 trend.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "The lesson's pattern is: AI maps the signals, the underwriter decides the number. The first and third options ask the model to make a credit decision — what figure to use or what midpoint is defensible — which is exactly the line the lesson tells you not to cross. The fourth option asks the model for an assessment of consistency, which is also a judgment call dressed up as analysis. Only the second option keeps the model on synthesis.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "After the model lays out the three income signals in a clean table, it volunteers in the closing paragraph: 'A reasonable approach would be to use a blended figure of $115k as conservative qualifying income.' What is the right response?",
+      "choices": [
+        "Use the $115k figure since it is the model's conservative blend and conservatism reduces risk",
+        "Remove the recommendation from the output, write your own reconciliation in your own words, and adjust your prompt next time to forbid recommendation",
+        "Treat the $115k as a sanity check against your own reconciliation and document agreement if your number is close",
+        "Use the $115k figure but require additional bank statement documentation to verify"
+      ],
+      "correctIndex": 1,
+      "explanation": "The model drifted into the recommendation space the lesson explicitly excludes — even though it sounds conservative, it is a credit decision the model has no basis to make. The third option is the trap: using model output as a 'sanity check' is how the model's framing quietly becomes your framing. Strip the recommendation, write your own number with your own reasoning, and tighten the prompt for next time.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Of the four signals available — W2, tax returns with depreciation, recent paystubs, and 90-day bank statements — which carries the most weight for a working capital underwriting decision, and what is the right way to ask AI for help with it?",
+      "choices": [
+        "Paystubs, because they are the most current; ask the model to annualize and project the trend",
+        "Tax returns, because they are filed under penalty of perjury; ask the model to confirm the return supports the request",
+        "Bank statements; ask the model to summarize total deposits per month and identify recurring versus non-recurring sources, without characterizing whether the deposit picture supports the application",
+        "W2, because it is the cleanest single-employer wage signal; ask the model to verify it is consistent with the other documents"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bank statements typically carry the most signal for working capital underwriting because they show actual cash movement rather than a snapshot or self-reported figure. The framing of the AI ask matters as much as the choice of signal: summarize deposits, identify sources, do not characterize support for the application. The other options either pick a weaker signal (paystub spike, W2 from a side employer, returns that are already known to be heavily adjusted) or ask the model to make the supportability call. Both halves of the question matter.",
+      "orderIndex": 3
+    }
+  ]
+}

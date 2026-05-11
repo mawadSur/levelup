@@ -32,6 +32,8 @@ playwright-report/
 .swarm/
 ruvector.db
 ruvector.db-*
+agentdb.rvf
+agentdb.rvf.lock
 
 # Stripe products setup script sidecar (contains real product/price IDs)
 .stripe-products.json

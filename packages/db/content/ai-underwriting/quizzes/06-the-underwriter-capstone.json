@@ -1,0 +1,41 @@
+{
+  "title": "The Underwriter Capstone — Check",
+  "questions": [
+    {
+      "prompt": "You have 90 minutes before committee on a complex multi-entity deal with conflicting income signals. Which sequence is closest to the capstone workflow?",
+      "choices": [
+        "Prompt AI for a memo skeleton first to anchor your thinking, then read the file to fill in the details, then write the recommendation",
+        "Read the file fully first, decide your tentative call, redact once, then use AI in three constrained passes (capital structure, income signals, risk/mitigant expansion), then write your own reconciliation and recommendation, then verify all numbers, then fair-lending review",
+        "Redact and feed the entire file to AI in a single prompt asking for a complete committee memo, then edit the output to match your voice",
+        "Skip the AI synthesis on a 90-minute deadline; AI saves time on simple deals but adds overhead on complex ones"
+      ],
+      "correctIndex": 1,
+      "explanation": "The capstone is explicit on order. Reading first forms the gestalt. Deciding a tentative call anchors the synthesis. Redacting once is faster than three times. AI runs in constrained synthesis passes only — not as a memo-generator. Reconciliation and recommendation are yours. Verification and fair-lending review are non-negotiable. The first option inverts the order in a way that lets the model's framing shape your call. The third turns the model into the underwriter. The fourth is wrong — AI saves more time on complex deals than on simple ones, when used correctly.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "On the same deal, you finish your AI-assisted draft with 10 minutes to spare. Two final tasks compete for that time: (a) verify every dollar figure in the memo against source documents, or (b) re-read the memo end-to-end as if you were the committee chair. Which is the correct prioritization?",
+      "choices": [
+        "Do (b) first — committee will read it cold and the holistic read catches the most issues",
+        "Do (a) first — unverified numbers in front of committee is the single largest reputational and audit risk in the whole workflow",
+        "Skip both — the work is good enough after the AI passes; over-checking costs more than it saves",
+        "Do (a) but only for the largest figures — small numbers are within rounding tolerance"
+      ],
+      "correctIndex": 1,
+      "explanation": "Verification is the load-bearing step that makes the synthesis steps safe. An unverified number from the model can be entirely fabricated. The holistic read is important and the capstone includes it as a separate step, but if forced to choose, verification comes first because the failure mode is more severe. The fourth option is wrong because the small figures (e.g., a $4k monthly debt service swing on a refinance) are often the load-bearing ones for the credit call.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Reviewing your finished memo, you find a sentence in the risk section that reads: 'Furthermore, from a credit perspective, the obligor's profile reflects a measured approach to leverage.' You did not write that sentence. What is the right interpretation and action?",
+      "choices": [
+        "The sentence is fine — it is neutral, plausibly true, and adds polish to the section",
+        "The sentence is AI residue — generic transitional phrasing, hedged characterization, and a sentiment that softens rather than describes; rewrite or cut it because it is not your voice and not your judgment",
+        "Keep the sentence but add a citation to a specific data point that supports the 'measured approach to leverage' claim",
+        "Keep the sentence as a hedge; if anything goes wrong with the deal, the language gives you defensible ground"
+      ],
+      "correctIndex": 1,
+      "explanation": "This is the AI-residue check from the capstone. The model has a voice — 'furthermore,' 'from a credit perspective,' soft characterizations like 'measured approach' — that does not belong in a Kapitus committee memo. Adding a citation tries to rescue a sentence that should not be there. Treating hedged language as defensive cover is exactly the wrong instinct: vague language is harder to defend than specific language, both at committee and on audit. Cut it.",
+      "orderIndex": 3
+    }
+  ]
+}

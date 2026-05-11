@@ -17,7 +17,7 @@ type SeedLesson = {
   slug: string;
   body: string;
   estimatedMinutes: number;
-  questions: [SeedQuestion, SeedQuestion];
+  questions: SeedQuestion[];
 };
 
 type SeedPath = {
@@ -26,8 +26,116 @@ type SeedPath = {
   description: string;
   targetRole: Role | null;
   targetLevel: AiLevel;
-  lessons: [SeedLesson, SeedLesson, SeedLesson];
+  lessons: SeedLesson[];
 };
+
+// File-driven paths under packages/db/content/<slug>/ — for paths authored as
+// markdown lessons + JSON quizzes (the Kapitus academy curriculum). Added in
+// order they should appear in the catalog.
+const FILE_PATH_SLUGS = [
+  'kapitus-foundations',
+  'ai-customer-comms',
+  'ai-lending',
+  'ai-underwriting',
+  'ai-compliance',
+  'prompt-engineering',
+] as const;
+
+interface MarkdownLessonFrontmatter {
+  slug: string;
+  title: string;
+  estimatedMinutes: number;
+  orderIndex: number;
+}
+
+function parseFrontmatter(raw: string): { frontmatter: MarkdownLessonFrontmatter; body: string } {
+  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) {
+    throw new Error('Lesson markdown is missing YAML frontmatter');
+  }
+  const yaml = match[1] ?? '';
+  const body = (match[2] ?? '').trim();
+  const fields: Record<string, string> = {};
+  for (const line of yaml.split('\n')) {
+    const idx = line.indexOf(':');
+    if (idx === -1) continue;
+    const key = line.slice(0, idx).trim();
+    const value = line
+      .slice(idx + 1)
+      .trim()
+      .replace(/^['"]|['"]$/g, '');
+    fields[key] = value;
+  }
+  const slug = fields.slug;
+  const title = fields.title;
+  if (!slug || !title) {
+    throw new Error('Lesson frontmatter must include `slug` and `title`');
+  }
+  return {
+    frontmatter: {
+      slug,
+      title,
+      estimatedMinutes: parseInt(fields.estimatedMinutes ?? '8', 10) || 8,
+      orderIndex: parseInt(fields.orderIndex ?? '0', 10) || 0,
+    },
+    body,
+  };
+}
+
+function loadPathFromContent(slug: string): SeedPath {
+  const dir = path.join(__dirname, '..', 'content', slug);
+  const meta = JSON.parse(fs.readFileSync(path.join(dir, 'path.json'), 'utf8')) as {
+    title: string;
+    slug: string;
+    description: string;
+    targetRole: string | null;
+    targetLevel: string;
+  };
+
+  const lessonFiles = fs
+    .readdirSync(path.join(dir, 'lessons'))
+    .filter((f) => f.endsWith('.md'))
+    .sort();
+
+  const lessons: SeedLesson[] = lessonFiles.map((file) => {
+    const raw = fs.readFileSync(path.join(dir, 'lessons', file), 'utf8');
+    const { frontmatter, body } = parseFrontmatter(raw);
+
+    // Quiz lives at quizzes/<same-stem>.json
+    const stem = file.replace(/\.md$/, '');
+    const quizFile = path.join(dir, 'quizzes', `${stem}.json`);
+    const quizRaw = JSON.parse(fs.readFileSync(quizFile, 'utf8')) as {
+      questions: Array<{
+        prompt: string;
+        choices: string[];
+        correctIndex: number;
+        explanation?: string;
+      }>;
+    };
+
+    return {
+      title: frontmatter.title,
+      slug: frontmatter.slug,
+      body,
+      estimatedMinutes: frontmatter.estimatedMinutes,
+      questions: quizRaw.questions.map((q) => ({
+        prompt: q.prompt,
+        choices: q.choices,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+      })),
+    };
+  });
+
+  return {
+    title: meta.title,
+    slug: meta.slug,
+    description: meta.description,
+    targetRole: meta.targetRole as Role | null,
+    targetLevel: meta.targetLevel as AiLevel,
+    lessons,
+  };
+}
 
 const PATHS: SeedPath[] = [
   {
@@ -365,7 +473,13 @@ async function main() {
     },
   });
 
-  for (const path of PATHS) {
+  // Combine hardcoded baseline paths with the file-driven Kapitus academy
+  // paths so the same upsert loop handles both. Idempotent — re-running the
+  // seed updates lesson bodies + quiz questions in place.
+  const filePaths: SeedPath[] = FILE_PATH_SLUGS.map((slug) => loadPathFromContent(slug));
+  const allPaths: SeedPath[] = [...PATHS, ...filePaths];
+
+  for (const path of allPaths) {
     const created = await prisma.learningPath.upsert({
       where: {
         organizationId_slug: { organizationId: org.id, slug: path.slug },

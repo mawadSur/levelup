@@ -1,0 +1,41 @@
+{
+  "title": "Complaint Response Tone — Check",
+  "questions": [
+    {
+      "prompt": "Which opening to a complaint response is most likely to escalate rather than resolve the situation?",
+      "choices": [
+        "'You called on May 3 about the $35 returned-payment fee on your April 28 payment, which you said hit your account before payday. Here is what we found and what we are doing about it.'",
+        "'We sincerely apologize for the inconvenience and want you to know that your satisfaction is our top priority. We appreciate your patience as we work to resolve this matter.'",
+        "'We pulled the ACH on April 27 instead of April 28, which is our error. We have refunded the $35 fee and corrected the pull date.'",
+        "'Thanks for reaching out, Mr. Johnson. We read your email carefully and want to walk through what happened.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic boilerplate apologies — 'inconvenience,' 'top priority,' 'appreciate your patience' — signal to the borrower that nobody read the complaint. The CFPB and regulators look for exactly this pattern as evidence of non-responsive servicing. The other three openings each reference specifics.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A draft complaint response includes the sentence: 'This was a clear violation of our agreement with you and likely a violation of federal lending law.' Compliance has not yet reviewed the matter. What is the issue?",
+      "choices": [
+        "No issue — owning the mistake builds trust",
+        "The sentence states legal conclusions that are not yours to make. Characterizing something as a violation of an agreement or of federal law is a determination for compliance and counsel, and it creates a written record that can be used against Kapitus in arbitration, litigation, or regulatory action. Remove the legal characterizations and keep the factual acknowledgment",
+        "The only problem is the word 'clear' — change it to 'possible'",
+        "The sentence is fine as long as you delete the response after sending"
+      ],
+      "correctIndex": 1,
+      "explanation": "There is real legal daylight between empathetic accountability ('we made a mistake — we pulled the payment a day early') and legal conclusions ('this was a violation of federal lending law'). The first is appropriate; the second is for legal and compliance to determine. AI will produce either column without distinguishing.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which type of complaint is the worst candidate for a same-day AI-assisted response?",
+      "choices": [
+        "A borrower asking why a $25 late fee was charged on a payment made one day after the due date",
+        "A borrower asking for a copy of the most recent statement",
+        "A borrower alleging that their application was declined because of their national origin, in a complaint filed through the CFPB portal",
+        "A borrower asking for clarification of an interest-rate change disclosed in last month's statement"
+      ],
+      "correctIndex": 2,
+      "explanation": "Allegations of discrimination — ECOA, fair-lending — filed through a regulator are the highest-stakes complaint type Kapitus handles. They go to compliance and legal first, with AI drafts attached as a starting point at most. Speed is the wrong instinct here; careful is the only correct speed.",
+      "orderIndex": 3
+    }
+  ]
+}

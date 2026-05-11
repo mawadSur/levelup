@@ -1,0 +1,41 @@
+{
+  "title": "Explaining Decisions Without Violating ECOA — Check",
+  "questions": [
+    {
+      "prompt": "An applicant has been declined. You ask AI to draft the decline letter, and the draft contains the sentence: 'Unfortunately, your credit score of 612 is below our threshold.' What is the most accurate problem with this sentence?",
+      "choices": [
+        "It is too blunt — the applicant might feel insulted",
+        "It violates ECOA / Regulation B by citing a raw bureau score instead of specific principal reasons from the approved reason code list, and it likely omits the FCRA-required bureau disclosure",
+        "It is fine as long as the score is accurate and you add 'we're sorry' at the end",
+        "It is acceptable for the cover paragraph but should be moved to the postscript"
+      ],
+      "correctIndex": 1,
+      "explanation": "ECOA requires specific principal reasons drawn from the actual decision factors, not a raw FICO score. If a consumer report was used, the FCRA additionally requires naming the bureau and disclosing the applicant's rights to a free copy and to dispute inaccuracies. This sentence fails both requirements regardless of tone.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Underwriting declined an applicant for two specific reasons: 'insufficient time in business' and 'high existing debt obligations.' Which prompt is the safest way to use AI to help with the decline letter?",
+      "choices": [
+        "'Draft a decline letter — the applicant has only been in business 8 months and already has two MCAs out. Make it sympathetic.'",
+        "'Write a decline letter for a working-capital applicant. The reasons are insufficient time in business and high existing debt. Phrase the reasons in a compassionate way.'",
+        "'I have an adverse action with these approved reason codes: insufficient time in business, high existing debt obligations. Draft a warm 3-4 sentence cover paragraph that leads into a principal-reasons section. Do not paraphrase or add reasons. I will paste our regulatory template below.'",
+        "'Write a full ECOA-compliant decline letter for a small business applicant including all required disclosures.'"
+      ],
+      "correctIndex": 2,
+      "explanation": "Option C lets AI do what it is good at (cover-paragraph tone) and forbids it from doing what it is bad at (paraphrasing reason codes, generating regulatory disclosures). Option A leaks identifying details. Option B asks the model to 'phrase the reasons compassionately,' which is how reason codes drift from the approved language. Option D asks the model to generate the regulatory block itself, which is exactly where it will hallucinate disclosures.",
+      "orderIndex": 3
+    },
+    {
+      "prompt": "You receive an AI-drafted decline letter that looks polished. It mentions the principal reasons, the bureau, and tells the applicant they can dispute inaccuracies. It also closes with 'given your area's economic conditions, we suggest reapplying next year.' Is it safe to send?",
+      "choices": [
+        "Yes — all three regulatory elements are present, and the closing is a kind suggestion",
+        "Yes, but only after removing the bureau information for privacy reasons",
+        "No — the 'given your area' phrase implies a geography-based factor that could read as a fair-lending issue (proxy for protected class) and was not in the underwriting reason codes; remove it before sending",
+        "No — decline letters should never include a suggestion to reapply"
+      ],
+      "correctIndex": 2,
+      "explanation": "Geographic phrasing in a decline letter is a fair-lending red flag because it can serve as a proxy for race, national origin, or other protected classes — and in this case it was not a reason code from underwriting at all, so AI added it. Removing it is required. Suggesting that the applicant may reapply in general is actually fine; what's not fine is implying the timing is conditioned on demographic or location factors.",
+      "orderIndex": 3
+    }
+  ]
+}

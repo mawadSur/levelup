@@ -1,0 +1,41 @@
+{
+  "title": "Reviewing AI-Drafted Customer Communications — Check",
+  "questions": [
+    {
+      "prompt": "An AI-drafted adverse action letter lands on your desk for review. It cites 'insufficient time in business' as the principal reason for decline, includes the ECOA notice, includes the FCRA notice, and discloses no PII beyond the applicant's name and address. The applicant's actual underwriting file shows the decline was driven by deposit volatility, not time in business. The drafter says the AI 'just picked one of the factors that was in the prompt' and time in business was indeed weak. Does this letter pass review?",
+      "choices": [
+        "Yes — all disclosures are present, no PII issues, and time in business was a real factor in the file",
+        "No — the principal reason in an adverse action notice must reflect the actual driver of the decline, not a different real-but-secondary factor; this is a Regulation B issue",
+        "Yes, but with a coaching note to the drafter for the next round",
+        "No — but only because the AI was used to draft the disclosure block rather than the narrative"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both option 1 and option 2 are plausibly correct readings — the disclosures are present and the cited factor was real. But Regulation B requires the principal reasons for the action, meaning the factors that actually drove the decision. Substituting a real-but-secondary factor for the actual driver is a Regulation B violation regardless of whether the substituted factor is technically true. The letter fails review and the AI-drafting workflow needs a fix: the prompt should give the model the specific underwriting factor that drove the decline, not a list of all the weak attributes in the file.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of the four checks in the 60-second review pattern most often catches hallucinated specifics like a fabricated interest rate or a non-existent credit inquiry?",
+      "choices": [
+        "Check 1 — disclosures present and correct",
+        "Check 2 — PII redacted appropriately",
+        "Check 3 — tone fair-lending-safe",
+        "Check 4 — no hallucinated rates, terms, or facts; reconcile specifics against the source of truth"
+      ],
+      "correctIndex": 3,
+      "explanation": "Check 4 is specifically designed to catch fabricated specifics. The other three checks would not surface a wrong rate or a fictitious inquiry — disclosure language is templated, PII redaction is about what is included, and tone is independent of factual accuracy. This is the slowest check because it requires reconciling against the loan management system, which is why it sits last in the pattern.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You sample twenty AI-drafted approval-with-conditions letters from last week. Two of them refer to the applicant's spouse by name in the body of the letter (the spouse was listed as a guarantor on the application). The information is true and the spouse did sign as guarantor. Is this a defect?",
+      "choices": [
+        "No — the spouse is a party to the transaction as guarantor, so referencing them by name is appropriate",
+        "Yes — referencing third parties by name in customer correspondence raises information-sharing issues that should be reviewed regardless of whether the underlying fact is correct",
+        "No, but only if the spouse also signed a separate consent for written communications",
+        "Yes — but only if the letter was sent to an address shared with the spouse"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both options 1 and 2 are plausibly defensible. Option 2 is the right compliance posture: referencing third parties (even ones who are parties to the transaction) by name in customer correspondence raises issues under GLBA's information-sharing rules, internal information-handling policies, and the principle of minimum necessary disclosure. The fact that the spouse signed as guarantor does not automatically authorize their name to appear in correspondence directed to the applicant. This is exactly the kind of pattern AI tends to introduce because it echoes back whatever was in the prompt — the drafter likely pasted the full application file into the prompt and the model reused the names. Flag the defect, coach the drafter, and consider tightening the template.",
+      "orderIndex": 3
+    }
+  ]
+}

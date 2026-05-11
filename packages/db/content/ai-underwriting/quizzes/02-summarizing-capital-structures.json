@@ -1,0 +1,41 @@
+{
+  "title": "Summarizing Capital Structures — Check",
+  "questions": [
+    {
+      "prompt": "You are preparing to feed a multi-entity capital structure to AI for a summary. The applicant has three entities (HoldCo, OpCo, FleetCo), one principal, intercompany debt, and a recent refinance. Which prep approach is correct?",
+      "choices": [
+        "Paste the full application package including names, EINs, and addresses so the model has full context",
+        "Replace legal names with role labels (HoldCo, OpCo, FleetCo, Principal), strip EINs and addresses, keep all dollar figures and dates",
+        "Summarize the file yourself first in plain English, then ask the model to expand your summary back into detail",
+        "Paste only the dollar figures with no entity labels at all, to minimize any identifying information"
+      ],
+      "correctIndex": 1,
+      "explanation": "Role labels plus stripped identifiers is the Kapitus Foundations pattern. The first option leaks PII unnecessarily. The third inverts the workflow — AI's job is to compress structure into prose, not to expand your prose back into detail. The fourth strips so much context that the model cannot produce a useful structural map; relationships need labeled nodes.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Your AI-generated capital structure summary describes the intercompany note between OpCo and HoldCo as 'a note in good standing between related entities.' Your original notes flagged that this note has been rolling for four years with no principal amortization. What is the most likely explanation, and what should you do?",
+      "choices": [
+        "The model has access to industry norms suggesting four-year rolling notes are routine; accept the language",
+        "The model has smoothed an anomaly toward genre-typical credit memo prose; rewrite the line to preserve the structural concern",
+        "The model is correcting a misunderstanding in your notes; verify with the principal whether the note is in fact in good standing",
+        "The model has dropped the concern because it was not material; trust the omission"
+      ],
+      "correctIndex": 1,
+      "explanation": "This is the 'smoothed-over weirdness' failure pattern from the lesson. The model is generating language that sounds like a typical credit memo, not language that preserves the specific anomaly in your file. A four-year non-amortizing intercompany note is a real risk signal. The model has no independent view on whether the note is in good standing, and 'industry norms' is not a thing the model is consulting. Rewrite.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "The model's output describes FleetCo as 'leasing trucks from OpCo at $38k/month.' Your source shows OpCo paying FleetCo $38k/month for use of trucks FleetCo owns. Which of the following is the most useful framing of this error?",
+      "choices": [
+        "A typo on the model's part that does not change the substance of the memo",
+        "An inverted-flow error — the model got the direction of a related-party payment backwards, which would materially mislead the committee on where cash is going",
+        "An acceptable simplification since both descriptions imply a fleet-lease relationship",
+        "A signal that the model should not have been used on this file at all"
+      ],
+      "correctIndex": 1,
+      "explanation": "Direction of related-party flows is exactly the kind of error the lesson flags as common and high-stakes. The committee reading the memo would form a completely different mental picture of where cash sits and where the operating risk lives depending on which direction the lease runs. It is not a simplification — it is a factual inversion. Also not a reason to abandon AI; it is a reason to verify direction in every summary, which is what the lesson teaches.",
+      "orderIndex": 3
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "title": "Vetting AI Tools Before Approval — Check",
+  "questions": [
+    {
+      "prompt": "A vendor pitching a new AI underwriting summary tool tells you, 'Our terms of service cover data processing — we don't sign separate DPAs because our ToS is already comprehensive.' What is the right response?",
+      "choices": [
+        "Accept the ToS as equivalent to a DPA if it covers the same substantive points",
+        "Decline to proceed at any data tier above Public-only until a negotiated DPA is in place — ToS is not a substitute for a DPA negotiated by a regulated counterparty",
+        "Approve the tool at Tier 3 (Internal-OK) only, since ToS is sufficient for non-PII use",
+        "Escalate to legal for a one-time waiver and proceed at Tier 1 with extra audit logging"
+      ],
+      "correctIndex": 1,
+      "explanation": "ToS is unilateral and changeable; it is not negotiated by Kapitus as a regulated counterparty and does not give us the contractual standing we need under GLBA. Options 1 and 3 sound pragmatic but accept a posture risk — a vendor that won't execute a DPA is signaling they are not yet built for regulated customers. The right move is to require a real DPA before approval, or walk away.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "A pilot is proposed for a marketing-copy AI tool that the team wants to use for blog post drafts and social media. The vendor will not sign a DPA but the copy will only describe Kapitus's products in general terms with no applicant data. Which tier is appropriate?",
+      "choices": [
+        "Tier 1 — Restricted-OK, because marketing copy is customer-facing",
+        "Tier 2 — Confidential-OK, because product information is internal",
+        "Tier 3 — Internal-OK, because the use case is general business drafting with no PII",
+        "Tier 4 — Public-only, because the absence of a DPA caps the tier regardless of the use case"
+      ],
+      "correctIndex": 3,
+      "explanation": "Both option 3 and option 4 are plausibly correct on the surface — the use case really is non-PII drafting that sounds like Tier 3. But the four-tier model gates on what the vendor will support, not just on what the team plans to send. Without a DPA, the tool cannot be approved above Tier 4 (Public-only), regardless of how the team intends to use it. If the team needs Tier 3 functionality, escalate to the vendor's enterprise sales to get a DPA in place — or find a tool that already supports the tier.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which of these vendor responses is the strongest single signal to end the review and decline the tool, even before completing the rest of the questionnaire?",
+      "choices": [
+        "'Our SOC 2 Type II report is from 18 months ago; the new observation period is in progress.'",
+        "'We use customer prompts to improve our model by default; opt-out is available on request.'",
+        "'Our enterprise tier costs more than the team has budgeted for this pilot.'",
+        "'Our standard log retention is 90 days; we can extend on request.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Default-on training data ingestion is a posture issue, not just a configuration item — it signals the vendor's product is not yet built for regulated customers, and the rest of the review is likely to surface similar issues. Stale SOC 2, budget mismatches, and short default log retention are real concerns but can typically be negotiated or addressed with compensating controls; they do not by themselves end the review.",
+      "orderIndex": 3
+    }
+  ]
+}

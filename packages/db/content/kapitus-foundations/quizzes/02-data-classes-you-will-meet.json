@@ -1,0 +1,41 @@
+{
+  "title": "Data Classes You Will Meet — Check",
+  "questions": [
+    {
+      "prompt": "You're cleaning up a deal-pipeline spreadsheet for your Monday one-on-one. It has applicant business names, requested loan amounts, expected close dates, and one column with the applicant principal's last four SSN digits. What class is this document, and where can you take it?",
+      "choices": [
+        "Confidential — it can go into any Tier-A or Tier-B approved tool",
+        "Restricted — even the last four of an SSN combined with a named individual makes the whole document Restricted, and it goes only to a tool cleared for Restricted data",
+        "Internal — last-four isn't a full SSN, so the regulated rules don't apply",
+        "Public — pipeline data isn't customer-facing, so it's not really sensitive"
+      ],
+      "correctIndex": 1,
+      "explanation": "A document inherits the highest class of any data in it. Last-four-SSN plus a named individual is still nonpublic personal information under GLBA. The whole pipeline sheet is Restricted, even though most cells aren't. Approved-for-Restricted tooling only.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "Which of these is Confidential rather than Restricted at Kapitus?",
+      "choices": [
+        "An applicant's bank statement from their funding submission",
+        "A credit report pulled from the bureau for underwriting",
+        "An internal pricing memo describing the rate floors we've authorized for Q3",
+        "An applicant's driver's license image"
+      ],
+      "correctIndex": 2,
+      "explanation": "The pricing memo is competitively sensitive but is not regulated NPI — it's about Kapitus, not about a specific applicant. The other three are all applicant-identifying financial information and are Restricted under GLBA.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You want a consumer AI tool to help you tighten the wording of an internal PTO policy. You haven't been approved yet for a Tier-A tool. What's the best move?",
+      "choices": [
+        "Paste the full Kapitus policy in — PTO policies aren't regulated, so it's fine",
+        "Black out the word 'Kapitus' wherever it appears and paste the rest",
+        "Don't paste the Kapitus version. Describe the structure generically — 'I'm rewriting a PTO policy that has accrual rules, blackout dates, and a request workflow' — and let the AI suggest improvements you can then apply to the real doc",
+        "Skip AI entirely and rewrite it by hand"
+      ],
+      "correctIndex": 2,
+      "explanation": "Internal data shouldn't go into a consumer AI tool, but you can still get useful help by describing the structure of the problem generically. Redacting the company name isn't enough; the substance of the policy is still Internal data leaving our boundary. Doing it by hand is fine but unnecessary — the generic prompt works.",
+      "orderIndex": 3
+    }
+  ]
+}

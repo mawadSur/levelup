@@ -1,0 +1,41 @@
+{
+  "title": "Your First Prompt at Kapitus — Check",
+  "questions": [
+    {
+      "prompt": "You're drafting that missing-W2 follow-up email in a Tier-B tool. Which of these prompts is the cleanest version of what you should type?",
+      "choices": [
+        "'Write a follow-up email to John Martinez at Martinez HVAC LLC (applied 4/12 for $180K) reminding him to send his 2024 W2.'",
+        "'Write a brief, warm, professional follow-up email to [Applicant A], a small-business owner who applied three days ago, asking for their most recent W2. Under 120 words. No financial figures. No promises about approval. Sign off as [Your name], Kapitus.'",
+        "'Write a follow-up email — you figure out the rest.'",
+        "'Draft an adverse action notice for an applicant missing a W2.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Option 2 is the right shape: placeholders for Restricted data, clear constraints that prevent regulatory slips (no figures, no approval promises), enough structure for a good draft. Option 1 leaks NPI into the tool. Option 3 is too vague to get useful output. Option 4 misuses an adverse action template — missing a W2 isn't a credit decision.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "The AI returns a draft that says 'Following up on our call Tuesday — we'll get you approved as soon as the W2 arrives.' You never had a call, and approvals are decided by underwriting. What's the right response?",
+      "choices": [
+        "Send it as-is — the applicant won't notice the small inaccuracies",
+        "Send it after fixing only the call reference, since the approval line sounds friendly",
+        "Strip both the invented call and the approval promise. The fabricated call is a factual lie; the approval promise commits Kapitus to a decision underwriting hasn't made and could create ECOA exposure if we then decline. Either edit it out or re-prompt the model with tighter constraints",
+        "Stop using AI entirely after a single hallucination"
+      ],
+      "correctIndex": 2,
+      "explanation": "Both lines are problems for different reasons. The 'we'll get you approved' phrasing is the dangerous one — it pre-commits the lender to an outcome that hasn't been underwritten yet, which is exactly the kind of language regulators scrutinize when an adverse action later happens. Editing it out (or re-prompting) is the right move; abandoning AI for one hallucination is overcorrection.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Why does the lesson recommend hydrating placeholders — replacing [Applicant A] with the real name — inside your email client rather than inside the AI tool?",
+      "choices": [
+        "Email clients are faster than AI tools",
+        "It's an arbitrary preference; either order works",
+        "Keeping the real applicant data out of the AI tool's chat log means the Restricted information never leaves the Kapitus boundary, even when you're using a tool that technically could handle it. It builds a habit that scales across every tier and every task",
+        "AI tools cannot handle proper names correctly"
+      ],
+      "correctIndex": 2,
+      "explanation": "The architecture is the point. Hydrating in Kapitus systems keeps NPI inside our environment, makes the habit work even if the tool tier changes, and means there's no Restricted data sitting in a chat log waiting to be reviewed by an auditor or accidentally surfaced later.",
+      "orderIndex": 3
+    }
+  ]
+}

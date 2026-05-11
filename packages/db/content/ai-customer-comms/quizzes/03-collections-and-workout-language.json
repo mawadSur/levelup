@@ -1,0 +1,41 @@
+{
+  "title": "Collections and Workout Language — Check",
+  "questions": [
+    {
+      "prompt": "You want AI help drafting a forbearance offer. You consider pasting a real forbearance letter Kapitus sent to another borrower last quarter as an example. What is the main risk?",
+      "choices": [
+        "The AI will refuse to use real examples",
+        "Another borrower's specific terms (amounts, dates, account references) could be reused or referenced in the new letter, potentially exposing that borrower's loan terms. Additionally, pasting customer data into a public AI tool may violate privacy and policy",
+        "Real examples make AI output too rigid",
+        "No risk — using prior letters is standard practice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Real letters contain real customer terms. The model can carry those over into the new draft, and you have also pushed identifiable customer data outside the company's environment if the tool is public. Use sanitized templates with placeholder values, not real prior letters.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An AI-drafted past-due reminder includes the sentence: 'Failure to pay may result in seizure of business assets and personal liability for the loan balance.' The borrower's contract does not authorize asset seizure in this state and includes no personal guaranty. What is the correct action?",
+      "choices": [
+        "Send it — borrowers respond better to strong language",
+        "Send it but soften 'seizure' to 'recovery'",
+        "Remove the sentence. Threatening action that the contract does not authorize is a UDAAP and likely FDCPA-analog violation. The letter cannot imply consequences Kapitus cannot lawfully take in this borrower's situation",
+        "Send it because the language is industry-standard"
+      ],
+      "correctIndex": 2,
+      "explanation": "You cannot threaten consequences the contract does not actually permit. UDAAP and state debt-collection rules treat that as deceptive. AI will produce this kind of language because it has read it in training data, but the existence of the language elsewhere does not make it lawful for Kapitus to send in this specific case.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "You ask an AI to rewrite a payment reminder 'with more urgency.' It returns a version headlined 'FINAL NOTICE — IMMEDIATE ACTION REQUIRED' even though the account is only 15 days past due, no acceleration has occurred, and no referral to a collections agency is teed up. How do you handle the output?",
+      "choices": [
+        "Use it — urgent language drives faster payment",
+        "Use it with the headline lowercased",
+        "Reject the framing. 'Final notice' and 'immediate action required' must be true statements of fact about the timeline. Using them when the account is only 15 days past due and no real consequence is imminent is deceptive — exactly the pattern UDAAP enforcement targets",
+        "Use it but add a footnote explaining the headline is figurative"
+      ],
+      "correctIndex": 2,
+      "explanation": "Urgency framing must match the actual posture of the account. 'Final notice' implies it is the final notice; 'immediate action required' implies a near-term consequence. If neither is true, the language is deceptive and creates regulatory risk regardless of how natural it sounds.",
+      "orderIndex": 3
+    }
+  ]
+}

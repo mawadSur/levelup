@@ -1,0 +1,41 @@
+{
+  "title": "The Loan Officer and AI — Check",
+  "questions": [
+    {
+      "prompt": "Which of the following is the best use of a general-purpose AI chatbot for a Kapitus loan officer?",
+      "choices": [
+        "Asking it whether a borderline applicant should be approved given their cash-flow profile",
+        "Drafting the first version of a follow-up email asking an applicant for a missing bank statement",
+        "Looking up Kapitus's current prepayment penalty schedule for a 12-month product",
+        "Generating the regulatory citations to include in an adverse action notice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Drafting outbound communication is the sweet spot — the judgment is already yours, AI just helps you say it faster. The other three are decision-making, product-fact lookup, and regulatory citation, all of which the model will guess at with confidence and frequently get wrong.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "An applicant calls confused about why their offer amount dropped from the pre-qual to the final terms. You know the reason: their bank statements showed more seasonal revenue volatility than the pre-qual assumed. Where does AI fit in this conversation?",
+      "choices": [
+        "Paste the applicant's bank statement into a chatbot and ask it to explain the change to the applicant directly",
+        "Ask the chatbot whether the offer should have been reduced, then relay its answer to the applicant",
+        "Ask the chatbot to help you phrase 'seasonal revenue volatility caused the reduction' in plain, non-technical language you can use on the call",
+        "Skip AI entirely — anything involving an applicant on a live call is off-limits for AI assistance"
+      ],
+      "correctIndex": 2,
+      "explanation": "The decision is already made and the data is already evaluated. AI's role here is translation — turning 'seasonal revenue volatility' into a sentence the applicant will actually understand. Pasting bank statements is a data exposure, asking the chatbot to second-guess the underwriting decision is outside what the tool can do, and avoiding AI entirely is overcorrection.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Which statement best captures the mental model this lesson recommends?",
+      "choices": [
+        "AI is a junior analyst — give it the data and let it recommend a decision you can override",
+        "AI is a search engine — use it to look up Kapitus product terms and regulatory rules",
+        "AI is a drafting assistant, never the decision-maker — you decide what to do, AI helps you say it",
+        "AI is a compliance reviewer — let it check your work for ECOA violations before sending"
+      ],
+      "correctIndex": 2,
+      "explanation": "The drafting-assistant framing keeps the human responsible for every decision and uses AI for the genuinely-helpful surface tasks. The other framings put AI in roles it cannot fill: it does not have current Kapitus product data, it is not a regulator, and treating it as a junior analyst encourages exactly the kind of rubber-stamping this lesson warns against.",
+      "orderIndex": 3
+    }
+  ]
+}

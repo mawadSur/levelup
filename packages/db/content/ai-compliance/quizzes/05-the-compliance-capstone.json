@@ -1,0 +1,41 @@
+{
+  "title": "The Compliance Capstone — Check",
+  "questions": [
+    {
+      "prompt": "In the Riverside Auto Body scenario, the underwriter pasted the Experian report into a free consumer AI tool AND the resulting adverse action letter contained a fabricated factor. Which framing best captures the regulatory picture?",
+      "choices": [
+        "A single GLBA incident — the communication defect is downstream of the data incident and does not warrant separate analysis",
+        "A single Regulation B incident — the GLBA disclosure is incidental because only one applicant was affected",
+        "Two distinct issues — a GLBA NPI disclosure plus a Regulation B / UDAAP communication defect — that must be analyzed and remediated on separate tracks even though they involve the same applicant",
+        "Neither rises to a reportable incident because the applicant has not yet suffered measurable harm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Both option 1 and option 3 are plausibly correct framings. Option 3 is the right answer because the two issues have different remediation paths (corrected adverse action notice and applicant data remediation), different legal analyses (Regulation B accuracy and GLBA disclosure), and different audiences for the threshold analysis. Collapsing them into a single 'data incident' narrative would cause the communication-side remediation to be under-resourced. Option 4 misreads the threshold question: 'measurable harm' is not the test for whether an incident is reportable internally or whether the corrected adverse action notice is owed.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You are drafting the incident memo for the Riverside Auto Body matter and want to use AI to accelerate the work. Which approach best applies the curriculum?",
+      "choices": [
+        "Paste the full Experian report and the original AI-drafted letter into the approved Tier-1 tool to give the model maximum context",
+        "Use the approved Tier-3 tool with scrubbed facts (no NPI, no SSN, no full account numbers) to draft the body, then verify every regulatory citation against the actual rule before circulating",
+        "Avoid using AI for the incident memo because using AI in response to an AI incident is a conflict of interest",
+        "Use a free consumer AI tool because the incident memo is internal and not regulated"
+      ],
+      "correctIndex": 1,
+      "explanation": "Option 2 is the disciplined application of the path. The incident memo is internal text work that AI accelerates well; the regulatory analysis does not depend on the contents of the Experian report, so the scrubbed-facts approach is sufficient. Option 1 over-collects sensitive data into the prompt unnecessarily and increases incident surface for the response itself. Option 3 leaves leverage on the table for no compliance benefit. Option 4 violates the data-tier discipline the entire path has been teaching — even when the content sounds 'internal,' a free consumer tool is Tier-4 only.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "A board member asks why Kapitus does not simply ban all AI use to eliminate the risk surface entirely. Which answer is most defensible from a compliance program perspective?",
+      "choices": [
+        "Agree — banning all AI use is the cleanest path to regulatory comfort and should be recommended at the next board meeting",
+        "A blanket ban is unenforceable in practice (employees can paste into consumer tools from personal devices), pushes use underground without an audit trail, and forgoes the productivity gains that competitors will capture; a tiered policy with training, monitoring, and incident response is both more enforceable and more defensible",
+        "Disagree — AI use is mandated by federal regulators, so a ban would itself be a compliance violation",
+        "Agree — but only ban the use of AI for customer-facing communications while permitting it everywhere else"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both option 1 and option 2 are positions a board member might find appealing. Option 2 is the correct compliance posture: an unenforceable ban moves usage from a controlled environment (approved tools at the right tier, with audit trails, training, and sampling) to an uncontrolled environment (personal devices and consumer tools, with no audit trail). The tiered approach with training and monitoring is both more defensible and more effective. Option 3 misstates the regulatory landscape; option 4 picks an arbitrary boundary that does not align with where the risk actually concentrates.",
+      "orderIndex": 3
+    }
+  ]
+}

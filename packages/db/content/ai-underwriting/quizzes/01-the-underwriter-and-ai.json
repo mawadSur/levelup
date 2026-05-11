@@ -1,0 +1,41 @@
+{
+  "title": "The Underwriter and AI — Check",
+  "questions": [
+    {
+      "prompt": "Which of the following is the most appropriate use of AI on an underwriting file?",
+      "choices": [
+        "Asking the model whether an applicant with a 1.15 DSCR and a recent bankruptcy should be approved",
+        "Asking the model to summarize the capital structure and list visible risks, with no recommendation",
+        "Asking the model to predict the probability of default given the deposit history",
+        "Asking the model to draft your committee recommendation paragraph in your voice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Summarizing structure and listing visible risks is synthesis — the kind of work AI is reliably good at when constrained to restatement. Asking for an approval call, a default prediction, or a recommendation paragraph are all credit decisions the model has no basis to make and that put your judgment downstream of a system that should be downstream of yours.",
+      "orderIndex": 1
+    },
+    {
+      "prompt": "You ask AI to summarize a 40-page applicant file. The output reads as a clean, well-organized one-page picture. It includes a debt service coverage ratio of 1.32 that you do not recall seeing in the source documents. What is the right response?",
+      "choices": [
+        "Use the figure — the model has integrated information across the file that you may have missed",
+        "Cross-check the figure against the source documents before any of it goes near a memo",
+        "Trust the figure if the rest of the summary appears accurate, since accuracy tends to cluster",
+        "Re-prompt the model and use whichever DSCR appears more often across re-runs"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI will produce plausible-looking numbers that do not exist in the source. Trusting a figure because the surrounding summary looks clean is exactly the pattern that puts a fabricated DSCR in front of committee. Verification against source documents — every figure, every time — is non-negotiable. Re-prompting to look for consistency does not help; the model can confabulate consistently.",
+      "orderIndex": 2
+    },
+    {
+      "prompt": "Two underwriters discuss the synthesize-vs-decide rule. Which framing is most aligned with how this path expects you to use AI?",
+      "choices": [
+        "'AI should never touch a credit file because anything it produces is unreliable'",
+        "'AI is a junior analyst whose drafts I review and whose recommendations I weight alongside my own'",
+        "'AI restates and reformats the file; the call is mine, and I never ask it whether to approve'",
+        "'AI gives me a starting point on the recommendation that I then refine based on my judgment'"
+      ],
+      "correctIndex": 2,
+      "explanation": "The first option is too restrictive — AI is legitimately useful for synthesis. The second and fourth options both let the model's framing influence the credit call, which is the exact drift this lesson warns against; even 'starting point' or 'weighted alongside' lets the model shape the recommendation. Only the third option keeps the synthesize-vs-decide line clean.",
+      "orderIndex": 3
+    }
+  ]
+}
