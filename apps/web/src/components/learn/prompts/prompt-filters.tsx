@@ -17,14 +17,7 @@ const CATEGORIES = [
   { value: 'General', label: 'General' },
 ] as const;
 
-const BASE_SCOPES = [
-  { value: 'all', label: 'All' },
-  { value: 'mine', label: 'Mine' },
-  { value: 'org', label: 'Org' },
-  { value: 'library', label: 'Library' },
-] as const;
-
-type BaseScopeValue = (typeof BASE_SCOPES)[number]['value'];
+type BaseScopeValue = 'all' | 'mine' | 'org' | 'library';
 type ScopeValue = BaseScopeValue | 'dept';
 
 interface PromptFiltersProps {

@@ -7,7 +7,7 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import { embed, isStubMode } from '@levelup/llm';
 import type { SearchHit } from '@levelup/types';
 

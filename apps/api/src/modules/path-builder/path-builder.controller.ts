@@ -23,7 +23,7 @@ import {
   type AcceptPathRequestInput,
   type CreatePathRequestInput,
 } from '@levelup/types';
-import { PathBuilderService } from './path-builder.service';
+import type { PathBuilderService } from './path-builder.service';
 
 @Controller('path-builder')
 @UseGuards(RoleGuard)

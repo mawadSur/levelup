@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import { getPlanLimit, getPlanConfig } from '@levelup/billing';
 import { Plan } from '@levelup/db';
 import { enqueueEmail } from '@levelup/queue';

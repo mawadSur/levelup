@@ -3,7 +3,7 @@ import type { IntegrationProvider } from '@levelup/db';
 import { IntegrationStatus, type OrganizationIntegration } from '@levelup/db';
 import type { IntegrationSummary } from '@levelup/types';
 import { decrypt } from '@levelup/integrations-slack';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 
 /**
  * IntegrationsService

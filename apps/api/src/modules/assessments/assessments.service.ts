@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { AssessmentType, AiLevel } from '@levelup/db';
 import type { AssessmentItem, Prisma } from '@levelup/db';

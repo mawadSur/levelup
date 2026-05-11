@@ -14,7 +14,7 @@
  */
 
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma';
+import type { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import {
   enqueueCertPdf,
@@ -36,6 +36,7 @@ import type {
   JobName,
 } from '@levelup/queue';
 import type { DlqListParams, AuditListParams } from '@levelup/types';
+import type { Prisma } from '@levelup/db';
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -284,7 +285,7 @@ export class AdminOpsService {
         action: params.action,
         targetType: params.targetType ?? null,
         targetId: params.targetId ?? null,
-        metadata: params.metadata as import('@levelup/db').Prisma.InputJsonValue,
+        metadata: params.metadata as Prisma.InputJsonValue,
       },
     });
   }

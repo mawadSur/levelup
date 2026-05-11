@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState, useTransition } from 'react';
-import { Flag, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { Flag, Plus, RotateCcw } from 'lucide-react';
 import {
   Badge,
   Button,

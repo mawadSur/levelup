@@ -63,6 +63,7 @@ const VERIFY_BASE = 'https://app.levelup.example/certificates/verify';
 export async function generateCertificatePdf(input: CertificatePdfInput): Promise<Buffer> {
   // Dynamic import so the module loads even when pdfkit is absent
   // (worker resolves it; API tests don't need to produce PDFs directly).
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   type PDFKitDoc = InstanceType<typeof import('pdfkit')>;
 
   let PDFDocument: new (opts: object) => PDFKitDoc;

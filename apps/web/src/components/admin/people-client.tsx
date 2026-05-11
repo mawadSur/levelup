@@ -19,7 +19,6 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@levelup/ui';
-import { cn } from '@/lib/utils';
 import { invitations, departments as deptsApi } from '@/lib/api';
 import type { User } from '@/lib/api/users';
 import type { Invitation } from '@/lib/api/invitations';

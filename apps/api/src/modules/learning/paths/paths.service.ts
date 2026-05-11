@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../prisma';
+import type { PrismaService } from '../../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { CreatePathDto } from './dto/create-path.dto';
 import type { UpdatePathDto } from './dto/update-path.dto';

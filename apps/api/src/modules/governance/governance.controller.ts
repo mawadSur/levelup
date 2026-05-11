@@ -14,7 +14,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { GovernanceService } from './governance.service';
+import type { GovernanceService } from './governance.service';
 import {
   generateReportSchema,
   triggerFeedQuerySchema,

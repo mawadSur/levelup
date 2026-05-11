@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../prisma';
+import type { PrismaService } from '../../prisma';
 import { enqueueEmbedContent } from '@levelup/queue';
 import type { SessionPayload } from '@levelup/auth-client';
 import type { UpsertLessonDto } from './dto/upsert-lesson.dto';

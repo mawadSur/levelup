@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { apiFetch, apiGet, apiPost, apiPatch, apiDelete } from '../client';
+import { apiFetch, apiGet, apiPost, apiDelete } from '../client';
 import { ApiError } from '../errors';
 
 // ---- constants --------------------------------------------------------------

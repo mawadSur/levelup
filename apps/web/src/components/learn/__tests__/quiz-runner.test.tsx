@@ -26,6 +26,7 @@ import { renderWithProviders } from '@/test/render';
 import { QuizRunner } from '../quiz-runner';
 import type { Quiz, QuizAttempt } from '@/lib/api/quizzes';
 import type { QuizAttemptResult } from '@levelup/types';
+import type * as LibApiModule from '@/lib/api';
 
 // ---------------------------------------------------------------------------
 // Mock next/navigation
@@ -75,12 +76,12 @@ vi.mock('@/components/learn/hud/lesson-completion-modal', () => ({
 const mockSubmitAttempt =
   vi.fn<
     (
-      input: Parameters<typeof import('@/lib/api').quizzes.submitAttempt>[0],
+      input: Parameters<(typeof LibApiModule)['quizzes']['submitAttempt']>[0],
     ) => Promise<QuizAttemptResult>
   >();
 
 vi.mock('@/lib/api', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@/lib/api')>();
+  const original = await importOriginal<typeof LibApiModule>();
   return {
     ...original,
     quizzes: {

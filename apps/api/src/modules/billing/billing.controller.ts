@@ -28,8 +28,8 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { PrismaService } from '../prisma';
-import { BillingService } from './billing.service';
+import type { PrismaService } from '../prisma';
+import type { BillingService } from './billing.service';
 import {
   createCheckoutSessionBodySchema,
   type CreateCheckoutSessionBodyDto,

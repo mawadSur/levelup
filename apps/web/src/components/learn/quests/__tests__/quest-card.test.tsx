@@ -17,6 +17,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/render';
 import { QuestCard } from '../quest-card';
+import type * as LevelupUiModule from '@levelup/ui';
 import type { DailyQuestItem } from '@levelup/types';
 
 // ---------------------------------------------------------------------------
@@ -26,7 +27,7 @@ import type { DailyQuestItem } from '@levelup/types';
 const { mockToast } = vi.hoisted(() => ({ mockToast: vi.fn() }));
 
 vi.mock('@levelup/ui', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@levelup/ui')>();
+  const original = await importOriginal<typeof LevelupUiModule>();
   return {
     ...original,
     toast: mockToast,

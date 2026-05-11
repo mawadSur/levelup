@@ -22,7 +22,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { AdminOpsService } from './admin-ops.service';
+import type { AdminOpsService } from './admin-ops.service';
 import { dlqListParamsSchema, auditListParamsSchema } from '@levelup/types';
 import type { DlqListParams, AuditListParams } from '@levelup/types';
 

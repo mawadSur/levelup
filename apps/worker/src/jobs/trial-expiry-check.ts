@@ -19,7 +19,8 @@
 
 import type { Job } from 'bullmq';
 import type { TrialExpiryCheckInput, TrialExpiryCheckOutput } from '@levelup/queue';
-import { prisma, Plan, Prisma } from '@levelup/db';
+import type { Prisma } from '@levelup/db';
+import { prisma, Plan } from '@levelup/db';
 import { logger } from '../logger.js';
 
 /** 7-day grace window after trialEndsAt before auto-archiving. */

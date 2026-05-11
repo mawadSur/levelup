@@ -14,7 +14,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import { PromptsService } from './prompts.service';
+import type { PromptsService } from './prompts.service';
 import { savePromptSchema } from './dto/save-prompt.dto';
 import type { SavePromptDto } from './dto/save-prompt.dto';
 

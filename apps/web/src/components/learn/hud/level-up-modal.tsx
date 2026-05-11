@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { Dialog, DialogContent, DialogTitle, Button } from '@levelup/ui';
 import { Sparkles } from 'lucide-react';
 import { cn } from '@levelup/ui';
