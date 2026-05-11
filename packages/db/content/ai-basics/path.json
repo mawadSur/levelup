@@ -4,6 +4,9 @@
   "description": "What AI is, what it can and cannot do, and how to use it safely and effectively at work.",
   "targetRole": null,
   "targetLevel": "BEGINNER",
+  "tier": "BEGINNER",
+  "isCore": true,
+  "prerequisiteSlugs": [],
   "isPublished": true,
   "orderIndex": 0
 }

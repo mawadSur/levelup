@@ -5,6 +5,32 @@ import type { CreatePathDto } from './dto/create-path.dto';
 import type { UpdatePathDto } from './dto/update-path.dto';
 import type { AssignPathDto } from './dto/assign-path.dto';
 import type { SaveBulkDto } from './dto/save-bulk.dto';
+import type { AiLevel } from '@levelup/db';
+
+// The curriculum map renders paths in named tiers. AiLevel values map to
+// learner-facing labels so the frontend doesn't need to know about the enum.
+const TIER_META: Record<AiLevel, { label: string; tagline: string; order: number }> = {
+  BEGINNER: {
+    label: 'Apprentice',
+    tagline: 'Start here. Get safe. Get oriented.',
+    order: 0,
+  },
+  PRACTITIONER: {
+    label: 'Practitioner',
+    tagline: 'Apply AI to your daily Kapitus work.',
+    order: 1,
+  },
+  POWER_USER: {
+    label: 'Specialist',
+    tagline: 'Repeatable patterns, deeper technique.',
+    order: 2,
+  },
+  CHAMPION: {
+    label: 'Hero',
+    tagline: 'Lead AI culture for your team.',
+    order: 3,
+  },
+};
 
 @Injectable()
 export class PathsService {
@@ -47,6 +73,117 @@ export class PathsService {
       lessonCount: p._count.lessons,
       isAssigned: p.assignments.length > 0,
     }));
+  }
+
+  /**
+   * Curriculum map — paths grouped by tier with the user's progress overlay.
+   *
+   * Returns the data the /learn/curriculum page needs to render the full
+   * Kapitus academy: tiers as columns, paths as cards within each tier,
+   * prerequisite slugs encoded on each card so the client can draw locks +
+   * arrows.
+   */
+  async getCurriculumMap(user: SessionPayload) {
+    const paths = await this.prisma.learningPath.findMany({
+      where: {
+        OR: [{ organizationId: user.organizationId }, { organizationId: null }],
+        isPublished: true,
+      },
+      orderBy: [{ tier: 'asc' }, { orderIndex: 'asc' }, { createdAt: 'asc' }],
+      include: {
+        _count: { select: { lessons: true } },
+        lessons: { select: { id: true } },
+        assignments: { where: { userId: user.userId }, select: { id: true } },
+      },
+    });
+
+    // Fetch the user's lesson completions in one query so we can compute
+    // path-level completionRate without N+1.
+    const allLessonIds = paths.flatMap((p) => p.lessons.map((l) => l.id));
+    const progress = allLessonIds.length
+      ? await this.prisma.userProgress.findMany({
+          where: { userId: user.userId, lessonId: { in: allLessonIds } },
+          select: { lessonId: true, status: true },
+        })
+      : [];
+    const completedLessonIds = new Set(
+      progress.filter((p) => p.status === 'COMPLETED').map((p) => p.lessonId),
+    );
+
+    // Build a slug → completionRate map (used to compute prerequisite unlocks).
+    const completionBySlug = new Map<string, number>();
+    for (const p of paths) {
+      const total = p._count.lessons;
+      const done = p.lessons.filter((l) => completedLessonIds.has(l.id)).length;
+      completionBySlug.set(p.slug, total === 0 ? 0 : done / total);
+    }
+
+    // Second pass: build the card shape including unlock status.
+    const cards = paths.map((p) => {
+      const total = p._count.lessons;
+      const done = p.lessons.filter((l) => completedLessonIds.has(l.id)).length;
+      const completionRate = total === 0 ? 0 : done / total;
+      const prereqs = (p.prerequisiteSlugs as string[]) ?? [];
+      const blockingPrereqs = prereqs.filter((slug) => (completionBySlug.get(slug) ?? 0) < 1);
+      return {
+        id: p.id,
+        slug: p.slug,
+        title: p.title,
+        description: p.description,
+        tier: p.tier,
+        isCore: p.isCore,
+        prerequisiteSlugs: prereqs,
+        blockingPrereqs,
+        isUnlocked: blockingPrereqs.length === 0,
+        lessonCount: total,
+        completedLessons: done,
+        completionRate,
+        isComplete: total > 0 && completionRate === 1,
+        isAssigned: p.assignments.length > 0,
+        orderIndex: p.orderIndex,
+      };
+    });
+
+    // Group by tier in display order.
+    const byTier = new Map<AiLevel, typeof cards>();
+    for (const card of cards) {
+      const list = byTier.get(card.tier) ?? [];
+      list.push(card);
+      byTier.set(card.tier, list);
+    }
+
+    const tiers = Object.entries(TIER_META)
+      .sort(([, a], [, b]) => a.order - b.order)
+      .map(([key, meta]) => ({
+        key: key as AiLevel,
+        label: meta.label,
+        tagline: meta.tagline,
+        paths: byTier.get(key as AiLevel) ?? [],
+      }));
+
+    // Compute the user's effective tier from completed core paths. A user who
+    // has finished all CORE paths in a tier graduates to the next tier.
+    const completedSlugs = new Set(cards.filter((c) => c.isComplete).map((c) => c.slug));
+    const tierOrder: AiLevel[] = ['BEGINNER', 'PRACTITIONER', 'POWER_USER', 'CHAMPION'];
+    let userTier: AiLevel = 'BEGINNER';
+    for (const t of tierOrder) {
+      const coreInTier = cards.filter((c) => c.tier === t && c.isCore);
+      const allCoreDone =
+        coreInTier.length > 0 && coreInTier.every((c) => completedSlugs.has(c.slug));
+      if (allCoreDone) {
+        const next = tierOrder[tierOrder.indexOf(t) + 1];
+        if (next) userTier = next;
+      }
+    }
+
+    return {
+      user: {
+        id: user.userId,
+        tierKey: userTier,
+        tierLabel: TIER_META[userTier].label,
+      },
+      tiers,
+    };
   }
 
   /** Single path with lessons (ordered) — no quiz internals */

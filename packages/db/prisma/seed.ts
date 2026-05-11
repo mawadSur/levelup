@@ -26,6 +26,10 @@ type SeedPath = {
   description: string;
   targetRole: Role | null;
   targetLevel: AiLevel;
+  tier: AiLevel;
+  isCore: boolean;
+  prerequisiteSlugs: string[];
+  orderIndex: number;
   lessons: SeedLesson[];
 };
 
@@ -90,6 +94,10 @@ function loadPathFromContent(slug: string): SeedPath {
     description: string;
     targetRole: string | null;
     targetLevel: string;
+    tier?: string;
+    isCore?: boolean;
+    prerequisiteSlugs?: string[];
+    orderIndex?: number;
   };
 
   const lessonFiles = fs
@@ -133,6 +141,10 @@ function loadPathFromContent(slug: string): SeedPath {
     description: meta.description,
     targetRole: meta.targetRole as Role | null,
     targetLevel: meta.targetLevel as AiLevel,
+    tier: (meta.tier ?? meta.targetLevel) as AiLevel,
+    isCore: meta.isCore ?? false,
+    prerequisiteSlugs: meta.prerequisiteSlugs ?? [],
+    orderIndex: meta.orderIndex ?? 99,
     lessons,
   };
 }
@@ -144,6 +156,10 @@ const PATHS: SeedPath[] = [
     description: 'Foundations every employee needs to use AI safely and effectively.',
     targetRole: null,
     targetLevel: AiLevel.BEGINNER,
+    tier: AiLevel.BEGINNER,
+    isCore: true,
+    prerequisiteSlugs: [],
+    orderIndex: 0,
     lessons: [
       {
         title: 'What is generative AI?',
@@ -233,6 +249,10 @@ const PATHS: SeedPath[] = [
     description: 'Use AI to personalize outreach, qualify leads, and shorten the sales cycle.',
     targetRole: Role.EMPLOYEE,
     targetLevel: AiLevel.PRACTITIONER,
+    tier: AiLevel.PRACTITIONER,
+    isCore: false,
+    prerequisiteSlugs: ['ai-basics', 'kapitus-foundations'],
+    orderIndex: 14,
     lessons: [
       {
         title: 'Personalized outreach at scale',
@@ -306,6 +326,10 @@ const PATHS: SeedPath[] = [
     description: 'Lead a team that adopts AI safely and measurably.',
     targetRole: Role.MANAGER,
     targetLevel: AiLevel.POWER_USER,
+    tier: AiLevel.POWER_USER,
+    isCore: false,
+    prerequisiteSlugs: ['ai-basics', 'kapitus-foundations'],
+    orderIndex: 15,
     lessons: [
       {
         title: 'Setting an AI policy',
@@ -484,7 +508,15 @@ async function main() {
       where: {
         organizationId_slug: { organizationId: org.id, slug: path.slug },
       },
-      update: { title: path.title, description: path.description, isPublished: true },
+      update: {
+        title: path.title,
+        description: path.description,
+        isPublished: true,
+        tier: path.tier,
+        isCore: path.isCore,
+        prerequisiteSlugs: path.prerequisiteSlugs,
+        orderIndex: path.orderIndex,
+      },
       create: {
         organizationId: org.id,
         title: path.title,
@@ -492,6 +524,10 @@ async function main() {
         description: path.description,
         targetRole: path.targetRole,
         targetLevel: path.targetLevel,
+        tier: path.tier,
+        isCore: path.isCore,
+        prerequisiteSlugs: path.prerequisiteSlugs,
+        orderIndex: path.orderIndex,
         isPublished: true,
       },
     });

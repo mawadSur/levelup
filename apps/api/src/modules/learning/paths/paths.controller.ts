@@ -24,6 +24,19 @@ export class PathsController {
     return this.pathsService.listPaths(user);
   }
 
+  /**
+   * GET /paths/curriculum-map
+   *
+   * Returns the full path catalog grouped by tier (Apprentice → Practitioner
+   * → Specialist → Hero) with the current user's progress overlay and
+   * prerequisite lock state. Declared before the `:slug` route so Nest
+   * doesn't match "curriculum-map" as a slug.
+   */
+  @Get('curriculum-map')
+  getCurriculumMap(@CurrentUser() user: SessionPayload) {
+    return this.pathsService.getCurriculumMap(user);
+  }
+
   @Get(':slug')
   getPathBySlug(@Param('slug') slug: string, @CurrentUser() user: SessionPayload) {
     return this.pathsService.getPathBySlug(slug, user);

@@ -4,6 +4,9 @@
   "description": "Draft compliant, on-tone applicant and borrower messages with AI: decline letters, payment notices, plain-English rewrites, and complaint responses.",
   "targetRole": "EMPLOYEE",
   "targetLevel": "PRACTITIONER",
+  "tier": "PRACTITIONER",
+  "isCore": false,
+  "prerequisiteSlugs": ["ai-basics", "kapitus-foundations"],
   "isPublished": true,
-  "orderIndex": 13
+  "orderIndex": 10
 }

@@ -15,22 +15,35 @@ import type { PathCardData } from '@/components/learn/path-card';
 import type { MyPathProgress } from '@/lib/api/progress';
 import { DailyQuestPanel } from '@/components/learn/quests/daily-quest-panel';
 import { StreakCallout } from '@/components/learn/quests/streak-callout';
+import { HeroNextStep } from '@/components/learn/hero-next-step';
 import type { DailyQuestItem } from '@levelup/types';
+import type { CurriculumMap } from '@/lib/api/paths';
 
 export const metadata: Metadata = {
   title: 'Learn',
 };
 
 export default async function LearnPage() {
-  const [progressData, meData, allPathsData, assessmentData, gameStateData, questsData] =
-    await Promise.allSettled([
-      progress.getMyProgress(),
-      auth.me(),
-      paths.listPaths({ published: true }),
-      assessments.listMyAssessments(),
-      game.getGameState(),
-      game.getTodayQuests(),
-    ]);
+  const [
+    progressData,
+    meData,
+    allPathsData,
+    assessmentData,
+    gameStateData,
+    questsData,
+    curriculumData,
+  ] = await Promise.allSettled([
+    progress.getMyProgress(),
+    auth.me(),
+    paths.listPaths({ published: true }),
+    assessments.listMyAssessments(),
+    game.getGameState(),
+    game.getTodayQuests(),
+    paths.getCurriculumMap(),
+  ]);
+
+  const curriculum: CurriculumMap | null =
+    curriculumData.status === 'fulfilled' ? curriculumData.value : null;
 
   const myPathProgress: MyPathProgress[] =
     progressData.status === 'fulfilled' ? progressData.value : [];
@@ -92,26 +105,8 @@ export default async function LearnPage() {
 
   return (
     <div className="mx-auto max-w-content space-y-12 px-6 py-10">
-      {/* Baseline assessment banner */}
-      {!hasCompletedAssessment && (
-        <Card data-onboarding="baseline-banner" className="border-signal/40 bg-signal/5">
-          <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1.5">
-              <MonoLabel tone="signal">BASELINE PENDING</MonoLabel>
-              <p className="font-serif text-h2 italic text-paper-100">
-                Get a learning path tailored to you.
-              </p>
-              <p className="text-body-sm text-paper-300">
-                Take the 5-minute baseline assessment to unlock your personalised AI learning
-                journey.
-              </p>
-            </div>
-            <Button asChild variant="primary" className="shrink-0">
-              <Link href="/assessment">Start assessment</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+      {/* The one CTA we want every learner to see first. */}
+      <HeroNextStep curriculum={curriculum} hasCompletedAssessment={hasCompletedAssessment} />
 
       {/* Hero greeting */}
       <header className="animate-mission-in space-y-3">

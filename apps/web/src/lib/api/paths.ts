@@ -124,3 +124,43 @@ export async function getLearners(learningPathId: string): Promise<PathLearner[]
 export async function saveBulk(pathId: string, input: SaveBulkInput): Promise<LearningPath> {
   return apiPost<SaveBulkInput, LearningPath>(`/paths/${pathId}/save-bulk`, input);
 }
+
+// ---------------------------------------------------------------------------
+// Curriculum map (tiered view) — drives /learn/curriculum + <HeroNextStep>
+// ---------------------------------------------------------------------------
+
+export type CurriculumTierKey = 'BEGINNER' | 'PRACTITIONER' | 'POWER_USER' | 'CHAMPION';
+
+export interface CurriculumPathCard {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  tier: CurriculumTierKey;
+  isCore: boolean;
+  prerequisiteSlugs: string[];
+  blockingPrereqs: string[];
+  isUnlocked: boolean;
+  lessonCount: number;
+  completedLessons: number;
+  completionRate: number;
+  isComplete: boolean;
+  isAssigned: boolean;
+  orderIndex: number;
+}
+
+export interface CurriculumTier {
+  key: CurriculumTierKey;
+  label: string;
+  tagline: string;
+  paths: CurriculumPathCard[];
+}
+
+export interface CurriculumMap {
+  user: { id: string; tierKey: CurriculumTierKey; tierLabel: string };
+  tiers: CurriculumTier[];
+}
+
+export async function getCurriculumMap(): Promise<CurriculumMap> {
+  return apiGet<CurriculumMap>('/paths/curriculum-map');
+}

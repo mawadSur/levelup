@@ -252,6 +252,15 @@ model LearningPath {
   description    String?  @db.Text
   targetRole     Role?
   targetLevel    AiLevel
+  // Tier groups paths in the curriculum map. Mirrors targetLevel today but is
+  // kept separate so we can shift the curriculum without rewriting AI-level
+  // recommendations elsewhere.
+  tier           AiLevel  @default(BEGINNER)
+  // Core paths are required for every employee (e.g. AI Basics, Foundations).
+  isCore         Boolean  @default(false)
+  // Slugs of paths that must be completed before this one unlocks.
+  // Stored as JSON string array so the seed + admin UI can edit it cheaply.
+  prerequisiteSlugs Json @default("[]")
   coverImageUrl  String?
   isPublished    Boolean  @default(false)
   orderIndex     Int      @default(0)

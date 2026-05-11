@@ -4,6 +4,9 @@
   "description": "The real techniques: structured outputs, few-shot examples, chain-of-thought reasoning, and the refinement loop. For Kapitus power users who've outgrown the basics.",
   "targetRole": "EMPLOYEE",
   "targetLevel": "POWER_USER",
+  "tier": "POWER_USER",
+  "isCore": false,
+  "prerequisiteSlugs": ["ai-basics", "kapitus-foundations"],
   "isPublished": true,
   "orderIndex": 20
 }
