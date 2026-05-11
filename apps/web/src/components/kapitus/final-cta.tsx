@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { kRoutes } from './routes';
 
 export function KapitusFinalCta() {
   return (
@@ -21,7 +22,7 @@ export function KapitusFinalCta() {
               Schedule A 30-Minute Call
             </Link>
             <Link
-              href="/clients/kapitus/sign-up"
+              href={kRoutes.signUp}
               className="kp-body-sm text-white/80 underline-offset-4 hover:text-white hover:underline"
             >
               Or start the pilot account &rarr;

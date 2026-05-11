@@ -9,7 +9,7 @@ import { TeamFilterPills } from '@/components/learn/team/team-filter-pills';
 import type { TeamProgressEntry } from '@/lib/api/progress';
 
 export const metadata: Metadata = {
-  title: 'Your Team — LevelUp AI Academy',
+  title: 'Your Team',
 };
 
 interface PageProps {

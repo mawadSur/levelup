@@ -11,6 +11,8 @@
  *   appUrl         - Base app URL
  */
 
+import { academyName } from '../../config.js';
+
 export interface CertificateEmailData {
   userName: string;
   pathTitle: string;
@@ -46,7 +48,7 @@ export function renderCertificate(data: CertificateEmailData): RenderedEmail {
       <!-- Header -->
       <tr>
         <td style="background-color:#1E40AF;padding:32px 40px;text-align:center;">
-          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">LevelUp AI Academy</p>
+          <p style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:1px;">${academyName}</p>
         </td>
       </tr>
 
@@ -99,7 +101,7 @@ export function renderCertificate(data: CertificateEmailData): RenderedEmail {
       <tr>
         <td style="padding:20px 40px;border-top:1px solid #E5E7EB;text-align:center;">
           <p style="margin:0;font-size:12px;color:#9CA3AF;">
-            &copy; ${new Date().getFullYear()} LevelUp AI Academy. All rights reserved.
+            &copy; ${new Date().getFullYear()} ${academyName}. All rights reserved.
           </p>
         </td>
       </tr>
@@ -123,7 +125,7 @@ export function renderCertificate(data: CertificateEmailData): RenderedEmail {
     ``,
     `Verification code: ${data.verifyCode}`,
     ``,
-    `-- LevelUp AI Academy`,
+    `-- ${academyName}`,
   ].join('\n');
 
   return { subject, html, text };

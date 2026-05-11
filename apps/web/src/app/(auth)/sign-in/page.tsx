@@ -2,17 +2,23 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MonoLabel } from '@levelup/ui';
 import { SignInForm } from '@/components/auth/sign-in-form';
+import { IS_KAPITUS } from '@/lib/client';
+import { KapitusSignInPanel } from '@/components/kapitus/auth-shell';
 
 export const metadata: Metadata = {
   title: 'Sign in',
 };
 
 interface SignInPageProps {
-  searchParams: Promise<{ redirect?: string }>;
+  searchParams: Promise<{ redirect?: string; email?: string }>;
 }
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
-  const { redirect } = await searchParams;
+  const { redirect, email } = await searchParams;
+
+  if (IS_KAPITUS) {
+    return <KapitusSignInPanel redirect={redirect} initialEmail={email} />;
+  }
 
   return (
     <div className="space-y-10">

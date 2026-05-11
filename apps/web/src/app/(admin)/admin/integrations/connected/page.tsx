@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
 import { Button, Card, CardContent } from '@levelup/ui';
+import { brand } from '@/lib/client';
 
 export const metadata: Metadata = {
   title: 'Integration Connected',
@@ -32,7 +33,7 @@ export default async function IntegrationConnectedPage({ searchParams }: Connect
           <div className="space-y-2">
             <h1 className="text-xl font-semibold text-paper-100">{providerLabel} connected</h1>
             <p className="text-sm text-paper-300">
-              Your workspace is now connected to LevelUp AI Academy.
+              Your workspace is now connected to {brand.name}.
             </p>
           </div>
           <Button asChild>

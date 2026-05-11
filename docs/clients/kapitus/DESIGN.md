@@ -124,24 +124,58 @@ Line heights: 1.1 for display, 1.25 for h1/h2, 1.4 for h3, 1.6 for body, 1.5 for
 
 ## What this means for our existing surfaces
 
-We are **not** redesigning the entire app for Kapitus. The branch is for a Kapitus-specific marketing surface — a dedicated landing page and scoped sign-up/sign-in, while the app underneath stays Mission Brief.
+The branch was originally a Kapitus-only marketing preview at `/clients/kapitus`. It now also supports a **full white-label build** — flip a single env var and the whole app rebrands to "Kapitus AI Academy".
 
-Initial scope (shipped):
+### Modes
 
-1. **`/clients/kapitus`** — marketing landing page (hero on dark band, problem stats, how-it-works, roles, governance mock, pricing with cream accent inner panel, FAQ, final CTA on dark band).
-2. **`<KapitusLayout>`** — scoped layout that swaps tokens and the Manrope font at the route level via the `.kapitus` class wrapper.
-3. **`<KapitusNav>`** + **`<KapitusFooter>`** — Kapitus-style chrome.
-4. **`/clients/kapitus/sign-up`** — co-branded form, industry pre-set to Financial services.
+| Build               | `NEXT_PUBLIC_CLIENT` + `CLIENT` env | What changes                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Default LevelUp     | unset                               | LevelUp marketing at `/`. `/clients/kapitus` still serves the scoped preview. Cert PDFs + emails branded "LevelUp AI Academy".                                                                                                                                                                                                                                                        |
+| Kapitus white-label | `kapitus`                           | Root `/` renders the Kapitus landing. `/pricing` and `/governance` 404. `/sign-in` + `/sign-up` co-brand and apply the `.kapitus` token theme. Admin + learn shells swap the seal (`LU` → `K`) and wordmark. Cert PDFs use purple palette + Kapitus issuer line. Resend `from` becomes `Kapitus AI Academy <noreply@…>` and every email template's footer reads "Kapitus AI Academy". |
 
-Phase 2 (when client buys in deeper):
+### Implementation seam
 
-- `/clients/kapitus/sign-in` co-branded.
-- Kapitus-themed certificate template (the cert PDF generator can branch on `org.industry === 'FINANCIAL_SERVICES_KAPITUS'`).
+- **Web:** `apps/web/src/lib/client.ts` exports `IS_KAPITUS`, `CLIENT`, and a typed `brand` object (`name`, `shortName`, `description`, meta-title default/template, `industryDefault`, `themeClass`). Every consumer reads from there — never hardcode the client.
+- **Worker:** `apps/worker/src/config.ts` exports `client`, `academyName`, and a Kapitus-aware `emailFrom`. Email templates import `academyName` from there.
+- **Cert PDF:** `apps/worker/src/cert/pdf.ts` reads `process.env.CLIENT` once at module load — purple palette + Kapitus issuer when set, blue/gold + LevelUp otherwise.
+
+### Routes that change shape under `CLIENT=kapitus`
+
+| Route                | LevelUp build              | Kapitus build                                                                                   |
+| -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
+| `/`                  | Editorial marketing (dark) | Kapitus landing (light + dark hero/CTA bands)                                                   |
+| `/pricing`           | Per-seat pricing page      | `redirect('/#pricing')`                                                                         |
+| `/governance`        | AI governance page         | `notFound()`                                                                                    |
+| `/sign-in`           | Mission Brief auth panel   | `<KapitusSignInPanel />` (purple, sentence case)                                                |
+| `/sign-up`           | Mission Brief auth panel   | `<KapitusSignUpPanel />` — industry pre-set to Financial services                               |
+| `/admin/*`           | Dark editorial shell       | Same shell + wordmark swap. (Full re-skin to light tokens is a follow-up if/when client signs.) |
+| `/learn/*`           | Dark editorial shell       | Same shell + wordmark swap.                                                                     |
+| `/clients/kapitus/*` | Marketing-only preview     | Still serves Kapitus content (canonical URLs live at root)                                      |
+
+## Deployment
+
+Vercel project for `ai.kapitus.com` (or whatever the negotiated domain is):
+
+1. Branch: `client/kapitus`.
+2. Required env on Vercel (Production + Preview):
+   - `NEXT_PUBLIC_CLIENT=kapitus`
+   - `CLIENT=kapitus` (read by worker/API for cert PDFs + emails)
+3. All other env vars stay the same as the LevelUp deployment.
+
+The default LevelUp Vercel project doesn't set either var, so it keeps its existing behavior.
+
+### Preview locally
+
+```bash
+NEXT_PUBLIC_CLIENT=kapitus CLIENT=kapitus pnpm --filter @levelup/web dev
+```
+
+Visit `http://localhost:3000` — root marketing should be the Kapitus landing. `/pricing` should 302 to `/#pricing`. `/sign-up` should render the purple panel.
 
 ## What stays unchanged
 
-- All Mission Brief design tokens and primitives in `packages/ui` — untouched.
-- Existing routes (`/`, `/pricing`, `/governance`, `/admin`, `/learn`, etc.) — untouched.
+- All Mission Brief design tokens and primitives in `packages/ui` — untouched. The Kapitus token sheet is class-scoped under `.kapitus` and only activates when the body class is applied.
+- LevelUp build is fully backward-compatible — leave `NEXT_PUBLIC_CLIENT` unset and you get the original product.
 - Auth, billing, governance, content — untouched.
 
 ## Implementation reference

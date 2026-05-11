@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Check } from 'lucide-react';
+import { kRoutes } from './routes';
 
 const INCLUDED = [
   'Governance dashboard included',
@@ -47,7 +48,7 @@ export function KapitusPricing() {
                   Talk To A Specialist
                 </Link>
                 <Link
-                  href="/clients/kapitus/sign-up"
+                  href={kRoutes.signUp}
                   className="inline-flex items-center justify-center rounded-kp-sm border border-kp-rule-strong bg-kp-paper px-6 py-3 text-base font-medium text-kp-ink transition-colors duration-200 ease-kp-out hover:bg-kp-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
                 >
                   Start The 30-Day Pilot

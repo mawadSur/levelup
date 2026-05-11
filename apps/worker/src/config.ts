@@ -27,11 +27,26 @@ export const isEmailStubMode: boolean =
 export const resendApiKey: string = rawResendKey;
 
 /** The "from" address used for all outgoing emails. */
-export const emailFrom: string =
-  process.env['EMAIL_FROM'] ?? 'LevelUp AI Academy <noreply@levelupai.academy>';
+const defaultEmailFrom =
+  (process.env['CLIENT'] ?? '').toLowerCase() === 'kapitus'
+    ? 'Kapitus AI Academy <noreply@levelupai.academy>'
+    : 'LevelUp AI Academy <noreply@levelupai.academy>';
+export const emailFrom: string = process.env['EMAIL_FROM'] ?? defaultEmailFrom;
 
 /** Public app URL used to build links in email bodies. */
 export const appUrl: string = process.env['APP_URL'] ?? 'http://localhost:3000';
+
+// ---------------------------------------------------------------------------
+// White-label client (drives email branding + cert PDF look)
+// ---------------------------------------------------------------------------
+
+/** Active client key. Lowercase. `kapitus` for the Kapitus build, empty otherwise. */
+export const client: 'kapitus' | '' =
+  (process.env['CLIENT'] ?? '').toLowerCase() === 'kapitus' ? 'kapitus' : '';
+
+/** Display name used in subject lines, footers, and the wordmark band. */
+export const academyName: string =
+  client === 'kapitus' ? 'Kapitus AI Academy' : 'LevelUp AI Academy';
 
 // ---------------------------------------------------------------------------
 // Worker concurrency (env-overridable)

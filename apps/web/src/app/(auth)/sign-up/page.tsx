@@ -2,12 +2,18 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MonoLabel } from '@levelup/ui';
 import { SignUpForm } from '@/components/auth/sign-up-form';
+import { IS_KAPITUS } from '@/lib/client';
+import { KapitusSignUpPanel } from '@/components/kapitus/auth-shell';
 
 export const metadata: Metadata = {
   title: 'Create your organization',
 };
 
 export default function SignUpPage() {
+  if (IS_KAPITUS) {
+    return <KapitusSignUpPanel />;
+  }
+
   return (
     <div className="space-y-10">
       <div>

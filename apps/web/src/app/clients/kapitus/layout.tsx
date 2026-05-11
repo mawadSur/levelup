@@ -13,16 +13,14 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: 'LevelUp for Kapitus — AI training with guardrails',
-    template: '%s · LevelUp for Kapitus',
+    default: 'Kapitus AI Academy — AI training with guardrails',
+    template: '%s · Kapitus AI Academy',
   },
   description:
     'AI training that protects loan applicants’ data. GLBA-aligned, audit-ready, tuned for lenders, underwriters, and operations.',
 };
 
-export default function KapitusLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function KapitusLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div
       className={`kapitus ${manrope.variable} flex min-h-screen flex-col bg-kp-paper text-kp-ink`}

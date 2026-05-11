@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createOrganizationSchema } from '@levelup/types';
 import { apiPost } from '@/lib/api';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
+import { kRoutes } from './routes';
 
 interface CreateOrgResponse {
   id: string;
@@ -84,18 +85,17 @@ export function KapitusSignUpForm() {
         }
       }
 
-      router.push(
-        `/clients/kapitus/sign-in${data.signInUrl.includes('?') ? data.signInUrl.slice(data.signInUrl.indexOf('?')) : ''}`,
-      );
+      const qs = data.signInUrl.includes('?')
+        ? data.signInUrl.slice(data.signInUrl.indexOf('?'))
+        : '';
+      router.push(`${kRoutes.signIn}${qs}`);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong';
       if (message.includes('404')) {
         if (typeof window !== 'undefined') {
           window.localStorage.setItem('levelup_org_hint', orgName);
         }
-        router.push(
-          `/clients/kapitus/sign-in?redirect=%2Fadmin&email=${encodeURIComponent(adminEmail)}`,
-        );
+        router.push(`${kRoutes.signIn}?redirect=%2Fadmin&email=${encodeURIComponent(adminEmail)}`);
       } else {
         setApiError(message);
       }

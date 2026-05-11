@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useReducedMotion } from '@/lib/motion/use-reduced-motion';
 import { useOnboarding } from './onboarding-context';
 import { StepCard } from './step-card';
+import { brand } from '@/lib/client';
 
 // ---------------------------------------------------------------------------
 // Step config
@@ -22,7 +23,7 @@ const STEPS: StepConfig[] = [
   {
     id: 0,
     target: '[data-onboarding="baseline-banner"], main',
-    copy: 'Welcome to LevelUp. Take a 5-minute baseline so we can recommend what matters for your role.',
+    copy: `Welcome to ${brand.shortName}. Take a 5-minute baseline so we can recommend what matters for your role.`,
     primaryCta: { label: 'Start assessment', href: '/assessment' },
   },
   {

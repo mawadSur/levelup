@@ -23,6 +23,10 @@ import { OnboardingTour } from './onboarding/onboarding-tour';
 import { GlobalSearchDialog } from './search/global-search-dialog';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider, usePostHog } from '@/lib/analytics/posthog-provider';
+import { brand, IS_KAPITUS } from '@/lib/client';
+
+const SEAL = IS_KAPITUS ? 'K' : 'LU';
+const WORDMARK = IS_KAPITUS ? brand.shortName : 'LevelUp';
 
 /** Fires `learn_app_opened` once on mount. */
 function LearnAppOpenedTracker() {
@@ -111,17 +115,23 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                 <div className="mx-auto flex h-14 max-w-content items-center justify-between gap-4 px-4 sm:px-6">
                   <Link
                     href="/learn"
-                    aria-label="LevelUp AI Academy home"
+                    aria-label={`${brand.name} home`}
                     className="flex items-center gap-2"
                   >
                     <span
                       aria-hidden="true"
                       className="flex h-7 w-7 items-center justify-center rounded-sm bg-signal font-mono text-mono-sm font-semibold text-ink-900"
                     >
-                      LU
+                      {SEAL}
                     </span>
-                    <span className="hidden font-serif text-h3 italic text-paper-100 sm:inline">
-                      LevelUp
+                    <span
+                      className={
+                        IS_KAPITUS
+                          ? 'hidden text-h3 font-semibold text-paper-100 sm:inline'
+                          : 'hidden font-serif text-h3 italic text-paper-100 sm:inline'
+                      }
+                    >
+                      {WORDMARK}
                     </span>
                   </Link>
 

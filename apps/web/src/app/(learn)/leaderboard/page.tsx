@@ -6,7 +6,7 @@ import { ScopeToggle } from '@/components/learn/leaderboard/scope-toggle';
 import type { LeaderboardPeriod, LeaderboardScope } from '@levelup/types';
 
 export const metadata: Metadata = {
-  title: 'Leaderboard — LevelUp AI Academy',
+  title: 'Leaderboard',
 };
 
 // ---------------------------------------------------------------------------

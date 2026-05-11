@@ -1,35 +1,37 @@
 import Link from 'next/link';
+import { kRoutes } from './routes';
+import { brand } from '@/lib/client';
 
 const FOOTER_COLUMNS = [
   {
     heading: 'Product',
     links: [
-      { label: 'Overview', href: '/clients/kapitus' },
-      { label: 'Pricing', href: '/clients/kapitus#pricing' },
-      { label: 'Sign in', href: '/clients/kapitus/sign-in' },
+      { label: 'Overview', href: kRoutes.home },
+      { label: 'Pricing', href: kRoutes.pricing },
+      { label: 'Sign in', href: kRoutes.signIn },
     ],
   },
   {
     heading: 'Solutions',
     links: [
-      { label: 'For lenders', href: '/clients/kapitus#roles' },
-      { label: 'For underwriters', href: '/clients/kapitus#roles' },
-      { label: 'For compliance', href: '/clients/kapitus#roles' },
-      { label: 'For operations', href: '/clients/kapitus#roles' },
+      { label: 'For lenders', href: `${kRoutes.home}#roles` },
+      { label: 'For underwriters', href: `${kRoutes.home}#roles` },
+      { label: 'For compliance', href: `${kRoutes.home}#roles` },
+      { label: 'For operations', href: `${kRoutes.home}#roles` },
     ],
   },
   {
     heading: 'Resources',
     links: [
-      { label: 'Governance dashboard', href: '/clients/kapitus#evidence' },
-      { label: 'How it works', href: '/clients/kapitus#how-it-works' },
-      { label: 'FAQ', href: '/clients/kapitus#faq' },
+      { label: 'Governance dashboard', href: kRoutes.evidence },
+      { label: 'How it works', href: kRoutes.howItWorks },
+      { label: 'FAQ', href: `${kRoutes.home}#faq` },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About', href: '/clients/kapitus#hero' },
+      { label: 'About', href: kRoutes.hero },
       {
         label: 'Contact',
         href: 'mailto:hello@ailevel.app?subject=Kapitus%20engagement',
@@ -55,11 +57,11 @@ export function KapitusFooter() {
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Link
-              href="/clients/kapitus"
-              aria-label="LevelUp home"
+              href={kRoutes.home}
+              aria-label={`${brand.shortName} home`}
               className="kp-h2 inline-block text-kp-ink"
             >
-              LevelUp
+              {brand.shortName}
             </Link>
             <p className="kp-body-sm mt-4 max-w-xs text-kp-ink-soft">
               An AI training partner for Kapitus.
@@ -87,11 +89,9 @@ export function KapitusFooter() {
 
         <div className="mt-14 flex flex-col items-start gap-3 border-t border-kp-rule pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="kp-body-sm text-kp-ink-mute">
-            &copy; {year} LevelUp AI Academy. All rights reserved.
+            &copy; {year} {brand.name}. All rights reserved.
           </p>
-          <p className="kp-body-sm text-kp-ink-mute">
-            Built with care for finance teams.
-          </p>
+          <p className="kp-body-sm text-kp-ink-mute">Built with care for finance teams.</p>
         </div>
       </div>
     </footer>

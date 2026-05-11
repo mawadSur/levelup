@@ -7,9 +7,10 @@ import { PromptCard } from '@/components/learn/prompts/prompt-card';
 import { NewPromptDialog } from '@/components/learn/prompts/new-prompt-dialog';
 import { MonoLabel, Skeleton } from '@levelup/ui';
 import type { Prompt } from '@/lib/api/prompts';
+import { brand } from '@/lib/client';
 
 export const metadata: Metadata = {
-  title: 'Prompts — LevelUp AI Academy',
+  title: 'Prompts',
 };
 
 interface PageProps {
@@ -151,7 +152,7 @@ export default async function PromptsPage({ searchParams }: PageProps) {
           <MonoLabel>PROMPT LIBRARY</MonoLabel>
           <h1 className="font-serif text-display-md italic text-paper-100">Prompts</h1>
           <p className="max-w-reading text-body text-paper-300">
-            Reusable prompts that work — yours, your team&apos;s, and the LevelUp library.
+            Reusable prompts that work — yours, your team&apos;s, and the {brand.shortName} library.
           </p>
         </div>
         <div className="shrink-0">

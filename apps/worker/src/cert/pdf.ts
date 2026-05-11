@@ -34,8 +34,11 @@ export interface CertificateData {
 const PAGE_WIDTH = 792; // US Letter landscape width in pts
 const PAGE_HEIGHT = 612; // US Letter landscape height in pts
 
-const BRAND_BLUE = '#1E40AF';
-const BRAND_GOLD = '#D97706';
+const IS_KAPITUS = (process.env.CLIENT ?? '').toLowerCase() === 'kapitus';
+const ACADEMY_NAME = IS_KAPITUS ? 'Kapitus AI Academy' : 'LevelUp AI Academy';
+
+const BRAND_PRIMARY = IS_KAPITUS ? '#9100E0' : '#1E40AF';
+const BRAND_ACCENT = IS_KAPITUS ? '#AD00FF' : '#D97706';
 const DARK_TEXT = '#111827';
 const MUTED_TEXT = '#6B7280';
 
@@ -57,7 +60,7 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
       margin: 0,
       info: {
         Title: `Certificate — ${data.learningPathTitle}`,
-        Author: 'LevelUp AI Academy',
+        Author: ACADEMY_NAME,
         Subject: `Completion certificate for ${data.userName}`,
         CreationDate: data.issuedAt,
       },
@@ -74,17 +77,17 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
     doc.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT).fill('#FFFFFF');
 
     // Left accent bar
-    doc.rect(0, 0, 12, PAGE_HEIGHT).fill(BRAND_BLUE);
+    doc.rect(0, 0, 12, PAGE_HEIGHT).fill(BRAND_PRIMARY);
 
     // Top gold rule (below accent bar)
-    doc.rect(28, 28, PAGE_WIDTH - 56, 3).fill(BRAND_GOLD);
+    doc.rect(28, 28, PAGE_WIDTH - 56, 3).fill(BRAND_ACCENT);
 
     // Bottom gold rule
-    doc.rect(28, PAGE_HEIGHT - 31, PAGE_WIDTH - 56, 3).fill(BRAND_GOLD);
+    doc.rect(28, PAGE_HEIGHT - 31, PAGE_WIDTH - 56, 3).fill(BRAND_ACCENT);
 
     // Decorative corner boxes (top-right, bottom-left)
-    doc.rect(PAGE_WIDTH - 44, 28, 16, 16).fill(BRAND_BLUE);
-    doc.rect(28, PAGE_HEIGHT - 44, 16, 16).fill(BRAND_BLUE);
+    doc.rect(PAGE_WIDTH - 44, 28, 16, 16).fill(BRAND_PRIMARY);
+    doc.rect(28, PAGE_HEIGHT - 44, 16, 16).fill(BRAND_PRIMARY);
 
     // -----------------------------------------------------------------------
     // Academy name / header
@@ -92,8 +95,8 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
     doc
       .font('Helvetica-Bold')
       .fontSize(11)
-      .fillColor(BRAND_BLUE)
-      .text('LEVELUP AI ACADEMY', 0, 55, {
+      .fillColor(BRAND_PRIMARY)
+      .text(ACADEMY_NAME.toUpperCase(), 0, 55, {
         align: 'center',
         width: PAGE_WIDTH,
         characterSpacing: 3,
@@ -116,7 +119,7 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
       .moveTo(PAGE_WIDTH / 2 - 120, 148)
       .lineTo(PAGE_WIDTH / 2 + 120, 148)
       .lineWidth(1)
-      .strokeColor(BRAND_GOLD)
+      .strokeColor(BRAND_ACCENT)
       .stroke();
 
     // -----------------------------------------------------------------------
@@ -134,7 +137,7 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
     // -----------------------------------------------------------------------
     // Recipient name
     // -----------------------------------------------------------------------
-    doc.font('Helvetica-Bold').fontSize(28).fillColor(BRAND_BLUE).text(data.userName, 0, 193, {
+    doc.font('Helvetica-Bold').fontSize(28).fillColor(BRAND_PRIMARY).text(data.userName, 0, 193, {
       align: 'center',
       width: PAGE_WIDTH,
     });
@@ -201,7 +204,7 @@ export function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
       .fontSize(8)
       .fillColor(MUTED_TEXT)
       .text(
-        `Verification code: ${data.verifyCode}  |  Issued by LevelUp AI Academy`,
+        `Verification code: ${data.verifyCode}  |  Issued by ${ACADEMY_NAME}`,
         0,
         PAGE_HEIGHT - 25,
         {

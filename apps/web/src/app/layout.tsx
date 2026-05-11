@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
-import { Instrument_Serif } from 'next/font/google';
+import { Instrument_Serif, Manrope } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Toaster } from '@levelup/ui';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { GrainOverlay } from '@/components/atmosphere/grain-overlay';
+import { IS_KAPITUS, brand } from '@/lib/client';
 import './globals.css';
+import '@levelup/ui/styles/kapitus';
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -15,13 +17,19 @@ const instrumentSerif = Instrument_Serif({
   display: 'swap',
 });
 
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: {
-    default: 'LevelUp AI Academy — Train every operator',
-    template: '%s · LevelUp AI Academy',
+    default: brand.metaTitleDefault,
+    template: brand.metaTitleTemplate,
   },
-  description:
-    'A role-based AI curriculum, an in-context coach, and a reporting instrument your CIO will actually open. Pilot in thirty days. Prove the ROI by week three.',
+  description: brand.description,
   icons: {
     icon: '/favicon.svg',
   },
@@ -32,17 +40,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const htmlClass = `${instrumentSerif.variable} ${GeistSans.variable} ${GeistMono.variable} ${manrope.variable}`;
+  const bodyClass = IS_KAPITUS
+    ? 'kapitus bg-kp-paper text-kp-ink antialiased'
+    : 'bg-ink-900 text-paper-100 font-sans antialiased';
+  const bodyStyle = IS_KAPITUS
+    ? { fontFamily: 'var(--font-manrope), system-ui, sans-serif' }
+    : undefined;
+
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${GeistSans.variable} ${GeistMono.variable}`}
-    >
-      <body className="bg-ink-900 text-paper-100 font-sans antialiased">
+    <html lang="en" suppressHydrationWarning className={htmlClass}>
+      <body className={bodyClass} data-theme={IS_KAPITUS ? 'kapitus' : undefined} style={bodyStyle}>
         <ThemeProvider>
           {children}
           <Toaster />
-          <GrainOverlay />
+          {IS_KAPITUS ? null : <GrainOverlay />}
         </ThemeProvider>
       </body>
     </html>

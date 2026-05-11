@@ -5,6 +5,7 @@ import { MonoLabel } from '@levelup/ui';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { Footer } from '@/components/marketing/footer';
 import { env } from '@/lib/env';
+import { brand } from '@/lib/client';
 
 interface CertificateData {
   holderName: string;
@@ -71,7 +72,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: `/certificates/verify/${hash}/opengraph-image`,
             width: 1200,
             height: 630,
-            alt: `${holderName} — ${pathTitle} | LevelUp AI Academy`,
+            alt: `${holderName} — ${pathTitle} | ${brand.name}`,
           },
         ],
       },
@@ -84,7 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: 'Certificate Verification | LevelUp AI Academy',
+    title: `Certificate Verification | ${brand.name}`,
     description: 'Verified certificate of completion.',
   };
 }

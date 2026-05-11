@@ -5,7 +5,7 @@ import { PlaybookSection } from '@/components/learn/playbooks/playbook-section';
 import type { LearningPath } from '@/lib/api/paths';
 
 export const metadata: Metadata = {
-  title: 'Playbooks — LevelUp AI Academy',
+  title: 'Playbooks',
 };
 
 // ---------------------------------------------------------------------------
