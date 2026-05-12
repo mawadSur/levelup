@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, RotateCcw } from 'lucide-react';
 import { Button, Card, CardContent } from '@levelup/ui';
-import { assessments, ApiError } from '@/lib/api';
+import { ApiError } from '@/lib/api';
+import { ssrGet } from '@/lib/api/server-fetch';
 import type { MyAssessment } from '@/lib/api/assessments';
 import { LevelBadge } from '@/components/assessment/level-badge';
 
@@ -14,12 +15,20 @@ export const metadata: Metadata = {
 // component that does its best to surface a "you've taken this before" UI when
 // `listMyAssessments` succeeds. If the request fails (e.g. unauthenticated
 // in a preview), we fall back to the intro screen.
+function assessmentDate(a: MyAssessment): string | undefined {
+  return a.completedAt ?? a.createdAt;
+}
+
 async function fetchRecentBaseline(): Promise<MyAssessment | null> {
   try {
-    const all = await assessments.listMyAssessments();
+    const all = await ssrGet<MyAssessment[]>('/assessments/me');
     const baseline = all
       .filter((a) => a.type === 'BASELINE')
-      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime())[0];
+      .sort((a, b) => {
+        const aTs = new Date(assessmentDate(a) ?? 0).getTime();
+        const bTs = new Date(assessmentDate(b) ?? 0).getTime();
+        return bTs - aTs;
+      })[0];
     return baseline ?? null;
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) {
@@ -29,9 +38,12 @@ async function fetchRecentBaseline(): Promise<MyAssessment | null> {
   }
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | undefined): string {
+  if (!iso) return '—';
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -75,7 +87,7 @@ export default async function AssessmentLandingPage() {
             You&apos;re all set
           </p>
           <h1 className="mb-4 text-2xl font-bold tracking-tight text-paper-100">
-            You took the baseline on {formatDate(recent.completedAt)}
+            You took the baseline on {formatDate(assessmentDate(recent))}
           </h1>
 
           <div className="mb-6 flex justify-center">

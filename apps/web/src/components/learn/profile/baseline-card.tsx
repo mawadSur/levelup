@@ -34,8 +34,11 @@ function levelVariant(level: string): 'default' | 'secondary' | 'outline' {
   return 'outline';
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-GB', {
+function formatDate(iso: string | undefined): string {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -74,7 +77,8 @@ export function BaselineCard({ assessments, loadFailed = false }: BaselineCardPr
                 {levelLabel(baseline.recommendedLevel)}
               </Badge>
               <span className="text-sm text-paper-300">
-                Score: {baseline.score}% &middot; Taken {formatDate(baseline.completedAt)}
+                Score: {baseline.score}% &middot; Taken{' '}
+                {formatDate(baseline.completedAt ?? baseline.createdAt)}
               </span>
             </div>
             <Button asChild variant="outline" size="sm">

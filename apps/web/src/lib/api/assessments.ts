@@ -44,7 +44,11 @@ export interface MyAssessment {
   type: string;
   score: number;
   recommendedLevel: string;
-  completedAt: string;
+  /** Server may return either field name depending on deploy generation —
+   * the rename `createdAt → completedAt` shipped in 00b7ae2 but older API
+   * builds still emit `createdAt`. Callers read both. */
+  completedAt?: string;
+  createdAt?: string;
 }
 
 // ---------------------------------------------------------------------------
