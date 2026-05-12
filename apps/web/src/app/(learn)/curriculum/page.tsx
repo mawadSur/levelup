@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, Lock, Star } from 'lucide-react';
 import { Card, CardContent, MonoLabel } from '@levelup/ui';
-import { paths } from '@/lib/api';
-import type { CurriculumPathCard, CurriculumTier } from '@/lib/api/paths';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { CurriculumMap, CurriculumPathCard, CurriculumTier } from '@/lib/api/paths';
 
 export const metadata: Metadata = {
   title: 'Curriculum',
 };
 
 export default async function CurriculumPage() {
-  let map: Awaited<ReturnType<typeof paths.getCurriculumMap>> | null = null;
+  let map: CurriculumMap | null = null;
   try {
-    map = await paths.getCurriculumMap();
+    map = await ssrGet<CurriculumMap>('/paths/curriculum-map');
   } catch {
     map = null;
   }

@@ -11,8 +11,9 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@levelup/ui';
-import { auth, certificates, assessments } from '@/lib/api';
-import { apiGet } from '@/lib/api';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { Certificate } from '@/lib/api/certificates';
+import type { MyAssessment } from '@/lib/api/assessments';
 import { getSessionUser } from '@/lib/auth-client';
 import { ProfileHeader } from '@/components/learn/profile/profile-header';
 import { EditProfileForm } from '@/components/learn/profile/edit-profile-form';
@@ -40,20 +41,22 @@ interface BackendBadge {
 }
 
 export default async function ProfilePage() {
-  const [sessionResult, meResult, certsResult, assessmentsResult, badgesResult] =
-    await Promise.allSettled([
-      getSessionUser(),
-      auth.me(),
-      certificates.listMyCerts(),
-      assessments.listMyAssessments(),
-      // TODO: Replace with a dedicated /users/me/badges endpoint once the
-      // backend exposes it. For now we attempt the call defensively; if it
-      // 404s or errors the badge wall still renders (all locked).
-      apiGet<BackendBadge[]>('/users/me/badges'),
-    ]);
+  // `getSessionUser` already authenticates against /auth/me and returns the
+  // same shape as a separate auth.me() call would, so we lean on it as the
+  // canonical user fetch and skip the duplicate request. The other three
+  // calls go through `ssrGet` so they forward the user's Supabase bearer.
+  const [sessionResult, certsResult, assessmentsResult, badgesResult] = await Promise.allSettled([
+    getSessionUser(),
+    ssrGet<Certificate[]>('/certificates/me'),
+    ssrGet<MyAssessment[]>('/assessments/me'),
+    // TODO: Replace with a dedicated /users/me/badges endpoint once the
+    // backend exposes it. For now we attempt the call defensively; if it
+    // 404s or errors the badge wall still renders (all locked).
+    ssrGet<BackendBadge[]>('/users/me/badges'),
+  ]);
 
   const session = sessionResult.status === 'fulfilled' ? sessionResult.value : null;
-  const me = meResult.status === 'fulfilled' ? meResult.value : null;
+  const me = session; // getSessionUser already returns the merged shape we need
   const certs = certsResult.status === 'fulfilled' ? certsResult.value : [];
   const myAssessments = assessmentsResult.status === 'fulfilled' ? assessmentsResult.value : [];
   const assessmentsLoadFailed = assessmentsResult.status === 'rejected';
