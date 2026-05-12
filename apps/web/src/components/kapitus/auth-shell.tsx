@@ -41,7 +41,7 @@ export function KapitusSignInPanel({
           Need help signing in?{' '}
           <a
             href="mailto:hello@ailevel.app"
-            className="text-kp-purple underline-offset-2 hover:underline"
+            className="font-medium text-kp-purple-deep underline underline-offset-2 hover:text-kp-purple"
           >
             Contact support
           </a>

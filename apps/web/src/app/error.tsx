@@ -17,7 +17,7 @@ export default function GlobalError({ error, reset }: ErrorProps) {
   const isDev = process.env.NODE_ENV === 'development';
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-ink-900 px-4 text-paper-100">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-ink-900 px-4 text-paper-100">
       <Card className="w-full max-w-md">
         <CardContent className="space-y-5 pt-8 pb-6 text-center">
           <MonoLabel tone="danger">SYSTEM EXCEPTION</MonoLabel>
@@ -45,6 +45,6 @@ export default function GlobalError({ error, reset }: ErrorProps) {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

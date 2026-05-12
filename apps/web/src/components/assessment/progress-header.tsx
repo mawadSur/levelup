@@ -41,6 +41,7 @@ export function ProgressHeader({
           className="h-full bg-signal transition-[width] duration-500 ease-mission"
           style={{ width: `${value}%` }}
           role="progressbar"
+          aria-label="Assessment progress"
           aria-valuenow={value}
           aria-valuemin={0}
           aria-valuemax={100}

@@ -6,6 +6,13 @@ const PROTECTED_PATTERNS = [
   /^\/learn(\/.*)?$/,
   /^\/profile(\/.*)?$/,
   /^\/team(\/.*)?$/,
+  /^\/coach(\/.*)?$/,
+  /^\/assessment(\/.*)?$/,
+  /^\/curriculum(\/.*)?$/,
+  /^\/playbooks(\/.*)?$/,
+  /^\/leaderboard(\/.*)?$/,
+  /^\/prompts(\/.*)?$/,
+  /^\/privacy(\/.*)?$/,
 ];
 
 function isProtected(pathname: string): boolean {
@@ -23,7 +30,11 @@ function isProtected(pathname: string): boolean {
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // Expose the current pathname to server components (e.g. (learn)/layout.tsx
+  // uses it to preserve the deep-link target on the sign-in redirect).
+  request.headers.set('x-pathname', pathname);
   const { response, user } = await updateSession(request);
+  response.headers.set('x-pathname', pathname);
 
   if (!isProtected(pathname)) {
     return response;

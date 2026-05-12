@@ -70,7 +70,7 @@ export function KapitusFooter() {
 
           {FOOTER_COLUMNS.map(({ heading, links }) => (
             <div key={heading}>
-              <h3 className="kp-eyebrow text-kp-ink">{heading}</h3>
+              <h2 className="kp-eyebrow text-kp-ink">{heading}</h2>
               <ul className="mt-4 space-y-3">
                 {links.map(({ label, href }) => (
                   <li key={label}>

@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth-client';
 import { organizations, anomaly } from '@/lib/api';
@@ -10,7 +11,8 @@ export default async function AdminGroupLayout({ children }: { children: React.R
   const user = await getSessionUser();
 
   if (!user) {
-    redirect('/sign-in?redirect=%2Fadmin');
+    const pathname = (await headers()).get('x-pathname') ?? '/admin';
+    redirect(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
   }
 
   // Employees have no admin access

@@ -37,6 +37,7 @@ export function StreakFlame({ count, className }: StreakFlameProps) {
       )}
       <span
         className={cn('flex items-center gap-0.5', className)}
+        role="img"
         aria-label={`${count}-day streak`}
       >
         <Flame

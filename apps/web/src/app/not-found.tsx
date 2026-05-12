@@ -1,8 +1,45 @@
 import Link from 'next/link';
 import { Button, MonoLabel } from '@levelup/ui';
+import { IS_KAPITUS } from '@/lib/client';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
+import { KapitusNav } from '@/components/kapitus/nav';
+import { KapitusFooter } from '@/components/kapitus/footer';
+import { kRoutes } from '@/components/kapitus/routes';
 
 export default function NotFound() {
+  if (IS_KAPITUS) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <KapitusNav />
+        <main className="flex-1 bg-kp-mist">
+          <div className="mx-auto flex max-w-kp-container flex-col items-center justify-center px-6 py-24 text-center sm:px-8 lg:px-12 lg:py-32">
+            <p className="kp-eyebrow text-kp-purple-deep">404 · NOT FOUND</p>
+            <h1 className="kp-display mt-6 text-kp-ink">We couldn&apos;t find that page.</h1>
+            <p className="kp-body-lg mt-5 max-w-kp-reading text-kp-ink-soft">
+              The link may be out of date, or you may have typed the address incorrectly. Head back
+              to the academy and pick up where you left off.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href={kRoutes.home}
+                className="inline-flex h-11 items-center rounded-kp-sm bg-kp-purple-deep px-5 text-sm font-semibold text-white shadow-kp-sm transition-colors duration-200 ease-kp-out hover:bg-kp-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kp-purple"
+              >
+                Back to the academy
+              </Link>
+              <Link
+                href={kRoutes.signIn}
+                className="inline-flex h-11 items-center rounded-kp-sm border border-kp-rule-strong px-5 text-sm font-semibold text-kp-ink transition-colors duration-200 ease-kp-out hover:bg-kp-fog"
+              >
+                Sign in
+              </Link>
+            </div>
+          </div>
+        </main>
+        <KapitusFooter />
+      </div>
+    );
+  }
+
   return (
     <>
       <MarketingNav />
