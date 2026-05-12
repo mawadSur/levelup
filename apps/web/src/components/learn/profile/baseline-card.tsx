@@ -12,20 +12,25 @@ import type { MyAssessment } from '@/lib/api/assessments';
 
 interface BaselineCardProps {
   assessments: MyAssessment[];
+  /** True when /assessments/me rejected — show a diagnostic message instead of
+   * the "not taken yet" empty state, which would mislead users who did take it. */
+  loadFailed?: boolean;
 }
 
 function levelLabel(level: string): string {
   const map: Record<string, string> = {
     BEGINNER: 'Beginner',
-    INTERMEDIATE: 'Intermediate',
-    ADVANCED: 'Advanced',
+    PRACTITIONER: 'Practitioner',
+    POWER_USER: 'Power User',
+    CHAMPION: 'Champion',
   };
   return map[level] ?? level;
 }
 
 function levelVariant(level: string): 'default' | 'secondary' | 'outline' {
-  if (level === 'ADVANCED') return 'default';
-  if (level === 'INTERMEDIATE') return 'secondary';
+  if (level === 'CHAMPION') return 'default';
+  if (level === 'POWER_USER') return 'default';
+  if (level === 'PRACTITIONER') return 'secondary';
   return 'outline';
 }
 
@@ -37,7 +42,7 @@ function formatDate(iso: string): string {
   });
 }
 
-export function BaselineCard({ assessments }: BaselineCardProps) {
+export function BaselineCard({ assessments, loadFailed = false }: BaselineCardProps) {
   const baseline = assessments.find((a) => a.type === 'BASELINE') ?? assessments[0] ?? null;
 
   return (
@@ -49,7 +54,17 @@ export function BaselineCard({ assessments }: BaselineCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {baseline ? (
+        {loadFailed ? (
+          <div className="rounded-lg border border-dashed border-danger/40 bg-danger/10 p-6 text-center">
+            <p className="text-sm text-danger">
+              Could not load your assessment history. The server may be deploying — refresh in a
+              minute. If the problem persists, retake the assessment.
+            </p>
+            <Button asChild variant="outline" size="sm" className="mt-4">
+              <Link href="/assessment">Retake assessment</Link>
+            </Button>
+          </div>
+        ) : baseline ? (
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <Badge

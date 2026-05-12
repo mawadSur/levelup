@@ -56,6 +56,7 @@ export default async function ProfilePage() {
   const me = meResult.status === 'fulfilled' ? meResult.value : null;
   const certs = certsResult.status === 'fulfilled' ? certsResult.value : [];
   const myAssessments = assessmentsResult.status === 'fulfilled' ? assessmentsResult.value : [];
+  const assessmentsLoadFailed = assessmentsResult.status === 'rejected';
 
   // Badge data — falls back to empty array on any error (endpoint may not exist yet)
   const rawBadges: BackendBadge[] =
@@ -108,7 +109,7 @@ export default async function ProfilePage() {
           <EditProfileForm initialName={displayName} />
 
           {/* Baseline assessment */}
-          <BaselineCard assessments={myAssessments} />
+          <BaselineCard assessments={myAssessments} loadFailed={assessmentsLoadFailed} />
 
           {/* Certificates */}
           <CertificatesList certificates={certs} />

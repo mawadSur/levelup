@@ -188,7 +188,7 @@ export class AssessmentsService {
   // GET /assessments/me
   // ---------------------------------------------------------------------------
   async listMyAssessments(sessionUser: SessionPayload) {
-    return this.prisma.assessment.findMany({
+    const rows = await this.prisma.assessment.findMany({
       where: {
         userId: sessionUser.userId,
         organizationId: sessionUser.organizationId,
@@ -203,6 +203,13 @@ export class AssessmentsService {
         // itemResponses intentionally excluded
       },
     });
+    // The row is only ever created on submit, so the column's semantic meaning
+    // is "completed at" from the caller's perspective. Rename in the response
+    // so the web client doesn't have to translate.
+    return rows.map(({ createdAt, ...rest }) => ({
+      ...rest,
+      completedAt: createdAt,
+    }));
   }
 
   // ---------------------------------------------------------------------------
