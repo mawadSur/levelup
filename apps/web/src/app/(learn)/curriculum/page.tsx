@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Check, Lock, Star } from 'lucide-react';
 import { Card, CardContent, MonoLabel } from '@levelup/ui';
 import { ssrGet } from '@/lib/api/server-fetch';
+import { ApiError } from '@/lib/api/errors';
 import type { CurriculumMap, CurriculumPathCard, CurriculumTier } from '@/lib/api/paths';
 
 export const metadata: Metadata = {
@@ -11,9 +12,23 @@ export const metadata: Metadata = {
 
 export default async function CurriculumPage() {
   let map: CurriculumMap | null = null;
+  let loadError: { status: number; message: string; requestId?: string } | null = null;
   try {
     map = await ssrGet<CurriculumMap>('/paths/curriculum-map');
-  } catch {
+  } catch (err) {
+    if (err instanceof ApiError) {
+      loadError = {
+        status: err.status,
+        message: err.message,
+        requestId: err.requestId,
+      };
+    } else {
+      loadError = {
+        status: 0,
+        message: err instanceof Error ? err.message : 'Unknown error',
+      };
+    }
+    console.error('[curriculum] getCurriculumMap failed', loadError);
     map = null;
   }
 
@@ -37,10 +52,20 @@ export default async function CurriculumPage() {
 
       {!map ? (
         <Card>
-          <CardContent className="p-8 text-center">
+          <CardContent className="space-y-3 p-8 text-center">
             <p className="text-body-sm text-paper-300">
-              Curriculum map unavailable. Please refresh or check back shortly.
+              {loadError?.status === 401
+                ? 'You need to sign in to view your curriculum.'
+                : loadError && loadError.status >= 500
+                  ? 'The curriculum service hit an error. Refresh in a moment — the server may still be deploying.'
+                  : 'Curriculum map unavailable. Please refresh or check back shortly.'}
             </p>
+            {loadError && (
+              <p className="font-mono text-mono-sm text-paper-500">
+                HTTP {loadError.status} · {loadError.message}
+                {loadError.requestId && ` · req ${loadError.requestId.slice(0, 8)}`}
+              </p>
+            )}
           </CardContent>
         </Card>
       ) : (
