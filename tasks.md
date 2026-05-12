@@ -106,8 +106,8 @@
 - [x] **T6.1** Vitest unit tests for `packages/llm`, `packages/types`, web client utils — 198 tests across 14 files
 - [x] **T6.2** Jest e2e for NestJS modules using a test Postgres — auth + learning e2e specs
 - [x] **T6.3** Playwright e2e — sign-up → invite teammate → take assessment → complete lesson → see cert — 5 specs, dev-bypass auth, seeded-user fixtures
-- [ ] **T6.4** Accessibility pass on key pages (use web-design-guidelines skill) — deferred until pnpm install runs
-- [ ] **T6.5** Visual QA pass (use qa-only skill once dev server runs) — deferred until pnpm install runs
+- [x] **T6.4** Accessibility pass on key pages — axe-core sweep on live ailevel.app: 0 critical, 3 serious (streak `<span>` aria, sign-in mailto contrast, progressbar name) + 3 moderate (heading-order, missing h1 on /assessment/take, missing main landmark on error boundary) — all fixed. Report at `docs/qa/a11y-report-2026-05-12.md`. `/admin` partial coverage (test session not admin) — re-audit when an admin account is available.
+- [x] **T6.5** Visual QA pass — qa-only sweep on live ailevel.app: health 68/100 on first pass. Fixed: 3 legal pages 404 (now ship `/legal/{privacy,terms,security}` stubs), 404 page chrome (now Kapitus chrome under `IS_KAPITUS`), `/coach` and `/assessment` redirect target loss. H2 brand-mismatch dismissed as false positive — agent was given the wrong spec (purple + Manrope IS the live Kapitus palette). Report at `docs/qa/visual-qa-2026-05-12.md`.
 - [x] **T6.6** Security review (use security-review skill on completed code) — full review at `docs/security-review.md`: 1 critical, 6 high, 6 medium, 4 low, 1 info
 
 ## Phase 7 — Deploy
@@ -328,3 +328,13 @@ If any of those fail, you don't have an MVP, you have a code generator's halluci
 - CR.32 — Manual path editor: `POST /paths/:id/save-bulk` transactional diff (delete removed, upsert existing, create new lessons + quizzes); `/admin/learning/[pathId]/edit` page with 3-column layout (lesson rail / editor / live markdown preview); HTML5 drag-to-reorder; per-lesson body markdown + estimated minutes + quiz editor (up to 10 questions, 4 choices, correctIndex radio); dirty indicator + optimistic save
 - AI path generator abuse guards: 5 req/hour/org + 10 req/24h/org caps with friendly 429 messages; audit log on rate-limit rejection
 - Test fixes — `posthog-js/react` doesn't exist as a sub-export → rewrote provider to use raw `posthog` singleton + local `usePostHog` hook; Next.js 15 page params type changed to `Promise<{...}>` in `/admin/learning/[pathId]/edit/page.tsx`; jobs catalog test bumped to expect 9 entries (anomaly-scan added)
+
+## QA Sweep — 2026-05-12
+
+Three parallel agents audited live ailevel.app (a11y axe-core, visual qa-only, assessment regression). Reports under `docs/qa/`. Fixes:
+
+- T6.4 a11y — `StreakFlame` span gets `role="img"` so its `aria-label` is valid; assessment progress bar gets `aria-label="Assessment progress"`; assessment runner gets sr-only `<h1>`; Kapitus footer `<h3>` column headers demoted to `<h2>` to fix heading-order skip; global error boundary wrapped in `<main>` landmark; sign-in mailto link gets persistent underline + `kp-purple-deep` for AA contrast against muted slate
+- T6.5 QA — `/legal/{privacy,terms,security}` stub pages shipped under a shared `legal/layout.tsx` (Kapitus chrome under `IS_KAPITUS`, default chrome otherwise) with "draft — contact legal" placeholders; `not-found.tsx` now renders Kapitus chrome when `IS_KAPITUS`; brand-mismatch H2 dismissed as false positive (the spec I gave the agent was wrong — kp-purple + Manrope IS the live kapitus.com palette)
+- QA H3 — middleware sets `x-pathname` header on every request; (learn) and (admin) layouts read it from `next/headers` for the sign-in redirect target; PROTECTED_PATTERNS expanded to coach/assessment/curriculum/playbooks/leaderboard/prompts/privacy so the middleware-level redirect catches them with the correct deep-link target
+- Assessment Bug #1 — `readPersisted` validates each persisted item id against `/^c[a-z0-9]{24,}$/` (Prisma cuid shape) before trusting a localStorage payload; submit errors map "Validation failed" / "Failed to fetch" / "assessmentSessionId does not match" to friendly user-facing copy; error state replaces "Try again" (reload, would resume stale state) with "Start over" that clears persistence and re-calls `startAssessment`; inline error banner also exposes Start over; test fixtures use cuid-shaped ids
+- Assessment Bug #2 — `Assessment` model gets nullable `assessmentSessionId String?` + `@@unique([userId, type, assessmentSessionId])` (migration `20260512170000_assessment_session_id_idempotency`); submit handler does `findFirst` before create, rescore from stored `itemResponses` when an existing row is returned, and catches a concurrent-submit `P2002` to refetch the winner; audit log + analytics capture + first-baseline aiLevel update only fire on the actual create

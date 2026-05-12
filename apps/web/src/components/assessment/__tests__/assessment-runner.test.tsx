@@ -66,28 +66,36 @@ vi.mock('@/lib/api', async (importOriginal) => {
 // Fixture data
 // ---------------------------------------------------------------------------
 
+// readPersisted now rejects payloads where ids don't look like Prisma cuids
+// (defense against stale-/tampered-localStorage). Test fixtures use cuid-shaped
+// strings so the rehydrate path is exercised honestly.
+const ITEM_1_ID = 'citem00000000000000000001';
+const ITEM_2_ID = 'citem00000000000000000002';
+const SESSION_ID = 'csession000000000000000001';
+const ASSESS_ID = 'cassess0000000000000000001';
+
 const ITEMS: AssessmentItem[] = [
   {
-    id: 'item-1',
+    id: ITEM_1_ID,
     prompt: 'What does AI stand for?',
     choices: ['Artificial Intelligence', 'Auto Input', 'Active Interface', 'Augmented Insight'],
   },
   {
-    id: 'item-2',
+    id: ITEM_2_ID,
     prompt: 'Which model is a language model?',
     choices: ['ResNet', 'GPT-4', 'AlexNet', 'YOLO'],
   },
 ];
 
 const ASSESSMENT: Assessment = {
-  assessmentSessionId: 'session-1',
-  id: 'session-1',
+  assessmentSessionId: SESSION_ID,
+  id: SESSION_ID,
   type: 'BASELINE',
   items: ITEMS,
 };
 
 const ASSESSMENT_RESULT: AssessmentResult = {
-  assessmentId: 'assess-1',
+  assessmentId: ASSESS_ID,
   score: 80,
   total: 30,
   scoreByLevel: {
@@ -236,7 +244,7 @@ describe('AssessmentRunner', () => {
       const raw = localStorageMock.getItem(STORAGE_KEY);
       expect(raw).not.toBeNull();
       const saved = JSON.parse(raw!) as { answers: Record<string, number> };
-      expect(saved.answers['item-1']).toBe(0);
+      expect(saved.answers[ITEM_1_ID]).toBe(0);
     });
   });
 
@@ -245,7 +253,7 @@ describe('AssessmentRunner', () => {
     const persisted = {
       assessmentId: ASSESSMENT.id,
       items: ITEMS,
-      answers: { 'item-1': 0 },
+      answers: { [ITEM_1_ID]: 0 },
       index: 1,
     };
     localStorageMock.setItem(STORAGE_KEY, JSON.stringify(persisted));

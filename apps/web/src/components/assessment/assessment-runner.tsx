@@ -27,8 +27,11 @@ interface PersistedRun {
   index: number;
 }
 
+// Prisma cuids: 25 chars, lowercase letters + digits, leading 'c'.
+const CUID_RE = /^c[a-z0-9]{24,}$/;
+
 function isValidId(id: unknown): id is string {
-  return typeof id === 'string' && id.length > 0 && id !== 'undefined' && id !== 'null';
+  return typeof id === 'string' && CUID_RE.test(id);
 }
 
 function readPersisted(assessmentId: string): PersistedRun | null {
@@ -36,7 +39,9 @@ function readPersisted(assessmentId: string): PersistedRun | null {
   // Earlier builds wrote the persistence record with `assessmentId: undefined`
   // because the API returns `assessmentSessionId`, not `id`. A page reload
   // after upgrade would otherwise restore that stale record and submit
-  // `assessmentSessionId: undefined`. Bail out and let the runner start fresh.
+  // `assessmentSessionId: undefined`. Also rejects hand-crafted/tampered
+  // localStorage payloads — every item id must look like a real cuid before
+  // we trust the run.
   if (!isValidId(assessmentId)) return null;
   try {
     const raw = window.localStorage.getItem(`${STORAGE_PREFIX}${assessmentId}`);
@@ -44,6 +49,7 @@ function readPersisted(assessmentId: string): PersistedRun | null {
     const parsed = JSON.parse(raw) as PersistedRun;
     if (!parsed?.items || !Array.isArray(parsed.items)) return null;
     if (!isValidId(parsed.assessmentId)) return null;
+    if (!parsed.items.every((it) => it && isValidId(it.id))) return null;
     return parsed;
   } catch {
     return null;
@@ -97,6 +103,31 @@ function clearActive(): void {
   } catch {
     // ignore
   }
+}
+
+// ---------------------------------------------------------------------------
+// Friendly error mapping
+//
+// The API surfaces validation failures as "Validation failed: <zod issues>"
+// strings and network errors as "Failed to fetch". Neither is useful for the
+// end user — and a validation failure on submit means the persisted run is
+// out of date (stale session id, tampered item ids), so the only real recovery
+// is to start over.
+// ---------------------------------------------------------------------------
+function toFriendlySubmitError(err: unknown): string {
+  if (err instanceof Error) {
+    const m = err.message ?? '';
+    if (m.startsWith('Validation failed') || m.includes('Invalid cuid')) {
+      return "We couldn't score this attempt. Tap Start over to begin a fresh assessment.";
+    }
+    if (/failed to fetch|networkerror|network request failed/i.test(m)) {
+      return "Couldn't save your answers — check your connection and try submitting again.";
+    }
+    if (m.includes('assessmentSessionId does not match')) {
+      return 'This attempt has expired. Tap Start over to begin a fresh assessment.';
+    }
+  }
+  return 'Submission failed. Please try again.';
 }
 
 // ---------------------------------------------------------------------------
@@ -316,10 +347,58 @@ export function AssessmentRunner() {
       setState((s) => ({
         ...s,
         phase: 'answering',
-        errorMessage: err instanceof Error ? err.message : 'Submission failed. Please try again.',
+        errorMessage: toFriendlySubmitError(err),
       }));
     }
   }, [router, state.assessment, state.answers]);
+
+  // -------------------------------------------------------------------------
+  // Start-over: clears any persisted run and triggers a fresh /assessments/start
+  // -------------------------------------------------------------------------
+  const handleStartOver = useCallback(() => {
+    const stale = getActive();
+    if (stale) clearPersisted(stale);
+    if (state.assessment?.id) clearPersisted(state.assessment.id);
+    clearActive();
+    startedRef.current = false;
+    setState({
+      phase: 'loading',
+      assessment: null,
+      answers: {},
+      index: 0,
+      errorMessage: null,
+    });
+    void (async () => {
+      try {
+        const assessment = await assessments.startAssessment('BASELINE');
+        setActive(assessment.id);
+        writePersisted({
+          assessmentId: assessment.id,
+          items: assessment.items,
+          answers: {},
+          index: 0,
+        });
+        setState({
+          phase: 'answering',
+          assessment,
+          answers: {},
+          index: 0,
+          errorMessage: null,
+        });
+      } catch (err) {
+        setState({
+          phase: 'error',
+          assessment: null,
+          answers: {},
+          index: 0,
+          errorMessage:
+            err instanceof Error
+              ? err.message
+              : 'Could not start the assessment. Please try again.',
+        });
+      }
+    })();
+  }, [state.assessment]);
 
   // -------------------------------------------------------------------------
   // Keyboard shortcut: Enter advances when an answer is selected
@@ -369,8 +448,8 @@ export function AssessmentRunner() {
           <CardContent className="space-y-4 py-10 text-center">
             <MonoLabel tone="danger">ASSESSMENT FAILED</MonoLabel>
             <p className="text-body-sm text-paper-300">{state.errorMessage}</p>
-            <Button variant="primary" onClick={() => window.location.reload()}>
-              Try again
+            <Button variant="primary" onClick={handleStartOver}>
+              Start over
             </Button>
           </CardContent>
         </Card>
@@ -387,6 +466,7 @@ export function AssessmentRunner() {
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-6 sm:py-10">
+      <h1 className="sr-only">Baseline AI assessment</h1>
       {/* Inline keyframes for the slide animation */}
       <style jsx>{`
         @keyframes slideFromRight {
@@ -421,9 +501,16 @@ export function AssessmentRunner() {
         {state.errorMessage && (
           <div
             role="alert"
-            className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
+            className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-body-sm text-danger"
           >
-            {state.errorMessage}
+            <span>{state.errorMessage}</span>
+            <button
+              type="button"
+              onClick={handleStartOver}
+              className="font-mono text-mono-sm uppercase tracking-[0.05em] underline underline-offset-2 transition-opacity hover:opacity-80"
+            >
+              Start over
+            </button>
           </div>
         )}
 

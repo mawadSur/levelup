@@ -392,18 +392,20 @@ model UserProgress {
 }
 
 model Assessment {
-  id               String         @id @default(cuid())
-  organizationId   String
-  userId           String
-  type             AssessmentType
-  score            Int
-  recommendedLevel AiLevel
-  itemResponses    Json
-  createdAt        DateTime       @default(now())
+  id                    String         @id @default(cuid())
+  organizationId        String
+  userId                String
+  type                  AssessmentType
+  score                 Int
+  recommendedLevel      AiLevel
+  itemResponses         Json
+  assessmentSessionId   String?
+  createdAt             DateTime       @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, type, assessmentSessionId])
   @@index([organizationId])
   @@index([userId])
   @@map("assessments")

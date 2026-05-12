@@ -87,47 +87,78 @@ export class AssessmentsService {
       }
     }
 
-    // 6. Build response map and score.
-    const responseMap = new Map<string, number>(
-      itemResponses.map((r) => [r.itemId, r.choiceIndex]),
-    );
-
-    const result = scoreAssessment(sampledItems, responseMap);
-
-    // 7. Persist the Assessment record.
-    const assessment = await this.prisma.assessment.create({
-      data: {
-        organizationId: sessionUser.organizationId,
+    // 6. Idempotency check. If we already scored this session, return the
+    // persisted attempt rather than creating a duplicate. A retry / double-
+    // submit (network glitch, double-click) collapses to the same row instead
+    // of fanning out audit logs + analytics + duplicate aiLevel updates.
+    const existing = await this.prisma.assessment.findFirst({
+      where: {
         userId: sessionUser.userId,
         type,
-        score: result.correct,
-        recommendedLevel: result.recommendedLevel,
-        itemResponses: itemResponses as unknown as Prisma.InputJsonValue,
+        assessmentSessionId,
       },
     });
 
-    await this.createAuditLog(sessionUser, 'assessment.submit', {
-      assessmentId: assessment.id,
-      type,
-      score: result.correct,
-      total: result.total,
-      recommendedLevel: result.recommendedLevel,
-    });
+    // Decide which response set to score. For a new attempt: the dto. For an
+    // existing row: re-derive from the stored responses so the returned shape
+    // always matches what was persisted, regardless of what the caller resent.
+    const effectiveResponses = existing
+      ? (existing.itemResponses as unknown as Array<{ itemId: string; choiceIndex: number }>)
+      : itemResponses;
+    const responseMap = new Map<string, number>(
+      effectiveResponses.map((r) => [r.itemId, r.choiceIndex]),
+    );
+    const result = scoreAssessment(sampledItems, responseMap);
 
-    // Fire-and-forget analytics capture — must never throw into the caller.
-    track.assessmentSubmitted({
-      organizationId: sessionUser.organizationId,
-      userId: sessionUser.userId,
-      assessmentId: assessment.id,
-      type: String(type),
-      score: result.correct,
-      total: result.total,
-      recommendedLevel: String(result.recommendedLevel),
-    });
+    let assessment = existing;
+    if (!assessment) {
+      try {
+        assessment = await this.prisma.assessment.create({
+          data: {
+            organizationId: sessionUser.organizationId,
+            userId: sessionUser.userId,
+            type,
+            score: result.correct,
+            recommendedLevel: result.recommendedLevel,
+            itemResponses: itemResponses as unknown as Prisma.InputJsonValue,
+            assessmentSessionId,
+          },
+        });
 
-    // 8. Auto-update aiLevel on first BASELINE only.
-    if (type === AssessmentType.BASELINE) {
-      await this.maybeUpdateAiLevel(sessionUser, result.recommendedLevel, assessment.id);
+        await this.createAuditLog(sessionUser, 'assessment.submit', {
+          assessmentId: assessment.id,
+          type,
+          score: result.correct,
+          total: result.total,
+          recommendedLevel: result.recommendedLevel,
+        });
+
+        // Fire-and-forget analytics capture — must never throw into the caller.
+        track.assessmentSubmitted({
+          organizationId: sessionUser.organizationId,
+          userId: sessionUser.userId,
+          assessmentId: assessment.id,
+          type: String(type),
+          score: result.correct,
+          total: result.total,
+          recommendedLevel: String(result.recommendedLevel),
+        });
+
+        // 8. Auto-update aiLevel on first BASELINE only.
+        if (type === AssessmentType.BASELINE) {
+          await this.maybeUpdateAiLevel(sessionUser, result.recommendedLevel, assessment.id);
+        }
+      } catch (err: unknown) {
+        // Concurrent submit raced past findFirst — the unique index caught the
+        // duplicate. Refetch the winning row instead of bubbling P2002 to the
+        // caller. Cast keeps the check loose so we don't drag in PrismaClientKnownRequestError.
+        const code = (err as { code?: string } | null)?.code;
+        if (code !== 'P2002') throw err;
+        assessment = await this.prisma.assessment.findFirst({
+          where: { userId: sessionUser.userId, type, assessmentSessionId },
+        });
+        if (!assessment) throw err;
+      }
     }
 
     const message = buildMessage(result.recommendedLevel, result.correct, result.total);
