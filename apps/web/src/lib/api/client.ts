@@ -27,25 +27,7 @@ const API_PREFIX = `${API_BASE}/api`;
 // should set the Authorization header themselves before calling.
 
 async function getBearerHeader(): Promise<string | null> {
-  if (typeof window === 'undefined') {
-    // Server component / route handler context. The API is hosted on a
-    // different origin from the web app (cross-origin), so cookies don't
-    // propagate automatically — we mirror what getSessionUser does and read
-    // the Supabase SSR session, then forward its access token as a Bearer.
-    try {
-      const mod = await import('../supabase/server');
-      if (!mod.isSupabaseConfigured()) return null;
-      const supabase = await mod.getSupabaseServerClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      if (typeof token === 'string' && token.length > 0) return `Bearer ${token}`;
-    } catch {
-      // Ignore — request will go out unauthenticated and the API will 401.
-    }
-    return null;
-  }
+  if (typeof window === 'undefined') return null;
 
   // Stub-mode dev-bypass stashes the access token in localStorage.
   try {
