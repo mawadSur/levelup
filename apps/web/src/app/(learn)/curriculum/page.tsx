@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Check, Lock, Star } from 'lucide-react';
 import { Card, CardContent, MonoLabel } from '@levelup/ui';
 import { paths } from '@/lib/api';
 import type { CurriculumPathCard, CurriculumTier } from '@/lib/api/paths';
+import { ApiError } from '@/lib/api/errors';
 
 export const metadata: Metadata = {
   title: 'Curriculum',
@@ -11,10 +13,19 @@ export const metadata: Metadata = {
 
 export default async function CurriculumPage() {
   let map: Awaited<ReturnType<typeof paths.getCurriculumMap>> | null = null;
+  let loadError: ApiError | null = null;
   try {
     map = await paths.getCurriculumMap();
-  } catch {
-    map = null;
+  } catch (err) {
+    if (err instanceof ApiError) {
+      loadError = err;
+    } else {
+      // Anything not an ApiError (e.g. Next's redirect signal) must propagate.
+      throw err;
+    }
+  }
+  if (loadError?.isAuthRequired) {
+    redirect('/sign-in?redirect=%2Fcurriculum');
   }
 
   return (

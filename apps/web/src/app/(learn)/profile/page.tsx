@@ -11,8 +11,10 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@levelup/ui';
+import { redirect } from 'next/navigation';
 import { auth, certificates, assessments } from '@/lib/api';
 import { apiGet } from '@/lib/api';
+import { ApiError } from '@/lib/api/errors';
 import { getSessionUser } from '@/lib/auth-client';
 import { ProfileHeader } from '@/components/learn/profile/profile-header';
 import { EditProfileForm } from '@/components/learn/profile/edit-profile-form';
@@ -56,6 +58,17 @@ export default async function ProfilePage() {
   const me = meResult.status === 'fulfilled' ? meResult.value : null;
   const certs = certsResult.status === 'fulfilled' ? certsResult.value : [];
   const myAssessments = assessmentsResult.status === 'fulfilled' ? assessmentsResult.value : [];
+
+  // If /auth/me or /assessments/me 401's, the user's session is dead — kick
+  // them to sign-in so they get a fresh token instead of a misleading "could
+  // not load" banner on this page.
+  const anyAuthExpired = [meResult, certsResult, assessmentsResult].some(
+    (r) => r.status === 'rejected' && r.reason instanceof ApiError && r.reason.isAuthRequired,
+  );
+  if (anyAuthExpired) {
+    redirect('/sign-in?redirect=%2Fprofile');
+  }
+
   const assessmentsLoadFailed = assessmentsResult.status === 'rejected';
 
   // Badge data — falls back to empty array on any error (endpoint may not exist yet)
