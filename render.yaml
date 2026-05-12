@@ -5,8 +5,16 @@ services:
     rootDir: .
     plan: standard
     region: oregon
-    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/api...
-    startCommand: pnpm --filter @levelup/api start
+    # Build flow:
+    #   1. install
+    #   2. prisma generate (codegen for the API)
+    #   3. prisma migrate deploy — apply any new migrations to the prod DB
+    #      so the API doesn't query columns that don't exist yet
+    #   4. turbo build the API
+    # The `start` step then runs db:seed once (idempotent upserts) so any new
+    # learning paths land before the API starts serving traffic.
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @levelup/db generate && pnpm --filter @levelup/db exec prisma migrate deploy && pnpm turbo run build --filter=@levelup/api...
+    startCommand: pnpm --filter @levelup/db run seed || true; pnpm --filter @levelup/api start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
