@@ -5,7 +5,8 @@ import { cn } from '@levelup/ui';
 
 export interface QuestionItem {
   id: string;
-  text: string;
+  /** Question text. Matches the API field name (`prompt`). */
+  prompt: string;
   choices: string[];
 }
 
@@ -21,7 +22,7 @@ export function QuestionCard({ question, selectedIndex, onSelect, groupName }: Q
   return (
     <fieldset className="space-y-6">
       <legend className="block text-balance font-serif text-h1 italic leading-snug text-paper-100 sm:text-display-md">
-        {question.text}
+        {question.prompt}
       </legend>
 
       <div className="space-y-2.5">

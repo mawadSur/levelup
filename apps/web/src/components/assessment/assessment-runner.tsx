@@ -133,6 +133,7 @@ export function AssessmentRunner() {
         setState({
           phase: 'answering',
           assessment: {
+            assessmentSessionId: persisted.assessmentId,
             id: persisted.assessmentId,
             type: 'BASELINE',
             items: persisted.items,
@@ -266,6 +267,7 @@ export function AssessmentRunner() {
 
     try {
       const result = await assessments.submitAssessment({
+        assessmentSessionId: state.assessment.assessmentSessionId,
         type: 'BASELINE',
         itemResponses,
       });

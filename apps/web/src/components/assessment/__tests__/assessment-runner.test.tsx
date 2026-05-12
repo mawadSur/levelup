@@ -69,18 +69,19 @@ vi.mock('@/lib/api', async (importOriginal) => {
 const ITEMS: AssessmentItem[] = [
   {
     id: 'item-1',
-    text: 'What does AI stand for?',
+    prompt: 'What does AI stand for?',
     choices: ['Artificial Intelligence', 'Auto Input', 'Active Interface', 'Augmented Insight'],
   },
   {
     id: 'item-2',
-    text: 'Which model is a language model?',
+    prompt: 'Which model is a language model?',
     choices: ['ResNet', 'GPT-4', 'AlexNet', 'YOLO'],
   },
 ];
 
 const ASSESSMENT: Assessment = {
-  id: 'assess-1',
+  assessmentSessionId: 'session-1',
+  id: 'session-1',
   type: 'BASELINE',
   items: ITEMS,
 };

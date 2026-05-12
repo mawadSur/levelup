@@ -54,6 +54,10 @@ export const updateLessonProgressSchema = z.object({
 export type UpdateLessonProgressInput = z.infer<typeof updateLessonProgressSchema>;
 
 export const submitAssessmentSchema = z.object({
+  // Fingerprint returned by /assessments/start. The server uses it to verify
+  // the submitted item set was not tampered with; the client must round-trip
+  // it back unchanged on /assessments/submit.
+  assessmentSessionId: z.string().min(1),
   type: z.nativeEnum(AssessmentType),
   itemResponses: z
     .array(

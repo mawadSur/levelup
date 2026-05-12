@@ -11,11 +11,29 @@ import {
 // ---------------------------------------------------------------------------
 export interface AssessmentItem {
   id: string;
-  text: string;
+  /** Question text. Matches the API field name (`prompt`). */
+  prompt: string;
   choices: string[];
+  level?: string;
+  category?: string;
+}
+
+/** Shape returned by POST /assessments/start. */
+interface StartAssessmentResponse {
+  assessmentSessionId: string;
+  items: AssessmentItem[];
 }
 
 export interface Assessment {
+  /**
+   * Server-issued session fingerprint. Must be passed back on submit so the
+   * server can verify the item set wasn't tampered with.
+   */
+  assessmentSessionId: string;
+  /**
+   * Alias of `assessmentSessionId` for code that persists runs under an `id`
+   * key (localStorage, in-flight components).
+   */
   id: string;
   type: string;
   items: AssessmentItem[];
@@ -34,7 +52,15 @@ export interface MyAssessment {
 // ---------------------------------------------------------------------------
 
 export async function startAssessment(type: string): Promise<Assessment> {
-  return apiPost<{ type: string }, Assessment>('/assessments/start', { type });
+  const response = await apiPost<{ type: string }, StartAssessmentResponse>('/assessments/start', {
+    type,
+  });
+  return {
+    assessmentSessionId: response.assessmentSessionId,
+    id: response.assessmentSessionId,
+    type,
+    items: response.items,
+  };
 }
 
 export async function submitAssessment(input: SubmitAssessmentInput): Promise<AssessmentResult> {
