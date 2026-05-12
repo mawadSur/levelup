@@ -30,7 +30,10 @@ export class PathsController {
    * Returns the full path catalog grouped by tier (Apprentice → Practitioner
    * → Specialist → Hero) with the current user's progress overlay and
    * prerequisite lock state. Declared before the `:slug` route so Nest
-   * doesn't match "curriculum-map" as a slug.
+   * doesn't match "curriculum-map" as a slug — if you reorder these handlers
+   * the literal-string route MUST stay above the param route or every call to
+   * /paths/curriculum-map starts hitting getPathBySlug with slug="curriculum-map"
+   * and returning 404 "Learning path not found".
    */
   @Get('curriculum-map')
   getCurriculumMap(@CurrentUser() user: SessionPayload) {
