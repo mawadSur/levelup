@@ -27,13 +27,23 @@ interface PersistedRun {
   index: number;
 }
 
+function isValidId(id: unknown): id is string {
+  return typeof id === 'string' && id.length > 0 && id !== 'undefined' && id !== 'null';
+}
+
 function readPersisted(assessmentId: string): PersistedRun | null {
   if (typeof window === 'undefined') return null;
+  // Earlier builds wrote the persistence record with `assessmentId: undefined`
+  // because the API returns `assessmentSessionId`, not `id`. A page reload
+  // after upgrade would otherwise restore that stale record and submit
+  // `assessmentSessionId: undefined`. Bail out and let the runner start fresh.
+  if (!isValidId(assessmentId)) return null;
   try {
     const raw = window.localStorage.getItem(`${STORAGE_PREFIX}${assessmentId}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedRun;
     if (!parsed?.items || !Array.isArray(parsed.items)) return null;
+    if (!isValidId(parsed.assessmentId)) return null;
     return parsed;
   } catch {
     return null;
@@ -127,7 +137,11 @@ export function AssessmentRunner() {
     startedRef.current = true;
 
     const activeId = getActive();
-    if (activeId) {
+    if (activeId && !isValidId(activeId)) {
+      // Stale pointer from a pre-fix build — clear it so we don't loop.
+      clearActive();
+    }
+    if (activeId && isValidId(activeId)) {
       const persisted = readPersisted(activeId);
       if (persisted && persisted.items.length > 0) {
         setState({
