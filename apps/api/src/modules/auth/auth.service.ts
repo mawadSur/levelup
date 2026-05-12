@@ -175,6 +175,31 @@ export class AuthService {
   ): Promise<UpsertResult> {
     const name = [profile.firstName, profile.lastName].filter(Boolean).join(' ') || emailLower;
 
+    // White-label single-tenant mode: under CLIENT=kapitus every employee is
+    // an EMPLOYEE in one shared "kapitus" org (seeded with the academy content)
+    // instead of bootstrapping a personal org. The seeded org is found by its
+    // stable slug so we don't hardcode an internal id.
+    const sharedSlug = (process.env.CLIENT ?? '').toLowerCase() === 'kapitus' ? 'kapitus' : null;
+    if (sharedSlug) {
+      const sharedOrg = await this.prisma.organization.findUnique({
+        where: { slug: sharedSlug },
+      });
+      if (sharedOrg) {
+        const user = await this.prisma.user.create({
+          data: {
+            organizationId: sharedOrg.id,
+            supabaseUserId: profile.supabaseUserId,
+            email: emailLower,
+            name,
+            role: Role.EMPLOYEE,
+          },
+        });
+        return { user, organization: sharedOrg };
+      }
+      // Fall through to personal-org bootstrap if the seed hasn't run yet —
+      // better to onboard the user into a recoverable state than to 500.
+    }
+
     const organization = await this.prisma.organization.create({
       data: { name: `${name}'s Organization` },
     });

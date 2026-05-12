@@ -114,6 +114,7 @@ enum PathGenerationStatus {
 model Organization {
   id                   String           @id @default(cuid())
   name                 String
+  slug                 String?          @unique
   industry             String?
   companySize          String?
   plan                 Plan             @default(TRIAL)

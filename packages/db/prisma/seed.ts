@@ -416,11 +416,18 @@ const PATHS: SeedPath[] = [
 
 async function main() {
   const isKapitus = (process.env.CLIENT ?? '').toLowerCase() === 'kapitus';
+  // The "demo-org" id is stable across environments; under CLIENT=kapitus it
+  // doubles as the shared Kapitus org that all employees attach to. Stamp a
+  // slug so the auth flow can find it without hardcoding the id.
   const org = await prisma.organization.upsert({
     where: { id: 'demo-org' },
-    update: {},
+    update: {
+      slug: isKapitus ? 'kapitus' : 'demo',
+      name: isKapitus ? 'Kapitus' : 'Demo Co',
+    },
     create: {
       id: 'demo-org',
+      slug: isKapitus ? 'kapitus' : 'demo',
       name: isKapitus ? 'Kapitus' : 'Demo Co',
       industry: isKapitus ? 'Financial Services' : 'Software',
       companySize: isKapitus ? '201-1000' : '51-200',
@@ -615,11 +622,59 @@ async function main() {
     bankCreated += 1;
   }
 
+  // ── Kapitus mode: consolidate personal-org signups into the shared org ──
+  // Before the white-label rollout, every signup got `<Name>'s Organization`
+  // and saw an empty curriculum. Move those users + their data into the
+  // shared Kapitus org so they pick up where they left off. Idempotent —
+  // a no-op once every user is in the kapitus org.
+  let reconciledUsers = 0;
+  if (isKapitus) {
+    const strays = await prisma.user.findMany({
+      where: { organizationId: { not: org.id } },
+      select: { id: true, organizationId: true, role: true, email: true },
+    });
+    for (const u of strays) {
+      const oldOrgId = u.organizationId;
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: u.id },
+          data: { organizationId: org.id, role: Role.EMPLOYEE },
+        }),
+        prisma.assessment.updateMany({
+          where: { userId: u.id, organizationId: oldOrgId },
+          data: { organizationId: org.id },
+        }),
+        prisma.auditLog.updateMany({
+          where: { actorId: u.id, organizationId: oldOrgId },
+          data: { organizationId: org.id },
+        }),
+        prisma.aiCoachSession.updateMany({
+          where: { userId: u.id, organizationId: oldOrgId },
+          data: { organizationId: org.id },
+        }),
+        prisma.conversation.updateMany({
+          where: { userId: u.id, organizationId: oldOrgId },
+          data: { organizationId: org.id },
+        }),
+        prisma.prompt.updateMany({
+          where: { userId: u.id, organizationId: oldOrgId },
+          data: { organizationId: org.id },
+        }),
+      ]);
+      // The orphan personal org is now data-free; delete cascades through any
+      // remaining shared rows (Departments, Invitations) that were never
+      // attached to a user.
+      await prisma.organization.delete({ where: { id: oldOrgId } }).catch(() => {});
+      reconciledUsers += 1;
+    }
+  }
+
   console.log('Seed complete:', {
     org: org.id,
     users: [admin.email, manager.email, employee1.email, employee2.email],
     paths: PATHS.map((p) => p.slug),
     assessmentItems: { created: bankCreated, total: bankItems.length },
+    reconciledUsers,
   });
 }
 
