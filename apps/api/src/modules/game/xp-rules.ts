@@ -22,6 +22,7 @@ export const XP_AWARDS: Record<XpEventKind, number> = {
   STREAK_30: 500,
   ASSESSMENT_BASELINE: 50,
   BADGE_BONUS: 0,
+  LAB_PASSED: 75,
 };
 
 /**

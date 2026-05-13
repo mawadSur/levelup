@@ -10,4 +10,7 @@ export type { PolicyUploadResult } from './policies';
 export { uploadGovernanceReport, getGovernanceReportSignedUrl } from './governance';
 export type { GovernanceReportUploadResult } from './governance';
 
+export { uploadSceneAsset } from './scene-assets';
+export type { SceneAssetUploadResult } from './scene-assets';
+
 export { stubGetCertificateLocalFilePath } from './stub';

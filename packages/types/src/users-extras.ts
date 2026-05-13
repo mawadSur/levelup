@@ -41,3 +41,11 @@ export const updateMyProfileSchema = z.object({
   avatarUrl: z.string().url().optional(),
 });
 export type UpdateMyProfileInput = z.infer<typeof updateMyProfileSchema>;
+
+// ---------------------------------------------------------------------------
+// Leaderboard opt-out toggle (PATCH /users/me/leaderboard-opt-out)
+// ---------------------------------------------------------------------------
+export const leaderboardOptOutSchema = z.object({
+  optOut: z.boolean(),
+});
+export type LeaderboardOptOutInput = z.infer<typeof leaderboardOptOutSchema>;

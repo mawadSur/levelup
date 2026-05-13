@@ -17,6 +17,7 @@ import type { MyAssessment } from '@/lib/api/assessments';
 import { getSessionUser } from '@/lib/auth-client';
 import { ProfileHeader } from '@/components/learn/profile/profile-header';
 import { EditProfileForm } from '@/components/learn/profile/edit-profile-form';
+import { LeaderboardOptOutCard } from '@/components/learn/profile/leaderboard-opt-out-card';
 import { BaselineCard } from '@/components/learn/profile/baseline-card';
 import { CertificatesList } from '@/components/learn/profile/certificates-list';
 import { BadgeWall } from '@/components/learn/achievements/badge-wall';
@@ -110,6 +111,9 @@ export default async function ProfilePage() {
         <TabsContent value="profile" className="space-y-6">
           {/* Edit profile */}
           <EditProfileForm initialName={displayName} />
+
+          {/* Leaderboard opt-out */}
+          <LeaderboardOptOutCard initialOptOut={session?.leaderboardOptOut ?? false} />
 
           {/* Baseline assessment */}
           <BaselineCard assessments={myAssessments} loadFailed={assessmentsLoadFailed} />

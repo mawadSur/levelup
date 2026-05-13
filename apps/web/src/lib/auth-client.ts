@@ -22,6 +22,7 @@ export interface SessionUser {
   aiLevel?: string;
   orgName?: string;
   organizationName?: string;
+  leaderboardOptOut?: boolean;
 }
 
 /**
@@ -53,6 +54,7 @@ interface MeResponse {
   departmentId: string | null;
   aiLevel: string;
   organizationName: string;
+  leaderboardOptOut?: boolean;
 }
 
 /**
@@ -96,6 +98,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       aiLevel: me.aiLevel,
       organizationName: me.organizationName,
       orgName: me.organizationName,
+      leaderboardOptOut: me.leaderboardOptOut ?? false,
     };
   } catch {
     return null;

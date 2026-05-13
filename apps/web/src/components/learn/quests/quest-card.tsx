@@ -9,6 +9,7 @@ import {
   BookmarkPlus,
   Target,
   Flame,
+  FlaskConical,
   CheckCircle2,
 } from 'lucide-react';
 import { useReducedMotion } from '@/lib/motion/use-reduced-motion';
@@ -28,6 +29,7 @@ const KIND_META: Record<
   prompt: { Icon: BookmarkPlus, bg: 'bg-success/15', fg: 'text-success', label: 'Prompt' },
   quiz: { Icon: Target, bg: 'bg-warning/15', fg: 'text-warning', label: 'Quiz' },
   streak: { Icon: Flame, bg: 'bg-warning/15', fg: 'text-warning', label: 'Streak' },
+  lab: { Icon: FlaskConical, bg: 'bg-signal/15', fg: 'text-signal', label: 'Lab' },
 };
 
 function kindLabel(kind: DailyQuestKind, target: number): string {
@@ -37,6 +39,7 @@ function kindLabel(kind: DailyQuestKind, target: number): string {
     prompt: `${target} prompt${target !== 1 ? 's' : ''}`,
     quiz: `${target} quiz${target !== 1 ? 'zes' : ''}`,
     streak: `Keep your streak going`,
+    lab: `${target} hands-on lab${target !== 1 ? 's' : ''}`,
   };
   return map[kind];
 }

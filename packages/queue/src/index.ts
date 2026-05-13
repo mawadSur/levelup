@@ -26,6 +26,7 @@ export {
   enqueueAnomalyScan,
   enqueueGovernanceReport,
   enqueueTrialExpiryCheck,
+  enqueueGenerateSceneAsset,
 } from './queues.js';
 
 // Worker factory
@@ -63,4 +64,6 @@ export type {
   GovernanceReportOutput,
   TrialExpiryCheckInput,
   TrialExpiryCheckOutput,
+  GenerateSceneAssetInput,
+  GenerateSceneAssetOutput,
 } from './types.js';

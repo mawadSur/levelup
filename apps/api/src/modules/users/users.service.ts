@@ -11,7 +11,7 @@ import type { AiLevel, Badge, Role } from '@levelup/db';
 import type { UpdateProfileDto } from './dto/update-profile.dto';
 import type { UpdateRoleDto } from './dto/update-role.dto';
 import type { SetAiLevelDto } from './dto/set-ai-level.dto';
-import type { ActivityEvent } from '@levelup/types';
+import type { ActivityEvent, LeaderboardOptOutInput } from '@levelup/types';
 
 interface ListUsersQuery {
   role?: Role;
@@ -100,6 +100,30 @@ export class UsersService {
         metadata: { changes: dto },
       },
     });
+
+    return user;
+  }
+
+  async updateLeaderboardOptOut(sessionUser: SessionPayload, dto: LeaderboardOptOutInput) {
+    const user = await this.prisma.user.update({
+      where: { id: sessionUser.userId },
+      data: { leaderboardOptOut: dto.optOut },
+    });
+
+    try {
+      await this.prisma.auditLog.create({
+        data: {
+          organizationId: sessionUser.organizationId,
+          actorId: sessionUser.userId,
+          action: 'user.leaderboard_opt_out_changed',
+          targetType: 'User',
+          targetId: sessionUser.userId,
+          metadata: { optOut: dto.optOut },
+        },
+      });
+    } catch {
+      // Audit writes never block the parent op.
+    }
 
     return user;
   }

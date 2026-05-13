@@ -55,6 +55,7 @@ type NavLink = { href: string; label: string };
 const BASE_NAV_LINKS: NavLink[] = [
   { href: '/learn', label: 'Learn' },
   { href: '/curriculum', label: 'Curriculum' },
+  { href: '/labs', label: 'Labs' },
   { href: '/playbooks', label: 'Playbooks' },
   { href: '/coach', label: 'Coach' },
   { href: '/prompts', label: 'Prompts' },

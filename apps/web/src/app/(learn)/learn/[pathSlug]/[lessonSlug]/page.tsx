@@ -11,6 +11,13 @@ import { BackToTop } from '@/components/learn/back-to-top';
 import { MarkLessonReadButton } from '@/components/learn/mark-lesson-read-button';
 import { ReadingProgressBar } from '@/components/learn/reading-progress-bar';
 import { LessonHeroFade } from '@/components/learn/lesson-hero-fade';
+import { ScenarioRenderer } from '@/components/learn/scenario-renderer';
+import {
+  looksLikeScenarioBody,
+  parseScenarioBody,
+  ScenarioParseError,
+  type ScenarioScene,
+} from '@levelup/types';
 import type { TocLesson } from '@/components/learn/path-toc';
 // LessonProgress was removed from the per-lesson page — per-lesson status
 // now arrives via `progress.getMyPathProgress(pathId).lessons`.
@@ -132,6 +139,22 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const content = currentLesson.body ?? currentLesson.content ?? '';
   const youtubeEmbedUrl = extractYouTubeEmbed(currentLesson.videoUrl);
 
+  // Scenario detection — a scenario lesson's body is a sequence of
+  // `## <scene-slug>` blocks with bracketed cues. `looksLikeScenarioBody`
+  // gates the (cheap) full parse so we don't trip on prose lessons that
+  // happen to use second-level headings.
+  let scenarioScenes: ScenarioScene[] | null = null;
+  if (looksLikeScenarioBody(content)) {
+    try {
+      scenarioScenes = parseScenarioBody(content);
+    } catch (err) {
+      if (!(err instanceof ScenarioParseError)) throw err;
+      scenarioScenes = null;
+    }
+  }
+  const isScenario = scenarioScenes !== null && scenarioScenes.length > 0;
+  const sceneAssets = (currentLesson as Lesson).sceneAssets ?? ({} as Record<string, string>);
+
   return (
     <>
       <BackToTop />
@@ -191,7 +214,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </div>
             )}
 
-            {content ? (
+            {isScenario && scenarioScenes ? (
+              <ScenarioRenderer
+                scenes={scenarioScenes}
+                sceneAssets={sceneAssets}
+                lessonId={currentLesson.id}
+                isCompleted={isCompleted}
+                nextLessonHref={nextLessonHref}
+              />
+            ) : content ? (
               <MarkdownView content={content} className="pb-8" />
             ) : (
               <div className="rounded-md border border-dashed border-ink-600 p-10 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
@@ -200,7 +231,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             )}
 
             <div className="mt-10 border-t border-ink-600 pt-8">
-              {!quizData && !isCompleted && (
+              {!isScenario && !quizData && !isCompleted && (
                 <MarkLessonReadButton lessonId={currentLesson.id} nextHref={nextLessonHref} />
               )}
 
@@ -215,13 +246,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </div>
               )}
 
-              {isCompleted && !quizData && nextLessonHref && (
+              {!isScenario && isCompleted && !quizData && nextLessonHref && (
                 <Button asChild variant="primary">
                   <Link href={nextLessonHref}>Next lesson →</Link>
                 </Button>
               )}
 
-              {isCompleted && !quizData && !nextLessonHref && (
+              {!isScenario && isCompleted && !quizData && !nextLessonHref && (
                 <div className="flex items-center gap-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-success">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path

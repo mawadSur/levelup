@@ -444,9 +444,12 @@ export class GameService {
       }
     }
 
-    // Scope of users we'll consider — always inside the org.
+    // Scope of users we'll consider — always inside the org. Opted-out users
+    // are hidden from the public ranking; the requester themselves still sees
+    // the board, they just don't appear on it.
     const userWhere: Prisma.UserWhereInput = {
       organizationId: opts.organizationId,
+      leaderboardOptOut: false,
       ...(departmentFilter ? { departmentId: departmentFilter } : {}),
     };
 
@@ -540,6 +543,8 @@ export class GameService {
 
     // Cap the public list at top 50, but if the requesting user falls
     // outside, append their own row so the client can render "you are #87".
+    // Opted-out users are filtered out of `entries` above — they never get
+    // their own row appended either.
     const TOP_N = 50;
     const top = entries.slice(0, TOP_N);
     const me = entries.find((e) => e.userId === opts.userId);

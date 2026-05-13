@@ -13,6 +13,7 @@ import { updateRoleSchema } from './dto/update-role.dto';
 import type { UpdateRoleDto } from './dto/update-role.dto';
 import { setAiLevelSchema } from './dto/set-ai-level.dto';
 import type { SetAiLevelDto } from './dto/set-ai-level.dto';
+import { leaderboardOptOutSchema, type LeaderboardOptOutInput } from '@levelup/types';
 import { z } from 'zod';
 import { Role as RoleEnum, AiLevel as AiLevelEnum } from '@levelup/db';
 
@@ -65,6 +66,14 @@ export class UsersController {
     @Body(new ZodValidationPipe(updateProfileSchema)) dto: UpdateProfileDto,
   ) {
     return this.usersService.updateMyProfile(user, dto);
+  }
+
+  @Patch('me/leaderboard-opt-out')
+  updateLeaderboardOptOut(
+    @CurrentUser() user: SessionPayload,
+    @Body(new ZodValidationPipe(leaderboardOptOutSchema)) dto: LeaderboardOptOutInput,
+  ) {
+    return this.usersService.updateLeaderboardOptOut(user, dto);
   }
 
   @Get(':id/activity')

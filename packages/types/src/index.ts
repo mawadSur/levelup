@@ -17,3 +17,11 @@ export * from './demo';
 export * from './insights';
 export * from './anomaly';
 export * from './integrations';
+export * from './labs';
+export * from './scenarios';
+export {
+  parseScenario,
+  parseScenarioBody,
+  looksLikeScenarioBody,
+  ScenarioParseError,
+} from './scenario-parser';

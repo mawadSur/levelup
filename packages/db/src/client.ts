@@ -66,4 +66,7 @@ export type {
   PathGenerationRequest,
   OrganizationIntegration,
   AnomalyAlert,
+  Lab,
+  LabAttempt,
+  LessonSceneAsset,
 } from '@prisma/client';

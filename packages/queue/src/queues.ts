@@ -15,6 +15,7 @@ import type {
   AnomalyScanInput,
   GovernanceReportInput,
   TrialExpiryCheckInput,
+  GenerateSceneAssetInput,
 } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -207,6 +208,26 @@ export function enqueueTrialExpiryCheck(
 ): Promise<Job<TrialExpiryCheckInput, JobMap['trial-expiry-check']['output']>> {
   return getQueue('trial-expiry-check').add('trial-expiry-check', input ?? {}, {
     ...JOBS['trial-expiry-check'].defaultOpts,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `generate-scene-asset` job.
+ *
+ * Generates (or reuses) the pre-rendered image for one scene in a scenario
+ * lesson. The handler is idempotent on `promptHash` — re-enqueuing the same
+ * payload returns the cached blob URL via `LessonSceneAsset`. We pin
+ * `jobId` to the promptHash so BullMQ dedupes back-to-back submits from a
+ * single seed run.
+ */
+export function enqueueGenerateSceneAsset(
+  input: GenerateSceneAssetInput,
+  overrides?: JobsOptions,
+): Promise<Job<GenerateSceneAssetInput, JobMap['generate-scene-asset']['output']>> {
+  return getQueue('generate-scene-asset').add('generate-scene-asset', input, {
+    ...JOBS['generate-scene-asset'].defaultOpts,
+    jobId: `scene:${input.promptHash}`,
     ...overrides,
   });
 }

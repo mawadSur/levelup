@@ -1,100 +1,199 @@
-# CLAUDE.md
+# Ruflo — Claude Code Configuration
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Rules
 
-## Repo at a glance
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless absolutely necessary — prefer editing existing files
+- NEVER create documentation files unless explicitly requested
+- NEVER save working files or tests to root — use `/src`, `/tests`, `/docs`, `/config`, `/scripts`
+- ALWAYS read a file before editing it
+- NEVER commit secrets, credentials, or .env files
+- Keep files under 500 lines
+- Validate input at system boundaries
 
-**LevelUp AI Academy** — multi-tenant SaaS that trains employees to use AI safely and effectively. pnpm + Turborepo monorepo. Apps split into a Next.js 15 web frontend (`apps/web`), a NestJS API (`apps/api`), and a BullMQ worker (`apps/worker`). Shared logic lives in `packages/` (db, types, ui, llm, auth-client, billing, queue, observability, plus config presets).
+## Agent Comms (SendMessage-First Coordination)
 
-This repo is being built incrementally by an autonomous orchestrator. Build state lives in `tasks.md` at the repo root — read it first to understand what's done, in flight, or pending. The orchestrator skill at `.claude/skills/levelup-orchestrator/SKILL.md` describes the dispatch pattern.
+Named agents coordinate via `SendMessage`, not polling or shared state.
 
-## Common commands
-
-Run from repo root unless noted.
-
-```bash
-pnpm install
-pnpm infra:up            # docker compose: Postgres+pgvector + Redis (run before db tasks / dev)
-pnpm db:generate         # prisma generate (run after schema changes)
-pnpm db:migrate          # prisma migrate dev (creates / applies migrations)
-pnpm db:seed             # seeds demo org + paths from packages/db/content/
-pnpm db:studio           # Prisma Studio
-pnpm dev                 # turbo dev — runs web (3000) + api (4000) + worker in parallel
-pnpm build               # turbo build (respects ^build deps; Prisma client generated first)
-pnpm typecheck
-pnpm lint
-pnpm test                # runs vitest in each package + jest in apps/api
-pnpm format              # prettier write
-pnpm infra:down
+```
+Lead (you) ←→ architect ←→ developer ←→ tester ←→ reviewer
+              (named agents message each other directly)
 ```
 
-Filter scripts to one workspace, e.g. `pnpm --filter @levelup/api dev`, `pnpm --filter @levelup/db studio`. Run a single Vitest file with `pnpm --filter @levelup/llm exec vitest run src/sensitive.test.ts`. Run a single NestJS e2e spec with `pnpm --filter @levelup/api exec jest --config test/jest-e2e.json test/auth.e2e-spec.ts`.
+### Spawning a Coordinated Team
 
-CI in `.github/workflows/ci.yml` runs the same `format:check → lint → typecheck → build → test` chain against a Postgres+Redis services pair.
+```javascript
+// ALL agents in ONE message, each knows WHO to message next
+Agent({
+  prompt: "Research the codebase. SendMessage findings to 'architect'.",
+  subagent_type: 'researcher',
+  name: 'researcher',
+  run_in_background: true,
+});
+Agent({
+  prompt: "Wait for 'researcher'. Design solution. SendMessage to 'coder'.",
+  subagent_type: 'system-architect',
+  name: 'architect',
+  run_in_background: true,
+});
+Agent({
+  prompt: "Wait for 'architect'. Implement it. SendMessage to 'tester'.",
+  subagent_type: 'coder',
+  name: 'coder',
+  run_in_background: true,
+});
+Agent({
+  prompt: "Wait for 'coder'. Write tests. SendMessage results to 'reviewer'.",
+  subagent_type: 'tester',
+  name: 'tester',
+  run_in_background: true,
+});
+Agent({
+  prompt: "Wait for 'tester'. Review code quality and security.",
+  subagent_type: 'reviewer',
+  name: 'reviewer',
+  run_in_background: true,
+});
 
-## Stub mode (very important)
+// Kick off the pipeline
+SendMessage({ to: 'researcher', summary: 'Start', message: '[task context]' });
+```
 
-Every external integration (`OPENAI_API_KEY`, `WORKOS_API_KEY`, `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `OTEL_EXPORTER_OTLP_ENDPOINT`) tolerates a `PLACEHOLDER_*` value and falls back to a deterministic in-process stub. The pattern is consistent across packages: each has a `config.ts` with `isStubMode()` and a `stub.ts` with the canned behaviour. Stub mode throws at boot in `NODE_ENV=production`. Don't add new integrations without the same pattern — the dev experience depends on it. `WorkOS` stub uses `/api/auth/dev-bypass?email=...` to fake SSO; never ship that route enabled in production.
+### Patterns
 
-## Architecture
+| Pattern        | Flow                  | Use When                                |
+| -------------- | --------------------- | --------------------------------------- |
+| **Pipeline**   | A → B → C → D         | Sequential dependencies (feature dev)   |
+| **Fan-out**    | Lead → A, B, C → Lead | Independent parallel work (research)    |
+| **Supervisor** | Lead ↔ workers        | Ongoing coordination (complex refactor) |
 
-### Multi-tenant by `organizationId`
+### Rules
 
-Every domain row carries `organizationId` (with cascade delete). Two intentional exceptions: `LearningPath` and `AssessmentItem` allow `organizationId = NULL` for global content shared across tenants. Every service must scope queries by the current org. Reads of "shareable" entities use a union: `WHERE organizationId = currentOrg OR organizationId IS NULL`. Writes are always single-tenant.
+- ALWAYS name agents — `name: "role"` makes them addressable
+- ALWAYS include comms instructions in prompts — who to message, what to send
+- Spawn ALL agents in ONE message with `run_in_background: true`
+- After spawning: STOP, tell user what's running, wait for results
+- NEVER poll status — agents message back or complete automatically
 
-### Auth: default-secure
+## Swarm & Routing
 
-`AuthModule` registers `AuthGuard` and `RoleGuard` as `APP_GUARD` providers — every route is authenticated unless decorated with `@Public()` (auth callback, webhooks, health, marketing root, certificate verification). RBAC uses a hierarchy `ADMIN > MANAGER > EMPLOYEE`; `@Roles('MANAGER')` means "manager-or-higher". Sessions are JWE-encrypted (`dir` + `A256GCM`, key derived `SHA-256(SESSION_SECRET)`) so payloads can't be inspected client-side. Cookie name is `LEVELUP_SESSION` (`HttpOnly`, `SameSite=Lax`, 7-day TTL, also tracked as a `Session` row for audit/revocation).
+### Config
 
-### Webhooks need raw body
+- **Topology**: hierarchical-mesh (anti-drift)
+- **Max Agents**: 15
+- **Memory**: hybrid
+- **HNSW**: Enabled
+- **Neural**: Enabled
 
-`apps/api/src/main.ts` mounts `express.raw({ type: 'application/json' })` on `/api/webhooks/stripe` _before_ the JSON body parser. Stripe signature verification reads `req.rawBody` directly — don't add another body parser ahead of that route or signature checks fail.
+```bash
+npx @claude-flow/cli@latest swarm init --topology hierarchical --max-agents 8 --strategy specialized
+```
 
-### Audit log everywhere
+### Agent Routing
 
-Every mutation writes to `AuditLog` with `(organizationId, actorId?, action, targetType?, targetId?, metadata)`. Action names use a `domain.verb` convention — `path.assign`, `coach.invoke`, `coach.sensitive_data_detected`, `billing.checkout_started`, `webhook.stripe.subscription.updated`, etc. Audit writes never block the parent operation (errors are caught and logged).
+| Task        | Agents                             | Topology     |
+| ----------- | ---------------------------------- | ------------ |
+| Bug Fix     | researcher, coder, tester          | hierarchical |
+| Feature     | architect, coder, tester, reviewer | hierarchical |
+| Refactor    | architect, coder, reviewer         | hierarchical |
+| Performance | perf-engineer, coder               | hierarchical |
+| Security    | security-architect, auditor        | hierarchical |
 
-### AI coach data flow
+### When to Swarm
 
-1. Client → `POST /api/coach` or `POST /api/coach/stream` (SSE).
-2. `CoachService` loads user (with `aiLevel`, dept, role) + latest `CompanyPolicy`.
-3. Always runs `classifySensitive(userInput)` from `@levelup/llm` — regex first (SSN/credit-card/AWS-key/`sk-...`), optional Stage-2 LLM check (1s timeout). Trigger writes `coach.sensitive_data_detected` to AuditLog and sets a banner on the response, but never blocks the call.
-4. `runCoach`/`streamCoach` builds the prompt from a stable system-prompt constant (cache-friendly: never mutate the prefix across calls) and asks for structured JSON (`explanation`, `improvedPrompt?`, `whyItWorks?`, `nextAction?`).
-5. Streaming uses a tolerant incremental JSON parser that emits per-field deltas; the final event is the source of truth.
-6. Persists `AiCoachSession` row with input, full response, sensitivity flag, tokens, model.
-7. `RateLimitGuard` enforces 30 calls/minute/user (in-memory; production should swap to Redis-backed).
+- **YES**: 3+ files, new features, cross-module refactoring, API changes, security, performance
+- **NO**: single file edits, 1-2 line fixes, docs updates, config changes, questions
 
-### Background jobs
+### 3-Tier Model Routing
 
-`@levelup/queue` defines a typed `JobMap` for `cert-pdf | report-aggregate | embed-content | send-email`. Producers (in the API) call typed enqueue helpers; consumers (in `apps/worker`) call `createWorker(name, handler)` with full input/output type inference. Adding a new job requires updating `JobMap`, `JOBS`, and the corresponding helper — TypeScript enforces this. Cert PDFs are generated by the worker (pdfkit), written to `apps/api/.cert-output/<id>.pdf`, served via the API at `GET /api/certificates/:id/file`. Lesson embeddings use mean-pooled chunks upserted into `LessonEmbedding` (Prisma `Unsupported("vector(1536)")` field, written via raw SQL).
+| Tier | Handler              | Use Cases                                       |
+| ---- | -------------------- | ----------------------------------------------- |
+| 1    | Agent Booster (WASM) | Simple transforms — skip LLM, use Edit directly |
+| 2    | Haiku                | Simple tasks, low complexity                    |
+| 3    | Sonnet/Opus          | Architecture, security, complex reasoning       |
 
-### Frontend
+## Memory & Learning
 
-Next.js 15 App Router with route groups: `(auth)` (sign-in/sign-up/accept-invitation), `(admin)` (admin-only shell with sidebar nav, server-side session check), `(learn)` (employee shell), and root marketing pages (`/`, `/pricing`). `middleware.ts` does the cheap cookie check first; the API rejects expired sessions on every request. Server components fetch data via the typed client at `apps/web/src/lib/api/` (one file per domain, namespaced re-exports). Client components handle interactivity. Streaming is a manual `fetch` + `TextDecoder` SSE parser yielded as an `AsyncGenerator`. Theme tokens come from `@levelup/ui`'s `globals.css` (deep-indigo brand, light + dark via `.dark` class, `next-themes` provider). Use `cn` from `@levelup/ui` for class composition; never reach for `clsx` directly.
+### Before Any Task
 
-### Content
+```bash
+npx @claude-flow/cli@latest memory search --query "[task keywords]" --namespace patterns
+npx @claude-flow/cli@latest hooks route --task "[task description]"
+```
 
-Learning content lives in `packages/db/content/<path-slug>/` as markdown files with YAML frontmatter (`slug, title, estimatedMinutes, orderIndex`) plus per-lesson quiz JSON. Assessment item bank at `packages/db/content/assessment-bank/items.json` (40 items). Sample policy at `packages/db/content/sample-policy/`. Prompt library starter at `packages/db/content/prompt-library/prompts.json` (50 prompts seeded as global `isShared: true`). The seed script under `packages/db/prisma/seed.ts` is the canonical loader — keep it idempotent (uses upserts).
+### After Success
 
-### Observability
+```bash
+npx @claude-flow/cli@latest memory store --namespace patterns --key "[name]" --value "[what worked]"
+npx @claude-flow/cli@latest hooks post-task --task-id "[id]" --success true --store-results true
+```
 
-`@levelup/observability` wraps `@opentelemetry/sdk-node` with auto-instrumentations. Both `apps/api/src/main.ts` and `apps/worker/src/main.ts` import `./observability/start` _as the first import_ so OTel patches Node core before any framework loads. No-op when the OTLP endpoint env is a placeholder.
+### MCP Tools (use `ToolSearch("keyword")` to discover)
 
-## Conventions agents must follow
+| Category      | Key Tools                                                  |
+| ------------- | ---------------------------------------------------------- |
+| **Memory**    | `memory_store`, `memory_search`, `memory_search_unified`   |
+| **Bridge**    | `memory_import_claude`, `memory_bridge_status`             |
+| **Swarm**     | `swarm_init`, `swarm_status`, `swarm_health`               |
+| **Agents**    | `agent_spawn`, `agent_list`, `agent_status`                |
+| **Hooks**     | `hooks_route`, `hooks_post-task`, `hooks_worker-dispatch`  |
+| **Security**  | `aidefence_scan`, `aidefence_is_safe`, `aidefence_has_pii` |
+| **Hive-Mind** | `hive-mind_init`, `hive-mind_consensus`, `hive-mind_spawn` |
 
-- Strict TypeScript everywhere. Avoid `any` — use `unknown` + narrowing or generics. The few intentional escape hatches are documented inline.
-- No comments unless they explain non-obvious _why_ (e.g., the prompt-cache invariant, the JWE algorithm choice, the "must be first import" line). Don't write what-the-code-does comments.
-- Use `ZodValidationPipe` for request bodies, sourcing schemas from `@levelup/types`.
-- Org-scope every Prisma read AND write. Don't trust foreign-key joins to enforce it.
-- Don't edit `apps/api/src/app.module.ts` while a parallel agent is building a new module — the orchestrator pattern is "each module agent reports the import line and the orchestrator wires it manually" to avoid concurrent edits. Same for `main.ts`.
-- The web app currently consumes some `@levelup/ui` source files via `transpilePackages`; don't break that by adding non-TS-source build artifacts the consumer can't compile.
+### Background Workers
 
-## Known schema additions deferred
+| Worker     | When                   |
+| ---------- | ---------------------- |
+| `audit`    | After security changes |
+| `optimize` | After performance work |
+| `testgaps` | After adding features  |
+| `map`      | Every 5+ file changes  |
+| `document` | After API changes      |
 
-These were noted by agents during the build and not yet applied to `packages/db/prisma/schema.prisma`:
+```bash
+npx @claude-flow/cli@latest hooks worker dispatch --trigger audit
+```
 
-- `User.deactivatedAt: DateTime?` — `users.service.ts` falls back to nullifying `workosUserId` until added.
-- `Organization.paymentFailed: Boolean @default(false)` — webhook handler audits but doesn't flag the org until added.
-- `ReportSnapshot` model — worker stashes report payloads in `AuditLog.metadata` until added.
+## Agents
 
-When the migration is run, search for `// TODO` or "deferred" markers near these areas to switch to the real columns.
+**Core**: `coder`, `reviewer`, `tester`, `planner`, `researcher`
+**Architecture**: `system-architect`, `backend-dev`, `mobile-dev`
+**Security**: `security-architect`, `security-auditor`
+**Performance**: `performance-engineer`, `perf-analyzer`
+**Coordination**: `hierarchical-coordinator`, `mesh-coordinator`, `adaptive-coordinator`
+**GitHub**: `pr-manager`, `code-review-swarm`, `issue-tracker`, `release-manager`
+
+Any string works as a custom agent type.
+
+## Build & Test
+
+- ALWAYS run tests after code changes
+- ALWAYS verify build succeeds before committing
+
+```bash
+npm run build && npm test
+```
+
+## CLI Quick Reference
+
+```bash
+npx @claude-flow/cli@latest init --wizard           # Setup
+npx @claude-flow/cli@latest swarm init --v3-mode     # Start swarm
+npx @claude-flow/cli@latest memory search --query "" # Vector search
+npx @claude-flow/cli@latest hooks route --task ""    # Route to agent
+npx @claude-flow/cli@latest doctor --fix             # Diagnostics
+npx @claude-flow/cli@latest security scan            # Security scan
+npx @claude-flow/cli@latest performance benchmark    # Benchmarks
+```
+
+26 commands, 140+ subcommands. Use `--help` on any command for details.
+
+## Setup
+
+```bash
+claude mcp add claude-flow -- npx -y @claude-flow/cli@latest
+npx @claude-flow/cli@latest daemon start
+npx @claude-flow/cli@latest doctor --fix
+```
+
+**Agent tool** handles execution (agents, files, code, git). **MCP tools** handle coordination (swarm, memory, hooks). **CLI** is the same via Bash.

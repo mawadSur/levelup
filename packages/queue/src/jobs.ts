@@ -120,4 +120,16 @@ export const JOBS: Record<JobName, JobRegistration> = {
       attempts: 1,
     },
   },
+
+  'generate-scene-asset': {
+    queue: 'generate-scene-asset',
+    defaultOpts: {
+      ...defaultJobOptions,
+      // Image generation is paid + sometimes flaky on the gateway side; give
+      // it a couple of retries with backoff but cap at 3 to avoid burning
+      // budget on a truly broken prompt.
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 3000 },
+    },
+  },
 } as const;

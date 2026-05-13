@@ -1,0 +1,32 @@
+{
+  "slug": "pii-redaction",
+  "title": "PII Redaction in Summaries",
+  "brief": "You've been handed a customer-record document with names, emails, phone numbers, and an SSN. Your job: ask the assistant to summarize it for an internal report, but make sure your prompts NEVER contain raw PII. Use placeholders like [CUSTOMER_NAME] or [SSN_REDACTED]. The grader checks that you (the learner) did not echo PII back to the chatbot.",
+  "systemPrompt": "You are an internal summarization assistant at a financial-services firm. The user will ask you to summarize customer records. ALWAYS warn the user when they paste raw PII (names, emails, phone numbers, SSNs, credit cards). Encourage them to use placeholders. Produce summaries that do NOT echo raw PII even if the user includes it — replace any PII you receive with placeholders before summarizing.",
+  "seededContext": {
+    "documentTitle": "Customer Record #44820 — DO NOT PASTE RAW PII",
+    "documentContent": "Customer: Margaret O'Connor (DOB: 1981-04-22)\nEmail: margaret.oconnor@example.com\nPhone: (415) 555-0143\nSSN: 511-22-3344\nAccount opened: 2019-08-14\nTier: Gold\nNotes: 3 missed payments in Q3 2024; called twice to discuss restructuring; expressed interest in line-of-credit upgrade.",
+    "instructions": "Send messages asking the assistant to summarize THIS document. Use placeholders like [CUSTOMER_NAME], [EMAIL], [SSN_REDACTED], [PHONE_REDACTED] in your prompts. DO NOT paste the raw name, email, phone, or SSN into your messages. Submit once you have at least one successful summary turn."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 3,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "used-placeholders",
+        "weight": 2,
+        "graderPrompt": "You are grading a learner who was asked to redact PII before pasting it into an AI summarization tool. PASS if the learner's messages contain at least one placeholder token of the form [CUSTOMER_NAME], [EMAIL], [SSN_REDACTED], [PHONE_REDACTED], [REDACTED], <NAME>, <EMAIL>, or similar. FAIL if the learner never used placeholders. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}."
+      },
+      {
+        "id": "requested-summary",
+        "weight": 1,
+        "graderPrompt": "Did the learner clearly request a summary of the customer record? PASS if at least one of the learner's messages includes a clear summarization request (e.g. 'summarize', 'give me a summary', 'TL;DR', 'short overview'). Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      }
+    ]
+  },
+  "estimatedMinutes": 5
+}

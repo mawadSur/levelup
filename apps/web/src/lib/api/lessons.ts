@@ -19,6 +19,12 @@ export interface Lesson {
   order?: number;
   /** Quiz id when the lesson has a quiz, otherwise null. */
   quizId: string | null;
+  /**
+   * For scenario lessons (kind: scenario in the markdown frontmatter), the
+   * `sceneSlug → blobUrl` map of pre-rendered scene images. Empty for plain
+   * prose lessons; absent when the API server is older than this client.
+   */
+  sceneAssets?: Record<string, string>;
   isPublished?: boolean;
   createdAt?: string;
   updatedAt?: string;

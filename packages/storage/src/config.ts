@@ -14,12 +14,15 @@ export interface StorageConfig {
   certificatesBucket: string;
   policyFilesBucket: string;
   governanceReportsBucket: string;
+  sceneAssetsBucket: string;
   /** Where the local-fs stub writes cert PDFs (also where the legacy worker wrote them). */
   certOutputDir: string;
   /** Where the local-fs stub writes policy uploads. */
   policyOutputDir: string;
   /** Where the local-fs stub writes governance evidence reports. */
   governanceOutputDir: string;
+  /** Where the local-fs stub writes scenario scene images. */
+  sceneAssetsOutputDir: string;
   nodeEnv: string;
 }
 
@@ -31,6 +34,7 @@ function readEnv(): StorageConfig {
     policyFilesBucket: process.env['SUPABASE_POLICY_FILES_BUCKET'] ?? 'policy-files',
     governanceReportsBucket:
       process.env['SUPABASE_GOVERNANCE_REPORTS_BUCKET'] ?? 'governance-reports',
+    sceneAssetsBucket: process.env['SUPABASE_SCENE_ASSETS_BUCKET'] ?? 'scene-assets',
     certOutputDir:
       process.env['CERT_OUTPUT_DIR'] ??
       // Two levels up from packages/storage/dist → repo root → apps/api/.cert-output
@@ -38,6 +42,8 @@ function readEnv(): StorageConfig {
     policyOutputDir: process.env['POLICY_OUTPUT_DIR'] ?? `${process.cwd()}/.policy-uploads`,
     governanceOutputDir:
       process.env['GOVERNANCE_OUTPUT_DIR'] ?? `${process.cwd()}/.governance-reports`,
+    sceneAssetsOutputDir:
+      process.env['SCENE_ASSETS_OUTPUT_DIR'] ?? `${process.cwd()}/.scene-assets`,
     nodeEnv: process.env['NODE_ENV'] ?? 'development',
   };
 }

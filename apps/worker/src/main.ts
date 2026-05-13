@@ -34,6 +34,7 @@ import { pathGenerationHandler } from './jobs/path-generation.js';
 import { anomalyScanHandler } from './jobs/anomaly-scan.js';
 import { handleGovernanceReport } from './jobs/governance-report.js';
 import { handleTrialExpiryCheck } from './jobs/trial-expiry-check.js';
+import { handleGenerateSceneAsset } from './scenario/generate-scene-asset.js';
 import { attachDlqListener } from './jobs/dlq.js';
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -155,6 +156,15 @@ function boot(): void {
     'trial-expiry-check',
     createWorker('trial-expiry-check', handleTrialExpiryCheck, { concurrency: 1 }),
     1,
+  );
+
+  // generate-scene-asset — concurrency 2: image generation is mostly I/O
+  // bound on the model API. Two parallel calls keep the seed-time backfill
+  // brisk without thundering the OpenAI image endpoint.
+  registerWorker(
+    'generate-scene-asset',
+    createWorker('generate-scene-asset', handleGenerateSceneAsset, { concurrency: 2 }),
+    2,
   );
 }
 

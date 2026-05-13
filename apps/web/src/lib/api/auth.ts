@@ -23,17 +23,29 @@ export async function signOut(): Promise<void> {
  * Return the currently authenticated user, or throw ApiError(401).
  *
  * The API returns a flat shape that satisfies `sessionUserSchema` directly,
- * plus `aiLevel` and `organizationName`.
+ * plus `aiLevel`, `organizationName`, and `leaderboardOptOut`.
  */
-export async function me(): Promise<SessionUser & { aiLevel: string; organizationName?: string }> {
+export async function me(): Promise<
+  SessionUser & {
+    aiLevel: string;
+    organizationName?: string;
+    leaderboardOptOut: boolean;
+  }
+> {
   const json = (await apiGet<unknown>('/auth/me')) as Record<string, unknown>;
   const parsed = sessionUserSchema.parse(json);
   const aiLevel = typeof json['aiLevel'] === 'string' ? (json['aiLevel'] as string) : 'BEGINNER';
   const organizationName =
     typeof json['organizationName'] === 'string' ? (json['organizationName'] as string) : undefined;
-  const out: SessionUser & { aiLevel: string; organizationName?: string } = {
+  const leaderboardOptOut = json['leaderboardOptOut'] === true;
+  const out: SessionUser & {
+    aiLevel: string;
+    organizationName?: string;
+    leaderboardOptOut: boolean;
+  } = {
     ...parsed,
     aiLevel,
+    leaderboardOptOut,
   };
   if (organizationName !== undefined) out.organizationName = organizationName;
   return out;

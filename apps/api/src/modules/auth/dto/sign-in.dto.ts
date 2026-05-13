@@ -21,6 +21,7 @@ export interface MeResponse {
   departmentId: string | null;
   aiLevel: string;
   organizationName: string;
+  leaderboardOptOut: boolean;
 }
 
 export interface AcceptInvitationResponse {

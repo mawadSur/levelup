@@ -31,6 +31,7 @@ import { InsightsModule } from './modules/insights';
 import { AnomalyModule } from './modules/anomaly';
 import { IntegrationsModule } from './modules/integrations';
 import { GovernanceModule } from './modules/governance';
+import { LabsModule } from './modules/labs';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { GovernanceModule } from './modules/governance';
     ReportingModule,
     CertificatesModule,
     GameModule,
+    LabsModule,
     OnboardingModule,
     PrivacyModule,
     SearchModule,

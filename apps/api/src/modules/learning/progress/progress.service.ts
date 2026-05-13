@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   ForbiddenException,
   BadRequestException,
@@ -11,6 +12,7 @@ import type { TeamProgressEntry } from '@levelup/types';
 import type { GameService } from '../../game/game.service';
 import { signCertificate } from '../../certificates/cert-signing';
 import { track, captureEvent } from '@levelup/analytics';
+import { enqueueCertPdf } from '@levelup/queue';
 
 const FIRST_LESSON_BADGE_SLUG = 'first-lesson';
 const PASS_THRESHOLD = 70;
@@ -18,6 +20,8 @@ const MAX_TEAM_PROGRESS_USER_IDS = 200;
 
 @Injectable()
 export class ProgressService {
+  private readonly logger = new Logger(ProgressService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly gameService: GameService,
@@ -641,7 +645,7 @@ export class ProgressService {
     const signedHash = signCertificate({ userId: user.userId, learningPathId, issuedAt });
 
     try {
-      await this.prisma.certificate.create({
+      const cert = await this.prisma.certificate.create({
         data: {
           userId: user.userId,
           learningPathId,
@@ -650,6 +654,22 @@ export class ProgressService {
         },
       });
 
+      // Kick off PDF rendering so the cert is downloadable without requiring
+      // the user to first hit /certificates/:id/download. Failure to enqueue
+      // must never block certificate issuance — the manual download endpoint
+      // will retry the enqueue on demand.
+      let jobId: string | null = null;
+      try {
+        const job = await enqueueCertPdf({ certificateId: cert.id });
+        jobId = job.id ?? null;
+      } catch (err: unknown) {
+        this.logger.warn(
+          `Failed to enqueue cert-pdf for certificate ${cert.id}: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        );
+      }
+
       await this.prisma.auditLog.create({
         data: {
           organizationId: user.organizationId,
@@ -657,7 +677,7 @@ export class ProgressService {
           action: 'progress.path_complete',
           targetType: 'LearningPath',
           targetId: learningPathId,
-          metadata: { totalLessons: allLessons.length },
+          metadata: { totalLessons: allLessons.length, certificateId: cert.id, jobId },
         },
       });
 

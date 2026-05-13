@@ -104,6 +104,22 @@ export interface TrialExpiryCheckOutput {
   archivedCount: number;
 }
 
+export interface GenerateSceneAssetInput {
+  /** Lesson row owning this scene (scenario lessons are Lesson rows). */
+  lessonId: string;
+  /** `## <scene-slug>` from the scenario markdown. */
+  sceneSlug: string;
+  /** `[image] <prompt>` text from the scenario markdown. */
+  imagePrompt: string;
+  /** Cast for this scene, in stable order — fed into the hash and the prompt. */
+  characters: string[];
+  /** Caller-computed sha256(sceneSlug + imagePrompt + characters.sort().join(',')). */
+  promptHash: string;
+}
+export interface GenerateSceneAssetOutput {
+  blobUrl: string;
+}
+
 export interface GovernanceReportInput {
   /** Caller-issued request id (cuid) used to track status & idempotency. */
   requestId: string;
@@ -141,6 +157,10 @@ export interface JobMap {
   'anomaly-scan': { input: AnomalyScanInput; output: AnomalyScanOutput };
   'governance-report': { input: GovernanceReportInput; output: GovernanceReportOutput };
   'trial-expiry-check': { input: TrialExpiryCheckInput; output: TrialExpiryCheckOutput };
+  'generate-scene-asset': {
+    input: GenerateSceneAssetInput;
+    output: GenerateSceneAssetOutput;
+  };
 }
 
 /** Union of all valid job names. */

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { PrismaClient, Role, AiLevel, Plan } from '@prisma/client';
+import { seedScenarios } from './seed-scenarios';
 
 const prisma = new PrismaClient();
 
@@ -102,7 +103,7 @@ function loadPathFromContent(slug: string): SeedPath {
 
   const lessonFiles = fs
     .readdirSync(path.join(dir, 'lessons'))
-    .filter((f) => f.endsWith('.md'))
+    .filter((f) => f.endsWith('.md') && !f.endsWith('.scenario.md'))
     .sort();
 
   const lessons: SeedLesson[] = lessonFiles.map((file) => {
@@ -591,6 +592,57 @@ async function main() {
     }
   }
 
+  // ── Global Labs (hands-on AI scenarios) ──────────────────────────────────
+  // Labs ship as `*.lab.json` content files under packages/db/content/labs/.
+  // organizationId = null = visible to every tenant. Idempotent: matched by
+  // `slug` (unique).
+  const labsDir = path.join(__dirname, '..', 'content', 'labs');
+  let labsUpserted = 0;
+  if (fs.existsSync(labsDir)) {
+    const labFiles = fs.readdirSync(labsDir).filter((f) => f.endsWith('.lab.json'));
+    for (const file of labFiles) {
+      const raw = fs.readFileSync(path.join(labsDir, file), 'utf-8');
+      const spec = JSON.parse(raw) as {
+        slug: string;
+        title: string;
+        brief: string;
+        systemPrompt: string;
+        seededContext: Record<string, unknown>;
+        rubric: Record<string, unknown>;
+        estimatedMinutes: number;
+        learningPathId?: string | null;
+        isPublished?: boolean;
+      };
+      await prisma.lab.upsert({
+        where: { slug: spec.slug },
+        update: {
+          title: spec.title,
+          brief: spec.brief,
+          systemPrompt: spec.systemPrompt,
+          seededContext: spec.seededContext,
+          rubric: spec.rubric,
+          estimatedMinutes: spec.estimatedMinutes,
+          isPublished: spec.isPublished ?? true,
+        },
+        create: {
+          slug: spec.slug,
+          organizationId: null,
+          learningPathId: spec.learningPathId ?? null,
+          title: spec.title,
+          brief: spec.brief,
+          systemPrompt: spec.systemPrompt,
+          seededContext: spec.seededContext,
+          rubric: spec.rubric,
+          estimatedMinutes: spec.estimatedMinutes,
+          isPublished: spec.isPublished ?? true,
+        },
+      });
+      labsUpserted += 1;
+    }
+  }
+
+  const scenariosResult = await seedScenarios(prisma, org.id);
+
   // ── Global assessment-item bank ───────────────────────────────────────────
   // Items are global (organizationId = null) so every tenant samples from the
   // same bank. Idempotent: matched by prompt text.
@@ -674,6 +726,8 @@ async function main() {
     users: [admin.email, manager.email, employee1.email, employee2.email],
     paths: PATHS.map((p) => p.slug),
     assessmentItems: { created: bankCreated, total: bankItems.length },
+    labs: { upserted: labsUpserted },
+    scenarios: scenariosResult,
     reconciledUsers,
   });
 }

@@ -230,6 +230,7 @@ export class AuthService {
     departmentId: string | null;
     aiLevel: string;
     organizationName: string;
+    leaderboardOptOut: boolean;
   }> {
     const [org, dbUser] = await Promise.all([
       this.prisma.organization.findUniqueOrThrow({
@@ -238,12 +239,18 @@ export class AuthService {
       }),
       this.prisma.user.findUnique({
         where: { id: sessionUser.userId },
-        select: { aiLevel: true, name: true, departmentId: true },
+        select: {
+          aiLevel: true,
+          name: true,
+          departmentId: true,
+          leaderboardOptOut: true,
+        },
       }),
     ]);
     const aiLevel = dbUser?.aiLevel ?? 'BEGINNER';
     const name = dbUser?.name ?? sessionUser.email;
     const departmentId = dbUser?.departmentId ?? null;
+    const leaderboardOptOut = dbUser?.leaderboardOptOut ?? false;
     return {
       id: sessionUser.userId,
       email: sessionUser.email,
@@ -253,6 +260,7 @@ export class AuthService {
       departmentId,
       aiLevel,
       organizationName: org.name,
+      leaderboardOptOut,
     };
   }
 

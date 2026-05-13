@@ -80,6 +80,7 @@ enum XpEventKind {
   STREAK_30
   ASSESSMENT_BASELINE
   BADGE_BONUS
+  LAB_PASSED
 }
 
 enum QuestStatus {
@@ -149,6 +150,8 @@ model Organization {
   pathGenerationRequests PathGenerationRequest[]
   integrations           OrganizationIntegration[]
   anomalyAlerts          AnomalyAlert[]
+  labs                   Lab[]
+  labAttempts            LabAttempt[]
 
   @@map("organizations")
 }
@@ -182,9 +185,10 @@ model User {
   aiLevel         AiLevel   @default(BEGINNER)
   avatarUrl       String?
   lastLoginAt     DateTime?
-  deactivatedAt   DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  deactivatedAt     DateTime?
+  leaderboardOptOut Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   organization           Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   department             Department?              @relation(fields: [departmentId], references: [id], onDelete: SetNull)
@@ -213,6 +217,7 @@ model User {
   installedIntegrations  OrganizationIntegration[]
   anomalyAlerts          AnomalyAlert[]
   acknowledgedAnomalies  AnomalyAlert[]            @relation("AnomalyAcknowledgedBy")
+  labAttempts            LabAttempt[]
 
   @@unique([organizationId, email])
   @@index([organizationId])
@@ -273,6 +278,7 @@ model LearningPath {
   assignments            LearningPathAssignment[]
   certificates           Certificate[]
   pathGenerationRequests PathGenerationRequest[]
+  labs                   Lab[]
 
   @@unique([organizationId, slug])
   @@index([organizationId])
@@ -310,6 +316,7 @@ model Lesson {
   quizzes          Quiz[]
   progress         UserProgress[]
   contentEmbedding LessonEmbedding?
+  sceneAssets      LessonSceneAsset[]
 
   @@unique([learningPathId, slug])
   @@index([learningPathId])
@@ -887,4 +894,85 @@ model AnomalyAlert {
   @@index([organizationId, createdAt(sort: Desc)])
   @@index([organizationId, severity, acknowledgedAt])
   @@map("anomaly_alerts")
+}
+
+/// Lab — sandboxed AI scenario for hands-on practice (gamification Sprint 1).
+///
+/// Each lab has a simulated chatbot (`systemPrompt` + `seededContext`) and a
+/// `rubric` that the grader LLM uses to score a learner's transcript. Labs can
+/// be global (organizationId NULL) or org-owned; optionally nested under a
+/// LearningPath so they participate in path-completion + certificate flow.
+///
+/// Locked decision: `modelKey` defaults to `gpt-4o-mini` for both simulated
+/// chatbot turns and grader evaluation.
+model Lab {
+  id               String   @id @default(cuid())
+  organizationId   String?
+  learningPathId   String?
+  slug             String   @unique
+  title            String
+  brief            String   @db.Text
+  systemPrompt     String   @db.Text
+  seededContext    Json
+  rubric           Json
+  estimatedMinutes Int
+  modelKey         String   @default("gpt-4o-mini")
+  isPublished      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  learningPath LearningPath? @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
+  attempts     LabAttempt[]
+
+  @@index([organizationId])
+  @@index([learningPathId])
+  @@map("labs")
+}
+
+/// LabAttempt — one learner submission against a Lab.
+///
+/// The grader returns a per-criterion result + overall score. A passing
+/// attempt (`passed = true`) triggers `LAB_PASSED` XP via GameService.
+model LabAttempt {
+  id             String   @id @default(cuid())
+  labId          String
+  userId         String
+  organizationId String
+  transcript     Json
+  graderRaw      Json
+  score          Float
+  criteria       Json
+  passed         Boolean
+  tokensUsed     Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  lab          Lab          @relation(fields: [labId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, labId])
+  @@index([labId, createdAt(sort: Desc)])
+  @@map("lab_attempts")
+}
+
+/// LessonSceneAsset — pre-generated scene image for narrative scenarios.
+///
+/// Scenario lessons (kind: scenario) embed branching scenes. At seed time the
+/// scenario loader generates one image per scene via Vercel AI Gateway,
+/// uploads to Vercel Blob, and persists the URL here. `promptHash` is the
+/// SHA-256 of (sceneSlug + scenePrompt + characterSet) — identical content
+/// re-seeded reuses the existing blob.
+model LessonSceneAsset {
+  id         String   @id @default(cuid())
+  lessonId   String
+  sceneSlug  String
+  promptHash String   @unique
+  blobUrl    String
+  createdAt  DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, sceneSlug])
+  @@map("lesson_scene_assets")
 }

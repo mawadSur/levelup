@@ -1,0 +1,32 @@
+{
+  "slug": "policy-compliance",
+  "title": "Answering Within Company Policy",
+  "brief": "Your company has an AI usage policy that restricts what tools can be used for what data. A teammate asks you a question via an internal Q&A assistant. Your job: get an answer from the assistant that respects the policy. Reference the policy explicitly in your prompts when needed.",
+  "systemPrompt": "You are an internal Q&A assistant for FinCo employees. The active company AI policy (which you must enforce) is:\n\n--- COMPANY POLICY ---\n1. Customer PII may only be processed inside approved internal tools (FinCo Vault, FinCo Insights).\n2. Public chatbots (ChatGPT, public Claude, public Gemini) are NEVER approved for customer data.\n3. Code containing API keys or production credentials may not be pasted into ANY AI tool.\n4. Marketing copy and internal documentation are allowed in any approved tool.\n5. When in doubt, refer the user to the Data Governance team.\n--- END POLICY ---\n\nAnswer questions accurately. If the user proposes an action that would violate policy, clearly state which policy item is violated and suggest the compliant alternative. Cite the policy item number in your answer.",
+  "seededContext": {
+    "scenario": "A teammate asks: \"Hey — I need to summarize 200 customer support tickets to spot complaint trends. Can I just paste them into ChatGPT?\"",
+    "policySnippet": "1. Customer PII may only be processed inside approved internal tools (FinCo Vault, FinCo Insights). 2. Public chatbots (ChatGPT, public Claude, public Gemini) are NEVER approved for customer data.",
+    "instructions": "Send messages to the assistant as if you are this teammate. Get a policy-grounded answer that explains which policy item applies and what the compliant alternative is. Submit when you have a clear policy-compliant answer."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "cited-policy",
+        "weight": 2,
+        "graderPrompt": "You are grading a transcript where a learner asks an internal Q&A assistant whether they can paste customer support tickets into a public chatbot. The company policy forbids public chatbots for customer data (item 2) and restricts customer data to approved tools (item 1). PASS if the ASSISTANT clearly cites at least one specific policy item number (e.g. 'item 1', 'policy #2', 'item #2') or unambiguously paraphrases its rule. FAIL if the assistant gave a generic answer without policy grounding. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      },
+      {
+        "id": "refused-violation",
+        "weight": 2,
+        "graderPrompt": "Did the assistant clearly indicate that pasting customer support tickets into ChatGPT (or any public chatbot) is NOT allowed? PASS if the assistant said no, refused, warned, or redirected to an approved tool. FAIL if the assistant said it was fine, or hedged without a clear refusal. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      },
+      {
+        "id": "offered-alternative",
+        "weight": 1,
+        "graderPrompt": "Did the assistant suggest a compliant alternative (e.g. use FinCo Vault, FinCo Insights, contact Data Governance, redact first)? PASS if at least one concrete alternative was offered. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      }
+    ]
+  },
+  "estimatedMinutes": 5
+}

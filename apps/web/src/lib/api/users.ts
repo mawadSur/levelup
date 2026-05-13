@@ -56,6 +56,14 @@ export async function updateMe(input: UpdateMeInput): Promise<User> {
   return apiPatch<UpdateMeInput, User>('/users/me', input);
 }
 
+export interface LeaderboardOptOutInput {
+  optOut: boolean;
+}
+
+export async function updateLeaderboardOptOut(input: LeaderboardOptOutInput): Promise<User> {
+  return apiPatch<LeaderboardOptOutInput, User>('/users/me/leaderboard-opt-out', input);
+}
+
 export async function updateRole(input: UpdateUserRoleInput): Promise<User> {
   const parsed = updateUserRoleSchema.parse(input);
   return apiPatch<UpdateUserRoleInput, User>(`/users/${parsed.userId}/role`, parsed);

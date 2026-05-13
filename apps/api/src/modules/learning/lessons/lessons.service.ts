@@ -107,6 +107,16 @@ export class LessonsService {
       select: { id: true },
     });
 
+    // Pre-rendered scene images (only populated for scenario lessons). We
+    // surface them on the same GET so the renderer doesn't need a second
+    // round trip — empty record for non-scenario lessons.
+    const sceneAssets = await this.prisma.lessonSceneAsset.findMany({
+      where: { lessonId: lesson.id },
+      select: { sceneSlug: true, blobUrl: true },
+    });
+    const sceneAssetMap: Record<string, string> = {};
+    for (const a of sceneAssets) sceneAssetMap[a.sceneSlug] = a.blobUrl;
+
     return {
       id: lesson.id,
       learningPathId: lesson.learningPathId,
@@ -117,6 +127,7 @@ export class LessonsService {
       estimatedMinutes: lesson.estimatedMinutes,
       orderIndex: lesson.orderIndex,
       quizId: quiz?.id ?? null,
+      sceneAssets: sceneAssetMap,
     };
   }
 

@@ -16,6 +16,7 @@ export const xpEventKindSchema = z.enum([
   'STREAK_30',
   'ASSESSMENT_BASELINE',
   'BADGE_BONUS',
+  'LAB_PASSED',
 ]);
 
 export const gameStateSchema = z.object({
@@ -31,7 +32,7 @@ export const gameStateSchema = z.object({
   streakFreezes: z.number().int().min(0),
 });
 
-export const dailyQuestKindSchema = z.enum(['lesson', 'coach', 'prompt', 'quiz', 'streak']);
+export const dailyQuestKindSchema = z.enum(['lesson', 'coach', 'prompt', 'quiz', 'streak', 'lab']);
 
 export const dailyQuestItemSchema = z.object({
   slug: z.string(),
