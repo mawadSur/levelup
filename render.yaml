@@ -5,6 +5,8 @@ services:
     rootDir: .
     plan: standard
     region: oregon
+    branch: main
+    autoDeploy: true
     # Build flow:
     #   1. install
     #   2. prisma generate (codegen for the API)
@@ -90,6 +92,8 @@ services:
     rootDir: .
     plan: starter
     region: oregon
+    branch: main
+    autoDeploy: true
     buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm --filter @levelup/db generate && pnpm turbo run build --filter=@levelup/worker...
     startCommand: pnpm --filter @levelup/worker start
     envVars:

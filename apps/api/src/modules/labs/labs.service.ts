@@ -6,7 +6,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import type { Prisma} from '@levelup/db';
+import type { Prisma } from '@levelup/db';
 import { type Lab, type LabAttempt } from '@levelup/db';
 import { chatComplete, isStubMode } from '@levelup/llm';
 import {
