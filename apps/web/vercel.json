@@ -5,15 +5,6 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["pdx1"],
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_CLIENT": "kapitus"
-    }
-  },
-  "env": {
-    "NEXT_PUBLIC_CLIENT": "kapitus",
-    "CLIENT": "kapitus"
-  },
   "headers": [
     {
       "source": "/(.*)",
