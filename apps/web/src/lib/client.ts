@@ -1,5 +1,7 @@
-// White-label client resolution. Build-time only (NEXT_PUBLIC_CLIENT is inlined).
-// Adjust BRANDS below + add a branch in the ternary to add a tenant.
+// White-label client resolution. Build-time only — NEXT_PUBLIC_CLIENT is
+// inlined by Next.js at build time, so changing the env on Vercel requires a
+// FRESH (non-cached) build to take effect. Adjust BRANDS below + add a
+// branch in the ternary below to add a tenant.
 const CLIENT_RAW = (process.env.NEXT_PUBLIC_CLIENT ?? '').toLowerCase().trim();
 
 export type ClientName = 'kapitus' | 'ceolawyer' | 'default';
