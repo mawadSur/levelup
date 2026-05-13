@@ -1,14 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  Card,
-  CardContent,
-  Badge,
-  Button,
-  MissionNumber,
-  MonoLabel,
-  NumberedSection,
-} from '@levelup/ui';
+import { Card, CardContent, Badge, Button, MissionNumber, NumberedSection } from '@levelup/ui';
 import { paths, progress, assessments, auth, game } from '@/lib/api';
 import type { MyPathProgress } from '@/lib/api/progress';
 import { DailyQuestPanel } from '@/components/learn/quests/daily-quest-panel';
@@ -108,7 +100,6 @@ export default async function LearnPage() {
 
       {/* Hero greeting */}
       <header className="animate-mission-in space-y-3">
-        <MonoLabel>YOUR LEARNING</MonoLabel>
         <h1 className="font-serif text-display-md italic text-paper-100">Hi, {firstName}.</h1>
         <p className="max-w-reading text-body-lg text-paper-300">
           {completedThisMonth > 0 ? (

@@ -102,9 +102,14 @@ export interface InvokeCoachResult extends CoachResponse {
 
 export async function invokeCoach(input: CoachRequest): Promise<InvokeCoachResult> {
   const parsed = coachRequestSchema.parse(input);
+  // The API's CoachModule body schema uses `userInput`, not `inputText` —
+  // see apps/api/src/modules/coach/dto/coach-request.dto.ts. Translate on
+  // the wire so the canonical `coachRequestSchema` keeps `inputText` for
+  // type ergonomics.
+  const wireBody = { userInput: parsed.inputText, conversationId: parsed.conversationId };
   const json = await apiFetch<unknown>('/coach/invoke', {
     method: 'POST',
-    body: JSON.stringify(parsed),
+    body: JSON.stringify(wireBody),
   });
   // The server returns the canonical CoachResponse plus
   // `{ conversationId, turnId }`. Validate the canonical shape and pull the
@@ -124,7 +129,9 @@ export async function* streamCoach(
   opts?: { signal?: AbortSignal },
 ): AsyncGenerator<CoachStreamEvent> {
   const parsed = coachRequestSchema.parse(input);
-  const response = await apiFetchStream('/coach/stream', parsed, opts);
+  // See invokeCoach above for the inputText → userInput translation.
+  const wireBody = { userInput: parsed.inputText, conversationId: parsed.conversationId };
+  const response = await apiFetchStream('/coach/stream', wireBody, opts);
 
   const reader = response.body?.getReader();
   if (!reader) {
