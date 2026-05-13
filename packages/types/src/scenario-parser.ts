@@ -124,7 +124,10 @@ function parseScenes(body: string): ScenarioScene[] {
     const line = raw.trim();
 
     if (!line) {
-      inChoice = false;
+      // Don't reset inChoice on blank lines — the scenario format allows a
+      // blank line between `[choice]` and the first `-` bullet (and between
+      // bullets). inChoice is reset only by scene headers or by encountering
+      // a non-bullet content line inside the choice block.
       continue;
     }
 

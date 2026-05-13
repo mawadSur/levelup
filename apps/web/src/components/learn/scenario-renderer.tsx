@@ -129,11 +129,17 @@ export function ScenarioRenderer({
     setCompletionError(null);
     try {
       await progressClient.completeLesson(lessonId);
-      router.refresh();
+      // Auto-advance: take the learner straight into the next lesson rather
+      // than refreshing in place. Falls back to a refresh when there's no
+      // next lesson (path complete — the refresh surfaces the cert state).
+      if (nextLessonHref) {
+        router.push(nextLessonHref);
+      } else {
+        router.refresh();
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'failed to mark complete';
       setCompletionError(message);
-    } finally {
       setCompleting(false);
     }
   }
