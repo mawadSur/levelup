@@ -10,12 +10,12 @@ import {
   NumberedSection,
 } from '@levelup/ui';
 import { paths, progress, assessments, auth, game } from '@/lib/api';
-import { PathCard } from '@/components/learn/path-card';
-import type { PathCardData } from '@/components/learn/path-card';
 import type { MyPathProgress } from '@/lib/api/progress';
 import { DailyQuestPanel } from '@/components/learn/quests/daily-quest-panel';
 import { StreakCallout } from '@/components/learn/quests/streak-callout';
 import { HeroNextStep } from '@/components/learn/hero-next-step';
+import { NewsStream } from '@/components/learn/news-stream';
+import { fetchDailyNews } from '@/lib/news/fetch-news';
 import type { DailyQuestItem } from '@levelup/types';
 import type { CurriculumMap } from '@/lib/api/paths';
 
@@ -32,27 +32,27 @@ export default async function LearnPage() {
     gameStateData,
     questsData,
     curriculumData,
-  ] = await Promise.allSettled([
-    progress.getMyProgress(),
-    auth.me(),
-    paths.listPaths({ published: true }),
-    assessments.listMyAssessments(),
-    game.getGameState(),
-    game.getTodayQuests(),
-    paths.getCurriculumMap(),
+    newsItems,
+  ] = await Promise.all([
+    progress.getMyProgress().catch(() => [] as MyPathProgress[]),
+    auth.me().catch(() => null),
+    paths
+      .listPaths({ published: true })
+      .catch(() => [] as Awaited<ReturnType<typeof paths.listPaths>>),
+    assessments.listMyAssessments().catch(() => []),
+    game.getGameState().catch(() => null),
+    game.getTodayQuests().catch(() => ({ quests: [] as DailyQuestItem[] })),
+    paths.getCurriculumMap().catch(() => null as CurriculumMap | null),
+    fetchDailyNews(),
   ]);
 
-  const curriculum: CurriculumMap | null =
-    curriculumData.status === 'fulfilled' ? curriculumData.value : null;
-
-  const myPathProgress: MyPathProgress[] =
-    progressData.status === 'fulfilled' ? progressData.value : [];
-  const me = meData.status === 'fulfilled' ? meData.value : null;
-  const allPaths = allPathsData.status === 'fulfilled' ? allPathsData.value : [];
-  const myAssessments = assessmentData.status === 'fulfilled' ? assessmentData.value : [];
-  const gameState = gameStateData.status === 'fulfilled' ? gameStateData.value : null;
-  const initialQuests: DailyQuestItem[] =
-    questsData.status === 'fulfilled' ? questsData.value.quests : [];
+  const myPathProgress = progressData;
+  const me = meData;
+  const allPaths = allPathsData;
+  const myAssessments = assessmentData;
+  const gameState = gameStateData;
+  const initialQuests = questsData.quests;
+  const curriculum = curriculumData;
 
   const hasCompletedAssessment = myAssessments.length > 0;
 
@@ -70,24 +70,15 @@ export default async function LearnPage() {
     isAssigned?: boolean;
   };
   const pathsWithProgress = allPaths as PathWithProgress[];
-
   const assignedPaths = pathsWithProgress.filter((p) => p.isAssigned !== false);
-  const unassignedPaths = pathsWithProgress.filter((p) => p.isAssigned === false);
-
-  const meExtended =
-    meData.status === 'fulfilled'
-      ? (meData.value as { id: string; name: string; email: string; aiLevel?: string })
-      : null;
-  const userAiLevel = meExtended?.aiLevel;
-
-  const recommendedPaths = unassignedPaths
-    .filter((p) => !userAiLevel || p.targetLevel === userAiLevel)
-    .slice(0, 3) as PathWithProgress[];
 
   const firstName = me?.name?.split(' ')[0] ?? 'learner';
 
+  // The one path to resume — prefer in-progress over not-started.
   const continueTarget =
-    assignedPaths.find((p) => (p.completionRate ?? 0) > 0 && (p.completionRate ?? 0) < 100) ?? null;
+    assignedPaths.find((p) => (p.completionRate ?? 0) > 0 && (p.completionRate ?? 0) < 100) ??
+    assignedPaths.find((p) => (p.completionRate ?? 0) < 100) ??
+    null;
 
   // Streak callout data
   const today = new Date();
@@ -102,10 +93,17 @@ export default async function LearnPage() {
   const nextLessonHref = firstInProgressPath ? `/learn/${firstInProgressPath.slug}` : '/learn';
 
   const currentStreak = gameState?.currentStreak ?? 0;
+  const totalXp = gameState?.xp ?? 0;
+  const level = gameState?.level ?? 1;
+
+  // Counter index drives the section numerals: we skip numerals for empty
+  // sections so the visible order reads 01, 02, 03 rather than 01, 03, 05.
+  let stepIndex = 0;
+  const nextStep = () => String(++stepIndex).padStart(2, '0');
 
   return (
     <div className="mx-auto max-w-content space-y-12 px-6 py-10">
-      {/* The one CTA we want every learner to see first. */}
+      {/* Onboarding hand-holding for first-time learners. */}
       <HeroNextStep curriculum={curriculum} hasCompletedAssessment={hasCompletedAssessment} />
 
       {/* Hero greeting */}
@@ -119,14 +117,24 @@ export default async function LearnPage() {
               {completedThisMonth !== 1 ? 's' : ''} completed this month.
             </>
           ) : (
-            'No lessons completed this month yet — time to begin.'
+            'No lessons completed this month yet — pick up below.'
           )}
         </p>
+
+        {/* Quick stats strip — level, XP, streak. Always visible, always reliable. */}
+        <div className="flex flex-wrap items-center gap-3 pt-3">
+          <StatChip label="LEVEL" value={`${level}`} />
+          <StatChip label="XP" value={totalXp.toLocaleString()} />
+          <StatChip
+            label="STREAK"
+            value={`${currentStreak} ${currentStreak === 1 ? 'DAY' : 'DAYS'}`}
+          />
+        </div>
       </header>
 
       {/* Continue learning hero card */}
       {continueTarget && (
-        <NumberedSection numeral="01" eyebrow="CONTINUE LEARNING">
+        <NumberedSection numeral={nextStep()} eyebrow="CONTINUE LEARNING">
           <Card>
             <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0 flex-1 space-y-2">
@@ -167,73 +175,35 @@ export default async function LearnPage() {
 
       {/* Daily quest panel */}
       {initialQuests.length > 0 && (
-        <NumberedSection numeral="02" eyebrow="DAILY QUESTS" className="space-y-4">
+        <NumberedSection numeral={nextStep()} eyebrow="DAILY QUESTS" className="space-y-4">
           <div data-onboarding="quests">
             <DailyQuestPanel initialQuests={initialQuests} />
           </div>
         </NumberedSection>
       )}
 
-      {/* Your paths grid */}
-      {assignedPaths.length > 0 && (
-        <NumberedSection
-          numeral={initialQuests.length > 0 ? '03' : '02'}
-          eyebrow="YOUR PATHS"
-          className="space-y-4"
-        >
-          <div data-onboarding="paths" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {assignedPaths.map((path) => {
-              const cardData: PathCardData = {
-                id: path.id,
-                title: path.title,
-                slug: path.slug,
-                description: path.description,
-                targetRole: path.targetRole,
-                targetLevel: path.targetLevel,
-                coverImageUrl: path.coverImageUrl,
-                lessonCount: path.lessonCount,
-                estimatedMinutes: path.estimatedMinutes,
-                completedLessons: path.completedLessons ?? 0,
-                completionRate: path.completionRate ?? 0,
-                isAssigned: true,
-              };
-              return <PathCard key={path.id} path={cardData} />;
-            })}
-          </div>
-        </NumberedSection>
-      )}
-
-      {/* Recommended for you */}
-      {userAiLevel && recommendedPaths.length > 0 && (
-        <NumberedSection numeral="04" eyebrow="RECOMMENDED" className="space-y-4">
+      {/* Daily AI briefing — curated stream that refreshes hourly via Next cache. */}
+      {newsItems.length > 0 && (
+        <NumberedSection numeral={nextStep()} eyebrow="DAILY AI BRIEFING" className="space-y-4">
           <p className="max-w-reading text-body text-paper-300">
-            Matched to your{' '}
-            <span className="font-mono uppercase tracking-[0.05em] text-signal">
-              {userAiLevel.toUpperCase()}
-            </span>{' '}
-            level — ask your manager to assign them.
+            A daily pulse on what&apos;s shipping in AI — curated, refreshed every hour.
           </p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {recommendedPaths.map((path) => {
-              const cardData: PathCardData = {
-                id: path.id,
-                title: path.title,
-                slug: path.slug,
-                description: path.description,
-                targetRole: path.targetRole,
-                targetLevel: path.targetLevel,
-                coverImageUrl: path.coverImageUrl,
-                lessonCount: path.lessonCount,
-                estimatedMinutes: path.estimatedMinutes,
-                isAssigned: false,
-              };
-              return <PathCard key={path.id} path={cardData} recommended />;
-            })}
-          </div>
+          <NewsStream items={newsItems} />
         </NumberedSection>
       )}
 
-      <RecentAchievements pathProgress={myPathProgress} />
+      {/* Browse curriculum — replaces the in-page path grid. */}
+      <NumberedSection numeral={nextStep()} eyebrow="EXPLORE THE CURRICULUM" className="space-y-3">
+        <p className="max-w-reading text-body text-paper-300">
+          Looking for what comes next, or want to browse the whole journey from beginner to
+          champion? Open the curriculum map.
+        </p>
+        <Button asChild variant="secondary">
+          <Link href="/curriculum">Browse the curriculum →</Link>
+        </Button>
+      </NumberedSection>
+
+      <RecentAchievements pathProgress={myPathProgress} numeral={nextStep()} />
 
       {currentStreak >= 1 && (
         <StreakCallout
@@ -247,7 +217,25 @@ export default async function LearnPage() {
 }
 
 // ---------------------------------------------------------------------------
-function RecentAchievements({ pathProgress }: { pathProgress: MyPathProgress[] }) {
+
+function StatChip({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-2 rounded-data border border-ink-600 bg-ink-800/60 px-3 py-1.5">
+      <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+        {label}
+      </span>
+      <span className="font-mono text-mono-sm font-semibold text-paper-100">{value}</span>
+    </div>
+  );
+}
+
+function RecentAchievements({
+  pathProgress,
+  numeral,
+}: {
+  pathProgress: MyPathProgress[];
+  numeral: string;
+}) {
   const totalCompleted = pathProgress.reduce((sum, pp) => sum + pp.lessonsCompleted, 0);
   if (totalCompleted === 0) return null;
 
@@ -257,7 +245,7 @@ function RecentAchievements({ pathProgress }: { pathProgress: MyPathProgress[] }
   if (earned.length === 0) return null;
 
   return (
-    <NumberedSection numeral="05" eyebrow="RECENT ACHIEVEMENTS" className="space-y-4">
+    <NumberedSection numeral={numeral} eyebrow="RECENT ACHIEVEMENTS" className="space-y-4">
       <div className="flex flex-wrap gap-3">
         {earned.map((milestone) => (
           <div
