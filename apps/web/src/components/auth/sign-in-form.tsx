@@ -7,7 +7,8 @@ import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/su
 
 const API_BASE =
   typeof process !== 'undefined'
-    ? (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000')
+    ? (process.env.NEXT_PUBLIC_API_URL ??
+      (typeof window !== 'undefined' ? '' : 'http://localhost:4000'))
     : 'http://localhost:4000';
 
 interface SignInFormProps {

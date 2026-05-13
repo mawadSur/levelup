@@ -27,7 +27,8 @@ export async function getCert(id: string): Promise<Certificate> {
 
 export async function downloadCert(id: string): Promise<Blob> {
   const apiBase =
-    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) || 'http://localhost:4000';
+    process.env.NEXT_PUBLIC_API_URL ??
+    (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
   const url = `${apiBase}/api/certificates/${id}/download`;
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`Download failed: ${res.status}`);

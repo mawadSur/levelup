@@ -93,7 +93,8 @@ export async function exportCsv(filters?: Partial<ReportFilters>): Promise<Blob>
     if (v !== undefined && v !== null) qs.set(k, String(v));
   }
   const apiBase =
-    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) || 'http://localhost:4000';
+    process.env.NEXT_PUBLIC_API_URL ??
+    (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
   const url = `${apiBase}/api/reports/export?${qs.toString()}`;
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error(`Export failed: ${res.status}`);

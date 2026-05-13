@@ -1,7 +1,8 @@
 import 'server-only';
 import { getSupabaseServerClient } from './supabase/server';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
 /**
  * CR.0 — kept exported for one release of compat. The legacy JWE cookie name

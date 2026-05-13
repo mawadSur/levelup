@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   title: 'AI Coach',
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 const SESSION_COOKIE = 'LEVELUP_SESSION';
 
 interface ServerSessionUser {

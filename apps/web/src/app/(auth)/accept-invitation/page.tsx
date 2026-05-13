@@ -15,7 +15,9 @@ interface InvitationPreview {
 }
 
 async function fetchInvitationPreview(token: string): Promise<InvitationPreview | null> {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+  const apiBase =
+    process.env.NEXT_PUBLIC_API_URL ??
+    (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
   try {
     const res = await fetch(`${apiBase}/api/invitations/preview/${token}`, {
       cache: 'no-store',

@@ -78,7 +78,9 @@ export function AcceptInvitationForm({
 
   async function postSignIn(email: string): Promise<string | null> {
     if (stubMode) {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+      const apiBase =
+        process.env.NEXT_PUBLIC_API_URL ??
+        (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
       const url = new URL(`${apiBase}/api/auth/dev-bypass`);
       url.searchParams.set('email', email);
       const res = await fetch(url.toString());

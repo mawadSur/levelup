@@ -341,8 +341,8 @@ export async function transcribe(
   // We bypass apiFetch here because we need to send FormData (no
   // Content-Type header — browser sets multipart boundary automatically).
   const API_BASE =
-    (typeof process !== 'undefined' && process.env['NEXT_PUBLIC_API_URL']) ||
-    'http://localhost:4000';
+    process.env['NEXT_PUBLIC_API_URL'] ??
+    (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
   const res = await fetch(`${API_BASE}/api/coach/transcribe`, {
     method: 'POST',
@@ -374,8 +374,8 @@ export async function transcribe(
  */
 export async function synthesizeSpeech(text: string, voice?: string): Promise<Blob> {
   const API_BASE =
-    (typeof process !== 'undefined' && process.env['NEXT_PUBLIC_API_URL']) ||
-    'http://localhost:4000';
+    process.env['NEXT_PUBLIC_API_URL'] ??
+    (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
   const res = await fetch(`${API_BASE}/api/coach/synthesize`, {
     method: 'POST',

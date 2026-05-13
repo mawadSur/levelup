@@ -32,7 +32,9 @@ type VerifyResult =
 
 async function fetchVerification(hash: string): Promise<VerifyResult> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+    const apiUrl =
+      process.env.NEXT_PUBLIC_API_URL ??
+      (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
     const res = await fetch(`${apiUrl}/certificates/verify/${encodeURIComponent(hash)}`, {
       cache: 'no-store',

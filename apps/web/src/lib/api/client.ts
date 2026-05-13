@@ -12,8 +12,20 @@ import {
 // ---------------------------------------------------------------------------
 // Base URL
 // ---------------------------------------------------------------------------
-const API_BASE =
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) || 'http://localhost:4000';
+//
+// Production browser calls go through the Vercel `/api/*` rewrite (declared
+// in apps/web/vercel.json) so they're same-origin and session cookies are
+// sent normally. NEXT_PUBLIC_API_URL is only honored when explicitly set
+// (dev points it at http://localhost:4000) — otherwise we default to a
+// relative `/api` prefix on the browser side. SSR helpers attach the
+// session cookie manually and use the absolute API URL, so they're
+// unaffected.
+const explicit =
+  typeof process !== 'undefined' && typeof process.env.NEXT_PUBLIC_API_URL === 'string'
+    ? process.env.NEXT_PUBLIC_API_URL
+    : undefined;
+
+const API_BASE = explicit ?? (typeof window === 'undefined' ? 'http://localhost:4000' : '');
 
 const API_PREFIX = `${API_BASE}/api`;
 

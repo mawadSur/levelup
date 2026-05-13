@@ -5,6 +5,12 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["pdx1"],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://levelup-api-xz2v.onrender.com/api/:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
