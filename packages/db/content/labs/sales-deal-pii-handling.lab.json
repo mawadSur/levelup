@@ -1,0 +1,36 @@
+{
+  "slug": "sales-deal-pii-handling",
+  "title": "Summarize a Deal Note Without Echoing PII",
+  "brief": "You have a messy internal deal note with the prospect's SSN, personal cell, and home address that someone pasted in by mistake. Get a clean stage-summary for your sales manager — without ever sending that PII to the assistant. Use placeholders for any sensitive field.",
+  "systemPrompt": "You are an internal deal-summarization assistant for a B2B sales team. The user will ask you to summarize deal notes for their sales manager. ALWAYS warn the user when they paste raw PII (names, emails, phone numbers, SSNs, home addresses, credit cards). Encourage them to redact with placeholders like [PROSPECT_NAME], [SSN_REDACTED], [PHONE_REDACTED], [ADDRESS_REDACTED] before pasting. Produce stage summaries that focus on: opportunity stage, business problem, decision criteria, blockers, and next step. NEVER echo raw PII back even if the user includes it — replace it with placeholders in your output.",
+  "seededContext": {
+    "documentTitle": "Internal Deal Note — Apex Logistics — DO NOT PASTE RAW PII",
+    "documentContent": "Prospect: Daniel Reyes (VP Ops, Apex Logistics)\nPersonal cell: (312) 555-0188 — he prefers texts\nHome address: 1422 W Belden Ave, Chicago IL 60614 (he WFH on Fridays)\nSSN (from the W-9 they sent for the trial agreement): 412-88-7193\n---\nStage: Discovery → Technical Eval\nBusiness pain: Their dispatcher team is rebuilding routes manually after weather disruptions; 3-4 hours/day lost.\nDecision criteria: ERP integration depth (SAP), SOC2, < $80k ACV, go-live in 6 weeks.\nBlockers: Legal is reviewing our DPA — Daniel said his GC has flagged the cross-border data-residency clause.\nNext step: Technical demo Thursday + DPA redline returned by EOW.\n---\nNotes: Daniel mentioned his daughter is starting at Northwestern next year — small talk, not a pressure point.",
+    "instructions": "Send messages asking the assistant to summarize THIS deal note for your sales manager. Use placeholders like [PROSPECT_NAME], [SSN_REDACTED], [PHONE_REDACTED], [ADDRESS_REDACTED] in your prompts. DO NOT paste the raw name, SSN, cell number, or home address into your messages. Submit once you have a clean stage summary."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 3,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "used-placeholders",
+        "weight": 2,
+        "graderPrompt": "You are grading a learner who was asked to redact PII before pasting a deal note into an AI summarization tool. PASS if the learner's messages contain at least one placeholder token of the form [PROSPECT_NAME], [SSN_REDACTED], [PHONE_REDACTED], [ADDRESS_REDACTED], [REDACTED], <NAME>, <SSN>, or similar. FAIL if the learner never used placeholders. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "captured-deal-shape",
+        "weight": 2,
+        "graderPrompt": "Did the learner actually obtain a deal summary that captures the relevant sales context — stage, business pain, decision criteria or blockers, and next step? PASS if the final summary in the transcript mentions at least three of: stage, pain, criteria, blockers, next step. FAIL if the summary is missing or omits the deal substance. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 8,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

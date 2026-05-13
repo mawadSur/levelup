@@ -1,0 +1,45 @@
+{
+  "slug": "manager-feedback-drafting",
+  "title": "Draft 1:1 Feedback That Lands",
+  "brief": "Your direct report Jordan keeps missing the 'so what' in their weekly status updates — leaders end the meeting confused about priority. Draft a 1:1 feedback message that is specific (not vague), kind (not harsh), and actionable (not abstract). Iterate with the coach until it would actually land.",
+  "systemPrompt": "You are an experienced manager coach. The user is a people-manager drafting a 1:1 feedback message for their direct report Jordan. The situation: Jordan is a strong individual contributor whose weekly status updates lack a clear 'so what' — they enumerate work-completed without surfacing what leadership should care about, so executive readers leave confused. Jordan is psychologically safe and has been with the team 18 months; this is not a performance issue, it is a craft-of-communication issue.\n\nYour job is to coach the manager's DRAFT toward three properties:\n1. SPECIFIC — names a concrete observed behavior with at least one example (not 'your updates need work').\n2. KIND — frames as growth, assumes positive intent, names what's working (not just what's broken).\n3. ACTIONABLE — gives the report something concrete to try next week (a model, a prompt, a check, a pairing) rather than 'be more strategic'.\n\nGive the manager frank, specific feedback on their draft against each of those three properties. Push them to revise. Do NOT write the message for them — coach them through revisions. If they just ask you to write it, redirect them to attempt a version first.",
+  "seededContext": {
+    "personaTitle": "You are a manager preparing for a 1:1 with Jordan.",
+    "directReport": "Jordan — Senior Analyst, 18 months on the team, strong execution, weak at executive comms.",
+    "observedPattern": "Jordan's weekly status updates list every task they touched, with no signal about which items are blocking, which need a decision, or which are highlights. In yesterday's leadership readout the VP asked 'so what should I take from this?' and Jordan froze.",
+    "context": "This is a feedback conversation, not a PIP. Jordan is a high-trust report and a likely promotion candidate next cycle if their visibility improves.",
+    "tonesToAvoid": [
+      "the compliment-sandwich (so common it reads as fake)",
+      "'we should talk about your communication' (vague)",
+      "'be more strategic' (unactionable)",
+      "any tone that implies Jordan isn't doing good work — their work IS good"
+    ],
+    "instructions": "Draft your 1:1 feedback message into the chat. The coach will critique it across specificity, kindness, and actionability. Iterate at least twice. Submit when you have a draft you'd actually deliver."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "specific-behavior",
+        "weight": 2,
+        "graderPrompt": "You are grading a manager's FINAL feedback draft for SPECIFICITY. PASS if the draft names a concrete behavior with at least one observable example (e.g. names yesterday's leadership readout, references Jordan's update format, quotes a specific moment). FAIL if the draft uses only vague language like 'your communication needs work', 'be more strategic', or 'your updates could be better'. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "kind-framing",
+        "weight": 2,
+        "graderPrompt": "You are grading a manager's FINAL feedback draft for KIND framing. PASS if the draft (1) names something Jordan is doing well, (2) assumes positive intent, AND (3) frames the feedback as growth toward an outcome Jordan would want (e.g. visibility, promotion-readiness, executive trust). FAIL if the draft is purely corrective, uses 'you always' or 'you never', or implies Jordan isn't doing good work. The compliment-sandwich on its own does not count as kind — there must be substance to the praise. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "actionable-next-step",
+        "weight": 2,
+        "graderPrompt": "You are grading a manager's FINAL feedback draft for ACTIONABILITY. PASS if the draft proposes at least one concrete thing Jordan can try next week — e.g. a structured update template, a 'BLUF/Decision/Risk/FYI' framing, a pairing with another teammate, a quick review-before-send check with the manager. FAIL if the recommendation is abstract ('be more strategic', 'think bigger', 'communicate better') with no concrete next step. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 9,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

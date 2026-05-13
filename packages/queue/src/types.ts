@@ -120,6 +120,20 @@ export interface GenerateSceneAssetOutput {
   blobUrl: string;
 }
 
+export interface GenerateLessonImageInput {
+  /** Lesson row whose markdown body contains this `[image]` directive. */
+  lessonId: string;
+  /** Zero-based occurrence index of the `[image]` directive within the lesson body. */
+  slot: number;
+  /** `[image] <prompt>` text extracted from the lesson body. */
+  prompt: string;
+  /** Caller-computed sha256(lessonId + slot + prompt). */
+  promptHash: string;
+}
+export interface GenerateLessonImageOutput {
+  blobUrl: string;
+}
+
 export interface GovernanceReportInput {
   /** Caller-issued request id (cuid) used to track status & idempotency. */
   requestId: string;
@@ -160,6 +174,10 @@ export interface JobMap {
   'generate-scene-asset': {
     input: GenerateSceneAssetInput;
     output: GenerateSceneAssetOutput;
+  };
+  'generate-lesson-image': {
+    input: GenerateLessonImageInput;
+    output: GenerateLessonImageOutput;
   };
 }
 

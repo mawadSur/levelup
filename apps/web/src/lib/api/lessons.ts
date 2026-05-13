@@ -25,6 +25,13 @@ export interface Lesson {
    * prose lessons; absent when the API server is older than this client.
    */
   sceneAssets?: Record<string, string>;
+  /**
+   * For READ lessons whose markdown body contains `[image]` directives, the
+   * ordered list of pre-rendered image slots. The renderer pairs each
+   * directive with `imageAssets[slot]` by occurrence index. Absent when the
+   * API server is older than this client.
+   */
+  imageAssets?: Array<{ slot: number; blobUrl: string }>;
   /** Lesson rendering kind. Defaults to READ on older servers. */
   kind?: 'READ' | 'SCENARIO' | 'LAB';
   /** Populated when kind === 'LAB' so the renderer can mount the lab runner. */

@@ -1,0 +1,53 @@
+{
+  "slug": "sales-cold-email-rewrite",
+  "title": "Rewrite a Cold Email Like a Human",
+  "brief": "You inherited a generic cold-email template from the SDR before you. Open rates are 1.2%. Rewrite it into something a real human would actually open, read, and reply to. Keep it under 120 words. Stay specific. No spam tropes.",
+  "systemPrompt": "You are a senior B2B email coach helping a sales rep rewrite a cold email. The rep is selling a sales-engagement platform called BeamReach to RevOps leaders at 200-500 employee SaaS companies. The TEMPLATE the rep starts with is:\n\n---\nSubject: Quick question about your sales process\n\nHi {{first_name}},\n\nI hope this email finds you well! I came across {{company}} and was impressed by what you do. I wanted to reach out because we help companies like yours scale their sales process with AI-powered automation. Our best-in-class platform has helped 10,000+ companies see a 3x increase in pipeline.\n\nWould you be open to a quick 15-minute chat next week to explore synergies?\n\nBest,\n{{rep_name}}\n---\n\nWhen the rep sends you a rewrite attempt, give frank, specific feedback: what hooks work, what tropes to cut, what to make more concrete. Push them toward (1) a real reason for reaching out to THIS person, (2) a concrete observation or insight, (3) a low-friction ask, (4) total length under 120 words. Do NOT rewrite the email for them — coach them to do it themselves. If the rep just asks you to write it, redirect them to attempt a version first.",
+  "seededContext": {
+    "personaTitle": "You are a sales rep rewriting your team's cold-email template.",
+    "originalTemplate": "Subject: Quick question about your sales process\n\nHi {first_name}, I hope this email finds you well! I came across {company} and was impressed by what you do. I wanted to reach out because we help companies like yours scale their sales process with AI-powered automation. Our best-in-class platform has helped 10,000+ companies see a 3x increase in pipeline. Would you be open to a quick 15-minute chat next week to explore synergies? Best, {rep_name}",
+    "targetBuyer": "VP of RevOps at a 200-500 person SaaS company. They get 40+ cold emails per day. They have heard every variant of 'quick question' and 'synergies'.",
+    "spamTropesToAvoid": [
+      "'I hope this email finds you well'",
+      "'quick question / quick chat / quick 15 minutes'",
+      "'companies like yours'",
+      "'synergies'",
+      "'best-in-class' / 'world-class' / 'cutting-edge'",
+      "vague 3x / 10x / 'industry-leading' stats",
+      "'I came across {company} and was impressed'"
+    ],
+    "instructions": "Paste your rewritten cold email into the chat. The coach will critique it. Iterate at least twice. Submit once you have a version you'd actually send."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "personalization",
+        "weight": 2,
+        "graderPrompt": "You are grading a learner who was asked to rewrite a generic cold email into one that feels personal to a VP of RevOps at a specific SaaS company. PASS if the learner's FINAL rewrite includes at least one concrete, prospect-specific anchor — e.g. a named product line, a recent funding round, a public job posting, a podcast they were on, a tool in their stack, a specific number in their company, or a referral. FAIL if the rewrite still leans on generic phrases like 'companies like yours', 'I came across {company}', 'I was impressed by what you do', or could be sent to any company with a find-and-replace. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "value-prop-clarity",
+        "weight": 2,
+        "graderPrompt": "You are grading the value proposition in a learner's rewritten cold email. PASS if the FINAL rewrite makes the value concrete — a specific outcome, workflow, or pain point named in plain language (e.g. 'cut sequence build time from 3 hours to 20 minutes' beats 'increase efficiency'). FAIL if the value is vague ('scale your sales process', 'AI-powered automation', '3x pipeline') or buzzword-heavy. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-spam-tropes",
+        "weight": 2,
+        "graderPrompt": "You are grading whether a learner's FINAL rewritten cold email avoids well-known spam-trope phrases. PASS if the rewrite contains NONE of the following phrases (case-insensitive): 'hope this email finds you well', 'quick question', 'quick chat', 'quick 15 minutes', 'synergies', 'best-in-class', 'world-class', 'cutting-edge', 'companies like yours', 'I came across', 'I was impressed', 'circle back', 'touch base', 'pick your brain'. Score 1.0 if zero offenders, 0.5 if exactly one, 0 if two or more. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation listing any offenders found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "length-under-120",
+        "weight": 1,
+        "graderPrompt": "You are grading the length of a learner's FINAL rewritten cold email (the email body only, excluding subject line and signature). PASS if the email body is under 120 words. Count words and report the count. Score 1.0 if under 100 words, 0.7 if 100-120 words, 0.3 if 121-140 words, 0 if over 140 words. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": include the word count}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 9,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

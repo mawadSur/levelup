@@ -35,6 +35,8 @@ describe('JOBS catalog', () => {
     'anomaly-scan',
     'governance-report',
     'trial-expiry-check',
+    'generate-scene-asset',
+    'generate-lesson-image',
   ];
 
   it('has exactly the expected number of entries', () => {

@@ -6,6 +6,7 @@ export {
   Plan,
   BillingInterval,
   LessonStatus,
+  LessonKind,
   AssessmentType,
   InvitationStatus,
   BadgeRarity,

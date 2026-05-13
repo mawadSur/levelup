@@ -81,9 +81,13 @@ function stripFrontmatter(raw: string): string {
 
 /**
  * Try to import @levelup/queue and enqueue async. Returns a function that
- * either enqueues (real path) or falls through (CI path). We import lazily
- * because `@levelup/queue` opens a Redis connection at module load — we
- * never want that to happen during CI tests where Redis isn't running.
+ * either enqueues (real path) or falls through (CI / Redis-down path).
+ *
+ * We probe Redis with a short PING before returning the enqueuer — without
+ * that probe, a stale REDIS_URL pointing at an unreachable host would cause
+ * the first `add()` call to retry forever (ioredis default retryStrategy)
+ * and the seed would hang. With the probe we just fall through to the stub
+ * branch and the dev still gets usable SVG assets.
  */
 async function loadEnqueuer(): Promise<
   | null
@@ -97,6 +101,13 @@ async function loadEnqueuer(): Promise<
 > {
   const url = process.env['REDIS_URL'] ?? '';
   if (!url) return null;
+
+  // Probe Redis directly — cheap, side-effect free, and avoids importing
+  // bullmq (which would spin up the queue's persistent connection) when the
+  // host is unreachable.
+  const reachable = await pingRedis(url);
+  if (!reachable) return null;
+
   try {
     const mod = (await import('@levelup/queue')) as {
       enqueueGenerateSceneAsset: (input: {
@@ -113,6 +124,32 @@ async function loadEnqueuer(): Promise<
   } catch {
     return null;
   }
+}
+
+async function pingRedis(url: string): Promise<boolean> {
+  let host: string;
+  let port: number;
+  try {
+    const parsed = new URL(url);
+    host = parsed.hostname || 'localhost';
+    port = parsed.port ? parseInt(parsed.port, 10) : 6379;
+  } catch {
+    return false;
+  }
+  const { createConnection } = await import('node:net');
+  return new Promise<boolean>((resolve) => {
+    const socket = createConnection({ host, port, timeout: 500 });
+    let settled = false;
+    const done = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve(ok);
+    };
+    socket.once('connect', () => done(true));
+    socket.once('error', () => done(false));
+    socket.once('timeout', () => done(false));
+  });
 }
 
 /**
@@ -226,28 +263,19 @@ export async function seedScenarios(
       const promptHash = computePromptHash(scene);
 
       const existing = await prisma.lessonSceneAsset.findUnique({
-        where: { promptHash },
-        select: { id: true },
+        where: { lessonId_sceneSlug: { lessonId: lesson.id, sceneSlug: scene.slug } },
+        select: { id: true, promptHash: true },
       });
-      if (existing) continue;
 
-      if (enqueue) {
-        await enqueue({
-          lessonId: lesson.id,
-          sceneSlug: scene.slug,
-          imagePrompt: scene.imagePrompt,
-          characters: scene.characters,
-          promptHash,
-        });
-        scenesEnqueued += 1;
-      } else {
-        // No queue available (CI, or REDIS_URL unset) — write a
-        // deterministic stub SVG so the seed leaves a usable DB state.
+      // Always ensure a usable SVG row exists — the worker upserts a real
+      // image over the top if/when it later processes the job. This means
+      // dev never sees an empty image slot even with no Redis / no API key,
+      // and re-running the seed before the worker drains the queue doesn't
+      // skip the stub write.
+      if (!existing) {
         const blobUrl = buildStubSvgDataUrl(scene.slug, scene.characters);
-        await prisma.lessonSceneAsset.upsert({
-          where: { lessonId_sceneSlug: { lessonId: lesson.id, sceneSlug: scene.slug } },
-          update: { promptHash, blobUrl },
-          create: {
+        await prisma.lessonSceneAsset.create({
+          data: {
             lessonId: lesson.id,
             sceneSlug: scene.slug,
             promptHash,
@@ -255,6 +283,22 @@ export async function seedScenarios(
           },
         });
         stubAssetsWritten += 1;
+      }
+
+      if (enqueue) {
+        try {
+          await enqueue({
+            lessonId: lesson.id,
+            sceneSlug: scene.slug,
+            imagePrompt: scene.imagePrompt,
+            characters: scene.characters,
+            promptHash,
+          });
+          scenesEnqueued += 1;
+        } catch {
+          // Enqueue failed (e.g., Redis went down between probe and call).
+          // The stub row above is already in place — no further action.
+        }
       }
     }
   }

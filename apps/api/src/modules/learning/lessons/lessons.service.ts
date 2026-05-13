@@ -117,6 +117,15 @@ export class LessonsService {
     const sceneAssetMap: Record<string, string> = {};
     for (const a of sceneAssets) sceneAssetMap[a.sceneSlug] = a.blobUrl;
 
+    // Pre-rendered per-lesson images (READ-kind lessons whose markdown body
+    // contains one or more `[image]` directives). Returned ordered by slot so
+    // the renderer can pair each directive with its blob URL by occurrence.
+    const imageAssetsRows = await this.prisma.lessonImageAsset.findMany({
+      where: { lessonId: lesson.id },
+      orderBy: { slot: 'asc' },
+      select: { slot: true, blobUrl: true },
+    });
+
     // For lab-kind lessons, surface the *visible* lab fields so the renderer
     // can mount the lab runner inline. SystemPrompt / seededContext / rubric
     // remain server-only and are fetched separately via the labs runs/attempts
@@ -156,6 +165,7 @@ export class LessonsService {
       kind: lesson.kind,
       quizId: quiz?.id ?? null,
       sceneAssets: sceneAssetMap,
+      imageAssets: imageAssetsRows,
       lab: labSummary,
     };
   }

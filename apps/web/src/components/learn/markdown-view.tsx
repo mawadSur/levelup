@@ -8,6 +8,33 @@ import { CodeCopyButton } from './code-copy-button';
 interface MarkdownViewProps {
   content: string;
   className?: string;
+  /**
+   * Pre-rendered images for `[image] <prompt>` directives in the content. The
+   * `slot` is the zero-based occurrence index of the directive in the body.
+   * Missing slots fall through to a "preparing…" placeholder.
+   */
+  imageAssets?: Array<{ slot: number; blobUrl: string }>;
+}
+
+/**
+ * Replace `[image] <prompt>` directive lines with a markdown image whose `src`
+ * uses our internal `lesson-image:<slot>` scheme. The custom `img` renderer
+ * below resolves that scheme against the caller-supplied `imageAssets` map.
+ */
+function expandImageDirectives(content: string): string {
+  let slot = 0;
+  return content
+    .split('\n')
+    .map((line) => {
+      const trimmed = line.trim();
+      const match = trimmed.match(/^\[image\]\s+(.+)$/i);
+      if (!match) return line;
+      const alt = (match[1] ?? '').trim().replace(/[\]\[]/g, '');
+      const out = `![${alt}](lesson-image:${slot})`;
+      slot += 1;
+      return out;
+    })
+    .join('\n');
 }
 
 // ---------------------------------------------------------------------------
@@ -47,7 +74,9 @@ function extractText(children: React.ReactNode): string {
  *     rel="noopener noreferrer" and never use javascript: hrefs.
  *   - Custom `code` renderer uses <pre><code> with plain className only.
  */
-export function MarkdownView({ content, className }: MarkdownViewProps) {
+export function MarkdownView({ content, className, imageAssets }: MarkdownViewProps) {
+  const expandedContent = expandImageDirectives(content);
+  const blobBySlot = new Map<number, string>((imageAssets ?? []).map((a) => [a.slot, a.blobUrl]));
   return (
     <div
       className={cn(
@@ -150,6 +179,27 @@ export function MarkdownView({ content, className }: MarkdownViewProps) {
           // ------------------------------------------------------------------
           img({ src, alt, node: _node }) {
             if (!src) return null;
+            // Internal scheme emitted by expandImageDirectives — resolve to a
+            // pre-rendered blob URL from the caller-supplied imageAssets map.
+            if (src.startsWith('lesson-image:')) {
+              const slot = parseInt(src.slice('lesson-image:'.length), 10);
+              const resolved = Number.isFinite(slot) ? blobBySlot.get(slot) : undefined;
+              if (!resolved) {
+                return (
+                  <span className="my-6 block rounded-md border border-dashed border-ink-600 bg-ink-700/40 px-4 py-3 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    Image being prepared…
+                  </span>
+                );
+              }
+               
+              return (
+                <img
+                  src={resolved}
+                  alt={alt ?? ''}
+                  className="my-6 w-full rounded-lg border border-ink-600"
+                />
+              );
+            }
             const isAbsolute = src.startsWith('http://') || src.startsWith('https://');
             if (isAbsolute) {
               return (
@@ -166,8 +216,9 @@ export function MarkdownView({ content, className }: MarkdownViewProps) {
         allowedElements={undefined}
         disallowedElements={['script', 'iframe', 'object', 'embed', 'form', 'input', 'button']}
         unwrapDisallowed
+        urlTransform={(url) => url}
       >
-        {content}
+        {expandedContent}
       </ReactMarkdown>
     </div>
   );

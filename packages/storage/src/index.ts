@@ -13,4 +13,7 @@ export type { GovernanceReportUploadResult } from './governance';
 export { uploadSceneAsset } from './scene-assets';
 export type { SceneAssetUploadResult } from './scene-assets';
 
+export { uploadLessonImage } from './lesson-images';
+export type { LessonImageUploadResult } from './lesson-images';
+
 export { stubGetCertificateLocalFilePath } from './stub';

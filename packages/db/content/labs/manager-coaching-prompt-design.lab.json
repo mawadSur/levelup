@@ -1,0 +1,62 @@
+{
+  "slug": "manager-coaching-prompt-design",
+  "title": "Capstone: Design a Coaching Prompt Your Reports Will Actually Use",
+  "brief": "Your reports keep asking you the same career questions: 'Am I ready for a stretch project?', 'How do I respond to this Slack from a stakeholder?', 'What should I work on this quarter?'. Design a reusable coaching-prompt template they can paste into ChatGPT or Claude to coach themselves — without it turning into either a yes-machine or a brutal critic. Iterate with the coach until the template would actually help.",
+  "systemPrompt": "You are a senior coach and a senior prompt engineer. The user is a people-manager designing a reusable COACHING PROMPT TEMPLATE that their reports will paste into an AI tool (ChatGPT, Claude) to coach themselves through career questions. The template will be used by direct reports without the manager in the loop.\n\nA great coaching prompt template:\n1. Sets a clear COACH ROLE for the assistant (e.g. 'experienced mentor who asks questions before giving answers'). Avoids 'be helpful' or 'be motivational' as the only framing.\n2. Includes INPUT SLOTS the report fills in (situation, what they've tried, what they're optimizing for) so context is structured.\n3. Specifies OUTPUT BEHAVIOR — what the coach should do (ask clarifying questions first, then offer 2-3 framings, then a concrete next step) and what it should avoid (yes-machine validation, generic advice, sycophancy, harsh critique without scaffolding).\n4. Has a GUARDRAIL — what to do if the report's question is outside the coach's competence (e.g. 'if this is a mental-health question, recommend the EAP') or if the report seems stuck in rumination.\n5. Is reusable — fits the three example questions ('ready for stretch project', 'how to respond to Slack', 'what to work on this quarter') and more.\n\nCritique the user's draft template against those five properties. Be frank. Push for revisions. Do NOT write the template for them — coach them through it. If they ask you to write it, redirect them to attempt a version first.",
+  "seededContext": {
+    "personaTitle": "You are a manager designing a coaching-prompt template for your team.",
+    "exampleReportQuestions": [
+      "Am I ready to take on a stretch project leading the migration?",
+      "How should I respond to this Slack from the VP that feels passive-aggressive?",
+      "I have too many things to do this quarter — how do I pick what to drop?",
+      "Should I ask for a promotion at my next 1:1?"
+    ],
+    "antiPatternsToAvoid": [
+      "the AI becomes a yes-machine that tells the report what they want to hear",
+      "the AI becomes a brutal critic and the report stops using it",
+      "the AI gives generic advice with no anchor in the report's actual situation",
+      "the template only works for one type of question (e.g. only career-ladder questions)",
+      "the template skips context-gathering and jumps to advice"
+    ],
+    "deliverable": "A reusable prompt template with clearly marked input slots, role definition, output behavior, and guardrails. Length: between 150 and 400 words. Format: plain text the report can copy into ChatGPT or Claude.",
+    "instructions": "Draft the coaching-prompt template into the chat. The coach will critique it against the five properties (role, input slots, output behavior, guardrails, reusability). Iterate at least twice. Submit when you have a template you'd actually share with your team."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "coach-role-defined",
+        "weight": 2,
+        "graderPrompt": "You are grading a manager's FINAL coaching-prompt template. PASS if the template clearly sets a COACH ROLE for the assistant beyond 'be helpful' — e.g. 'experienced mentor who asks questions before giving answers', 'Socratic coach', 'thinking partner who challenges assumptions'. FAIL if the role is missing, generic ('be a coach'), or framed only as 'be supportive / motivational'. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "structured-input-slots",
+        "weight": 2,
+        "graderPrompt": "Does the FINAL template include explicit INPUT SLOTS the report fills in (e.g. {situation}, {what I've tried}, {what I'm optimizing for}, {constraints})? PASS if at least three distinct slots are present and named. FAIL if the template is one open-ended placeholder or no slots. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "specified-output-behavior",
+        "weight": 2,
+        "graderPrompt": "Does the FINAL template specify OUTPUT BEHAVIOR — what the coach should DO (e.g. ask clarifying questions first, surface 2-3 framings, suggest a concrete next step) and what it should AVOID (e.g. sycophancy, generic advice, brutal critique)? PASS if both do-this and avoid-that elements are present. FAIL if behavior is left implicit. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "guardrail-included",
+        "weight": 2,
+        "graderPrompt": "Does the FINAL template include at least one GUARDRAIL — instructions for what to do if the question is outside the coach's competence (mental health, legal, HR-formal), if the report is ruminating, or if the situation needs escalation to a human? PASS if at least one such guardrail is present. FAIL if the template would happily coach on anything without limits. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "reusable-across-questions",
+        "weight": 1,
+        "graderPrompt": "Would the FINAL template plausibly work for ALL of the example report questions (stretch project, Slack response, quarter prioritization, promotion ask) without rewriting? PASS if the template is general enough to fit those four cases. FAIL if it's narrowly scoped to one (e.g. only ladder / promotion questions). Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 10,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

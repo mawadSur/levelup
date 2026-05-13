@@ -132,4 +132,14 @@ export const JOBS: Record<JobName, JobRegistration> = {
       backoff: { type: 'exponential', delay: 3000 },
     },
   },
+
+  'generate-lesson-image': {
+    queue: 'generate-lesson-image',
+    defaultOpts: {
+      ...defaultJobOptions,
+      // Same envelope as generate-scene-asset — paid image API, cap retries.
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 3000 },
+    },
+  },
 } as const;

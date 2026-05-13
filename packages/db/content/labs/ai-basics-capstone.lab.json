@@ -1,0 +1,44 @@
+{
+  "slug": "ai-basics-capstone",
+  "title": "Capstone: Draft a real reply, end-to-end",
+  "brief": "You have one open-ended workplace task. In 1–3 turns, produce a final reply that is specific, factually grounded, free of raw PII, and aligned with the company AI-use policy. Use placeholders for anything sensitive. State your role, the format you want, and any constraints up front. The grader checks all five skills from this path at once.",
+  "systemPrompt": "You are a helpful general-purpose AI work assistant. The active company policy is:\n\n--- COMPANY POLICY ---\n1. Customer PII (names, emails, phone numbers, SSNs, account numbers) must NEVER appear verbatim in prompts to public AI tools. Use placeholders like [CUSTOMER_NAME].\n2. Internal financial figures, source code with credentials, and unsigned legal text are not permitted in public AI tools.\n3. When asked to invent statistics, named studies, or recent events you don't have grounded knowledge of, decline politely and ask the user to supply the numbers.\n4. Marketing copy, generic explanation, structure, and tone help are always permitted.\n--- END POLICY ---\n\nBehavior:\n- If the user pastes raw PII (matches name + email, or any SSN / phone pattern), warn them, refuse to echo it, and ask for placeholders instead.\n- If the user asks for a statistic or citation without supplying source data, explicitly refuse to invent one and ask the user to provide the number.\n- Otherwise: produce the requested deliverable. Be specific, plain-language, and free of corporate filler (no 'leverage', no 'in today's landscape', no 'moving forward').\n- Cite policy item numbers when refusing.",
+  "seededContext": {
+    "scenarioTitle": "The Monday 9am ask",
+    "taskBrief": "Your manager just messaged you: \"Hey — one of our top customers, Patricia Nguyen at patricia.n@northwind.example, called Friday upset that her renewal quote went up 18%. Can you draft a short reply (under 200 words) acknowledging the issue, explaining the change in plain language, and offering one concrete next step? Try to include a stat about industry-wide renewal increases if you can find one. Use the AI tool to draft it.\"",
+    "graderHint": "Your job is to use this lab's chat as the AI tool. Get a draft reply that: (a) does not echo Patricia's name or email, (b) is specific (not corporate filler), (c) does not include an invented statistic, (d) cites at least one company-policy guardrail when something risky was asked.",
+    "instructions": "Send 1–3 messages to draft the reply. Use placeholders like [CUSTOMER_NAME] and [CUSTOMER_EMAIL] in your prompts. Provide context (your role, format, length, constraints) up front. When you have a usable draft, submit."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 3,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "specific-not-filler",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the simulated assistant's final draft reply is specific and plain-language, NOT corporate filler. PASS if the draft reply avoids generic filler phrases ('leverage', 'in today's landscape', 'moving forward', 'reach out', 'circle back', 'best practices', 'synergies', 'going forward', 'unlock value') AND contains at least one concrete element (a number the user supplied, a named next step, a specific date, or a specific reason). FAIL if the draft is generic corporate prose. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}."
+      },
+      {
+        "id": "no-fabricated-stats",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the simulated assistant fabricated statistics or named studies that the user did NOT supply. The user's task mentioned 'try to include a stat about industry-wide renewal increases'. PASS if the assistant EITHER (a) declined to invent a statistic and asked the user to supply the number, OR (b) did not include a numeric industry statistic in the final draft. FAIL if the assistant inserted a specific percentage, named study, or cited a source the user never provided. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing the transcript}."
+      },
+      {
+        "id": "context-rich-prompt",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the LEARNER (the USER role in the transcript) wrote at least one prompt that specifies role/audience, desired format/length, AND a constraint or tone — not just 'write me an email'. PASS if any user message includes at least two of {role/audience, format-or-length, constraint-or-tone}. FAIL if every user message is one-line or unstructured. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      },
+      {
+        "id": "policy-citation-when-refusing",
+        "weight": 1,
+        "graderPrompt": "Did the simulated assistant explicitly cite a policy item number (e.g. 'policy item 1', 'item 3', 'item #1') when refusing to do something risky (echoing PII, inventing a statistic)? PASS if at least one refusal in the transcript is grounded with a policy item number or unambiguous paraphrase. PASS-with-half-credit if the assistant never had to refuse because the learner pre-empted every risk with placeholders. FAIL if the assistant complied with a risky request without a refusal. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}."
+      }
+    ]
+  },
+  "estimatedMinutes": 10,
+  "modelKey": "gpt-4o-mini"
+}

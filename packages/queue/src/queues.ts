@@ -16,6 +16,7 @@ import type {
   GovernanceReportInput,
   TrialExpiryCheckInput,
   GenerateSceneAssetInput,
+  GenerateLessonImageInput,
 } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -228,6 +229,24 @@ export function enqueueGenerateSceneAsset(
   return getQueue('generate-scene-asset').add('generate-scene-asset', input, {
     ...JOBS['generate-scene-asset'].defaultOpts,
     jobId: `scene:${input.promptHash}`,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `generate-lesson-image` job.
+ *
+ * Generates (or reuses) the pre-rendered image for one `[image]` directive
+ * inside a READ-kind lesson's markdown body. Idempotent on `promptHash` —
+ * pinning `jobId` to it dedupes back-to-back submits from a single seed run.
+ */
+export function enqueueGenerateLessonImage(
+  input: GenerateLessonImageInput,
+  overrides?: JobsOptions,
+): Promise<Job<GenerateLessonImageInput, JobMap['generate-lesson-image']['output']>> {
+  return getQueue('generate-lesson-image').add('generate-lesson-image', input, {
+    ...JOBS['generate-lesson-image'].defaultOpts,
+    jobId: `lesson-image:${input.promptHash}`,
     ...overrides,
   });
 }

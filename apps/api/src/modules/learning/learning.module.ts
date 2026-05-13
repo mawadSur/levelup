@@ -7,10 +7,18 @@ import { QuizzesController } from './quizzes/quizzes.controller';
 import { QuizzesService } from './quizzes/quizzes.service';
 import { ProgressController } from './progress/progress.controller';
 import { ProgressService } from './progress/progress.service';
+import { CurriculumController } from './curriculum/curriculum.controller';
+import { CurriculumService } from './curriculum/curriculum.service';
 
 @Module({
-  controllers: [PathsController, LessonsController, QuizzesController, ProgressController],
-  providers: [PathsService, LessonsService, QuizzesService, ProgressService],
-  exports: [PathsService, LessonsService, QuizzesService, ProgressService],
+  controllers: [
+    PathsController,
+    LessonsController,
+    QuizzesController,
+    ProgressController,
+    CurriculumController,
+  ],
+  providers: [PathsService, LessonsService, QuizzesService, ProgressService, CurriculumService],
+  exports: [PathsService, LessonsService, QuizzesService, ProgressService, CurriculumService],
 })
 export class LearningModule {}

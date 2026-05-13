@@ -15,6 +15,7 @@ export interface StorageConfig {
   policyFilesBucket: string;
   governanceReportsBucket: string;
   sceneAssetsBucket: string;
+  lessonImagesBucket: string;
   /** Where the local-fs stub writes cert PDFs (also where the legacy worker wrote them). */
   certOutputDir: string;
   /** Where the local-fs stub writes policy uploads. */
@@ -23,6 +24,8 @@ export interface StorageConfig {
   governanceOutputDir: string;
   /** Where the local-fs stub writes scenario scene images. */
   sceneAssetsOutputDir: string;
+  /** Where the local-fs stub writes per-lesson `[image]` directives. */
+  lessonImagesOutputDir: string;
   nodeEnv: string;
 }
 
@@ -35,6 +38,7 @@ function readEnv(): StorageConfig {
     governanceReportsBucket:
       process.env['SUPABASE_GOVERNANCE_REPORTS_BUCKET'] ?? 'governance-reports',
     sceneAssetsBucket: process.env['SUPABASE_SCENE_ASSETS_BUCKET'] ?? 'scene-assets',
+    lessonImagesBucket: process.env['SUPABASE_LESSON_IMAGES_BUCKET'] ?? 'lesson-images',
     certOutputDir:
       process.env['CERT_OUTPUT_DIR'] ??
       // Two levels up from packages/storage/dist → repo root → apps/api/.cert-output
@@ -44,6 +48,8 @@ function readEnv(): StorageConfig {
       process.env['GOVERNANCE_OUTPUT_DIR'] ?? `${process.cwd()}/.governance-reports`,
     sceneAssetsOutputDir:
       process.env['SCENE_ASSETS_OUTPUT_DIR'] ?? `${process.cwd()}/.scene-assets`,
+    lessonImagesOutputDir:
+      process.env['LESSON_IMAGES_OUTPUT_DIR'] ?? `${process.cwd()}/.lesson-images`,
     nodeEnv: process.env['NODE_ENV'] ?? 'development',
   };
 }

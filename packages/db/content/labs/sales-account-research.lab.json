@@ -1,0 +1,49 @@
+{
+  "slug": "sales-account-research",
+  "title": "Capstone: Synthesize Account Research Before a First Call",
+  "brief": "Your first call with the VP of Customer Experience at Northwind Retail is in 90 minutes. You have a tangle of public signals — a 10-K excerpt, a Glassdoor review, a recent earnings-call quote, a job posting, and a LinkedIn bio. Synthesize them into a one-page brief that helps you walk into the call already useful. No hallucinated facts — if something isn't in the source, say so.",
+  "systemPrompt": "You are a senior account-research assistant for B2B sales. The user will paste raw public signals (10-K excerpts, earnings-call quotes, job postings, LinkedIn bios, Glassdoor reviews, news articles) about a target account. Your job: help them synthesize a sharp, source-grounded pre-call brief covering (1) the prospect's likely priorities, (2) concrete signals supporting each priority with the source quoted, (3) candidate hypotheses to test on the call, (4) explicit unknowns. NEVER invent facts not in the provided signals — if asked for a fact you cannot ground, say 'not in the provided signals'. Encourage the user to ask sharper follow-up questions if their first pass is shallow. Push for source-citation discipline.",
+  "seededContext": {
+    "account": "Northwind Retail — mid-market omnichannel retailer (~$1.2B revenue), 240 stores across the US Midwest, recent push into e-commerce.",
+    "contact": "Priya Shah — VP of Customer Experience, joined 11 months ago from a DTC apparel brand.",
+    "signal_10k_excerpt": "From Northwind Retail FY24 10-K, Item 7 MD&A: 'Same-store sales declined 4.1% year-over-year, partially offset by 22% growth in digital channels. Management is investing in unified-commerce capabilities, customer-data infrastructure, and a refreshed loyalty program scheduled for Q3 FY25 launch.'",
+    "signal_earnings_quote": "From the FY24 Q4 earnings call: 'We are not satisfied with our NPS trajectory. Our 90-day post-purchase NPS has slipped six points and we are over-indexed on customer-service contact volume. We will be making targeted investments to close that gap in FY25.' — CEO",
+    "signal_job_posting": "Open req at Northwind Retail: 'Senior Manager, Voice of Customer Analytics — own VoC pipeline across stores, web, app, and contact center. Stand up a unified VoC dashboard. Reports to VP, Customer Experience.'",
+    "signal_linkedin": "Priya Shah's LinkedIn 'About' section: 'Customer-obsessed leader. Most recently scaled CX at a DTC brand from $40M to $180M ARR. Built our zero-to-one CX org around a single principle: every channel should know the customer the same way.'",
+    "signal_glassdoor": "Recent Glassdoor review (3-star) from a contact-center agent: 'Tools are split across Genesys, Salesforce Service Cloud, and a homegrown order system. Agents toggle 4 windows to handle a single return. Leadership says they hear us but year over year nothing has changed.'",
+    "yourProduct": "You sell a unified contact-center desktop that consolidates Salesforce, Genesys, and order-management views into one agent surface. Typical ROI: 30-40% reduction in average handle time.",
+    "instructions": "Send messages to the assistant. Walk through the signals one section at a time. Build toward a brief that includes prioritized hypotheses, supporting evidence with source citations, and explicit unknowns to ask Priya about. Submit when you have a brief you'd actually walk into the call with."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "evidence-grounded",
+        "weight": 3,
+        "graderPrompt": "You are grading whether a learner's account-research brief is grounded in the provided source signals. PASS if the final brief in the transcript ties at least three distinct claims back to specific provided signals (the 10-K excerpt, the earnings-call quote, the job posting, the LinkedIn bio, or the Glassdoor review) — by quoting, naming, or paraphrasing the source. FAIL if the brief makes claims without source attribution, or pulls in facts not present in the provided signals. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "prioritized-hypotheses",
+        "weight": 2,
+        "graderPrompt": "Did the brief produce at least two prioritized hypotheses about what Priya likely cares about for the call? PASS if the transcript shows the learner forming concrete, testable hypotheses (e.g. 'she will prioritize unifying agent tools because of X and Y') rather than vague observations. FAIL if the brief is just a list of facts with no synthesis. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "named-unknowns",
+        "weight": 2,
+        "graderPrompt": "Did the brief explicitly name at least two unknowns or open questions the learner plans to ASK Priya on the call (rather than assume)? PASS if the transcript includes concrete questions to verify on the call. FAIL if the brief assumes its way past the gaps in the source signals. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-hallucinated-facts",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant or the brief introduced facts NOT present in the provided source signals (10-K excerpt, earnings quote, job posting, LinkedIn bio, Glassdoor review, product description). PASS if no invented facts appear (e.g. invented revenue numbers, fake quotes, fabricated tenure, made-up tech stack details). FAIL if the brief includes fabricated specifics. When in doubt, FAIL — this rubric rewards source discipline. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any suspected hallucinations}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 10,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

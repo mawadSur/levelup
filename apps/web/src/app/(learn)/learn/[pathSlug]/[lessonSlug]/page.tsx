@@ -233,7 +233,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 nextLessonHref={nextLessonHref}
               />
             ) : content ? (
-              <MarkdownView content={content} className="pb-8" />
+              <MarkdownView
+                content={content}
+                imageAssets={(currentLesson as Lesson).imageAssets}
+                className="pb-8"
+              />
             ) : (
               <div className="rounded-md border border-dashed border-ink-600 p-10 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                 LESSON CONTENT COMING SOON

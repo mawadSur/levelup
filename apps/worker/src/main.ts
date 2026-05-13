@@ -35,6 +35,7 @@ import { anomalyScanHandler } from './jobs/anomaly-scan.js';
 import { handleGovernanceReport } from './jobs/governance-report.js';
 import { handleTrialExpiryCheck } from './jobs/trial-expiry-check.js';
 import { handleGenerateSceneAsset } from './scenario/generate-scene-asset.js';
+import { handleGenerateLessonImage } from './lesson-image/generate-lesson-image.js';
 import { attachDlqListener } from './jobs/dlq.js';
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -164,6 +165,14 @@ function boot(): void {
   registerWorker(
     'generate-scene-asset',
     createWorker('generate-scene-asset', handleGenerateSceneAsset, { concurrency: 2 }),
+    2,
+  );
+
+  // generate-lesson-image — same shape as scene-asset (I/O bound on the
+  // image model). Two parallel calls is plenty for seed-time backfill.
+  registerWorker(
+    'generate-lesson-image',
+    createWorker('generate-lesson-image', handleGenerateLessonImage, { concurrency: 2 }),
     2,
   );
 }

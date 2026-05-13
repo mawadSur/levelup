@@ -327,6 +327,7 @@ model Lesson {
   progress         UserProgress[]
   contentEmbedding LessonEmbedding?
   sceneAssets      LessonSceneAsset[]
+  imageAssets      LessonImageAsset[]
 
   @@unique([learningPathId, slug])
   @@index([learningPathId])
@@ -986,4 +987,23 @@ model LessonSceneAsset {
 
   @@unique([lessonId, sceneSlug])
   @@map("lesson_scene_assets")
+}
+
+/// LessonImageAsset — pre-generated image for one `[image]` directive inside
+/// a READ-kind lesson's markdown body. `slot` is the zero-based occurrence
+/// index of the directive within the body so the renderer can map a directive
+/// to its blob URL deterministically. Like LessonSceneAsset, these are global
+/// content (the owning Lesson may have a null organizationId).
+model LessonImageAsset {
+  id         String   @id @default(cuid())
+  lessonId   String
+  slot       Int
+  promptHash String   @unique
+  blobUrl    String
+  createdAt  DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, slot])
+  @@map("lesson_image_assets")
 }

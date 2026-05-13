@@ -1,0 +1,42 @@
+{
+  "slug": "manager-perf-review-summary",
+  "title": "Summarize a Quarter of 1:1 Notes Without Inventing Facts",
+  "brief": "Perf-review season. You have a quarter of 1:1 notes for your direct report Maya. Get the assistant to produce a structured starting point for her review — strengths, growth areas, key wins, themes — without inventing anything that isn't in the notes. If the notes are silent on a category, the summary should say so.",
+  "systemPrompt": "You are a perf-review writing assistant for people-managers. The user will paste 1:1 notes from a single quarter for one direct report. Your job: produce a structured starting point for the perf review with these sections:\n- Highlight wins (concrete, sourced from the notes)\n- Strengths (themes that show up in the notes; cite which note)\n- Growth areas (with the underlying evidence)\n- Open questions for the manager to verify before writing the final review\n\nNEVER invent facts not in the provided notes. If a section has no support in the notes, write 'Not covered in the notes — verify before including'. If the user pressures you to fill in a gap, refuse and instead flag it as an open question. If notes contain PII (other people's names, salaries, health info), warn the user and use placeholders in your output.",
+  "seededContext": {
+    "directReport": "Maya Patel — Senior Data Scientist — Q1 review",
+    "noteJan08": "1:1 Jan 8 — Maya kicked off the customer-churn model project. Took ownership of the data-quality issues with the events pipeline that have blocked the team for two quarters. Proactively scheduled a working session with the data-eng lead.",
+    "noteJan22": "1:1 Jan 22 — Followed up: churn model v0 baseline AUC 0.71. Maya flagged that the labels are noisy and asked for time to audit them before iterating. Good instinct. Discussed: she is hesitant to present at the monthly research review even though her work is the most visible thing on the team's roadmap.",
+    "noteFeb05": "1:1 Feb 5 — Maya audited 200 labels and found 12% mislabel rate driven by a CRM-export bug. She wrote up the finding for the data-eng team — clear, well-structured note that the eng manager forwarded to their VP. First externally visible written artifact this year. Asked her again about presenting at research review; she said she'd 'think about it'.",
+    "noteFeb19": "1:1 Feb 19 — Churn model v2 hit AUC 0.84 after relabeling. Maya proposed an experiment to back-test against the renewals team's gut calls — interesting cross-team idea, well scoped. Conflict point: she missed her one-on-one with the renewals PM twice (rescheduled both times). Need to discuss prioritization habits.",
+    "noteMar04": "1:1 Mar 4 — Discussed the missed renewals 1:1s — Maya said she deprioritizes cross-functional meetings when she is in deep work. We agreed: she'll keep a 'protected focus' calendar block but treat the renewals 1:1 as non-negotiable. Also: she finally agreed to present at the next research review.",
+    "noteMar18": "1:1 Mar 18 — Research-review presentation went well — strong technical content, audibly nervous in the first 5 minutes, settled in well. VP of Data referenced the model in his quarterly readout. Maya seemed surprised by the positive reception.",
+    "instructions": "Paste the notes into the chat (or reference them by date) and ask the assistant to draft the structured starting point for Maya's perf review. Push it to cite specific 1:1s for every claim. Submit once you have a draft you'd hand to a peer manager for review."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "source-grounded",
+        "weight": 3,
+        "graderPrompt": "You are grading whether a perf-review starting-point draft is grounded in the provided 1:1 notes. PASS if the final draft in the transcript ties at least three distinct claims back to specific 1:1 notes by date or by quoted observation (e.g. 'Jan 22: flagged noisy labels'). FAIL if claims appear without note-level attribution, or if the draft introduces facts not present in the notes (e.g. invented metrics, fabricated peer feedback, made-up stakeholders). Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "named-gaps",
+        "weight": 2,
+        "graderPrompt": "Did the draft surface at least one EXPLICIT open question or gap — a section flagged as 'not covered in the notes — verify' or an open question the manager should answer before finalizing the review? PASS if at least one such gap is named. FAIL if the draft pretends the notes cover everything. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "structured-output",
+        "weight": 2,
+        "graderPrompt": "Did the draft produce a STRUCTURED starting point covering at least three of: highlight wins, strengths, growth areas, open questions? PASS if the structure is present. FAIL if the output is an unstructured paragraph or only covers one or two of those buckets. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 10,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

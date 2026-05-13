@@ -13,6 +13,7 @@ export * as invitations from './invitations';
 export * as departments from './departments';
 export * as users from './users';
 export * as paths from './paths';
+export * as curriculum from './curriculum';
 export * as lessons from './lessons';
 export * as quizzes from './quizzes';
 export * as progress from './progress';
