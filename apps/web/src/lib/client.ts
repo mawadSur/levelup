@@ -1,3 +1,5 @@
+// White-label client resolution. Build-time only (NEXT_PUBLIC_CLIENT is inlined).
+// Adjust BRANDS below + add a branch in the ternary to add a tenant.
 const CLIENT_RAW = (process.env.NEXT_PUBLIC_CLIENT ?? '').toLowerCase().trim();
 
 export type ClientName = 'kapitus' | 'ceolawyer' | 'default';
