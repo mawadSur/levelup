@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { Footer } from '@/components/marketing/footer';
 import { PricingClient } from '@/components/marketing/pricing-client';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
-  if (IS_KAPITUS) {
+  if (IS_KAPITUS || IS_CEOLAWYER) {
     redirect('/#pricing');
   }
   // satisfy TS — redirect() throws, but the type narrowing above is enough

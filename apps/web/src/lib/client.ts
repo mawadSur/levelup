@@ -1,9 +1,11 @@
 const CLIENT_RAW = (process.env.NEXT_PUBLIC_CLIENT ?? '').toLowerCase().trim();
 
-export type ClientName = 'kapitus' | 'default';
+export type ClientName = 'kapitus' | 'ceolawyer' | 'default';
 
-export const CLIENT: ClientName = CLIENT_RAW === 'kapitus' ? 'kapitus' : 'default';
+export const CLIENT: ClientName =
+  CLIENT_RAW === 'kapitus' ? 'kapitus' : CLIENT_RAW === 'ceolawyer' ? 'ceolawyer' : 'default';
 export const IS_KAPITUS = CLIENT === 'kapitus';
+export const IS_CEOLAWYER = CLIENT === 'ceolawyer';
 
 type Brand = {
   name: string;
@@ -33,6 +35,16 @@ const BRANDS: Record<ClientName, Brand> = {
     metaTitleTemplate: '%s · Kapitus AI Academy',
     industryDefault: 'FINANCIAL_SERVICES',
     themeClass: 'kapitus',
+  },
+  ceolawyer: {
+    name: 'CEO Lawyer AI Academy',
+    shortName: 'CEO Lawyer AI Academy',
+    description:
+      'Sharpen your edge. Win more cases. AI training built for personal injury firms — confidentiality-safe, citation-checked, and tuned to how you actually serve clients.',
+    metaTitleDefault: 'CEO Lawyer AI Academy — AI training for personal injury firms',
+    metaTitleTemplate: '%s · CEO Lawyer AI Academy',
+    industryDefault: 'LEGAL',
+    themeClass: 'ceolawyer',
   },
 };
 

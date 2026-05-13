@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { GridLines, MonoLabel } from '@levelup/ui';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { KapitusNav } from '@/components/kapitus/nav';
 import { KapitusFooter } from '@/components/kapitus/footer';
+import { CeoLawyerNav } from '@/components/ceolawyer/nav';
+import { CeoLawyerFooter } from '@/components/ceolawyer/footer';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   if (IS_KAPITUS) {
@@ -11,6 +13,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <KapitusNav />
         <main className="flex-1">{children}</main>
         <KapitusFooter />
+      </div>
+    );
+  }
+
+  if (IS_CEOLAWYER) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <CeoLawyerNav />
+        <main className="flex-1">{children}</main>
+        <CeoLawyerFooter />
       </div>
     );
   }

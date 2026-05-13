@@ -1,0 +1,58 @@
+{
+  "slug": "legal-marketing-campaign-brief",
+  "title": "Capstone: build a state-expansion campaign brief",
+  "brief": "The firm is expanding into a new state next quarter. You need to produce a one-page campaign brief that the agency can execute against — audience, channels, anchor messages, required disclaimers, success metrics — without overpromising or violating that state's advertising rules. Use AI to assemble the brief; the grader checks for compliance, concreteness, and measurability.",
+  "systemPrompt": "You are a senior legal-marketing strategist helping a personal-injury firm plan a single-state expansion campaign. The user is on the marketing team and will share a target state. RULES:\n1. Each state has its own bar rules on lawyer advertising. Common red lines: no outcome guarantees, no comparative superlatives without substantiation, required attorney-advertising disclaimer language, required jurisdictional disclosure ('Licensed in [state]'), some states require submission of advertisements to the bar for review (e.g. Florida Rule 4-7.20).\n2. Push the user to define: (a) primary audience segments grounded in the state's real demographics and accident patterns, (b) channel mix appropriate to the audience, (c) 2-3 anchor messages that survive bar review, (d) the specific disclaimers the brief must carry, (e) measurable success metrics (signed retainers, qualified intakes, cost per qualified intake — NOT vanity metrics like impressions).\n3. Coach, do not author. If the user says 'write me the brief', redirect them to attempt a section first.\n4. If the user proposes any banned-superlative language ('best', 'top-rated', 'guarantee'), flag it and propose a compliant alternative.\n5. Never invent state-specific bar-rule citations the user did not supply. If a citation is needed, tell the user to confirm with local counsel.",
+  "seededContext": {
+    "scenarioTitle": "State expansion — first draft of the agency brief due Friday",
+    "targetState": "North Carolina",
+    "knownContext": [
+      "CEO Lawyer plans to open a Charlotte office in Q3, then expand to Raleigh and Greensboro",
+      "North Carolina personal-injury SOL is 3 years (N.C. Gen. Stat. § 1-52(16))",
+      "NC follows pure contributory negligence (one of only 4 states) — if plaintiff is even 1% at fault, recovery may be barred. This is unusual and a critical client-education item.",
+      "NC State Bar Rule 7.1 governs lawyer advertising; certain comparative claims require substantiation on the same page",
+      "Top inquiry types are car accidents (I-77, I-85, I-485 corridors near Charlotte; I-40, I-440 near Raleigh) and trucking accidents on I-40 / I-77 freight corridors",
+      "Spanish-language speakers represent roughly 10% of the Charlotte-area population and are an under-served audience for plaintiff PI firms",
+      "Budget for first 6 months is $1.4M across paid + content + community"
+    ],
+    "instructions": "Use 2–5 prompts. Build the brief section by section with the strategist's coaching. Submit when you have a one-page (~400–600 word) brief that covers: audience, channels, anchor messages, disclaimers, success metrics. The grader checks all five."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "audience-grounded",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL brief defines audience segments grounded in the actual state context provided. PASS if the brief names at least 2 specific audience segments tied to North Carolina realities — e.g. car-accident victims on I-77/I-85/I-485 in Charlotte metro, trucking-accident victims on I-40 freight corridor, Spanish-speaking residents in the Charlotte area, residents needing contributory-negligence education. FAIL if audiences are described generically ('people injured in accidents') without state-specific anchors. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation listing the segments found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "compliant-anchor-messages",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the FINAL brief's anchor messages avoid prohibited language. PASS if the anchor messages contain NONE of (case-insensitive): 'guarantee', 'guaranteed', 'best', '#1', 'top-rated', 'top rated', 'leading lawyer', 'we will win', 'no risk'. AND PASS if the brief acknowledges North Carolina's contributory-negligence rule as a client-education angle rather than a guarantee. FAIL if banned phrases appear or if anchor messages overpromise specific outcomes. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any banned terms}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "required-disclaimers",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL brief names the required disclaimers / jurisdictional disclosure the campaign must carry. PASS if the brief explicitly lists at least 2 of: 'past results do not guarantee future outcomes', attorney-advertising disclosure, 'licensed in North Carolina' / jurisdictional notice, 'this is an advertisement', a reference to N.C. State Bar Rule 7.1, or contingency-fee 'no fee unless we win' framing. FAIL if disclaimers are absent. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "measurable-success-metrics",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL brief defines measurable success metrics tied to business outcomes — not vanity metrics. PASS if the brief lists at least 2 of: cost per qualified intake, qualified intakes per month, signed retainers per month, cost per signed retainer, channel-attributed pipeline. FAIL if the brief only lists impressions, clicks, or reach as success metrics. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "channel-mix",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL brief defines a channel mix with rationale — paid search, paid social, OOH, content/SEO, community sponsorships, Spanish-language local media, etc. PASS if the brief names at least 3 channels AND ties at least one channel to a specific audience segment. FAIL if the brief lists channels generically with no audience tie. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 12,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 
 interface LegalPageProps {
   eyebrow: string;
@@ -10,6 +10,48 @@ interface LegalPageProps {
 }
 
 export function LegalPage({ eyebrow, title, lastUpdated, intro, contactEmail }: LegalPageProps) {
+  if (IS_CEOLAWYER) {
+    return (
+      <article className="mx-auto max-w-cl-reading px-6 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <p className="cl-eyebrow text-cl-navy">{eyebrow}</p>
+        <h1 className="cl-display mt-5 text-cl-ink">{title}</h1>
+        <p className="cl-body-sm mt-3 text-cl-ink-mute">Last updated: {lastUpdated}</p>
+
+        <div className="mt-10 rounded-cl-md border border-cl-rule bg-cl-surface p-6 sm:p-8">
+          <p className="cl-eyebrow text-cl-ink-soft">Draft</p>
+          <p className="cl-body mt-3 text-cl-ink">
+            This document is being drafted by the firm. The terms that apply to your use of the
+            academy are governed by your existing employment agreement and the policies in the firm
+            handbook.
+          </p>
+          <p className="cl-body mt-4 text-cl-ink">
+            For questions in the meantime,{' '}
+            <a
+              href={`mailto:${contactEmail}`}
+              className="font-medium text-cl-navy underline underline-offset-2 hover:text-cl-navy-deep"
+            >
+              email {contactEmail}
+            </a>
+            .
+          </p>
+        </div>
+
+        <div className="mt-12">
+          <p className="cl-body text-cl-ink-soft">{intro}</p>
+        </div>
+
+        <div className="mt-14 border-t border-cl-rule pt-8">
+          <Link
+            href="/"
+            className="cl-body-sm text-cl-ink-soft transition-colors hover:text-cl-navy"
+          >
+            ← Back to the academy
+          </Link>
+        </div>
+      </article>
+    );
+  }
+
   if (IS_KAPITUS) {
     return (
       <article className="mx-auto max-w-kp-reading px-6 py-20 sm:px-8 lg:px-12 lg:py-28">

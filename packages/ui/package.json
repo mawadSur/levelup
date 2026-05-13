@@ -11,13 +11,16 @@
     },
     "./styles": "./src/styles/globals.css",
     "./styles/kapitus": "./src/styles/kapitus.css",
+    "./styles/ceolawyer": "./src/styles/ceolawyer.css",
     "./tailwind.config": "./tailwind.config.ts",
-    "./kapitus-tailwind-preset": "./kapitus-tailwind-preset.ts"
+    "./kapitus-tailwind-preset": "./kapitus-tailwind-preset.ts",
+    "./ceolawyer-tailwind-preset": "./ceolawyer-tailwind-preset.ts"
   },
   "files": [
     "src",
     "tailwind.config.ts",
-    "kapitus-tailwind-preset.ts"
+    "kapitus-tailwind-preset.ts",
+    "ceolawyer-tailwind-preset.ts"
   ],
   "sideEffects": [
     "**/*.css"

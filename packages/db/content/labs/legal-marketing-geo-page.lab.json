@@ -1,0 +1,58 @@
+{
+  "slug": "legal-marketing-geo-page",
+  "title": "Rewrite a geo-page that won't get the firm in trouble",
+  "brief": "You have a generic 'Personal Injury Lawyer Near You' landing page and a request to localize it for a new city. The catch: state bar advertising rules forbid outcome guarantees, superlatives without substantiation ('best', 'top'), and unverifiable claims. Use the AI to coach you through a rewrite that is genuinely local AND survives compliance review. The grader checks for ad-rule violations.",
+  "systemPrompt": "You are a legal-marketing coach helping a firm's marketing team localize a landing page for CEO Lawyer, a personal injury firm expanding to a new city. The user will share a draft and ask for feedback. RULES:\n1. Most state bar advertising rules (Florida Rule 4-7, ABA Model Rule 7.1, similar) forbid: false or misleading statements, guarantees of outcome, comparative superlatives ('best', 'top-rated', '#1') unless objectively substantiated and the substantiation is on-page, claims that create unjustified expectations, and testimonial-style language that omits required disclaimers.\n2. Flag every instance in the user's draft of: 'guarantee', 'best', 'top', '#1', 'leading', 'winning', 'we will win', 'no risk', or comparison claims without substantiation.\n3. Push the user toward concrete localization: street names, courthouses, hospitals, common accident corridors, neighborhoods, specific local industries — NOT a city-name find-and-replace.\n4. Push the user toward required disclaimers: 'Past results do not guarantee future outcomes', 'Hiring a lawyer is an important decision that should not be based solely on advertisements', and (in many states) attorney-advertising disclosure.\n5. Never rewrite the entire page for the user. Coach them through revision.",
+  "seededContext": {
+    "personaTitle": "You are CEO Lawyer's marketing team localizing a generic landing page.",
+    "targetCity": "Augusta, Georgia",
+    "originalGenericDraft": "## Personal Injury Lawyer Near You\n\nIf you've been injured in an accident, you need the best personal injury lawyer fighting for you. At CEO Lawyer, we are the #1 top-rated personal injury firm and we guarantee we will get you the maximum settlement you deserve. Our award-winning attorneys have won millions for clients just like you. No fee unless we win.\n\nWe handle all types of injury cases — car accidents, truck accidents, slip and falls, and more. We are the leading personal injury lawyers serving your community. Call now for a free consultation. We're available 24/7.\n\nDon't settle for less. Choose the winners. Choose CEO Lawyer.",
+    "localFacts": [
+      "Augusta sits on the Savannah River; the I-20 / I-520 interchange is a frequent accident corridor",
+      "Augusta University Medical Center and Doctors Hospital are the two main level-trauma facilities",
+      "Richmond County Civil Court handles personal-injury cases under $25,000; State Court handles larger civil claims",
+      "Augusta is the home of Fort Eisenhower (formerly Fort Gordon), which means many clients are active-duty military or military families with overlapping benefit questions",
+      "I-20 East/West and Bobby Jones Expressway (I-520) carry heavy commercial truck traffic; Washington Road and Walton Way are common rear-end corridors near Augusta Mall",
+      "Georgia statute of limitations for personal injury is 2 years from date of injury (O.C.G.A. § 9-3-33)"
+    ],
+    "instructions": "Submit your rewritten Augusta-specific draft to the coach. Iterate at least twice. The coach will flag bar-rule violations and push for real localization. The grader checks the FINAL draft for outcome guarantees, banned superlatives, missing disclaimers, and whether the localization is more than a city-name swap."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "no-guarantees",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the learner's FINAL rewritten landing-page draft contains outcome guarantees or banned superlatives. PASS if the final draft contains NONE of the following (case-insensitive): 'guarantee', 'we will win', 'guaranteed', 'we will get you the maximum', 'best', '#1', 'top-rated', 'top rated', 'leading personal injury', 'winners', 'no risk'. FAIL if any of those appear. Note: 'No fee unless we win' is acceptable in most states as a contingency-fee statement. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any banned terms found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "genuinely-localized",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the learner's FINAL draft is genuinely localized to Augusta, Georgia — not a find-and-replace job. PASS if the draft references at least 3 of: Augusta River-Savannah area, I-20 / I-520 / Bobby Jones Expressway, Washington Road, Walton Way, Augusta University Medical Center, Doctors Hospital, Richmond County Civil Court, Georgia State Court, Fort Eisenhower / Fort Gordon, Georgia's 2-year SOL or O.C.G.A. § 9-3-33. FAIL if the draft only mentions 'Augusta' as a city name without any of these local anchors. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list the local anchors found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "includes-disclaimers",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the learner's FINAL draft includes required attorney-advertising disclaimers. PASS if the draft contains at least one of: 'past results do not guarantee future outcomes', 'past results are not a guarantee', 'this is an advertisement' / 'attorney advertising', 'hiring a lawyer is an important decision that should not be based solely on advertisements'. FAIL if no disclaimer is present. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "concrete-and-useful",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the learner's FINAL draft is actually useful to a reader in Augusta who was just in an accident — does it answer questions a real person would have (where to go for treatment, what the SOL is, what to do at the scene, how the firm handles a typical Augusta case) rather than being a wall of self-praise? PASS if the draft contains at least one concrete piece of information a reader could act on. FAIL if the draft is entirely promotional. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "iterated-with-coach",
+        "weight": 1,
+        "graderPrompt": "Did the learner iterate at least twice — i.e. send a draft, receive feedback, and send a revised draft? PASS if the transcript shows at least two distinct draft revisions by the learner. FAIL if the learner submitted only one version. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 10,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

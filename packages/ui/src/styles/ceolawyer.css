@@ -1,0 +1,186 @@
+/*
+ * CEO Lawyer client theme — class-scoped tokens.
+ * Loaded ONLY by the /clients/ceolawyer route group via the scoped layout.
+ * Selectors target `.ceolawyer` (and its descendants), never `:root`,
+ * so Mission Brief tokens in globals.css remain untouched.
+ */
+
+.ceolawyer {
+  /* Foundation */
+  --cl-paper: 255 255 255;
+  --cl-surface: 245 242 236;
+  --cl-mist: 250 248 244;
+  --cl-fog: 237 232 222;
+  --cl-rule: 224 217 203;
+  --cl-rule-strong: 197 188 169;
+
+  /* Ink */
+  --cl-ink: 26 26 26;
+  --cl-ink-soft: 60 60 60;
+  --cl-ink-mute: 92 92 92;
+  --cl-ink-faint: 140 140 140;
+
+  /* Brand — CEO Lawyer navy + gold */
+  --cl-navy: 15 42 74;             /* #0F2A4A — primary navy */
+  --cl-navy-deep: 10 30 56;        /* #0A1E38 — hover on primary */
+  --cl-navy-soft: 38 70 110;       /* #26466E — secondary navy */
+  --cl-gold: 212 162 76;           /* #D4A24C — warm gold accent */
+  --cl-gold-deep: 165 122 48;      /* #A57A30 — gold for small text on white (passes AA) */
+  --cl-dark-band: 15 42 74;        /* hero + final CTA dark band — navy */
+  --cl-cream: 245 240 226;         /* warm accent band */
+
+  /* Semantic */
+  --cl-success: 22 163 74;
+  --cl-warning: 217 119 6;
+  --cl-danger: 185 28 28;
+  --cl-info: 14 116 144;
+
+  /* Radius */
+  --cl-radius-sm: 4px;
+  --cl-radius-md: 8px;
+  --cl-radius-lg: 14px;
+  --cl-radius-pill: 9999px;
+
+  /* Shadow */
+  --cl-shadow-sm:
+    0 1px 2px rgba(15, 42, 74, 0.05), 0 1px 3px rgba(15, 42, 74, 0.07);
+  --cl-shadow-md:
+    0 4px 6px -1px rgba(15, 42, 74, 0.07), 0 2px 4px -2px rgba(15, 42, 74, 0.07);
+
+  /* Containers */
+  --cl-container: 1240px;
+  --cl-reading: 680px;
+
+  /* Easing */
+  --cl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  background-color: rgb(var(--cl-paper));
+  color: rgb(var(--cl-ink));
+  font-family: var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings:
+    'cv11' on,
+    'ss01' on;
+}
+
+.ceolawyer *,
+.ceolawyer *::before,
+.ceolawyer *::after {
+  border-color: rgb(var(--cl-rule));
+}
+
+.ceolawyer ::selection {
+  background-color: rgb(var(--cl-gold) / 0.28);
+  color: rgb(var(--cl-ink));
+}
+
+.ceolawyer *:focus-visible {
+  outline: 2px solid rgb(var(--cl-navy));
+  outline-offset: 2px;
+}
+
+/* Typography utilities */
+.ceolawyer .cl-display {
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ceolawyer .cl-h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.ceolawyer .cl-h2 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ceolawyer .cl-h3 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.ceolawyer .cl-eyebrow {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ceolawyer .cl-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.ceolawyer .cl-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.ceolawyer .cl-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.ceolawyer .cl-data {
+  font-family: ui-monospace, 'SF Mono', 'Geist Mono', Menlo, monospace;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pull-quote / accent serif — used sparingly for testimonial-style copy. */
+.ceolawyer .cl-quote {
+  font-family: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+
+/*
+ * Authed-shell theme bridge.
+ *
+ * Same pattern as the kapitus theme: the admin + learn surfaces were built
+ * against Mission Brief tokens. Re-skinning every class is wasteful — instead,
+ * we redefine the Mission Brief CSS variables inside the .ceolawyer scope so
+ * existing Tailwind classes (bg-ink-900, text-paper-100, bg-signal, etc.)
+ * automatically resolve to CEO Lawyer values for any descendant.
+ */
+.ceolawyer {
+  /* Surface stack — dark → light remap */
+  --ink-900: var(--cl-paper);
+  --ink-800: var(--cl-mist);
+  --ink-700: var(--cl-surface);
+  --ink-600: var(--cl-rule);
+  --ink-500: var(--cl-rule-strong);
+
+  /* Text stack — invert so dark text reads on light surfaces */
+  --paper-100: var(--cl-ink);
+  --paper-300: var(--cl-ink-soft);
+  --paper-500: var(--cl-ink-mute);
+
+  /* Brand accent — amber → CEO Lawyer navy */
+  --signal: var(--cl-navy);
+  --signal-dim: var(--cl-navy-deep);
+
+  /* Semantic — pull through CEO Lawyer equivalents */
+  --success: var(--cl-success);
+  --warning: var(--cl-warning);
+  --danger: var(--cl-danger);
+}

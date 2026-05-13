@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MonoLabel } from '@levelup/ui';
 import { SignUpForm } from '@/components/auth/sign-up-form';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { KapitusSignUpPanel } from '@/components/kapitus/auth-shell';
+import { CeoLawyerSignUpPanel } from '@/components/ceolawyer/auth-shell';
 
 export const metadata: Metadata = {
   title: 'Create your organization',
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
 export default function SignUpPage() {
   if (IS_KAPITUS) {
     return <KapitusSignUpPanel />;
+  }
+
+  if (IS_CEOLAWYER) {
+    return <CeoLawyerSignUpPanel />;
   }
 
   return (

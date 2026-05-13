@@ -1,0 +1,54 @@
+{
+  "slug": "paralegal-medical-summary",
+  "title": "Capstone: medical-record summary that doesn't bury the damaging detail",
+  "brief": "A 247-page medical-record set just came in on a soft-tissue case that has a wrinkle. You need a 1-page summary the attorney can read before the mediation tomorrow. The summary must (a) surface every case-relevant fact — including the damaging ones — (b) keep PHI out of any external chat, (c) cite page numbers for every claim, and (d) flag gaps in treatment and prior-condition issues that opposing counsel will exploit. The capstone exercises every paralegal skill on the path.",
+  "systemPrompt": "You are a medical-record summarization assistant for a paralegal at a personal injury firm. RULES:\n1. The records relate to PROTECTED HEALTH INFORMATION. The user must never paste raw patient name, full DOB, full SSN, MRN, or address into the chat. Use [PATIENT], [DOB_REDACTED], [MRN_REDACTED], etc. Warn the user if you detect raw PHI in their prompts.\n2. Summarize ONLY what the user describes. If a date, finding, or provider name is not in the user's description, do not invent it. Use [PAGE __] placeholders so the paralegal can fill in page citations from the actual record.\n3. Surface damaging facts. Do NOT soften, omit, or spin gaps in treatment, prior conditions, or admissions against interest. The attorney needs to see these BEFORE mediation, not from opposing counsel during it.\n4. Structure: Mechanism of injury, Initial complaints and exam findings, Imaging, Treatment timeline, Subjective complaints over time, Objective findings, Gaps in care (with duration), Prior conditions and pre-existing relevance, Causation issues, Apportionment risk, Bottom-line case-impact notes.\n5. Do NOT predict settlement value. Do NOT recommend strategy. The paralegal's job is to surface the facts; the attorney decides what to do with them.",
+  "seededContext": {
+    "scenarioTitle": "Medical-record summary for mediation — Daugherty v. Allstate insured",
+    "caseSummary": "The paralegal will describe the record set to the assistant. The record set is approximately as follows (the paralegal should paraphrase, NOT paste raw PHI):\n- Patient is a 38-year-old [PATIENT], rear-ended in moderate-speed MVC on June 7 last year.\n- Same-day ER at Lakeside Regional: cervical strain, lumbar strain, negative imaging, discharged with NSAIDs (record pages 1-22).\n- Primary care follow-up on June 12: same complaints, referred to chiropractor (page 28).\n- Chiropractic care: 14 visits between June 14 and August 30, then a 6-week gap, then 4 more visits in October (pages 35-118).\n- Orthopedic consult Dr. Vargas on October 18: MRI ordered, shows L4-L5 disc protrusion 'consistent with degenerative changes, no acute traumatic finding' (pages 130-145).\n- Physical therapy 12 sessions Nov-Dec, plateau noted in PT notes (pages 150-198).\n- Pain management consult January this year, lumbar epidural steroid injection performed (pages 200-219).\n- Important: prior records subpoenaed from a 2018 work-related lumbar injury at a previous employer show the patient had a documented L4-L5 disc bulge in 2019 imaging and underwent 8 weeks of PT then with reported full recovery (pages 220-247).\n- Patient told the ER intake nurse he had 'never had back problems before' (page 4). The 2018 records show otherwise.\n- There is a 6-week gap in treatment from late August to mid-October that the file does not explain.",
+    "instructions": "Describe the record set to the assistant in your own words, using [PATIENT] and other placeholders. Ask for the structured 1-page mediation summary with page citations and an explicit 'damaging facts to surface' section. Iterate at least twice. Submit the final summary."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 2,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "surfaces-damaging-facts",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the FINAL mediation summary explicitly surfaces the damaging facts opposing counsel will use: (a) the 2018 prior L4-L5 disc bulge and PT history, (b) the patient's ER statement of 'never had back problems before' that conflicts with the 2018 records, (c) the orthopedic MRI reading of 'degenerative changes, no acute traumatic finding', (d) the 6-week unexplained gap in treatment between August and October. PASS if at least 3 of these 4 damaging facts are explicitly flagged as risks / issues / weaknesses. FAIL if the summary glosses over or omits them. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list which damaging facts were surfaced}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "page-citations",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL summary cites page numbers (or page-number placeholders) for the facts it states. PASS if the summary contains at least 5 page references — using either the page numbers provided (e.g. 'p. 130-145') or '[PAGE __]' placeholders the paralegal can fill in. FAIL if no page citations appear. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "structured-output",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL summary uses the required structure: Mechanism, Initial complaints + exam, Imaging, Treatment timeline, Gaps in care, Prior conditions, Causation issues, Bottom-line notes. PASS if at least 6 of these section headers (or equivalents) are present. FAIL if the summary is a free-form paragraph. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-invented-facts",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL summary stuck to facts described by the paralegal — no invented providers, dates, imaging findings, or diagnoses. PASS if every fact in the summary maps to something in the paralegal's description. FAIL if invented details appear (e.g. a herniation that wasn't in the description, a doctor not mentioned, a permanent-impairment rating that wasn't given). Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any invented facts}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-strategy-or-value",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL summary avoided predicting settlement value or recommending mediation strategy. PASS if the summary stays factual and does NOT include phrases like 'we should demand $X', 'this case is worth $Y', 'the attorney should accept', 'we will win on causation'. FAIL if value or strategy predictions appear. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 14,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

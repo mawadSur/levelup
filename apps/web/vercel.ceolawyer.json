@@ -1,0 +1,30 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "_comment": "DOCUMENTATION TEMPLATE — NOT CONSUMED AT BUILD TIME. Vercel only reads vercel.json from the project root; it cannot pick a different file per project. This file exists so the intended build-time config for the ceolawyer.ailevel.app Vercel project is checked into source. To apply: in the ceolawyer Vercel project, copy the `buildCommand`, `installCommand`, `outputDirectory`, `framework`, `regions`, and `headers` from `vercel.json`, then set the env vars below in Project Settings → Environment Variables (Production + Preview). See docs/runbooks/ceolawyer-vercel-deploy.md for the full procedure.",
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@levelup/web...",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["pdx1"],
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_CLIENT": "ceolawyer"
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_CLIENT": "ceolawyer",
+    "CLIENT": "ceolawyer",
+    "NEXT_PUBLIC_APP_URL": "https://ceolawyer.ailevel.app"
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ]
+}

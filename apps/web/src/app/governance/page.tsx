@@ -8,7 +8,7 @@ import { Footer } from '@/components/marketing/footer';
 import { GovernanceHero } from '@/components/marketing/governance-hero';
 import { GovernanceEvidence } from '@/components/marketing/governance-evidence';
 import { GovernanceSecurity } from '@/components/marketing/governance-security';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 
 export const metadata: Metadata = {
   title: 'AI Governance',
@@ -61,7 +61,7 @@ const WHAT_YOU_GET = [
 ];
 
 export default function GovernanceMarketingPage() {
-  if (IS_KAPITUS) {
+  if (IS_KAPITUS || IS_CEOLAWYER) {
     notFound();
   }
 

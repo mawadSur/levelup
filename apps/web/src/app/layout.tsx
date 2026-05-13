@@ -5,9 +5,10 @@ import { GeistMono } from 'geist/font/mono';
 import { Toaster } from '@levelup/ui';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { GrainOverlay } from '@/components/atmosphere/grain-overlay';
-import { IS_KAPITUS, brand } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER, brand } from '@/lib/client';
 import './globals.css';
 import '@levelup/ui/styles/kapitus';
+import '@levelup/ui/styles/ceolawyer';
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -43,18 +44,22 @@ export default function RootLayout({
   const htmlClass = `${instrumentSerif.variable} ${GeistSans.variable} ${GeistMono.variable} ${manrope.variable}`;
   const bodyClass = IS_KAPITUS
     ? 'kapitus bg-kp-paper text-kp-ink antialiased'
-    : 'bg-ink-900 text-paper-100 font-sans antialiased';
-  const bodyStyle = IS_KAPITUS
-    ? { fontFamily: 'var(--font-manrope), system-ui, sans-serif' }
-    : undefined;
+    : IS_CEOLAWYER
+      ? 'ceolawyer bg-cl-paper text-cl-ink antialiased'
+      : 'bg-ink-900 text-paper-100 font-sans antialiased';
+  const bodyStyle =
+    IS_KAPITUS || IS_CEOLAWYER
+      ? { fontFamily: 'var(--font-manrope), system-ui, sans-serif' }
+      : undefined;
+  const dataTheme = IS_KAPITUS ? 'kapitus' : IS_CEOLAWYER ? 'ceolawyer' : undefined;
 
   return (
     <html lang="en" suppressHydrationWarning className={htmlClass}>
-      <body className={bodyClass} data-theme={IS_KAPITUS ? 'kapitus' : undefined} style={bodyStyle}>
+      <body className={bodyClass} data-theme={dataTheme} style={bodyStyle}>
         <ThemeProvider>
           {children}
           <Toaster />
-          {IS_KAPITUS ? null : <GrainOverlay />}
+          {IS_KAPITUS || IS_CEOLAWYER ? null : <GrainOverlay />}
         </ThemeProvider>
       </body>
     </html>

@@ -1,0 +1,50 @@
+{
+  "slug": "legal-intake-summary",
+  "title": "Turn a messy intake call into a facts-only summary",
+  "brief": "You just got off the phone with a prospective client. The raw transcript is rambling, repetitive, and out of order. Use the AI assistant to produce a clean, facts-only summary your case manager can act on — no editorializing, no inventing details, no leading conclusions about liability or value.",
+  "systemPrompt": "You are an internal summarization assistant at CEO Lawyer, a personal injury firm. The user is an intake specialist who will paste a raw call transcript and ask for a structured summary. RULES:\n1. Summarize ONLY facts that appear in the transcript. If the caller did not say something, do not invent it. Use [NOT STATED] for missing fields.\n2. Do not opine on liability, settlement value, case strength, or whether the firm should sign the case. Those are decisions for an attorney.\n3. Do not echo full SSN, driver's license number, or insurance policy number — replace with [REDACTED] in the summary. Names and dates are fine to keep.\n4. Structure: Caller, Date of incident, Location, Mechanism of injury, Injuries reported, Medical treatment so far, Police report (yes/no), Other parties / vehicles, Insurance status (their side and other side), Prior counsel (yes/no), Statute-of-limitations clock if calculable, Outstanding facts to verify.\n5. If the learner asks you to 'guess' something missing, refuse and remind them this goes to case-manager handoff — accuracy matters.\n6. If the learner asks for an opinion on whether to sign the case, decline and route them to an attorney.",
+  "seededContext": {
+    "scenarioTitle": "Intake call — Tuesday 2:14pm",
+    "callerName": "Carla Mendes",
+    "rawTranscript": "Intake (Elena): Hi this is Elena at CEO Lawyer, you called about a car accident?\nCaller: Yeah, hi, I was rear-ended back in, um, I think it was like three weeks ago? Maybe four? My neck has been killing me ever since.\nIntake: I'm sorry to hear that. Can you tell me roughly when it happened — like a date if you have it?\nCaller: It was a Tuesday. April 14th, I think. Or 15th. I'd have to check my phone. It was on I-95 northbound, around exit 16, going into Pompano Beach.\nIntake: And what happened?\nCaller: So I was in the middle lane, traffic slowed down for construction, I came to a stop, and then BAM, this pickup truck just slammed into me. Pushed me into the car in front of me too. The cops came, they did a report. Officer — I forget his name — Officer Donnelly maybe? I have a card somewhere.\nIntake: Were you injured?\nCaller: My neck and lower back. I went to urgent care that night because my neck was so stiff. They did X-rays, said nothing was broken, gave me muscle relaxers. But it's gotten worse not better. I saw a chiropractor twice last week. Still hurts to turn my head.\nIntake: Any other treatment?\nCaller: My primary care doc wants me to get an MRI but my insurance is being weird about authorizing it. I have BlueCross through my employer.\nIntake: Did you exchange insurance with the truck driver?\nCaller: Yeah, he had Progressive. I have his info written down. My insurance is Geico.\nIntake: Did you take any photos at the scene?\nCaller: A few of my car, the back end is crumpled in. I don't think I got his truck.\nIntake: Have you spoken to any other attorney about this?\nCaller: No, you guys are the first. I saw a billboard.\nIntake: Anything else I should know?\nCaller: I have two kids and I had to miss like a week of work, I'm a dental hygienist, so that's hurting financially. Also my husband's been driving me everywhere because I can't really turn my head to back up.\nIntake: Okay, this is super helpful. Let me put together a summary and one of our case managers will follow up today.",
+    "instructions": "Paste the transcript to the AI and ask it to produce the facts-only structured summary. Use 1–3 prompts to iterate. Submit once you have a summary that follows the required structure and contains no invented facts."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "source-grounded",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the assistant's FINAL intake summary contains ONLY facts that appear in the provided transcript. The transcript states: rear-end collision, I-95 northbound near exit 16 Pompano Beach, approximately April 14 or 15 (caller unsure), pickup truck rear-ended caller and pushed her into the car in front, police report by Officer Donnelly (caller uncertain of name), urgent care same night, X-rays negative, muscle relaxers prescribed, two chiropractor visits, primary-care doctor recommended MRI but insurance hasn't authorized, BlueCross health insurance through employer, other driver had Progressive, caller has Geico, photos of caller's car only, no prior counsel, missed ~1 week of work, occupation dental hygienist. PASS if every claim in the summary maps to one of those facts. FAIL if the summary invents details (e.g. a specific time of day, a specific MRI finding, a settlement value, an opinion on fault, a number not stated). Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing any invented facts found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "captured-key-dates",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant's summary captured the date-of-incident question correctly. PASS if the summary records the date as 'approximately April 14 or 15' or similar (acknowledging caller uncertainty), OR explicitly notes that the date needs to be verified. FAIL if the summary picks a single date with false confidence, or omits the date entirely. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-liability-opinion",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant's summary avoids opining on liability, case value, or whether the firm should sign the case. PASS if the summary sticks to facts and explicitly leaves liability/value assessment for an attorney. FAIL if the summary contains language like 'clear liability', 'strong case', 'estimated settlement value', 'we should sign this', or any speculative legal conclusion. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing any opinion language found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "structured-output",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the assistant's summary uses the required structured fields: Caller, Date of incident, Location, Mechanism, Injuries, Treatment, Police report, Other parties, Insurance, Prior counsel, SOL clock, Outstanding to verify. PASS if at least 8 of these fields appear (or [NOT STATED] equivalents where data was missing). FAIL if the summary is a free-form paragraph with no structure. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "flagged-unknowns",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the assistant's summary explicitly flags items the case manager needs to verify (uncertain date, exact officer name, MRI authorization status, photos of other vehicle missing, etc.). PASS if the summary contains an 'Outstanding to verify' / 'To confirm' / 'Needs follow-up' section with at least 2 such items. FAIL if all unknowns are silently dropped. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 9,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

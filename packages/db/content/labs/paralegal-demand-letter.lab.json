@@ -1,0 +1,49 @@
+{
+  "slug": "paralegal-demand-letter",
+  "title": "Draft a demand letter in the firm's voice",
+  "brief": "A senior attorney handed you a fact pattern and asked for a first-draft demand letter to the at-fault driver's insurance carrier. Use AI to scaffold the letter — but in the firm's voice (direct, evidence-anchored, no guarantees), with a clean damages breakdown, and without inventing facts that aren't in the file. The grader checks structure, tone, and accuracy.",
+  "systemPrompt": "You are a drafting assistant helping a paralegal at CEO Lawyer produce a first-draft demand letter to an auto insurer. RULES:\n1. Use ONLY facts the paralegal provides. Do not invent injuries, treatment dates, dollar amounts, or witnesses.\n2. The firm's voice is: direct, evidence-anchored, factual, no superlatives, no guarantees, no threats beyond what the facts support. Cite specific records and dates. Avoid 'egregious', 'outrageous', 'unconscionable' unless the facts genuinely warrant.\n3. Structure: (1) Caption — your client, insured, claim number, date of loss. (2) Statement of facts. (3) Liability — why the insured's driver is at fault, citing the police report or witness statement. (4) Damages — itemized: medical bills with provider names and amounts, lost wages with employer and time-off documentation, pain and suffering as a general category (do not name a multiplier — this is a first draft). (5) Demand — a single dollar figure provided by the paralegal, with a response deadline.\n4. NEVER include guarantees about case outcome or trial value. NEVER cite case law or statutes you cannot verify — leave a [VERIFY: Fla. Stat. § ___] placeholder.\n5. NEVER add a settlement multiplier on pain-and-suffering unless the paralegal supplies one. If asked, decline and note it is a strategy call for the attorney.\n6. Format: ready-to-paste letter, single page if possible.",
+  "seededContext": {
+    "scenarioTitle": "First-draft demand letter — Velasquez v. (Progressive insured)",
+    "factPattern": "Client: Mariela Velasquez (use full name in caption, '[CLIENT_NAME]' only if the paralegal prefers).\nDate of loss: March 14 of last year.\nLocation: intersection of Glades Road and Powerline Road, Boca Raton, FL.\nMechanism: at-fault driver ran a red light eastbound on Glades and T-boned client's vehicle in the driver-side door. Police report assigns 100% fault to at-fault driver (Officer K. Riley, Boca PD, report #BPD-24-08812).\nAt-fault driver insurer: Progressive, claim #PR-2024-77-441903, BI policy limits $100,000 per person.\nClient injuries: closed-head injury with brief loss of consciousness at the scene, cervical strain, displaced fracture of the left radius requiring ORIF surgery.\nTreatment: Boca Regional ER same day ($14,820); ORIF surgery 3 days later with Dr. Alvin Roth orthopedic ($38,500 surgical and hospital combined); 18 sessions of PT at South Florida Orthopedic ($4,860); neurology follow-up for post-concussive symptoms ($1,150). All bills produced and bates-stamped CL-MED-0001 through CL-MED-0247.\nLost wages: client is a registered nurse, RN II level, missed 11 weeks of work documented by employer letter dated August 4 of last year, wage loss $17,820. Bates CL-WAGE-0001 through CL-WAGE-0008.\nResidual: ongoing post-concussive symptoms, range-of-motion deficit in left wrist documented by IME of Dr. Halpern dated October 22, six months post-incident.\nThe attorney has authorized a demand for the $100,000 BI policy limit with a 30-day response deadline.",
+    "instructions": "Use 1–3 prompts to produce the first-draft demand letter. Cite the bates ranges. Itemize the damages. End with a single dollar demand at policy limit and a 30-day response deadline. Submit the final draft."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "structure-complete",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL demand-letter draft includes all 5 required sections: (1) caption with claim number and date of loss, (2) statement of facts, (3) liability with police-report citation, (4) itemized damages, (5) a demand figure with a response deadline. PASS if all 5 sections are present in the draft. FAIL if any are missing. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list missing sections}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "damages-itemized",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the FINAL draft itemizes the damages with provider names and dollar amounts drawn from the fact pattern. The fact pattern includes: Boca Regional ER $14,820, ORIF surgery $38,500, 18 PT sessions $4,860, neurology $1,150, lost wages $17,820 over 11 weeks. PASS if at least 4 of the 5 line items appear with both the provider/category AND the dollar amount. PASS-with-half-credit if all 5 appear but one amount is wrong. FAIL if amounts are not itemized or are invented. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-invented-facts",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL draft sticks to facts in the file. PASS if the draft does NOT invent: a witness who wasn't named, a permanent-impairment rating that wasn't given, a specific multiplier on pain and suffering, a settlement value range outside the supplied $100K demand, or treatment that wasn't in the fact pattern. FAIL if any invented detail appears. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any invented facts found}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-guarantees-or-superlatives",
+        "weight": 1,
+        "graderPrompt": "You are grading the FINAL draft's tone. PASS if the draft contains NONE of (case-insensitive): 'guarantee', 'we will win', 'best', 'top-rated', 'unconscionable', 'outrageous', 'egregious' unless the facts genuinely warrant it (closed-head injury + clear-fault T-bone may warrant 'serious' or 'severe' but not 'outrageous'). PASS if the tone is direct and evidence-anchored. FAIL if the draft is hyperbolic or contains guarantees. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "demand-and-deadline",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL draft ends with a single specific demand of $100,000 (the BI policy limit, as instructed) AND a 30-day response deadline. PASS if both are present. FAIL if either is missing or different. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 12,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

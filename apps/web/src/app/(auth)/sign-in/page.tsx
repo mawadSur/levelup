@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MonoLabel } from '@levelup/ui';
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { KapitusSignInPanel } from '@/components/kapitus/auth-shell';
+import { CeoLawyerSignInPanel } from '@/components/ceolawyer/auth-shell';
 
 export const metadata: Metadata = {
   title: 'Sign in',
@@ -18,6 +19,10 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
   if (IS_KAPITUS) {
     return <KapitusSignInPanel redirect={redirect} initialEmail={email} />;
+  }
+
+  if (IS_CEOLAWYER) {
+    return <CeoLawyerSignInPanel redirect={redirect} initialEmail={email} />;
   }
 
   return (

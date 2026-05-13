@@ -1,0 +1,42 @@
+{
+  "slug": "legal-intake-pii-redaction",
+  "title": "Summarize an intake call without leaking PII",
+  "brief": "You need a quick summary of an intake call to drop into the case-management system, but the firm's policy — and your state bar's confidentiality rule — forbid pasting raw SSN, full DOB, home address, or medical-record numbers into outside tools. Use placeholders. The grader auto-detects PII leakage; don't be the next cautionary tale.",
+  "systemPrompt": "You are an internal summarization assistant for CEO Lawyer's intake team. The user will ask you to summarize an intake call. RULES:\n1. The firm's confidentiality policy and the state bar's Rule 1.6 (client confidentiality) require that raw client identifiers never leave the protected intake system. WARN the user any time their prompt contains a value matching: a 9-digit SSN, full DOB, home street address, driver's license number, medical-record number, or full credit-card number. Tell them to use placeholders like [CALLER_NAME], [DOB_REDACTED], [SSN_REDACTED], [ADDRESS_REDACTED] before resending.\n2. If the user pastes raw identifiers anyway, summarize without echoing them back — replace each with the appropriate placeholder in your output.\n3. Names alone (first name + last initial) and the city of the incident are acceptable identifiers for case-management triage. Full SSN, full DOB, full home address, and medical-record numbers are NOT.\n4. Cite Rule 1.6 in plain terms when refusing.",
+  "seededContext": {
+    "documentTitle": "Intake call — Premises liability, Wednesday 10:47am — DO NOT PASTE RAW PII",
+    "documentContent": "Caller: Daniel Whitfield (DOB: 1972-11-03)\nSSN: 412-88-7791\nDriver's License: FL D-836-559-72-301-0\nHome address: 2418 Palmetto Ridge Lane, Davie, FL 33324\nPhone: (954) 555-0188\nIncident: slip-and-fall at Sunbright Plaza grocery, Davie, FL on April 28. Wet floor near produce, no caution sign. Fractured left wrist, ER visit at Memorial Regional, ortho follow-up scheduled. Medical record number MRN: 88241-7C. No witnesses he can name. Store manager filed an incident report. Has photos of the floor.\nInsurance: Health insurance Cigna group #ZX-447821.\nPrior counsel: none.\nNotes: Lives alone, retired teacher, worried about wrist healing properly.",
+    "instructions": "Use placeholders like [CALLER_NAME], [DOB_REDACTED], [SSN_REDACTED], [DL_REDACTED], [ADDRESS_REDACTED], [MRN_REDACTED] when you prompt the assistant. Ask for a 4–6 line case-manager summary. The grader checks YOUR messages — if you paste raw SSN, full DOB, full address, or DL number into the chat, you fail the PII criterion."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 3,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "used-placeholders",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the learner used placeholder tokens instead of pasting raw client identifiers. PASS if the learner's messages contain at least two placeholders from the set [CALLER_NAME], [DOB_REDACTED], [SSN_REDACTED], [DL_REDACTED], [ADDRESS_REDACTED], [MRN_REDACTED], [REDACTED], <NAME>, <DOB>, <SSN>, <ADDRESS>. FAIL if no placeholders were used. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing transcript evidence}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "requested-summary",
+        "weight": 1,
+        "graderPrompt": "Did the learner clearly request a case-manager summary of the intake call? PASS if at least one message asks for a summary, recap, or TL;DR. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "case-relevant-facts",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the learner's prompts (and the assistant's resulting summary) preserved the case-relevant facts: slip-and-fall mechanism, wet floor, no caution sign, fractured left wrist, ER + ortho follow-up, no witnesses named, store manager incident report exists, photos. PASS if at least 4 of these case-relevant facts are referenced by the learner in their prompts. FAIL if the learner only sent the PII block without case facts. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 7,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

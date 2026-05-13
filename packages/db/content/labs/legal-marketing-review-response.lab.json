@@ -1,0 +1,48 @@
+{
+  "slug": "legal-marketing-review-response",
+  "title": "Respond to a 2-star review without breaching confidentiality",
+  "brief": "A former client just left a 2-star Google review with specific (and inaccurate) details about her case. You want to respond — but you cannot reveal client information, confirm or deny the case facts, or sound defensive. The state bar will read this. Use the AI to draft a response that protects the firm's reputation AND complies with Rule 1.6 confidentiality.",
+  "systemPrompt": "You are a legal-marketing assistant helping a law-firm staffer draft a response to a negative public review. RULES:\n1. State bar Rule 1.6 (and analogues in every state) prohibits revealing information related to a former client's representation, even to defend the firm publicly, unless the client consents. This includes: confirming the person was a client, confirming case facts, confirming settlement amounts, confirming the firm's strategy, confirming any private communications.\n2. You may: thank the reviewer generally, invite them to discuss privately, state the firm's general approach to client care, decline to address specifics publicly.\n3. You may NOT: name the client, name their case, dispute their account with specifics, confirm or deny their facts, share what was said in a confidential setting, defend a specific attorney by name in a way that implicates the client's matter.\n4. Tone: professional, not defensive, no sarcasm.\n5. If the user pastes the client's full name into the chat, warn them that even the chat is logged and recommend using [REVIEWER_NAME] or first name only.",
+  "seededContext": {
+    "scenarioTitle": "Google Reviews — 2 stars — posted this morning",
+    "reviewText": "Two stars. I came to CEO Lawyer after my accident on the I-95 last September thinking they would actually fight for me. Instead they pressured me to settle for $12,000 when I was still in physical therapy. My case manager Daniel never returned my calls for two weeks at a time. I had to find out the offer was on the table from the adjuster, not from my own lawyer. I would not recommend. — Renee Castellanos",
+    "instructions": "Use 1–3 prompts to draft a response. Use [REVIEWER_NAME] or 'Renee' in your prompts — do NOT paste the reviewer's full name (the chat is logged). The response should: address the review publicly without violating confidentiality, invite an offline conversation, and read as professional. Submit when you have a response ≤80 words you would actually post."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "__sensitive_classifier__",
+        "weight": 2,
+        "graderPrompt": "__sensitive_classifier__"
+      },
+      {
+        "id": "no-confidentiality-breach",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the FINAL drafted response avoided confirming or denying any case-specific facts about the reviewer's representation. PASS if the response does NOT: confirm the person was a client, confirm or deny the date of incident, confirm or deny the location (I-95 September), confirm or deny the settlement amount ($12,000), confirm or deny the case manager's name (Daniel), confirm or deny the alleged communication failures, or share what was said in any private setting. FAIL if any of those specifics are addressed. Note: a generic 'we cannot discuss client matters publicly' is acceptable and ideal. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing any confidentiality breach}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-full-name-leaked",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the learner avoided pasting the reviewer's full last name ('Castellanos') into the chat. PASS if the learner used 'Renee', 'the reviewer', '[REVIEWER_NAME]', or first name only. FAIL if the learner echoed the full name 'Renee Castellanos' in any prompt. Also FAIL if the drafted RESPONSE addresses the reviewer by full last name in a way that further identifies them publicly. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "invites-offline",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL drafted response invites an offline / private conversation (e.g. 'please call our office', 'please reach out to [contact]', 'we'd like to address this privately'). PASS if such an invitation is present. FAIL if the response is only a public defense. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "professional-tone",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the FINAL drafted response is professional and non-defensive — no sarcasm, no contradicting the reviewer, no implying the reviewer is lying. PASS if the tone reads as measured and respectful. FAIL if the response is defensive, dismissive, or argumentative. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 8,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

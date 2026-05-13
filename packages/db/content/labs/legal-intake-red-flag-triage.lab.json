@@ -1,0 +1,49 @@
+{
+  "slug": "legal-intake-red-flag-triage",
+  "title": "Capstone: triage a case with three red flags",
+  "brief": "A caller's story has problems that an attorney will not appreciate hearing about for the first time at the signing meeting. Use the AI to draft a triage summary that names EVERY red flag, classifies severity (deal-breaker vs. workable), and recommends a concrete next step. The capstone exercises every skill from the path: viability spotting, fact capture, PII safety, red-flag identification, and clean handoff.",
+  "systemPrompt": "You are an intake triage assistant at CEO Lawyer. The user is an intake specialist who will describe a caller's situation. Your job is to help them build a triage summary that an attorney can review in 60 seconds. RULES:\n1. Identify every red flag in the caller's story. Common ones for PI: statute of limitations near or expired, no insurance on either side, prior counsel on the same matter, plaintiff's own admitted fault, gap in medical treatment, pre-existing condition undisclosed, ongoing criminal proceeding, social-media activity contradicting injury, no police report when one was warranted, caller is not the injured party, minor without guardian consent, federal employee / military / workers-comp overlay.\n2. For each red flag, classify it: DEAL-BREAKER (firm should not sign), WORKABLE-WITH-CAVEAT (firm can sign but needs disclosure), MONITOR (note for the file).\n3. Recommend a concrete next step: route to attorney for review, request missing records, decline politely, refer out.\n4. Never opine on case value, percent recovery, or guaranteed outcome — that is unauthorized practice of law and a bar violation. Redirect any such request.\n5. Treat all caller identifiers as confidential — use first name + last initial, never echo full DOB / SSN / address.",
+  "seededContext": {
+    "scenarioTitle": "Intake call — Friday 4:52pm",
+    "callerSummary": "Caller: Tomás R., 41, calling about a workplace injury. He was working as a contractor at a construction site in Hialeah on February 8 this year. A scaffolding plank gave way, he fell about 8 feet, landed on his right shoulder, dislocated it. He was taken to Jackson Memorial by ambulance. Reduction in the ER, sling, ortho follow-up two days later. Says shoulder is still weak.\n\nAdditional facts disclosed during the call (some pulled with follow-up questions, some volunteered):\n- He is technically classified as an independent contractor by the general contractor (no W-2). He brought his own tools.\n- The site project manager told him at the hospital 'we'll take care of it' but he has not heard back in three months.\n- He was already collecting partial workers' compensation from a 2023 lumbar injury at a different job. He did not mention the lumbar injury to the ER intake nurse and does not know whether the new injury aggravated it.\n- He briefly spoke to another personal injury attorney in March who said 'I'll look into it' but never returned his calls. He never signed any retainer with that attorney.\n- He has photos of the broken scaffolding plank that he took the same day. The general contractor has since replaced the scaffolding.\n- He posted a TikTok last month showing him lifting his 6-year-old daughter at her birthday party with his right arm. He volunteered this proudly.\n- The statute of limitations for personal injury in Florida is 2 years from the date of injury for incidents on or after March 24, 2023. The injury was February 8 of THIS year.\n- He does not have health insurance. He paid the ER bill on a payment plan.\n- He is undocumented and asked the intake specialist whether that will hurt his case.",
+    "instructions": "Use 2–4 prompts to (1) describe the scenario to the AI in your own words using initials for the caller, (2) ask for a red-flag triage summary, (3) iterate until every issue is named with a severity tag and a concrete next step. Submit when you have a triage summary you could put in front of an attorney."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "all-red-flags-identified",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the assistant's FINAL triage summary identified the red flags present in the scenario. The red flags are: (a) contractor-vs-employee classification (workers-comp vs. third-party liability question), (b) prior workers-comp claim and possible aggravation of pre-existing lumbar injury, (c) prior attorney involvement (even without retainer — still worth confirming no conflict), (d) TikTok showing the caller using his injured arm to lift a child (active social-media contradiction), (e) general contractor replaced the scaffolding (spoliation of evidence concern), (f) caller is undocumented (does not bar recovery but is a known retention/communication consideration), (g) statute of limitations is approaching but not expired. PASS if at least 5 of these 7 red flags are explicitly named in the summary. FAIL if fewer than 5 are named. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list which red flags were caught and which were missed}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "severity-classified",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant's summary classifies each red flag by severity — DEAL-BREAKER vs. WORKABLE-WITH-CAVEAT vs. MONITOR (or equivalent severity tagging). PASS if the summary applies a severity tag to at least 4 distinct red flags. FAIL if red flags are listed without any severity classification. The TikTok and the spoliation are typically WORKABLE-WITH-CAVEAT but case-impacting; the prior workers-comp is WORKABLE; undocumented status is MONITOR for communication; SOL is MONITOR. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "concrete-next-step",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant recommended at least one concrete, actionable next step for the case manager / attorney handoff — e.g. 'route to attorney for sign-off before retainer', 'request workers-comp file for prior injury', 'preserve TikTok URL as evidence-management item', 'send preservation letter to general contractor about scaffolding'. PASS if the summary contains at least 2 specific actionable next steps tied to the red flags identified. FAIL if the summary stops at red-flag identification without saying what to do. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "no-unauthorized-practice",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the assistant avoided unauthorized practice of law. PASS if the summary does NOT contain any of: a specific settlement value estimate ('this case is worth $X'), a percent likelihood of winning, a guaranteed outcome, a specific legal strategy decision presented as final, or a direct opinion that the firm should or should not sign. Triage and severity classification are fine. Outcome predictions are not. FAIL if any of those appear. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation citing any UPL-adjacent language}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "confidentiality-preserved",
+        "weight": 1,
+        "graderPrompt": "You are grading whether the learner referred to the caller using first name + last initial (e.g. 'Tomás R.', 'the caller') rather than a full last name throughout the conversation. PASS if no full last name appears in the learner's prompts or the assistant's output (the seeded scenario uses 'Tomás R.' and the learner should preserve that). FAIL if a full last name was constructed or echoed. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 12,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

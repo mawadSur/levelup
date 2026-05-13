@@ -36,10 +36,10 @@ import {
 import { NavItem } from './nav-item';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider } from '@/lib/analytics/posthog-provider';
-import { brand, IS_KAPITUS } from '@/lib/client';
+import { brand, IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 
-const SEAL = IS_KAPITUS ? 'K' : 'LU';
-const WORDMARK = IS_KAPITUS ? brand.shortName : 'LevelUp';
+const SEAL = IS_KAPITUS ? 'K' : IS_CEOLAWYER ? 'CL' : 'LU';
+const WORDMARK = IS_KAPITUS || IS_CEOLAWYER ? brand.shortName : 'LevelUp';
 
 /** Minimal user shape passed from the server layout — avoids importing server-only auth-client. */
 export interface ShellUser {
@@ -160,7 +160,7 @@ function Sidebar({
           {!collapsed && (
             <span
               className={
-                IS_KAPITUS
+                IS_KAPITUS || IS_CEOLAWYER
                   ? 'text-h3 font-semibold text-paper-100'
                   : 'font-serif text-h3 italic text-paper-100'
               }

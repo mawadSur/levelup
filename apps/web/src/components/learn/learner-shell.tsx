@@ -23,10 +23,10 @@ import { OnboardingTour } from './onboarding/onboarding-tour';
 import { GlobalSearchDialog } from './search/global-search-dialog';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider, usePostHog } from '@/lib/analytics/posthog-provider';
-import { brand, IS_KAPITUS } from '@/lib/client';
+import { brand, IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 
-const SEAL = IS_KAPITUS ? 'K' : 'LU';
-const WORDMARK = IS_KAPITUS ? brand.shortName : 'LevelUp';
+const SEAL = IS_KAPITUS ? 'K' : IS_CEOLAWYER ? 'CL' : 'LU';
+const WORDMARK = IS_KAPITUS || IS_CEOLAWYER ? brand.shortName : 'LevelUp';
 
 /** Fires `learn_app_opened` once on mount. */
 function LearnAppOpenedTracker() {
@@ -127,7 +127,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                     </span>
                     <span
                       className={
-                        IS_KAPITUS
+                        IS_KAPITUS || IS_CEOLAWYER
                           ? 'hidden text-h3 font-semibold text-paper-100 sm:inline'
                           : 'hidden font-serif text-h3 italic text-paper-100 sm:inline'
                       }

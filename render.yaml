@@ -79,8 +79,11 @@ services:
         generateValue: true
 
       # CORS / cookie config
+      # Comma-separated allow-list. main.ts splits on `,` and trims whitespace.
+      # ceolawyer.ailevel.app is the second tenant (CEO Lawyer) served by a
+      # separate Vercel project — see docs/runbooks/ceolawyer-vercel-deploy.md.
       - key: WEB_ORIGIN
-        value: https://ailevel.app
+        value: https://ailevel.app,https://ceolawyer.ailevel.app
       - key: COOKIE_DOMAIN
         value: .ailevel.app
       - key: NEXT_PUBLIC_API_URL

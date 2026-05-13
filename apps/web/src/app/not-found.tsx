@@ -1,12 +1,48 @@
 import Link from 'next/link';
 import { Button, MonoLabel } from '@levelup/ui';
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { KapitusNav } from '@/components/kapitus/nav';
 import { KapitusFooter } from '@/components/kapitus/footer';
 import { kRoutes } from '@/components/kapitus/routes';
+import { CeoLawyerNav } from '@/components/ceolawyer/nav';
+import { CeoLawyerFooter } from '@/components/ceolawyer/footer';
+import { clRoutes } from '@/components/ceolawyer/routes';
 
 export default function NotFound() {
+  if (IS_CEOLAWYER) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <CeoLawyerNav />
+        <main className="flex-1 bg-cl-surface">
+          <div className="mx-auto flex max-w-cl-container flex-col items-center justify-center px-6 py-24 text-center sm:px-8 lg:px-12 lg:py-32">
+            <p className="cl-eyebrow text-cl-navy">404 · NOT FOUND</p>
+            <h1 className="cl-display mt-6 text-cl-ink">We couldn&apos;t find that page.</h1>
+            <p className="cl-body-lg mt-5 max-w-cl-reading text-cl-ink-soft">
+              The link may be out of date, or the address may be a typo. Head back to the academy
+              and pick up where you left off.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href={clRoutes.home}
+                className="inline-flex h-11 items-center rounded-cl-sm bg-cl-navy px-5 text-sm font-semibold text-white shadow-cl-sm transition-colors duration-200 ease-cl-out hover:bg-cl-navy-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cl-navy"
+              >
+                Back to the academy
+              </Link>
+              <Link
+                href={clRoutes.signIn}
+                className="inline-flex h-11 items-center rounded-cl-sm border border-cl-rule-strong px-5 text-sm font-semibold text-cl-ink transition-colors duration-200 ease-cl-out hover:bg-cl-fog"
+              >
+                Sign in
+              </Link>
+            </div>
+          </div>
+        </main>
+        <CeoLawyerFooter />
+      </div>
+    );
+  }
+
   if (IS_KAPITUS) {
     return (
       <div className="flex min-h-screen flex-col">

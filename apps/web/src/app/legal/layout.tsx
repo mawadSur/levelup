@@ -1,8 +1,10 @@
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { Footer } from '@/components/marketing/footer';
 import { KapitusNav } from '@/components/kapitus/nav';
 import { KapitusFooter } from '@/components/kapitus/footer';
+import { CeoLawyerNav } from '@/components/ceolawyer/nav';
+import { CeoLawyerFooter } from '@/components/ceolawyer/footer';
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   if (IS_KAPITUS) {
@@ -11,6 +13,16 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         <KapitusNav />
         <main className="flex-1 bg-kp-paper">{children}</main>
         <KapitusFooter />
+      </div>
+    );
+  }
+
+  if (IS_CEOLAWYER) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <CeoLawyerNav />
+        <main className="flex-1 bg-cl-paper">{children}</main>
+        <CeoLawyerFooter />
       </div>
     );
   }

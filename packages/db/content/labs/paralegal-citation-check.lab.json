@@ -1,0 +1,43 @@
+{
+  "slug": "paralegal-citation-check",
+  "title": "Catch the hallucinated citations in an AI-drafted brief",
+  "brief": "An associate handed you an AI-drafted brief and asked you to 'just verify the citations.' Some are real. Some are completely invented — the famous lawyer-AI failure mode that has gotten attorneys sanctioned and disbarred. Your job: walk through every citation, flag the fake ones with a confidence level, and produce a citation-verification memo the associate can act on. The grader checks whether you catch all the planted fakes.",
+  "systemPrompt": "You are a legal-research assistant helping a paralegal verify citations in a brief. RULES:\n1. The paralegal will share an excerpt of a brief with citations. Your job is to help them verify each citation.\n2. For each citation: classify as VERIFIED (you can confirm it exists with high confidence — well-known case, statute, or rule), QUESTIONABLE (plausible-looking but you cannot confirm without external lookup), or FABRICATED (you have strong reason to believe this does not exist — wrong reporter format, impossible volume/page, judge or court that doesn't match the case name, etc.).\n3. The paralegal cannot run real database lookups inside this chat. Your job is to coach them through structural red flags AND tell them which to verify in Westlaw / Lexis / Fastcase / the official reporter.\n4. NEVER fabricate confirmations. If you do not know whether a citation exists, say QUESTIONABLE and explain what they should look up.\n5. Common red flags: cited case name + reporter combination that doesn't match (wrong court for that reporter), volume numbers far outside the plausible range, a pin cite that does not match the case length, a judge attributed to a court they never sat on, a statute section number that does not exist in that title, parallel citations that conflict.",
+  "seededContext": {
+    "scenarioTitle": "Brief excerpt — premises liability section — handed to you by Marcus the paralegal",
+    "briefExcerpt": "Under Florida law, a business owner owes invitees a duty to maintain its premises in a reasonably safe condition. See Owens v. Publix Supermarkets, Inc., 802 So. 2d 315, 320 (Fla. 2001) (recognizing the duty of business owners to discover and remove transitory foreign substances). The plaintiff must establish that the defendant had actual or constructive notice of the dangerous condition. Fla. Stat. § 768.0755(1).\n\nA failure to inspect creates an inference of constructive notice when the substance has been present for a sufficient time. See Harmon v. Costco Wholesale Corp., 1142 So. 3d 88, 94 (Fla. 4th DCA 2019) (holding that twenty-three minutes constitutes sufficient time as a matter of law).\n\nFlorida courts have further held that the open-and-obvious doctrine does not bar recovery where the danger was concealed by adjacent product displays. See Reinhardt v. Whole Foods Market Group, Inc., 422 F. Supp. 3d 1109 (S.D. Fla. 2021) (Hon. Robert L. Hinkle, J.).\n\nMoreover, the Florida Supreme Court has clarified that summary judgment is inappropriate where evidence of regular inspection is contested. See Delgado-Reyes v. Sysco Foods of Florida, LLC, 387 So. 3d 1201 (Fla. 2024).\n\nFinally, attorney's fees are recoverable in slip-and-fall cases under the proposal-for-settlement statute. See Fla. Stat. § 768.79.\n\nList of citations to verify:\n1. Owens v. Publix Supermarkets, Inc., 802 So. 2d 315 (Fla. 2001)\n2. Fla. Stat. § 768.0755(1)\n3. Harmon v. Costco Wholesale Corp., 1142 So. 3d 88 (Fla. 4th DCA 2019)\n4. Reinhardt v. Whole Foods Market Group, Inc., 422 F. Supp. 3d 1109 (S.D. Fla. 2021) (Hon. Robert L. Hinkle, J.)\n5. Delgado-Reyes v. Sysco Foods of Florida, LLC, 387 So. 3d 1201 (Fla. 2024)\n6. Fla. Stat. § 768.79\n\nGround truth (for the grader, not the learner): citations 1, 2, and 6 are real / structurally plausible. Citation 3 has an impossible reporter volume (Florida's Southern Reporter 3d had not reached volume 1142 by 2019 — actual volumes in that period were in the 200s-300s) — FABRICATED. Citation 4 attributes the case to Judge Robert L. Hinkle, who sits in the Northern District of Florida, not the Southern District — FABRICATED or at minimum requires verification of judge assignment. Citation 5 cites a 2024 Florida Supreme Court case — Florida's Southern Reporter 3d was around volume 360-370 in 2024, so volume 387 is plausible but the case name and the existence of the holding require verification — QUESTIONABLE.",
+    "instructions": "Walk the assistant through each of the 6 citations. Ask it to classify each as VERIFIED, QUESTIONABLE, or FABRICATED, and to explain the structural red flag for any FABRICATED finding. Submit when you have a memo-style table covering all 6 citations."
+  },
+  "rubric": {
+    "passThreshold": 0.7,
+    "criteria": [
+      {
+        "id": "all-citations-classified",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL output classifies all 6 citations (Owens v. Publix, Fla. Stat. § 768.0755(1), Harmon v. Costco, Reinhardt v. Whole Foods, Delgado-Reyes v. Sysco, Fla. Stat. § 768.79) as VERIFIED / QUESTIONABLE / FABRICATED (or equivalent labels). PASS if all 6 are addressed with a classification. FAIL if any are skipped or unclassified. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": list any citations not classified}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "caught-volume-fake",
+        "weight": 3,
+        "graderPrompt": "You are grading whether the FINAL output flagged Harmon v. Costco, 1142 So. 3d 88 as FABRICATED or HIGHLY QUESTIONABLE based on the structurally impossible volume number (Southern Reporter 3d was nowhere near volume 1142 in 2019). PASS if the citation is flagged as fabricated/highly questionable with a reasoning that points to the volume number, the reporter, or the year as the red flag. FAIL if the citation is treated as verified or marked merely 'questionable' without explanation. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "caught-judge-fake",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL output flagged Reinhardt v. Whole Foods (attributed to Judge Robert L. Hinkle, S.D. Fla.) as FABRICATED or REQUIRES VERIFICATION because Judge Hinkle is a Northern District of Florida judge, not Southern District. PASS if the assistant either (a) flags the judge-court mismatch as a red flag, or (b) flags the citation as questionable and tells the paralegal to verify the judge's actual district before relying on it. FAIL if the citation is treated as verified without comment. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      },
+      {
+        "id": "concrete-verification-steps",
+        "weight": 2,
+        "graderPrompt": "You are grading whether the FINAL output gives the paralegal concrete next steps — which database to check (Westlaw, Lexis, Fastcase, PACER, the Florida Supreme Court site), what to search for, and how to confirm. PASS if the output names at least one specific database AND a specific lookup query (case name, statute section, judge's name, docket number, etc.). FAIL if the assistant only says 'verify it' without specifics. Output JSON: {\"pass\": boolean, \"score\": 0..1, \"note\": brief explanation}.",
+        "graderModelKey": "gpt-4o-mini"
+      }
+    ]
+  },
+  "estimatedMinutes": 12,
+  "modelKey": "gpt-4o-mini",
+  "isPublished": true
+}

@@ -1,4 +1,4 @@
-import { IS_KAPITUS } from '@/lib/client';
+import { IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { Hero } from '@/components/marketing/hero';
 import { TrustBar } from '@/components/marketing/trust-bar';
@@ -21,6 +21,15 @@ import { KapitusGovernanceMock } from '@/components/kapitus/governance-mock';
 import { KapitusPricing } from '@/components/kapitus/pricing';
 import { KapitusFaq } from '@/components/kapitus/faq';
 import { KapitusFinalCta } from '@/components/kapitus/final-cta';
+import { CeoLawyerNav } from '@/components/ceolawyer/nav';
+import { CeoLawyerFooter } from '@/components/ceolawyer/footer';
+import { CeoLawyerHero } from '@/components/ceolawyer/hero';
+import { CeoLawyerRoles } from '@/components/ceolawyer/roles';
+import { CeoLawyerHowItWorks } from '@/components/ceolawyer/how-it-works';
+import { CeoLawyerValueProps } from '@/components/ceolawyer/value-props';
+import { CeoLawyerTrustStrip } from '@/components/ceolawyer/trust-strip';
+import { CeoLawyerPricingTeaser } from '@/components/ceolawyer/pricing-teaser';
+import { CeoLawyerFinalCta } from '@/components/ceolawyer/final-cta';
 
 export default function HomePage() {
   if (IS_KAPITUS) {
@@ -39,6 +48,24 @@ export default function HomePage() {
           <KapitusFinalCta />
         </main>
         <KapitusFooter />
+      </div>
+    );
+  }
+
+  if (IS_CEOLAWYER) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <CeoLawyerNav />
+        <main className="flex-1">
+          <CeoLawyerHero />
+          <CeoLawyerRoles />
+          <CeoLawyerHowItWorks />
+          <CeoLawyerValueProps />
+          <CeoLawyerTrustStrip />
+          <CeoLawyerPricingTeaser />
+          <CeoLawyerFinalCta />
+        </main>
+        <CeoLawyerFooter />
       </div>
     );
   }
