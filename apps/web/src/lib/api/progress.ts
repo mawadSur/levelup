@@ -61,16 +61,14 @@ export async function getMyPathProgress(learningPathId: string): Promise<PathPro
 }
 
 export async function startLesson(lessonId: string): Promise<LessonProgress> {
-  return apiPost<{ lessonId: string }, LessonProgress>('/progress/start', {
-    lessonId,
-  });
+  return apiPost<Record<string, never>, LessonProgress>(`/progress/lessons/${lessonId}/start`, {});
 }
 
-export async function completeLesson(lessonId: string, score?: number): Promise<LessonProgress> {
-  return apiPost<{ lessonId: string; score?: number }, LessonProgress>('/progress/complete', {
-    lessonId,
-    score,
-  });
+export async function completeLesson(lessonId: string, _score?: number): Promise<LessonProgress> {
+  return apiPost<Record<string, never>, LessonProgress>(
+    `/progress/lessons/${lessonId}/complete`,
+    {},
+  );
 }
 
 export async function getUserProgress(userId: string): Promise<UserProgress> {

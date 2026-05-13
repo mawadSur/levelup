@@ -64,9 +64,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
   );
 
   // 4. Mark lesson as started (server-side, idempotent)
-  const startResult = await ssrPost<{ lessonId: string }, LessonProgress>('/progress/start', {
-    lessonId: currentLesson.id,
-  }).catch(() => null);
+  const startResult = await ssrPost<Record<string, never>, LessonProgress>(
+    `/progress/lessons/${currentLesson.id}/start`,
+    {},
+  ).catch(() => null);
 
   // 5. Fetch path progress (per-lesson statuses) + quiz data in parallel.
   //    The previous `getMyProgress()` flat lesson list is replaced by per-path
