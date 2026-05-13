@@ -283,6 +283,7 @@ model LearningPath {
   @@unique([organizationId, slug])
   @@index([organizationId])
   @@index([targetLevel])
+  @@index([tier])
   @@map("learning_paths")
 }
 
