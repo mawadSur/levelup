@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { checkRateLimit } from '@levelup/queue';
 
 /**

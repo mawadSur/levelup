@@ -15,7 +15,7 @@ import {
   SensitiveResult,
 } from '@levelup/llm';
 import { AiLevel as PrismaAiLevel, TurnRole } from '@levelup/db';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { PrismaService } from '../prisma';
 import { GameService } from '../game/game.service';
 import { RiskAlertsService } from '../risk-alerts/risk-alerts.service';

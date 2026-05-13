@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { CompanyPolicy } from '@levelup/db';
 import { Prisma } from '@levelup/db';
 import { PublishPolicyDto } from './dto/update-policy.dto';

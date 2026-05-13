@@ -25,7 +25,7 @@ import {
   type LabTranscript,
   type LabUpdateSpec,
 } from '@levelup/types';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { PrismaService } from '../prisma';
 import { GameService } from '../game/game.service';
 import { gradeAttempt } from './grader';

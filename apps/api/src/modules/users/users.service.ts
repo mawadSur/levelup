@@ -6,13 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@levelup/db';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, Badge, Role } from '@levelup/db';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { SetAiLevelDto } from './dto/set-ai-level.dto';
-import { ActivityEvent, LeaderboardOptOutInput } from '@levelup/types';
-
+import type { ActivityEvent, LeaderboardOptOutInput } from '@levelup/types';
 interface ListUsersQuery {
   role?: Role;
   departmentId?: string;

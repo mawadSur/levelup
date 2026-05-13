@@ -20,7 +20,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@levelup/db';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import {
   TopPromptsQueryDto,
   UsageTrendQueryDto,

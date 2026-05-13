@@ -14,7 +14,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { enqueueCertPdf } from '@levelup/queue';
 import { IssueCertificateDto } from './dto/issue-certificate.dto';
 import { signCertificate, verifyCertificate } from './cert-signing';

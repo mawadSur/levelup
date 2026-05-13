@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { CurriculumService } from './curriculum.service';
 
 /**

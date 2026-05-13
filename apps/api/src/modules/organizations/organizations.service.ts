@@ -3,10 +3,9 @@ import { PrismaService } from '../prisma';
 import { getPlanLimit, getPlanConfig } from '@levelup/billing';
 import { Plan } from '@levelup/db';
 import { enqueueEmail } from '@levelup/queue';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { UpdateOrgDto } from './dto/update-org.dto';
-import { CreateOrganizationInput } from '@levelup/types';
-
+import type { CreateOrganizationInput } from '@levelup/types';
 // Trial duration drawn from PLAN_CONFIG so the billing package stays the
 // single source of truth.
 function trialDurationDays(): number {

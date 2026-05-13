@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 import { Plan as PlanEnum, BillingInterval as BillingIntervalEnum } from '@levelup/db';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import {
   ensureCustomer,
   createCheckoutSession,

@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 import { AuthService } from '../auth.service';
 

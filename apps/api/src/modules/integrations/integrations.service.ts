@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IntegrationProvider } from '@levelup/db';
 import { IntegrationStatus, type OrganizationIntegration } from '@levelup/db';
-import { IntegrationSummary } from '@levelup/types';
+import type { IntegrationSummary } from '@levelup/types';
 import { decrypt } from '@levelup/integrations-slack';
 import { PrismaService } from '../prisma';
 

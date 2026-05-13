@@ -11,10 +11,9 @@
 import { Controller, Get, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { SearchService } from './search.service';
-import { SearchResponse } from '@levelup/types';
-
+import type { SearchResponse } from '@levelup/types';
 const MIN_QUERY_LENGTH = 2;
 const MAX_QUERY_LENGTH = 200;
 

@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { DataExportRequest, DeletionRequest, Prisma } from '@levelup/db';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { enqueueDataExport, enqueueEmail } from '@levelup/queue';
 
 // ---------------------------------------------------------------------------

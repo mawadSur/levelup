@@ -16,7 +16,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { CoachOutput, CoachStreamChunk } from '@levelup/llm';
 import { transcribeAudio, synthesizeSpeech } from '@levelup/llm';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';

@@ -14,7 +14,7 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, LessonStatus } from '@levelup/db';
 import { CompletionFiltersDto, AggregateJobDto } from './dto/report-filters.dto';
 import { enqueueReportAggregate } from '@levelup/queue';

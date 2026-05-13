@@ -26,8 +26,8 @@ import {
   SignOutResponse,
 } from './dto/sign-in.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
 import { isStubMode } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { AuthRateLimit, AuthRateLimitGuard } from './guards/auth-rate-limit.guard';
 
 @ApiTags('auth')

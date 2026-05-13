@@ -26,7 +26,7 @@ import * as path from 'node:path';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { PrivacyService } from './privacy.service';
 import { requestDeletionSchema, type RequestDeletionInput } from '@levelup/types';

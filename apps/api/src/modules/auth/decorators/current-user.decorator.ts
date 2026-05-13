@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
 import { Request } from 'express';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 
 export const CurrentUser = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): SessionPayload => {

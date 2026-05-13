@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Query, Redirect, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { getInstallUrl } from '@levelup/integrations-slack';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';

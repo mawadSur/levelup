@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserOnboarding } from '@levelup/db';
 import { Prisma } from '@levelup/db';
-import { OnboardingState } from '@levelup/types';
+import type { OnboardingState } from '@levelup/types';
 import { PrismaService } from '../prisma';
 
 /**

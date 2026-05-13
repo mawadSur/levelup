@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma';
 import { LessonStatus } from '@levelup/db';
-import { SessionPayload } from '@levelup/auth-client';
-import { TeamProgressEntry } from '@levelup/types';
+import type { SessionPayload } from '@levelup/auth-client';
+import type { TeamProgressEntry } from '@levelup/types';
 import { GameService } from '../../game/game.service';
 import { signCertificate } from '../../certificates/cert-signing';
 import { track, captureEvent } from '@levelup/analytics';

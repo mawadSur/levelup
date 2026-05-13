@@ -1,6 +1,10 @@
 import { chatComplete, classifySensitive, isStubMode } from '@levelup/llm';
-import { LabCriterionResult, LabRubric, LabRubricCriterion, LabTranscript } from '@levelup/types';
-
+import type {
+  LabCriterionResult,
+  LabRubric,
+  LabRubricCriterion,
+  LabTranscript,
+} from '@levelup/types';
 const GRADER_MODEL = 'gpt-4o-mini';
 
 // Strict JSON schema the grader LLM must produce. Mirrors LabCriterionResult

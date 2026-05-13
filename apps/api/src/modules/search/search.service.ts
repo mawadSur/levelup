@@ -9,8 +9,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import { embed, isStubMode } from '@levelup/llm';
-import { SearchHit } from '@levelup/types';
-
+import type { SearchHit } from '@levelup/types';
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 25;
 const SNIPPET_LENGTH = 160;

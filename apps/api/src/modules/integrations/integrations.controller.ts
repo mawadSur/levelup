@@ -1,8 +1,8 @@
 import { Controller, Delete, Get, HttpCode, Param, ParseEnumPipe, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { IntegrationProvider } from '@levelup/db';
-import { IntegrationSummary } from '@levelup/types';
+import type { IntegrationSummary } from '@levelup/types';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';

@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { getPlanLimit } from '@levelup/billing';
 import { Plan } from '@levelup/db';
 import { PrismaService } from '../prisma';

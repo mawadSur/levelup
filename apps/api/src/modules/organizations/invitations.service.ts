@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InvitationPreview } from '@levelup/types';
+import type { InvitationPreview } from '@levelup/types';
 import { randomBytes } from 'crypto';
 import { PrismaService } from '../prisma';
 import { planSeatsFor, isWithinSeatLimit } from '@levelup/billing';
 import { enqueueEmail } from '@levelup/queue';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { InviteUserDto } from './dto/invite-user.dto';
 
 @Injectable()

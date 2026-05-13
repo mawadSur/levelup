@@ -2,10 +2,9 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { hasRole } from '@levelup/auth-client';
-import { SessionPayload } from '@levelup/auth-client';
+import { hasRole, RolePriority } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { Role } from '@levelup/db';
-import { RolePriority } from '@levelup/auth-client';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 
 @Injectable()

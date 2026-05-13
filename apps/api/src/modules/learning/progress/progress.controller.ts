@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
 import { getTeamProgressBodySchema, type GetTeamProgressBody } from '@levelup/types';
 import { ProgressService } from './progress.service';

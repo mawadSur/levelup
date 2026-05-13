@@ -3,7 +3,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, Role } from '@levelup/db';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { UsersService } from './users.service';

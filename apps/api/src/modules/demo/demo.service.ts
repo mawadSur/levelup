@@ -17,10 +17,9 @@
 import { ForbiddenException, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma';
-import { SessionPayload } from '@levelup/auth-client';
+import type { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, Role, AssessmentType, XpEventKind } from '@levelup/db';
-import { DemoResetInput, DemoResetResponse } from '@levelup/types';
-
+import type { DemoResetInput, DemoResetResponse } from '@levelup/types';
 // ---------------------------------------------------------------------------
 // Mulberry32 — seedable PRNG so each call is internally consistent.
 // Keyed on companyName + Date.now() at call time.
