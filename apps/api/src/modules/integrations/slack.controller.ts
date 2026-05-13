@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Query, Redirect, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { getInstallUrl } from '@levelup/integrations-slack';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -9,14 +9,14 @@ import { Public } from '../../common/decorators/public.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { SlackSignatureGuard } from './slack-signature.guard';
-import type { SlackService } from './slack.service';
+import { SlackService } from './slack.service';
 import { SLACK_DEFAULT_SCOPES } from './slack.service';
 import {
   slashCommandPayloadSchema,
   slackEventEnvelopeSchema,
   type SlashCommandPayload,
 } from './dto';
-import type { KnownBlock } from '@levelup/integrations-slack';
+import { KnownBlock } from '@levelup/integrations-slack';
 
 // ---------------------------------------------------------------------------
 // State HMAC helpers

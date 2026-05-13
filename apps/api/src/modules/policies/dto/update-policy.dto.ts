@@ -1,4 +1,4 @@
-import type { z } from 'zod';
+import { z } from 'zod';
 import { updatePolicySchema, type ApprovedToolEntry } from '@levelup/types';
 
 /**

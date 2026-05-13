@@ -1,10 +1,10 @@
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { SessionPayload } from '@levelup/auth-client';
+import { Request, Response } from 'express';
+import { SessionPayload } from '@levelup/auth-client';
 import { getPlanLimit } from '@levelup/billing';
 import { Plan } from '@levelup/db';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 
 /**
  * PlanEnforcementGuard

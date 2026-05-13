@@ -12,11 +12,11 @@ import {
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PromptsService } from './prompts.service';
+import { PromptsService } from './prompts.service';
 import { savePromptSchema } from './dto/save-prompt.dto';
-import type { SavePromptDto } from './dto/save-prompt.dto';
+import { SavePromptDto } from './dto/save-prompt.dto';
 
 @Controller('prompts')
 @UseGuards(AuthGuard, RoleGuard)

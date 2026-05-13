@@ -8,7 +8,7 @@
  *  4. If no level reaches 0.60, recommend BEGINNER.
  */
 
-import type { AssessmentItem } from '@levelup/db';
+import { AssessmentItem } from '@levelup/db';
 import { AiLevel } from '@levelup/db';
 
 export interface LevelScore {

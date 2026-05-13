@@ -7,9 +7,9 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import { embed, isStubMode } from '@levelup/llm';
-import type { SearchHit } from '@levelup/types';
+import { SearchHit } from '@levelup/types';
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 25;

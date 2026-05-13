@@ -8,14 +8,14 @@
  */
 
 import { Controller, Get, Post, Query, Body, Res, UseGuards } from '@nestjs/common';
-import type { Response } from 'express';
+import { Response } from 'express';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { ReportingService } from './reporting.service';
+import { ReportingService } from './reporting.service';
 import {
   completionFiltersSchema,
   aggregateJobSchema,

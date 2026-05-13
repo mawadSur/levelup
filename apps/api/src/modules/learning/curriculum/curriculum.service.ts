@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { PrismaService } from '../../prisma';
-import type { GameService } from '../../game/game.service';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { AiLevel, LessonKind, LessonStatus } from '@levelup/db';
+import { PrismaService } from '../../prisma';
+import { GameService } from '../../game/game.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { AiLevel, LessonKind, LessonStatus } from '@levelup/db';
 
 const TIER_META: Record<AiLevel, { label: string; tagline: string; order: number }> = {
   BEGINNER: {

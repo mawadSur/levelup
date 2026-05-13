@@ -23,7 +23,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import { Response } from 'express';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { getCertificateSignedUrl, isStubMode as isStorageStubMode } from '@levelup/storage';
@@ -32,10 +32,10 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { CertificatesService } from './certificates.service';
-import type { PrismaService } from '../prisma';
+import { CertificatesService } from './certificates.service';
+import { PrismaService } from '../prisma';
 import { issueCertificateSchema, type IssueCertificateDto } from './dto/issue-certificate.dto';
 import { LocalFsCertStorage } from './cert-storage';
 

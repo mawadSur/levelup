@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { UserOnboarding } from '@levelup/db';
-import type { Prisma } from '@levelup/db';
-import type { OnboardingState } from '@levelup/types';
-import type { PrismaService } from '../prisma';
+import { UserOnboarding } from '@levelup/db';
+import { Prisma } from '@levelup/db';
+import { OnboardingState } from '@levelup/types';
+import { PrismaService } from '../prisma';
 
 /**
  * Total number of onboarding tour steps.

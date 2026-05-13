@@ -1,4 +1,4 @@
-import type { LoggerService, LogLevel } from '@nestjs/common';
+import { LoggerService, LogLevel } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 
 type LogEntry = {

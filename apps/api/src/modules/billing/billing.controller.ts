@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 import { Plan as PlanEnum, BillingInterval as BillingIntervalEnum } from '@levelup/db';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import {
   ensureCustomer,
   createCheckoutSession,
@@ -28,8 +28,8 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { PrismaService } from '../prisma';
-import type { BillingService } from './billing.service';
+import { PrismaService } from '../prisma';
+import { BillingService } from './billing.service';
 import {
   createCheckoutSessionBodySchema,
   type CreateCheckoutSessionBodyDto,

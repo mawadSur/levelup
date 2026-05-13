@@ -1,5 +1,5 @@
 import { Role } from '@levelup/db';
-import type { DailyQuestItem, DailyQuestKind } from '@levelup/types';
+import { DailyQuestItem, DailyQuestKind } from '@levelup/types';
 import { XP_AWARDS } from './xp-rules';
 
 /**

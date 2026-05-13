@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { CompanyPolicy } from '@levelup/db';
+import { PrismaService } from '../prisma/prisma.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { CompanyPolicy } from '@levelup/db';
 import { Prisma } from '@levelup/db';
-import type { PublishPolicyDto } from './dto/update-policy.dto';
+import { PublishPolicyDto } from './dto/update-policy.dto';
 
 @Injectable()
 export class PoliciesService {

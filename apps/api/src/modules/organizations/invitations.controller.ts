@@ -4,11 +4,11 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { InvitationsService } from './invitations.service';
+import { InvitationsService } from './invitations.service';
 import { inviteUserSchema } from './dto/invite-user.dto';
-import type { InviteUserDto } from './dto/invite-user.dto';
+import { InviteUserDto } from './dto/invite-user.dto';
 
 @Controller('invitations')
 @UseGuards(AuthGuard, RoleGuard)

@@ -3,11 +3,11 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { DepartmentsService } from './departments.service';
+import { DepartmentsService } from './departments.service';
 import { createDepartmentSchema } from './dto/create-department.dto';
-import type { CreateDepartmentDto } from './dto/create-department.dto';
+import { CreateDepartmentDto } from './dto/create-department.dto';
 
 @Controller('departments')
 @UseGuards(AuthGuard, RoleGuard)

@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import type { Role } from '@levelup/db';
+import { Role } from '@levelup/db';
 
 export const ROLES_KEY = 'roles';
 

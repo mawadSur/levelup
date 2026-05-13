@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
 import { AssessmentType, AiLevel } from '@levelup/db';
-import type { AssessmentItem, Prisma } from '@levelup/db';
+import { AssessmentItem, Prisma } from '@levelup/db';
 import { sampleItems } from './sampling';
 import { scoreAssessment } from './scoring';
-import type { StartAssessmentDto } from './dto/start-assessment.dto';
-import type { SubmitAssessmentDto } from './dto/submit-assessment.dto';
+import { StartAssessmentDto } from './dto/start-assessment.dto';
+import { SubmitAssessmentDto } from './dto/submit-assessment.dto';
 import { track } from '@levelup/analytics';
 
 /** Fields returned per item on /start — correctIndex is intentionally excluded. */

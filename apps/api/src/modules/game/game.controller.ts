@@ -8,8 +8,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import type { SessionPayload } from '@levelup/auth-client';
-import type {
+import { SessionPayload } from '@levelup/auth-client';
+import {
   DailyQuests,
   GameState,
   Leaderboard,
@@ -18,8 +18,8 @@ import type {
 } from '@levelup/types';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PrismaService } from '../prisma';
-import type { GameService } from './game.service';
+import { PrismaService } from '../prisma';
+import { GameService } from './game.service';
 import { type ClaimQuestDto, claimQuestSchema } from './dto/claim-quest.dto';
 
 const VALID_SCOPES: ReadonlySet<LeaderboardScope> = new Set(['org', 'department', 'me']);

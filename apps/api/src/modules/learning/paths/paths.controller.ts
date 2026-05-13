@@ -2,17 +2,17 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
-import type { PathsService } from './paths.service';
+import { PathsService } from './paths.service';
 import { createLearningPathSchema } from './dto/create-path.dto';
-import type { CreatePathDto } from './dto/create-path.dto';
+import { CreatePathDto } from './dto/create-path.dto';
 import { updatePathSchema } from './dto/update-path.dto';
-import type { UpdatePathDto } from './dto/update-path.dto';
+import { UpdatePathDto } from './dto/update-path.dto';
 import { assignPathSchema } from './dto/assign-path.dto';
-import type { AssignPathDto } from './dto/assign-path.dto';
+import { AssignPathDto } from './dto/assign-path.dto';
 import { saveBulkSchema } from './dto/save-bulk.dto';
-import type { SaveBulkDto } from './dto/save-bulk.dto';
+import { SaveBulkDto } from './dto/save-bulk.dto';
 
 @Controller('paths')
 @UseGuards(RoleGuard)

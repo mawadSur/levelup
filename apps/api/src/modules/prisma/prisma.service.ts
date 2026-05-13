@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { INestApplication, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { INestApplication, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@levelup/db';
 
 // We instantiate a fresh PrismaClient here rather than re-using the global

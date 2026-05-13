@@ -14,8 +14,8 @@
  */
 
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
 import {
   enqueueCertPdf,
   enqueueReportAggregate,
@@ -25,7 +25,7 @@ import {
   enqueueAuditCleanup,
   enqueueManagerDigestCron,
 } from '@levelup/queue';
-import type {
+import {
   CertPdfInput,
   ReportAggregateInput,
   EmbedContentInput,
@@ -35,8 +35,8 @@ import type {
   ManagerDigestCronInput,
   JobName,
 } from '@levelup/queue';
-import type { DlqListParams, AuditListParams } from '@levelup/types';
-import type { Prisma } from '@levelup/db';
+import { DlqListParams, AuditListParams } from '@levelup/types';
+import { Prisma } from '@levelup/db';
 
 // ---------------------------------------------------------------------------
 // Internal helpers

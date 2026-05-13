@@ -20,11 +20,11 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { AdminOpsService } from './admin-ops.service';
+import { AdminOpsService } from './admin-ops.service';
 import { dlqListParamsSchema, auditListParamsSchema } from '@levelup/types';
-import type { DlqListParams, AuditListParams } from '@levelup/types';
+import { DlqListParams, AuditListParams } from '@levelup/types';
 
 @Controller('admin/ops')
 @UseGuards(AuthGuard, RoleGuard)

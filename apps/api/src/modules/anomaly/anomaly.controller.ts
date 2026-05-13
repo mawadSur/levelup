@@ -2,8 +2,8 @@ import { Controller, Get, Post, Param, Query, UseGuards } from '@nestjs/common';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { AnomalyService } from './anomaly.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { AnomalyService } from './anomaly.service';
 import { listAnomaliesQuerySchema } from '@levelup/types';
 
 @Controller('anomalies')

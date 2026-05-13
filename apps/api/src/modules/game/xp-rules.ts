@@ -1,4 +1,4 @@
-import type { XpEventKind } from '@levelup/db';
+import { XpEventKind } from '@levelup/db';
 
 /**
  * Canonical per-event XP table. Centralising it here means the wiring

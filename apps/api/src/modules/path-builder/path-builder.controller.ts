@@ -15,7 +15,7 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import {
   acceptPathRequestSchema,
@@ -23,7 +23,7 @@ import {
   type AcceptPathRequestInput,
   type CreatePathRequestInput,
 } from '@levelup/types';
-import type { PathBuilderService } from './path-builder.service';
+import { PathBuilderService } from './path-builder.service';
 
 @Controller('path-builder')
 @UseGuards(RoleGuard)

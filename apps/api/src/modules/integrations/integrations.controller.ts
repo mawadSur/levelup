@@ -1,14 +1,14 @@
 import { Controller, Delete, Get, HttpCode, Param, ParseEnumPipe, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { IntegrationProvider } from '@levelup/db';
-import type { IntegrationSummary } from '@levelup/types';
+import { IntegrationSummary } from '@levelup/types';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import type { IntegrationsService } from './integrations.service';
-import type { SlackService } from './slack.service';
+import { IntegrationsService } from './integrations.service';
+import { SlackService } from './slack.service';
 
 /**
  * Generic integration listing/management endpoints.

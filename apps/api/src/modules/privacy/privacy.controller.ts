@@ -20,15 +20,15 @@ import {
   NotFoundException,
   GoneException,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import { Response } from 'express';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { PrivacyService } from './privacy.service';
+import { PrivacyService } from './privacy.service';
 import { requestDeletionSchema, type RequestDeletionInput } from '@levelup/types';
 
 // Where the worker writes export zips (mirrors worker config)

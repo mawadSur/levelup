@@ -15,13 +15,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import type { Request, Response } from 'express';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { CoachOutput, CoachStreamChunk } from '@levelup/llm';
+import { Request, Response } from 'express';
+import { SessionPayload } from '@levelup/auth-client';
+import { CoachOutput, CoachStreamChunk } from '@levelup/llm';
 import { transcribeAudio, synthesizeSpeech } from '@levelup/llm';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { CoachService } from './coach.service';
+import { CoachService } from './coach.service';
 import { RateLimitGuard } from './rate-limit.guard';
 import { coachInvokeBodySchema, type CoachInvokeBody } from './dto/coach-request.dto';
 

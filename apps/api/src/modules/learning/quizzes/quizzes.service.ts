@@ -5,11 +5,11 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { z } from 'zod';
-import type { PrismaService } from '../../prisma';
-import type { ProgressService } from '../progress/progress.service';
-import type { GameService } from '../../game/game.service';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { SubmitAttemptDto } from './dto/submit-attempt.dto';
+import { PrismaService } from '../../prisma';
+import { ProgressService } from '../progress/progress.service';
+import { GameService } from '../../game/game.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { SubmitAttemptDto } from './dto/submit-attempt.dto';
 // SubmitAttemptDto is { answers: number[] } — quizId comes from the URL param
 
 // ---------------------------------------------------------------------------

@@ -1,10 +1,10 @@
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import type { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
+import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 import { hasRole } from '@levelup/auth-client';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { Role } from '@levelup/db';
+import { SessionPayload } from '@levelup/auth-client';
+import { Role } from '@levelup/db';
 import { RolePriority } from '@levelup/auth-client';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 

@@ -10,15 +10,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { FlagsService } from './flags.service';
-import type { EvaluatedFlag } from './flags.service';
+import { FlagsService } from './flags.service';
+import { EvaluatedFlag } from './flags.service';
 import { upsertFlagSchema } from './dto/upsert-flag.dto';
-import type { UpsertFlagDto } from './dto/upsert-flag.dto';
+import { UpsertFlagDto } from './dto/upsert-flag.dto';
 
 @ApiTags('flags')
 @Controller('flags')

@@ -1,8 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { CurriculumService } from './curriculum.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { CurriculumService } from './curriculum.service';
 
 /**
  * /curriculum — denormalized 0-to-hero view for the visual progression page.

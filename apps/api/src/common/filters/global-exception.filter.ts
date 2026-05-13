@@ -1,7 +1,7 @@
-import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
+import { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { Catch, HttpException, HttpStatus } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { AppLogger } from '../logger/app-logger.service';
+import { Request, Response } from 'express';
+import { AppLogger } from '../logger/app-logger.service';
 
 type ErrorBody = {
   error: {

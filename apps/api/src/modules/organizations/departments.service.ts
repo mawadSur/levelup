@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { CreateDepartmentDto } from './dto/create-department.dto';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
+import { CreateDepartmentDto } from './dto/create-department.dto';
 
 @Injectable()
 export class DepartmentsService {

@@ -6,7 +6,7 @@ import {
   runCoach,
   streamCoach,
 } from '@levelup/llm';
-import type {
+import {
   AiLevel as LlmAiLevel,
   CoachInput,
   CoachOutput,
@@ -15,10 +15,10 @@ import type {
   SensitiveResult,
 } from '@levelup/llm';
 import { AiLevel as PrismaAiLevel, TurnRole } from '@levelup/db';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { PrismaService } from '../prisma';
-import type { GameService } from '../game/game.service';
-import type { RiskAlertsService } from '../risk-alerts/risk-alerts.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { PrismaService } from '../prisma';
+import { GameService } from '../game/game.service';
+import { RiskAlertsService } from '../risk-alerts/risk-alerts.service';
 import { track } from '@levelup/analytics';
 
 /**

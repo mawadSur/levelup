@@ -6,7 +6,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import type { Prisma } from '@levelup/db';
+import { Prisma } from '@levelup/db';
 import { type Lab, type LabAttempt } from '@levelup/db';
 import { chatComplete, isStubMode } from '@levelup/llm';
 import {
@@ -25,9 +25,9 @@ import {
   type LabTranscript,
   type LabUpdateSpec,
 } from '@levelup/types';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { PrismaService } from '../prisma';
-import type { GameService } from '../game/game.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { PrismaService } from '../prisma';
+import { GameService } from '../game/game.service';
 import { gradeAttempt } from './grader';
 
 const LAB_MODEL = 'gpt-4o-mini';

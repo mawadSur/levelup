@@ -1,5 +1,5 @@
 import { startOtel } from '@levelup/observability';
-import type { OtelHandle } from '@levelup/observability';
+import { OtelHandle } from '@levelup/observability';
 
 let _handle: OtelHandle | undefined;
 

@@ -13,12 +13,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import { acceptInvitationSchema } from './dto/sign-in.dto';
-import type {
+import {
   AcceptInvitationInput,
   AcceptInvitationResponse,
   DevBypassResponse,
@@ -26,7 +26,7 @@ import type {
   SignOutResponse,
 } from './dto/sign-in.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { isStubMode } from '@levelup/auth-client';
 import { AuthRateLimit, AuthRateLimitGuard } from './guards/auth-rate-limit.guard';
 

@@ -2,13 +2,13 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { AssessmentsService } from './assessments.service';
+import { AssessmentsService } from './assessments.service';
 import { startAssessmentSchema } from './dto/start-assessment.dto';
-import type { StartAssessmentDto } from './dto/start-assessment.dto';
+import { StartAssessmentDto } from './dto/start-assessment.dto';
 import { submitAssessmentDtoSchema } from './dto/submit-assessment.dto';
-import type { SubmitAssessmentDto } from './dto/submit-assessment.dto';
+import { SubmitAssessmentDto } from './dto/submit-assessment.dto';
 
 @Controller('assessments')
 @UseGuards(AuthGuard, RoleGuard)

@@ -23,11 +23,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
+import { PrismaService } from '../prisma';
 import { enqueuePathGeneration } from '@levelup/queue';
-import type { AiLevel, Prisma } from '@levelup/db';
+import { AiLevel, Prisma } from '@levelup/db';
 import { type LearningPath, type PathGenerationRequest } from '@levelup/db';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import {
   generatedPathSchema,
   type CreatePathRequestInput,

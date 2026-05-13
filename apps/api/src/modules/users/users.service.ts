@@ -4,14 +4,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { Prisma } from '@levelup/db';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { AiLevel, Badge, Role } from '@levelup/db';
-import type { UpdateProfileDto } from './dto/update-profile.dto';
-import type { UpdateRoleDto } from './dto/update-role.dto';
-import type { SetAiLevelDto } from './dto/set-ai-level.dto';
-import type { ActivityEvent, LeaderboardOptOutInput } from '@levelup/types';
+import { Prisma } from '@levelup/db';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
+import { AiLevel, Badge, Role } from '@levelup/db';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { SetAiLevelDto } from './dto/set-ai-level.dto';
+import { ActivityEvent, LeaderboardOptOutInput } from '@levelup/types';
 
 interface ListUsersQuery {
   role?: Role;

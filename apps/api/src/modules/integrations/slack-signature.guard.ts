@@ -1,7 +1,7 @@
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import type { Request } from 'express';
+import { Request } from 'express';
 
 /**
  * SlackSignatureGuard

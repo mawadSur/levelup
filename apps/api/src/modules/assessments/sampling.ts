@@ -12,7 +12,7 @@
  */
 
 import { createHash } from 'crypto';
-import type { AssessmentItem, AssessmentType } from '@levelup/db';
+import { AssessmentItem, AssessmentType } from '@levelup/db';
 import { AiLevel } from '@levelup/db';
 import { InternalServerErrorException } from '@nestjs/common';
 

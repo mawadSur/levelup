@@ -1,4 +1,4 @@
-import type { OnApplicationShutdown } from '@nestjs/common';
+import { OnApplicationShutdown } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { shutdownAnalytics } from '@levelup/analytics';
 

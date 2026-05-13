@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
-import type { Request } from 'express';
+import { Request } from 'express';
 
 const HEADER = 'x-request-id';
 

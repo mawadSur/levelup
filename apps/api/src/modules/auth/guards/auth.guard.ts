@@ -1,10 +1,10 @@
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import type { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
-import type { SessionPayload } from '@levelup/auth-client';
+import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
+import { SessionPayload } from '@levelup/auth-client';
 import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
-import type { AuthService } from '../auth.service';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

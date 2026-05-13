@@ -6,10 +6,10 @@
  */
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { ListAnomaliesQuery, AnomalyAlertDto, ListAnomaliesResponse } from '@levelup/types';
-import type { Prisma } from '@levelup/db';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
+import { ListAnomaliesQuery, AnomalyAlertDto, ListAnomaliesResponse } from '@levelup/types';
+import { Prisma } from '@levelup/db';
 
 @Injectable()
 export class AnomalyService {

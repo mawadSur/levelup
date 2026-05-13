@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
-import type { LabsService } from './labs.service';
+import { LabsService } from './labs.service';
 import { LabsRateLimitGuard } from './labs-rate-limit.guard';
 import {
   labAttemptRequestSchema,
@@ -16,7 +16,7 @@ import {
   type LabSpec,
   type LabUpdateSpec,
 } from './dto/lab-request.dto';
-import type {
+import {
   LabAttemptResponse,
   LabAttemptSummary,
   LabDetail,

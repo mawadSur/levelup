@@ -1,10 +1,10 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import type { Prisma } from '@levelup/db';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { GameService } from '../game/game.service';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { Prompt } from '@levelup/db';
-import type { SavePromptDto } from './dto/save-prompt.dto';
+import { Prisma } from '@levelup/db';
+import { PrismaService } from '../prisma/prisma.service';
+import { GameService } from '../game/game.service';
+import { SessionPayload } from '@levelup/auth-client';
+import { Prompt } from '@levelup/db';
+import { SavePromptDto } from './dto/save-prompt.dto';
 import { track } from '@levelup/analytics';
 
 /** Cap on how many PROMPT_CLONED awards a single original prompt can earn. */

@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import type { PrismaService } from '../../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
-import type { CreatePathDto } from './dto/create-path.dto';
-import type { UpdatePathDto } from './dto/update-path.dto';
-import type { AssignPathDto } from './dto/assign-path.dto';
-import type { SaveBulkDto } from './dto/save-bulk.dto';
-import type { AiLevel } from '@levelup/db';
+import { PrismaService } from '../../prisma';
+import { SessionPayload } from '@levelup/auth-client';
+import { CreatePathDto } from './dto/create-path.dto';
+import { UpdatePathDto } from './dto/update-path.dto';
+import { AssignPathDto } from './dto/assign-path.dto';
+import { SaveBulkDto } from './dto/save-bulk.dto';
+import { AiLevel } from '@levelup/db';
 
 // The curriculum map renders paths in named tiers. AiLevel values map to
 // learner-facing labels so the frontend doesn't need to know about the enum.

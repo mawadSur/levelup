@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { FeatureFlag } from '@levelup/db';
+import { FeatureFlag } from '@levelup/db';
 import { Prisma } from '@levelup/db';
-import type { PrismaService } from '../prisma';
-import type { UpsertFlagDto } from './dto/upsert-flag.dto';
+import { PrismaService } from '../prisma';
+import { UpsertFlagDto } from './dto/upsert-flag.dto';
 
 export interface EvaluatedFlag {
   key: string;

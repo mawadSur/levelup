@@ -13,10 +13,10 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import type { PrismaService } from '../prisma';
-import type { SessionPayload } from '@levelup/auth-client';
+import { PrismaService } from '../prisma';
+import { SessionPayload } from '@levelup/auth-client';
 import { AiLevel, LessonStatus } from '@levelup/db';
-import type { CompletionFiltersDto, AggregateJobDto } from './dto/report-filters.dto';
+import { CompletionFiltersDto, AggregateJobDto } from './dto/report-filters.dto';
 import { enqueueReportAggregate } from '@levelup/queue';
 import { createHash } from 'crypto';
 

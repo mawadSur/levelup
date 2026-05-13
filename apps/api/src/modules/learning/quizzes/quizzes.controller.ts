@@ -2,12 +2,12 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import type { SessionPayload } from '@levelup/auth-client';
+import { SessionPayload } from '@levelup/auth-client';
 import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
 import { createQuizSchema } from './quizzes.service';
-import type { CreateQuizDto, QuizzesService } from './quizzes.service';
+import { CreateQuizDto, QuizzesService } from './quizzes.service';
 import { submitAttemptBodySchema } from './dto/submit-attempt.dto';
-import type { SubmitAttemptDto } from './dto/submit-attempt.dto';
+import { SubmitAttemptDto } from './dto/submit-attempt.dto';
 
 @Controller()
 @UseGuards(RoleGuard)

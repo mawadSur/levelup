@@ -1,5 +1,5 @@
 import { chatComplete, classifySensitive, isStubMode } from '@levelup/llm';
-import type { LabCriterionResult, LabRubric, LabRubricCriterion, LabTranscript } from '@levelup/types';
+import { LabCriterionResult, LabRubric, LabRubricCriterion, LabTranscript } from '@levelup/types';
 
 const GRADER_MODEL = 'gpt-4o-mini';
 
