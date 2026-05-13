@@ -2,10 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Badge, Card, CardContent, MissionNumber, MonoLabel } from '@levelup/ui';
-import { paths, lessons, progress } from '@/lib/api';
 import { LessonRow } from '@/components/learn/lesson-row';
 import type { LessonRowData } from '@/components/learn/lesson-row';
 import { ApiError } from '@/lib/api/errors';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { LearningPath } from '@/lib/api/paths';
+import type { Lesson } from '@/lib/api/lessons';
+import type { PathProgress } from '@/lib/api/progress';
 
 interface PathPageProps {
   params: Promise<{ pathSlug: string }>;
@@ -14,7 +17,7 @@ interface PathPageProps {
 export async function generateMetadata({ params }: PathPageProps): Promise<Metadata> {
   const { pathSlug } = await params;
   try {
-    const path = await paths.getPath(pathSlug);
+    const path = await ssrGet<LearningPath>(`/paths/${pathSlug}`);
     return { title: path.title };
   } catch {
     return { title: 'Path not found' };
@@ -24,9 +27,9 @@ export async function generateMetadata({ params }: PathPageProps): Promise<Metad
 export default async function PathOverviewPage({ params }: PathPageProps) {
   const { pathSlug } = await params;
 
-  let pathData: Awaited<ReturnType<typeof paths.getPath>>;
+  let pathData: LearningPath;
   try {
-    pathData = await paths.getPath(pathSlug);
+    pathData = await ssrGet<LearningPath>(`/paths/${pathSlug}`);
   } catch (err) {
     if (err instanceof ApiError && err.isNotFound) {
       notFound();
@@ -38,8 +41,8 @@ export default async function PathOverviewPage({ params }: PathPageProps) {
   // includes a per-lesson status so we don't need a separate getMyProgress
   // pass (which now returns per-path aggregates only, not per-lesson rows).
   const [lessonsResult, pathProgressResult] = await Promise.allSettled([
-    lessons.listLessons(pathData.id),
-    progress.getMyPathProgress(pathData.id),
+    ssrGet<Lesson[]>(`/paths/${pathData.id}/lessons`),
+    ssrGet<PathProgress>(`/progress/me/paths/${pathData.id}`),
   ]);
 
   const lessonList = lessonsResult.status === 'fulfilled' ? lessonsResult.value : [];

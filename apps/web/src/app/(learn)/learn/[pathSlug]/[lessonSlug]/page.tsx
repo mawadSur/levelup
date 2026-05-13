@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button, Badge, MonoLabel } from '@levelup/ui';
-import { paths, lessons, quizzes, progress } from '@/lib/api';
+import type { Quiz, QuizAttempt } from '@/lib/api/quizzes';
 import { MarkdownView } from '@/components/learn/markdown-view';
 import { QuizRunner } from '@/components/learn/quiz-runner';
 import { PathToc } from '@/components/learn/path-toc';
@@ -15,6 +15,10 @@ import type { TocLesson } from '@/components/learn/path-toc';
 // LessonProgress was removed from the per-lesson page — per-lesson status
 // now arrives via `progress.getMyPathProgress(pathId).lessons`.
 import { ApiError } from '@/lib/api/errors';
+import { ssrGet, ssrPost } from '@/lib/api/server-fetch';
+import type { LearningPath } from '@/lib/api/paths';
+import type { Lesson } from '@/lib/api/lessons';
+import type { LessonProgress, PathProgress } from '@/lib/api/progress';
 
 interface LessonPageProps {
   params: Promise<{ pathSlug: string; lessonSlug: string }>;
@@ -23,8 +27,8 @@ interface LessonPageProps {
 export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
   const { pathSlug, lessonSlug } = await params;
   try {
-    const pathData = await paths.getPath(pathSlug);
-    const lessonList = await lessons.listLessons(pathData.id);
+    const pathData = await ssrGet<LearningPath>(`/paths/${pathSlug}`);
+    const lessonList = await ssrGet<Lesson[]>(`/paths/${pathData.id}/lessons`);
     const lesson = lessonList.find((l) => l.slug === lessonSlug);
     return { title: lesson?.title ?? 'Lesson' };
   } catch {
@@ -36,35 +40,39 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const { pathSlug, lessonSlug } = await params;
 
   // 1. Get path
-  let pathData: Awaited<ReturnType<typeof paths.getPath>>;
+  let pathData: LearningPath;
   try {
-    pathData = await paths.getPath(pathSlug);
+    pathData = await ssrGet<LearningPath>(`/paths/${pathSlug}`);
   } catch (err) {
     if (err instanceof ApiError && err.isNotFound) notFound();
     throw err;
   }
 
   // 2. Get all lessons for this path (for TOC + ordering)
-  const lessonList = await lessons.listLessons(pathData.id).catch(() => []);
+  const lessonList = await ssrGet<Lesson[]>(`/paths/${pathData.id}/lessons`).catch(
+    () => [] as Lesson[],
+  );
   const sortedLessons = [...lessonList].sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
 
   // 3. Find the current lesson (TOC view) — body is fetched separately via
-  //    getLesson() since the list endpoint omits the lesson body to keep
-  //    payloads small.
+  //    GET /lessons/:id since the list endpoint omits the lesson body to
+  //    keep payloads small.
   const currentLessonStub = sortedLessons.find((l) => l.slug === lessonSlug);
   if (!currentLessonStub) notFound();
-  const currentLesson = await lessons
-    .getLesson(pathData.id, currentLessonStub.id)
-    .catch(() => currentLessonStub);
+  const currentLesson = await ssrGet<Lesson>(`/lessons/${currentLessonStub.id}`).catch(
+    () => currentLessonStub,
+  );
 
   // 4. Mark lesson as started (server-side, idempotent)
-  const startResult = await progress.startLesson(currentLesson.id).catch(() => null);
+  const startResult = await ssrPost<{ lessonId: string }, LessonProgress>('/progress/start', {
+    lessonId: currentLesson.id,
+  }).catch(() => null);
 
   // 5. Fetch path progress (per-lesson statuses) + quiz data in parallel.
   //    The previous `getMyProgress()` flat lesson list is replaced by per-path
   //    aggregates; per-lesson status now lives inside `getMyPathProgress`.
   const [pathProgressResult, quizResult] = await Promise.allSettled([
-    progress.getMyPathProgress(pathData.id),
+    ssrGet<PathProgress>(`/progress/me/paths/${pathData.id}`),
     fetchQuizForLesson(currentLesson.id),
   ]);
 
@@ -79,7 +87,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const quizData = quizResult.status === 'fulfilled' ? quizResult.value : null;
 
   // 6. Fetch quiz attempts if quiz exists
-  const attemptsResult = quizData ? await quizzes.listMyAttempts(quizData.id).catch(() => []) : [];
+  const attemptsResult = quizData
+    ? await ssrGet<QuizAttempt[]>(`/quizzes/${quizData.id}/attempts/me`).catch(
+        () => [] as QuizAttempt[],
+      )
+    : [];
 
   // 7. Build TOC data
   const tocLessons: TocLesson[] = sortedLessons.map((l) => {
@@ -292,17 +304,16 @@ async function fetchQuizForLesson(lessonId: string) {
   // GET /quizzes?lessonId=... and gracefully return null on any error.
   // See report section "API contract ambiguities".
   try {
-    const { apiGet } = await import('@/lib/api/client');
-    const result = await apiGet<unknown>(`/quizzes?lessonId=${lessonId}`);
+    const result = await ssrGet<unknown>(`/quizzes?lessonId=${lessonId}`);
     // Single-object response
     if (result !== null && typeof result === 'object' && !Array.isArray(result) && 'id' in result) {
-      return result as Awaited<ReturnType<typeof quizzes.getQuiz>>;
+      return result as Quiz;
     }
     // Array response
     if (Array.isArray(result) && result.length > 0) {
       const first = result[0] as QuizLike | undefined;
       if (first?.id) {
-        return first as Awaited<ReturnType<typeof quizzes.getQuiz>>;
+        return first as unknown as Quiz;
       }
     }
   } catch {

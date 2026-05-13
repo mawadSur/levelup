@@ -79,33 +79,33 @@ export async function listPaths(opts?: {
   published?: boolean;
   targetRole?: string;
 }): Promise<LearningPath[]> {
-  return apiGet<LearningPath[]>('/learning-paths', { params: opts });
+  return apiGet<LearningPath[]>('/paths', { params: opts });
 }
 
 export async function getPath(idOrSlug: string): Promise<LearningPath> {
-  return apiGet<LearningPath>(`/learning-paths/${idOrSlug}`);
+  return apiGet<LearningPath>(`/paths/${idOrSlug}`);
 }
 
 export async function createPath(input: CreateLearningPathInput): Promise<LearningPath> {
   const parsed = createLearningPathSchema.parse(input);
-  return apiPost<CreateLearningPathInput, LearningPath>('/learning-paths', parsed);
+  return apiPost<CreateLearningPathInput, LearningPath>('/paths', parsed);
 }
 
 export async function updatePath(
   id: string,
   input: UpdateLearningPathInput,
 ): Promise<LearningPath> {
-  return apiPatch<UpdateLearningPathInput, LearningPath>(`/learning-paths/${id}`, input);
+  return apiPatch<UpdateLearningPathInput, LearningPath>(`/paths/${id}`, input);
 }
 
 export async function deletePath(id: string): Promise<void> {
-  return apiDelete(`/learning-paths/${id}`);
+  return apiDelete(`/paths/${id}`);
 }
 
 export async function assignPath(input: AssignLearningPathInput): Promise<{ assigned: number }> {
   const parsed = assignLearningPathSchema.parse(input);
   return apiPost<AssignLearningPathInput, { assigned: number }>(
-    `/learning-paths/${parsed.learningPathId}/assign`,
+    `/paths/${parsed.learningPathId}/assign`,
     parsed,
   );
 }
@@ -114,11 +114,11 @@ export async function unassignPath(opts: {
   learningPathId: string;
   userId: string;
 }): Promise<void> {
-  return apiDelete(`/learning-paths/${opts.learningPathId}/assign/${opts.userId}`);
+  return apiDelete(`/paths/${opts.learningPathId}/assign/${opts.userId}`);
 }
 
 export async function getLearners(learningPathId: string): Promise<PathLearner[]> {
-  return apiGet<PathLearner[]>(`/learning-paths/${learningPathId}/learners`);
+  return apiGet<PathLearner[]>(`/paths/${learningPathId}/learners`);
 }
 
 export async function saveBulk(pathId: string, input: SaveBulkInput): Promise<LearningPath> {

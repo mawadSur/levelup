@@ -1,4 +1,4 @@
-import { apiGet, apiPut, apiDelete, apiPost } from './client';
+import { apiGet, apiPatch, apiDelete, apiPost } from './client';
 
 // ---------------------------------------------------------------------------
 // Response shapes
@@ -44,11 +44,11 @@ export interface ReorderLessonsInput {
 // ---------------------------------------------------------------------------
 
 export async function listLessons(learningPathId: string): Promise<Lesson[]> {
-  return apiGet<Lesson[]>(`/learning-paths/${learningPathId}/lessons`);
+  return apiGet<Lesson[]>(`/paths/${learningPathId}/lessons`);
 }
 
-export async function getLesson(learningPathId: string, lessonId: string): Promise<Lesson> {
-  return apiGet<Lesson>(`/learning-paths/${learningPathId}/lessons/${lessonId}`);
+export async function getLesson(_learningPathId: string, lessonId: string): Promise<Lesson> {
+  return apiGet<Lesson>(`/lessons/${lessonId}`);
 }
 
 export async function upsertLesson(
@@ -57,23 +57,18 @@ export async function upsertLesson(
   input: UpsertLessonInput,
 ): Promise<Lesson> {
   if (lessonId) {
-    // update
-    return apiPut<UpsertLessonInput, Lesson>(
-      `/learning-paths/${learningPathId}/lessons/${lessonId}`,
-      input,
-    );
+    return apiPatch<UpsertLessonInput, Lesson>(`/lessons/${lessonId}`, input);
   }
-  // create
-  return apiPost<UpsertLessonInput, Lesson>(`/learning-paths/${learningPathId}/lessons`, input);
+  return apiPost<UpsertLessonInput, Lesson>(`/paths/${learningPathId}/lessons`, input);
 }
 
-export async function deleteLesson(learningPathId: string, lessonId: string): Promise<void> {
-  return apiDelete(`/learning-paths/${learningPathId}/lessons/${lessonId}`);
+export async function deleteLesson(_learningPathId: string, lessonId: string): Promise<void> {
+  return apiDelete(`/lessons/${lessonId}`);
 }
 
 export async function reorderLessons(
   learningPathId: string,
   input: ReorderLessonsInput,
 ): Promise<void> {
-  return apiPost(`/learning-paths/${learningPathId}/lessons/reorder`, input);
+  return apiPost(`/paths/${learningPathId}/lessons/reorder`, input);
 }
