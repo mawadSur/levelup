@@ -13,11 +13,19 @@ import { ApiError } from '@/lib/api/errors';
 
 interface LabRunnerProps {
   lab: LabDetail;
+  /**
+   * When the lab is used inline as a `kind: LAB` lesson, the parent supplies
+   * a callback that marks the host lesson complete after a passing attempt.
+   * The runner shows a "Continue" button in the result panel when set.
+   */
+  onLessonComplete?: () => Promise<void> | void;
+  /** Optional URL to advance to after the lesson is marked complete. */
+  nextLessonHref?: string | null;
 }
 
 type Status = 'idle' | 'sending' | 'submitting';
 
-export function LabRunner({ lab }: LabRunnerProps) {
+export function LabRunner({ lab, onLessonComplete, nextLessonHref }: LabRunnerProps) {
   const [transcript, setTranscript] = useState<LabTranscriptTurn[]>([]);
   const [draft, setDraft] = useState('');
   const [status, setStatus] = useState<Status>('idle');
@@ -76,7 +84,14 @@ export function LabRunner({ lab }: LabRunnerProps) {
   }
 
   if (result) {
-    return <LabResult result={result} onRetry={handleRetry} />;
+    return (
+      <LabResult
+        result={result}
+        onRetry={handleRetry}
+        onLessonComplete={onLessonComplete}
+        nextLessonHref={nextLessonHref}
+      />
+    );
   }
 
   return (
@@ -181,8 +196,35 @@ function ChatBubble({ role, content }: { role: 'user' | 'assistant'; content: st
   );
 }
 
-function LabResult({ result, onRetry }: { result: LabAttemptResponse; onRetry: () => void }) {
+function LabResult({
+  result,
+  onRetry,
+  onLessonComplete,
+  nextLessonHref,
+}: {
+  result: LabAttemptResponse;
+  onRetry: () => void;
+  onLessonComplete?: () => Promise<void> | void;
+  nextLessonHref?: string | null;
+}) {
   const pct = Math.round(result.score * 100);
+  const [completing, setCompleting] = useState(false);
+  const [completed, setCompleted] = useState(false);
+
+  async function handleContinue() {
+    if (!onLessonComplete || completing) return;
+    setCompleting(true);
+    try {
+      await onLessonComplete();
+      setCompleted(true);
+      if (nextLessonHref) {
+        window.location.href = nextLessonHref;
+      }
+    } finally {
+      setCompleting(false);
+    }
+  }
+
   return (
     <Card>
       <CardContent className="space-y-6 p-6">
@@ -215,7 +257,21 @@ function LabResult({ result, onRetry }: { result: LabAttemptResponse; onRetry: (
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button onClick={onRetry}>Try again</Button>
+          {result.passed && onLessonComplete && !completed && (
+            <Button onClick={handleContinue} disabled={completing}>
+              {completing
+                ? 'Saving…'
+                : nextLessonHref
+                  ? 'Continue to next lesson →'
+                  : 'Mark lesson complete'}
+            </Button>
+          )}
+          <Button
+            variant={result.passed && onLessonComplete ? 'secondary' : 'primary'}
+            onClick={onRetry}
+          >
+            Try again
+          </Button>
         </div>
       </CardContent>
     </Card>

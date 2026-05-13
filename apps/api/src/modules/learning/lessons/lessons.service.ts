@@ -117,6 +117,33 @@ export class LessonsService {
     const sceneAssetMap: Record<string, string> = {};
     for (const a of sceneAssets) sceneAssetMap[a.sceneSlug] = a.blobUrl;
 
+    // For lab-kind lessons, surface the *visible* lab fields so the renderer
+    // can mount the lab runner inline. SystemPrompt / seededContext / rubric
+    // remain server-only and are fetched separately via the labs runs/attempts
+    // endpoints when the learner interacts.
+    let labSummary: {
+      id: string;
+      slug: string;
+      title: string;
+      brief: string;
+      estimatedMinutes: number;
+      modelKey: string;
+    } | null = null;
+    if (lesson.kind === 'LAB' && lesson.labId) {
+      const lab = await this.prisma.lab.findUnique({
+        where: { id: lesson.labId },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          brief: true,
+          estimatedMinutes: true,
+          modelKey: true,
+        },
+      });
+      labSummary = lab;
+    }
+
     return {
       id: lesson.id,
       learningPathId: lesson.learningPathId,
@@ -126,8 +153,10 @@ export class LessonsService {
       videoUrl: lesson.videoUrl,
       estimatedMinutes: lesson.estimatedMinutes,
       orderIndex: lesson.orderIndex,
+      kind: lesson.kind,
       quizId: quiz?.id ?? null,
       sceneAssets: sceneAssetMap,
+      lab: labSummary,
     };
   }
 

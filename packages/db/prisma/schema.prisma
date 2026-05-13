@@ -47,6 +47,12 @@ enum LessonStatus {
   COMPLETED
 }
 
+enum LessonKind {
+  READ
+  SCENARIO
+  LAB
+}
+
 enum AssessmentType {
   BASELINE
   FINAL
@@ -312,8 +318,11 @@ model Lesson {
   videoUrl         String?
   estimatedMinutes Int
   orderIndex       Int
+  kind             LessonKind @default(READ)
+  labId            String?    @unique
 
   learningPath     LearningPath     @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  lab              Lab?             @relation(fields: [labId], references: [id], onDelete: SetNull)
   quizzes          Quiz[]
   progress         UserProgress[]
   contentEmbedding LessonEmbedding?
@@ -925,6 +934,7 @@ model Lab {
   organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   learningPath LearningPath? @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
   attempts     LabAttempt[]
+  lesson       Lesson?
 
   @@index([organizationId])
   @@index([learningPathId])

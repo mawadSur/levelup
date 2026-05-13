@@ -25,6 +25,17 @@ export interface Lesson {
    * prose lessons; absent when the API server is older than this client.
    */
   sceneAssets?: Record<string, string>;
+  /** Lesson rendering kind. Defaults to READ on older servers. */
+  kind?: 'READ' | 'SCENARIO' | 'LAB';
+  /** Populated when kind === 'LAB' so the renderer can mount the lab runner. */
+  lab?: {
+    id: string;
+    slug: string;
+    title: string;
+    brief: string;
+    estimatedMinutes: number;
+    modelKey: string;
+  } | null;
   isPublished?: boolean;
   createdAt?: string;
   updatedAt?: string;

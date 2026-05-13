@@ -12,6 +12,7 @@ import { MarkLessonReadButton } from '@/components/learn/mark-lesson-read-button
 import { ReadingProgressBar } from '@/components/learn/reading-progress-bar';
 import { LessonHeroFade } from '@/components/learn/lesson-hero-fade';
 import { ScenarioRenderer } from '@/components/learn/scenario-renderer';
+import { LessonLabRunner } from '@/components/learn/lesson-lab-runner';
 import {
   looksLikeScenarioBody,
   parseScenarioBody,
@@ -154,6 +155,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
   const isScenario = scenarioScenes !== null && scenarioScenes.length > 0;
   const sceneAssets = (currentLesson as Lesson).sceneAssets ?? ({} as Record<string, string>);
+  const isLab = currentLesson.kind === 'LAB' && currentLesson.lab != null;
 
   return (
     <>
@@ -214,7 +216,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </div>
             )}
 
-            {isScenario && scenarioScenes ? (
+            {isLab && currentLesson.lab ? (
+              <LessonLabRunner
+                labSlug={currentLesson.lab.slug}
+                brief={currentLesson.lab.brief}
+                lessonId={currentLesson.id}
+                isCompleted={isCompleted}
+                nextLessonHref={nextLessonHref}
+              />
+            ) : isScenario && scenarioScenes ? (
               <ScenarioRenderer
                 scenes={scenarioScenes}
                 sceneAssets={sceneAssets}
@@ -231,7 +241,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             )}
 
             <div className="mt-10 border-t border-ink-600 pt-8">
-              {!isScenario && !quizData && !isCompleted && (
+              {!isScenario && !isLab && !quizData && !isCompleted && (
                 <MarkLessonReadButton lessonId={currentLesson.id} nextHref={nextLessonHref} />
               )}
 

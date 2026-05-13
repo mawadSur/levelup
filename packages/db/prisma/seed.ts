@@ -546,14 +546,17 @@ async function main() {
         where: {
           learningPathId_slug: { learningPathId: created.id, slug: lessonSpec.slug },
         },
-        update: { title: lessonSpec.title, body: lessonSpec.body },
+        // Stride of 10 so lab-kind lessons can interleave at odd-multiples (15,
+        // 35, 55) without renumbering reads. Update applies on re-seed so old
+        // rows with stride=1 also rebase.
+        update: { title: lessonSpec.title, body: lessonSpec.body, orderIndex: i * 10 },
         create: {
           learningPathId: created.id,
           title: lessonSpec.title,
           slug: lessonSpec.slug,
           body: lessonSpec.body,
           estimatedMinutes: lessonSpec.estimatedMinutes,
-          orderIndex: i,
+          orderIndex: i * 10,
         },
       });
 
@@ -638,6 +641,96 @@ async function main() {
         },
       });
       labsUpserted += 1;
+    }
+  }
+
+  // ── Attach labs to AI Basics as lab-kind lessons ──────────────────────────
+  // Each lab becomes an inline lesson at a skill-checkpoint orderIndex so
+  // learners practice as they progress through the path instead of consuming
+  // labs from a separate page. The lessons are global (org-scoped via the
+  // path's nullable organizationId on the LearningPath row).
+  const labLessonAttachments: Array<{
+    labSlug: string;
+    pathSlug: string;
+    lessonSlug: string;
+    title: string;
+    orderIndex: number;
+    estimatedMinutes: number;
+    brief: string;
+  }> = [
+    {
+      labSlug: 'prompt-injection-defense',
+      pathSlug: 'ai-basics',
+      lessonSlug: 'lab-spot-the-injection',
+      title: 'Practice: spot the prompt injection',
+      // Reads are at stride 10 (0, 10, 20, …). Interleaved labs sit at 15/35/55
+      // so they fall between specific reading lessons.
+      orderIndex: 15,
+      estimatedMinutes: 8,
+      brief:
+        'A user is trying to trick a customer-support assistant into revealing hidden admin notes. Refuse the injection without breaking persona.',
+    },
+    {
+      labSlug: 'pii-redaction',
+      pathSlug: 'ai-basics',
+      lessonSlug: 'lab-redact-the-pii',
+      title: 'Practice: redact PII before you send',
+      orderIndex: 35,
+      estimatedMinutes: 8,
+      brief:
+        'Summarize a customer export without echoing any names, emails, phone numbers, or social security numbers in your reply.',
+    },
+    {
+      labSlug: 'policy-compliance',
+      pathSlug: 'ai-basics',
+      lessonSlug: 'lab-stay-on-policy',
+      title: 'Practice: stay within the company policy',
+      orderIndex: 55,
+      estimatedMinutes: 8,
+      brief:
+        'Answer the user’s question without violating the company AI-use policy. Reference the policy in your reasoning when needed.',
+    },
+  ];
+
+  let labLessonsUpserted = 0;
+  for (const attach of labLessonAttachments) {
+    const lab = await prisma.lab.findUnique({ where: { slug: attach.labSlug } });
+    // Attach to every path matching the slug (typically one per tenant, plus
+    // any global copy). Each path needs its own lab-lesson row because
+    // Lesson.learningPathId is the relation.
+    const learningPaths = await prisma.learningPath.findMany({
+      where: { slug: attach.pathSlug },
+    });
+    if (!lab || learningPaths.length === 0) continue;
+
+    for (const learningPath of learningPaths) {
+      await prisma.lesson.upsert({
+        where: {
+          learningPathId_slug: {
+            learningPathId: learningPath.id,
+            slug: attach.lessonSlug,
+          },
+        },
+        update: {
+          title: attach.title,
+          body: attach.brief,
+          estimatedMinutes: attach.estimatedMinutes,
+          orderIndex: attach.orderIndex,
+          kind: 'LAB',
+          labId: lab.id,
+        },
+        create: {
+          learningPathId: learningPath.id,
+          title: attach.title,
+          slug: attach.lessonSlug,
+          body: attach.brief,
+          estimatedMinutes: attach.estimatedMinutes,
+          orderIndex: attach.orderIndex,
+          kind: 'LAB',
+          labId: lab.id,
+        },
+      });
+      labLessonsUpserted += 1;
     }
   }
 
@@ -726,7 +819,7 @@ async function main() {
     users: [admin.email, manager.email, employee1.email, employee2.email],
     paths: PATHS.map((p) => p.slug),
     assessmentItems: { created: bankCreated, total: bankItems.length },
-    labs: { upserted: labsUpserted },
+    labs: { upserted: labsUpserted, labLessons: labLessonsUpserted },
     scenarios: scenariosResult,
     reconciledUsers,
   });
