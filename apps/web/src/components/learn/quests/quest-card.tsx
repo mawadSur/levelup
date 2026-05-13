@@ -109,6 +109,10 @@ export function QuestCard({ quest, onClaim }: QuestCardProps) {
       variants={prefersReduced ? undefined : cardVariants}
       animate={cardBounce && !prefersReduced ? 'bounce' : 'idle'}
       className="relative"
+      data-testid="quest-card"
+      data-quest-slug={slug}
+      data-quest-claimed={claimed ? 'true' : 'false'}
+      data-quest-ready={isReady ? 'true' : 'false'}
     >
       <Card className="overflow-visible">
         <CardContent className="flex items-start gap-3 p-3 sm:items-center">

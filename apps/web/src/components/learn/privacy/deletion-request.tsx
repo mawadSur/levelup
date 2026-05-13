@@ -134,6 +134,7 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
           )}
 
           <Button
+            data-testid="privacy-deletion-request-button"
             variant="destructive"
             onClick={() => setDialogOpen(true)}
             disabled={isPending || !!activeRequest}
@@ -142,10 +143,15 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
           </Button>
 
           {requests.length > 0 && (
-            <ul className="divide-y divide-border rounded-lg border">
+            <ul
+              className="divide-y divide-border rounded-lg border"
+              data-testid="privacy-deletion-list"
+            >
               {requests.map((req) => (
                 <li
                   key={req.id}
+                  data-testid="privacy-deletion-row"
+                  data-status={req.status}
                   className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="space-y-0.5">
@@ -220,7 +226,12 @@ export function DeletionRequest({ initialRequests, showConfirmedToast }: Props) 
             <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={isPending}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleRequestDeletion} disabled={isPending}>
+            <Button
+              data-testid="privacy-deletion-confirm-button"
+              variant="destructive"
+              onClick={handleRequestDeletion}
+              disabled={isPending}
+            >
               {isPending ? 'Submitting…' : 'Yes, request deletion'}
             </Button>
           </DialogFooter>

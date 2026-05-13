@@ -110,6 +110,7 @@ export function EvidenceExportCard({
 
           <div className="flex items-center gap-3">
             <Button
+              data-testid="governance-generate-report-button"
               variant="primary"
               size="lg"
               onClick={() => void handleGenerate()}
@@ -135,7 +136,11 @@ export function EvidenceExportCard({
           </div>
 
           {status !== 'idle' && (
-            <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-3"
+              data-testid="governance-report-status"
+              data-status={status}
+            >
               <span
                 aria-hidden
                 className={`h-1.5 w-1.5 rounded-full ${

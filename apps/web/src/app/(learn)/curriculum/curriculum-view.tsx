@@ -60,10 +60,13 @@ function GameStateStrip({ gameState }: { gameState: CurriculumMe['gameState'] })
   const pct = xpForNextLevel > 0 ? Math.min(100, (xpAtCurrentLevel / xpForNextLevel) * 100) : 0;
 
   return (
-    <div className="rounded-lg border border-ink-700 bg-ink-800 p-5">
+    <div className="rounded-lg border border-ink-700 bg-ink-800 p-5" data-testid="game-state-strip">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-signal font-serif text-h2 italic font-semibold text-ink-900">
+          <span
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-signal font-serif text-h2 italic font-semibold text-ink-900"
+            data-testid="game-state-level"
+          >
             {level}
           </span>
           <div>
@@ -135,7 +138,11 @@ function TierLane({
   const numeral = String(index + 1).padStart(2, '0');
 
   return (
-    <section className="rounded-lg border border-ink-700 bg-ink-900/40">
+    <section
+      className="rounded-lg border border-ink-700 bg-ink-900/40"
+      data-testid="curriculum-tier"
+      data-tier={tier.tier}
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -204,6 +211,9 @@ function PathCard({
         'rounded-md border bg-ink-800 p-5 transition-colors md:w-[28rem] md:flex-shrink-0',
         isUnlocked ? 'border-ink-700 hover:border-signal/50' : 'border-ink-700 opacity-70',
       )}
+      data-testid="path-card"
+      data-path-slug={path.slug}
+      data-unlocked={isUnlocked ? 'true' : 'false'}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -316,7 +326,10 @@ function LessonFlow({
   }
 
   return (
-    <div className="-mx-1 flex flex-wrap items-center gap-y-3 md:flex-nowrap md:overflow-x-auto md:pb-1">
+    <div
+      className="-mx-1 flex flex-wrap items-center gap-y-3 md:flex-nowrap md:overflow-x-auto md:pb-1"
+      data-testid="lesson-flow"
+    >
       {lessons.map((lesson, idx) => (
         <div key={lesson.id} className="flex items-center">
           <LessonNode

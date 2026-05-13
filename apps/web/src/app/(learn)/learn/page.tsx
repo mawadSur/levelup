@@ -211,11 +211,19 @@ export default async function LearnPage() {
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-data border border-ink-600 bg-ink-800/60 px-3 py-1.5">
+    <div
+      data-testid={`stat-chip-${label.toLowerCase()}`}
+      className="flex items-center gap-2 rounded-data border border-ink-600 bg-ink-800/60 px-3 py-1.5"
+    >
       <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
         {label}
       </span>
-      <span className="font-mono text-mono-sm font-semibold text-paper-100">{value}</span>
+      <span
+        data-testid={`stat-chip-${label.toLowerCase()}-value`}
+        className="font-mono text-mono-sm font-semibold text-paper-100"
+      >
+        {value}
+      </span>
     </div>
   );
 }

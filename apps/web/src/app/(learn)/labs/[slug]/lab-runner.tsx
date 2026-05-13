@@ -178,7 +178,10 @@ export function LabRunner({ lab, onLessonComplete, nextLessonHref }: LabRunnerPr
 function ChatBubble({ role, content }: { role: 'user' | 'assistant'; content: string }) {
   const isUser = role === 'user';
   return (
-    <div className={cn('flex', isUser ? 'justify-end' : 'justify-start')}>
+    <div
+      className={cn('flex', isUser ? 'justify-end' : 'justify-start')}
+      data-testid={isUser ? 'lab-chat-user' : 'lab-chat-assistant'}
+    >
       <div
         className={cn(
           'max-w-[85%] rounded-md border p-3 text-body-sm whitespace-pre-wrap',
@@ -226,7 +229,7 @@ function LabResult({
   }
 
   return (
-    <Card>
+    <Card data-testid="lab-result">
       <CardContent className="space-y-6 p-6">
         <div className="space-y-2">
           <MonoLabel tone={result.passed ? 'signal' : undefined}>

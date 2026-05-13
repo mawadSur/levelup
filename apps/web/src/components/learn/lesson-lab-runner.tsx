@@ -72,8 +72,8 @@ export function LessonLabRunner({
   }
 
   return (
-    <div className="space-y-4">
-      <Card>
+    <div className="space-y-4" data-testid="lesson-lab-runner">
+      <Card data-testid="lab-brief">
         <CardContent className="space-y-2 p-5">
           <MonoLabel tone="signal">HANDS-ON PRACTICE</MonoLabel>
           <p className="text-body-md text-paper-200">{brief}</p>

@@ -82,7 +82,11 @@ export function DataExportRequest({ initialRequests }: Props) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button onClick={handleExportRequest} disabled={isPending || hasActiveExport}>
+        <Button
+          data-testid="privacy-export-button"
+          onClick={handleExportRequest}
+          disabled={isPending || hasActiveExport}
+        >
           {isPending ? 'Requesting…' : hasActiveExport ? 'Export in progress…' : 'Export my data'}
         </Button>
 
@@ -91,10 +95,15 @@ export function DataExportRequest({ initialRequests }: Props) {
             You haven&apos;t exported your data yet. We&apos;ll email you when it&apos;s ready.
           </p>
         ) : (
-          <ul className="divide-y divide-border rounded-lg border">
+          <ul
+            className="divide-y divide-border rounded-lg border"
+            data-testid="privacy-export-list"
+          >
             {requests.map((req) => (
               <li
                 key={req.id}
+                data-testid="privacy-export-row"
+                data-status={req.status}
                 className="flex flex-col gap-1 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="space-y-0.5">

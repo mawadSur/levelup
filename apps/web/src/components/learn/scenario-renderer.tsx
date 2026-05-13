@@ -161,7 +161,11 @@ export function ScenarioRenderer({
     <div className="space-y-6">
       {/* Visited-scenes breadcrumb */}
       {history.length > 1 && (
-        <nav aria-label="Visited scenes" className="flex flex-wrap items-center gap-1.5">
+        <nav
+          aria-label="Visited scenes"
+          className="flex flex-wrap items-center gap-1.5"
+          data-testid="scenario-breadcrumb"
+        >
           <MonoLabel className="mr-1">PATH</MonoLabel>
           {history.map((slug, idx) => (
             <button
@@ -231,7 +235,7 @@ export function ScenarioRenderer({
 
       {/* Choices */}
       {showChoices && current.choices && (
-        <div className="space-y-2 border-t border-ink-600 pt-6">
+        <div className="space-y-2 border-t border-ink-600 pt-6" data-testid="scenario-choices">
           <MonoLabel>WHAT DO YOU DO?</MonoLabel>
           <div className="grid gap-2 sm:grid-cols-1">
             {current.choices.map((choice, idx) => (
@@ -240,6 +244,7 @@ export function ScenarioRenderer({
                 type="button"
                 onClick={() => handleChoice(choice.label, choice.next)}
                 className="rounded-md border border-ink-600 bg-ink-800/50 px-4 py-3 text-left text-paper-100 transition-colors hover:border-indigo-400/60 hover:bg-indigo-500/10 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
+                data-testid="scenario-choice"
               >
                 <span className="font-sans text-base">{choice.label}</span>
               </button>
@@ -287,7 +292,10 @@ interface DialogueBubbleProps {
 function DialogueBubble({ character, text }: DialogueBubbleProps) {
   const isNarrator = character === 'narrator';
   return (
-    <div className={cn('flex animate-mission-in', isNarrator ? 'justify-center' : 'justify-start')}>
+    <div
+      className={cn('flex animate-mission-in', isNarrator ? 'justify-center' : 'justify-start')}
+      data-testid="scenario-dialogue-bubble"
+    >
       <div
         className={cn(
           'max-w-[36rem] rounded-2xl border px-4 py-3',
