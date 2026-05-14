@@ -20,16 +20,20 @@ import { getMe } from '../helpers/api';
 // ---------------------------------------------------------------------------
 
 test.describe('Marketing home page', () => {
-  test('renders hero H1 containing "Train every employee"', async ({ page }) => {
+  test('renders hero H1 containing "Train every operator"', async ({ page }) => {
     await page.goto('/');
     // The Hero component renders:
-    //   <h1>Train every employee to use AI safely, effectively, and measurably.</h1>
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Train every employee');
+    //   <h1>Train every operator to use AI safely, effectively, and measurably.</h1>
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Train every operator');
   });
 
   test('"Sign in" link in nav navigates to /sign-in', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: /sign in/i }).click();
+    // Header and footer both expose a "Sign in" link; we test the header one.
+    await page
+      .getByRole('banner')
+      .getByRole('link', { name: /sign in/i })
+      .click();
     await page.waitForURL('**/sign-in**');
     expect(page.url()).toContain('/sign-in');
   });

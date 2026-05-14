@@ -1,5 +1,5 @@
 import 'server-only';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getSupabaseServerClient, isSupabaseConfigured } from './supabase/server';
 
 const STUB_COOKIE = 'sb-stub-auth-token';
@@ -74,12 +74,23 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   let accessToken: string | undefined;
 
   if (!isSupabaseConfigured()) {
-    const cookieStore = await cookies();
-    const stubToken = cookieStore.get(STUB_COOKIE)?.value;
-    if (typeof stubToken !== 'string' || stubToken.length === 0) {
+    // Stub mode reads the access token from EITHER an Authorization header
+    // (set by e2e helpers via context.setExtraHTTPHeaders) OR the
+    // sb-stub-auth-token cookie set by the sign-in form's localStorage
+    // bridge. The header wins because it's a request-scoped credential
+    // with no cookie-jar race against parallel navigations.
+    const headerStore = await headers();
+    const auth = headerStore.get('authorization') ?? headerStore.get('Authorization');
+    if (typeof auth === 'string' && auth.toLowerCase().startsWith('bearer ')) {
+      accessToken = auth.slice('bearer '.length).trim();
+    }
+    if (typeof accessToken !== 'string' || accessToken.length === 0) {
+      const cookieStore = await cookies();
+      accessToken = cookieStore.get(STUB_COOKIE)?.value;
+    }
+    if (typeof accessToken !== 'string' || accessToken.length === 0) {
       return null;
     }
-    accessToken = stubToken;
   } else {
     const supabase = await getSupabaseServerClient();
     const {

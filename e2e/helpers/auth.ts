@@ -45,18 +45,18 @@ export async function signInViaDevBypass(context: BrowserContext, email: string)
   }
   const { accessToken } = (await res.json()) as { accessToken: string; redirectTo: string };
 
-  // Install the cookie via TWO complementary mechanisms so SSR sees it
-  // reliably:
+  // Install auth via THREE complementary mechanisms so SSR sees the user on
+  // first navigation regardless of cookie-jar timing:
   //
-  // 1. context.addCookies — registers in Playwright's cookie jar; sufficient
-  //    for direct fetch() calls and getSessionCookie() reads.
-  // 2. context.request.get on the web dev-stub-cookie route — sends a real
-  //    HTTP request through Playwright's APIRequestContext (which IS bound
-  //    to the BrowserContext cookie jar), so Set-Cookie responses get
-  //    merged and subsequent page navigations send them.
-  //
-  // Either alone proved flaky for /admin under parallel load; together they
-  // are deterministic.
+  // 1. setExtraHTTPHeaders — attaches Authorization: Bearer to every request
+  //    in this context. Web SSR + API auth.guard both recognise it. This
+  //    is the authoritative signal under parallel load (request-scoped, no
+  //    cookie races).
+  // 2. addCookies — keeps getSessionCookie() working for tests that still
+  //    extract the raw token from the cookie jar.
+  // 3. dev-stub-cookie route — kept for tests that exercise the cookie path
+  //    end-to-end (the sign-in form bridge).
+  await context.setExtraHTTPHeaders({ Authorization: `Bearer ${accessToken}` });
   await context.addCookies([
     {
       name: STUB_COOKIE_NAME,

@@ -40,11 +40,18 @@ const API_PREFIX = `${API_BASE}/api`;
 
 async function getBearerHeader(): Promise<string | null> {
   if (typeof window === 'undefined') {
-    // Server-side: read the access token from request cookies. The dynamic
-    // import keeps `next/headers` out of the browser bundle. Server pages
-    // that call apiFetch directly (instead of ssrFetch) still get auth.
+    // Server-side: prefer an Authorization header on the current request
+    // (set by e2e helpers via setExtraHTTPHeaders), then fall back to
+    // sb-stub-auth-token or sb-*-auth-token cookies. The dynamic import
+    // keeps `next/headers` out of the browser bundle.
     try {
-      const { cookies } = await import('next/headers');
+      const { cookies, headers } = await import('next/headers');
+      const headerStore = await headers();
+      const auth = headerStore.get('authorization') ?? headerStore.get('Authorization');
+      if (typeof auth === 'string' && auth.toLowerCase().startsWith('bearer ')) {
+        const token = auth.slice('bearer '.length).trim();
+        if (token.length > 0) return `Bearer ${token}`;
+      }
       const store = await cookies();
       const stub = store.get('sb-stub-auth-token')?.value;
       if (typeof stub === 'string' && stub.length > 0) return `Bearer ${stub}`;

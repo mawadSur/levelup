@@ -1,5 +1,5 @@
 import 'server-only';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getSupabaseServerClient, isSupabaseConfigured } from '../supabase/server';
 import { apiFetch } from './client';
 
@@ -24,6 +24,17 @@ const STUB_COOKIE = 'sb-stub-auth-token';
 async function serverAuthHeader(): Promise<Record<string, string>> {
   if (!isSupabaseConfigured()) {
     try {
+      // Prefer Authorization header (e2e helpers + future API-token clients)
+      // over the stub cookie — the header is request-scoped so it can't lose
+      // to a cookie-jar race under parallel page navigations.
+      const headerStore = await headers();
+      const auth = headerStore.get('authorization') ?? headerStore.get('Authorization');
+      if (typeof auth === 'string' && auth.toLowerCase().startsWith('bearer ')) {
+        const tokenFromHeader = auth.slice('bearer '.length).trim();
+        if (tokenFromHeader.length > 0) {
+          return { Authorization: `Bearer ${tokenFromHeader}` };
+        }
+      }
       const cookieStore = await cookies();
       const token = cookieStore.get(STUB_COOKIE)?.value;
       return typeof token === 'string' && token.length > 0
