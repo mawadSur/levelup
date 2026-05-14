@@ -45,19 +45,33 @@ export async function signInViaDevBypass(context: BrowserContext, email: string)
   }
   const { accessToken } = (await res.json()) as { accessToken: string; redirectTo: string };
 
-  // Set the cookie via a server-issued Set-Cookie response. Playwright's
-  // addCookies() store doesn't reliably translate into outgoing Cookie
-  // headers for localhost across versions, so we go through a tiny web
-  // helper at /api/auth/dev-stub-cookie which writes the cookie via
-  // NextResponse.cookies.set and 302s to /. The browser receives the
-  // Set-Cookie header on a real navigation, scopes it correctly, and
-  // sends it on every subsequent request to localhost:3000.
-  const page = await context.newPage();
-  await page.goto(
-    `${WEB_BASE}/api/auth/dev-stub-cookie?token=${encodeURIComponent(accessToken)}&redirect=/`,
-    { waitUntil: 'load' },
+  // Install the cookie via TWO complementary mechanisms so SSR sees it
+  // reliably:
+  //
+  // 1. context.addCookies — registers in Playwright's cookie jar; sufficient
+  //    for direct fetch() calls and getSessionCookie() reads.
+  // 2. context.request.get on the web dev-stub-cookie route — sends a real
+  //    HTTP request through Playwright's APIRequestContext (which IS bound
+  //    to the BrowserContext cookie jar), so Set-Cookie responses get
+  //    merged and subsequent page navigations send them.
+  //
+  // Either alone proved flaky for /admin under parallel load; together they
+  // are deterministic.
+  await context.addCookies([
+    {
+      name: STUB_COOKIE_NAME,
+      value: accessToken,
+      url: WEB_BASE,
+      httpOnly: false,
+      secure: false,
+      sameSite: 'Lax',
+    },
+  ]);
+  await context.request.get(
+    `${WEB_BASE}/api/auth/dev-stub-cookie?token=${encodeURIComponent(accessToken)}`,
   );
-  return page;
+  const pages = context.pages();
+  return pages.length > 0 ? (pages[0] as Page) : await context.newPage();
 }
 
 // ---------------------------------------------------------------------------
