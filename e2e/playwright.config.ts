@@ -1,11 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright configuration for LevelUp AI Academy e2e tests.
+ * Stub-mode env injected into every webServer process.
  *
- * Stub mode is active when WORKOS_API_KEY starts with "PLACEHOLDER_".
- * In stub mode, /api/auth/dev-bypass is enabled and used by all auth helpers.
+ * `isStubMode()` in packages/auth-client checks SUPABASE_URL / SUPABASE_ANON_KEY
+ * for the "PLACEHOLDER_" prefix. We force those here so e2e never depends on
+ * whether the developer's .env / .env.local has real Supabase creds. With stub
+ * mode active the API exposes /api/auth/dev-bypass, which every auth fixture
+ * uses to sign cookies without going through Supabase OAuth.
  */
+const STUB_ENV = {
+  NODE_ENV: 'development',
+  SUPABASE_URL: 'PLACEHOLDER_supabase_url',
+  SUPABASE_ANON_KEY: 'PLACEHOLDER_supabase_anon',
+  SUPABASE_SERVICE_ROLE_KEY: 'PLACEHOLDER_supabase_service_role',
+  NEXT_PUBLIC_SUPABASE_URL: 'PLACEHOLDER_supabase_url',
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: 'PLACEHOLDER_supabase_anon',
+  WORKOS_API_KEY: 'PLACEHOLDER_workos_key',
+  COOKIE_DOMAIN: 'localhost',
+} as const;
+
 export default defineConfig({
   testDir: './specs',
   fullyParallel: true,
@@ -38,6 +52,7 @@ export default defineConfig({
       timeout: 120_000,
       stdout: 'pipe',
       stderr: 'pipe',
+      env: { ...STUB_ENV },
     },
     {
       command: 'pnpm --filter @levelup/web dev',
@@ -46,6 +61,7 @@ export default defineConfig({
       timeout: 120_000,
       stdout: 'pipe',
       stderr: 'pipe',
+      env: { ...STUB_ENV },
     },
   ],
 });
