@@ -7,9 +7,9 @@ import { isSupabaseConfigured } from '@/lib/supabase/server';
  * it natively. Only available when Supabase is not configured (stub mode);
  * 404s in production.
  *
- * Used by e2e/helpers/auth.ts as a more reliable alternative to Playwright's
- * `context.addCookies()` — Set-Cookie on a real response is honoured by every
- * browser without origin/domain quirks.
+ * Returns 200 (not a redirect) so the cookie set by this response is the
+ * final response Playwright sees — there's no redirect chain that could
+ * lose the Set-Cookie on the way to a final page.
  */
 export async function GET(req: NextRequest) {
   if (isSupabaseConfigured()) {
@@ -19,8 +19,7 @@ export async function GET(req: NextRequest) {
   if (!token) {
     return NextResponse.json({ error: 'Missing token' }, { status: 400 });
   }
-  const redirectTo = req.nextUrl.searchParams.get('redirect') ?? '/learn';
-  const response = NextResponse.redirect(new URL(redirectTo, req.url));
+  const response = NextResponse.json({ ok: true });
   response.cookies.set('sb-stub-auth-token', token, {
     httpOnly: false,
     secure: false,
