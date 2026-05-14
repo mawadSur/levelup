@@ -29,6 +29,11 @@ const STUB_ENV = {
   NEXT_PUBLIC_SUPABASE_ANON_KEY: 'PLACEHOLDER_supabase_anon',
   WORKOS_API_KEY: 'PLACEHOLDER_workos_key',
   COOKIE_DOMAIN: 'localhost',
+  // Force the web SSR layer to call the local API, not the production Render
+  // service — without this override Next.js inherits NEXT_PUBLIC_API_URL from
+  // the developer's root .env and the stub-mode JWT (signed locally) gets
+  // 401'd by production.
+  NEXT_PUBLIC_API_URL: 'http://localhost:4000',
   DATABASE_URL: LOCAL_DATABASE_URL,
   DIRECT_DATABASE_URL: LOCAL_DATABASE_URL,
   REDIS_URL: LOCAL_REDIS_URL,
