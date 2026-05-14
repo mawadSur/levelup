@@ -36,6 +36,26 @@ interface ChatPostMessageResult extends SlackOkResponse {
   channel?: string;
 }
 
+interface ChatPostEphemeralResult extends SlackOkResponse {
+  message_ts?: string;
+}
+
+export interface SlackConversation {
+  id: string;
+  name?: string;
+  is_channel?: boolean;
+  is_private?: boolean;
+  is_im?: boolean;
+  is_archived?: boolean;
+  is_member?: boolean;
+  num_members?: number;
+}
+
+interface ConversationsListResult extends SlackOkResponse {
+  channels?: SlackConversation[];
+  response_metadata?: { next_cursor?: string };
+}
+
 interface UsersLookupByEmailResult extends SlackOkResponse {
   user?: {
     id: string;
@@ -51,9 +71,21 @@ export interface WebClient {
       blocks?: KnownBlock[];
       text?: string;
     }): Promise<ChatPostMessageResult>;
+    postEphemeral(args: {
+      channel: string;
+      user: string;
+      text: string;
+      blocks?: KnownBlock[];
+    }): Promise<ChatPostEphemeralResult>;
   };
   conversations: {
     open(args: { users: string }): Promise<ConversationsOpenResult>;
+    list(args?: {
+      types?: string;
+      limit?: number;
+      cursor?: string;
+      exclude_archived?: boolean;
+    }): Promise<ConversationsListResult>;
   };
   users: {
     lookupByEmail(args: { email: string }): Promise<UsersLookupByEmailResult>;
@@ -121,9 +153,24 @@ export function createSlackClient(accessToken: string): WebClient {
           accessToken,
           args as unknown as Record<string, unknown>,
         ),
+      postEphemeral: (args) =>
+        callJsonApi<ChatPostEphemeralResult>(
+          'chat.postEphemeral',
+          accessToken,
+          args as unknown as Record<string, unknown>,
+        ),
     },
     conversations: {
       open: (args) => callJsonApi<ConversationsOpenResult>('conversations.open', accessToken, args),
+      list: (args) => {
+        const form: Record<string, string> = {};
+        if (args?.types) form['types'] = args.types;
+        if (typeof args?.limit === 'number') form['limit'] = String(args.limit);
+        if (args?.cursor) form['cursor'] = args.cursor;
+        if (args?.exclude_archived !== undefined)
+          form['exclude_archived'] = args.exclude_archived ? 'true' : 'false';
+        return callFormApi<ConversationsListResult>('conversations.list', accessToken, form);
+      },
     },
     users: {
       lookupByEmail: (args) =>

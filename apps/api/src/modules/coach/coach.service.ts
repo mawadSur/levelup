@@ -19,6 +19,7 @@ import type { SessionPayload } from '@levelup/auth-client';
 import { PrismaService } from '../prisma';
 import { GameService } from '../game/game.service';
 import { RiskAlertsService } from '../risk-alerts/risk-alerts.service';
+import { IncidentsService } from '../incidents/incidents.service';
 import { track } from '@levelup/analytics';
 
 /**
@@ -146,6 +147,7 @@ export class CoachService {
     private readonly prisma: PrismaService,
     private readonly gameService: GameService,
     private readonly riskAlertsService: RiskAlertsService,
+    private readonly incidentsService: IncidentsService,
   ) {}
 
   /**
@@ -210,6 +212,20 @@ export class CoachService {
       void this.riskAlertsService
         .checkAndNotify(sessionUser.userId)
         .catch((err: unknown) => this.logger.error('RiskAlertsService.checkAndNotify failed', err));
+
+      // Incident workflow loop — fire-and-forget. severity-rules decides
+      // whether the trigger crosses the threshold for an Incident row.
+      void this.incidentsService
+        .maybeOpenIncident({
+          organizationId: sessionUser.organizationId,
+          userId: sessionUser.userId,
+          signal: sensitive,
+          userInput,
+          triggeredBy: 'coach',
+        })
+        .catch((err: unknown) =>
+          this.logger.error('IncidentsService.maybeOpenIncident failed', err),
+        );
     }
 
     // -----------------------------------------------------------------------

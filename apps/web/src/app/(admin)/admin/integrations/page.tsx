@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Alert, AlertDescription, MonoLabel } from '@levelup/ui';
 import { integrations as integrationsApi } from '@/lib/api';
 import { InstallCard } from '@/components/admin/integrations/install-card';
+import { SlackMonitoredChannels } from '@/components/admin/integrations/slack-monitored-channels';
 import type { IntegrationSummary } from '@levelup/types';
 import { brand } from '@/lib/client';
 
@@ -51,6 +52,8 @@ export default async function IntegrationsPage({ searchParams }: IntegrationsPag
         <InstallCard provider="SLACK" integration={slackIntegration} />
         <InstallCard provider="MS_TEAMS" integration={null} comingSoon />
       </div>
+
+      {slackIntegration?.status === 'ACTIVE' && <SlackMonitoredChannels />}
     </div>
   );
 }

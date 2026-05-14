@@ -19,6 +19,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@levelup/llm": "workspace:*",
     "@slack/web-api": "^7.7.0"
   },
   "devDependencies": {

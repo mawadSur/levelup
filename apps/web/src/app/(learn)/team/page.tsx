@@ -6,7 +6,10 @@ import { users, paths as pathsApi, progress } from '@/lib/api';
 import { TeamTable } from '@/components/learn/team/team-table';
 import { CoachingSuggestions } from '@/components/learn/team/coaching-suggestions';
 import { TeamFilterPills } from '@/components/learn/team/team-filter-pills';
+import { TeamStudyPlansCard } from '@/components/learn/team/team-study-plans-card';
 import type { TeamProgressEntry } from '@/lib/api/progress';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { TeamStudyPlanResponse } from '@levelup/types';
 
 export const metadata: Metadata = {
   title: 'Your Team',
@@ -54,6 +57,12 @@ export default async function TeamPage({ searchParams }: PageProps) {
     progressEntries.map((entry) => [entry.userId, entry]),
   );
 
+  // Study-plan rows are an additive enhancement — failure to load shouldn't
+  // hide the rest of the page, so we degrade to an empty card.
+  const studyPlanRows = await ssrGet<TeamStudyPlanResponse>('/admin/study-plan/team')
+    .then((r) => r.rows)
+    .catch(() => [] as TeamStudyPlanResponse['rows']);
+
   const totalCount = teamUsers.length;
 
   return (
@@ -78,6 +87,9 @@ export default async function TeamPage({ searchParams }: PageProps) {
         availablePaths={availablePaths}
         activeFilter={activeFilter}
       />
+
+      {/* Study plans (manager view) */}
+      <TeamStudyPlansCard rows={studyPlanRows} />
 
       {/* Coaching suggestions */}
       <CoachingSuggestions users={teamUsers} progressMap={progressMap} />

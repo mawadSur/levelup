@@ -3,9 +3,11 @@
 import * as React from 'react';
 import { Card, CardContent, MonoLabel, NumberedSection, Separator } from '@levelup/ui';
 import type { CompletionReport, DeptHeatmapCell, RiskFlag } from '@/lib/api/reports';
+import type { TeamSkillHeatmap } from '@/lib/api/skills';
 import { PeriodSelector, type Period } from '@/components/admin/reports/period-selector';
 import { StatRow } from '@/components/admin/reports/stat-row';
 import { SkillsHeatmap } from '@/components/admin/reports/skills-heatmap';
+import { SkillHeatmap } from '@/components/admin/reports/skill-heatmap';
 import { DeptCompletionBars } from '@/components/admin/reports/dept-completion-bars';
 import { PathCompletionBars } from '@/components/admin/reports/path-completion-bars';
 import { RiskFlagsTable } from '@/components/admin/reports/risk-flags-table';
@@ -14,12 +16,14 @@ interface ReportsPageClientProps {
   completionReport: CompletionReport;
   heatmapCells: DeptHeatmapCell[];
   riskFlags: RiskFlag[];
+  skillTeam: TeamSkillHeatmap;
 }
 
 export function ReportsPageClient({
   completionReport,
   heatmapCells,
   riskFlags,
+  skillTeam,
 }: ReportsPageClientProps) {
   const [period, setPeriod] = React.useState<Period>('30d');
   const [customStart, setCustomStart] = React.useState('');
@@ -84,9 +88,26 @@ export function ReportsPageClient({
         </div>
       </NumberedSection>
 
+      <NumberedSection numeral="04" eyebrow="SKILL HEATMAP" className="space-y-4">
+        <Card>
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-end justify-between gap-3">
+              <div className="space-y-1">
+                <MonoLabel>BY MEMBER × SKILL</MonoLabel>
+                <p className="text-body-sm text-paper-300">
+                  Cells show composite mastery (weighted average of exposure, practice, and
+                  transfer). Recomputed daily at 04:00 UTC.
+                </p>
+              </div>
+            </div>
+            <SkillHeatmap data={skillTeam} />
+          </CardContent>
+        </Card>
+      </NumberedSection>
+
       <Separator />
 
-      <NumberedSection numeral="04" eyebrow="RISK FLAGS" className="space-y-4">
+      <NumberedSection numeral="05" eyebrow="RISK FLAGS" className="space-y-4">
         <p className="max-w-reading text-body-sm text-paper-300">
           Top 20 users by severity. Click a name to drill into their profile.
         </p>

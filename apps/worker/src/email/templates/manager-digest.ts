@@ -30,6 +30,18 @@ export interface ManagerDigestData {
   riskFlags: RiskFlag[];
   appUrl: string;
   periodLabel: string;
+  /**
+   * Optional pre-composed narrative (4-paragraph prose + appendix). When set,
+   * replaces the stat-box body. The legacy stat-box layout is rendered only
+   * when this is absent so the template stays usable for older callers.
+   */
+  narrative?: {
+    subject?: string;
+    /** HTML for body — already-escaped paragraphs + detailed numbers appendix. */
+    html: string;
+    /** Plain-text body — paragraphs + detailed numbers appendix. */
+    text: string;
+  };
 }
 
 export interface RenderedEmail {
@@ -41,7 +53,10 @@ export interface RenderedEmail {
 export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
   const reportsUrl = `${data.appUrl}/admin/reports`;
 
-  const subject = `Your team's AI training — weekly`;
+  const subject =
+    data.narrative?.subject && data.narrative.subject.length > 0
+      ? data.narrative.subject
+      : `Your team's AI training — weekly`;
 
   // Clamp to top 3 risk flags
   const topRisks = data.riskFlags.slice(0, 3);
@@ -102,7 +117,11 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
         <td style="padding:32px 40px 24px;">
           <p style="margin:0 0 24px;font-size:15px;color:#374151;">Hi ${escapeHtml(data.managerName)},</p>
 
-          <!-- Stat boxes -->
+          ${
+            data.narrative
+              ? `<!-- Narrative body (replaces legacy stat boxes; numbers appendix is embedded inside narrative.html) -->
+          <div style="margin-bottom:28px;">${data.narrative.html}</div>`
+              : `<!-- Stat boxes (legacy fallback) -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
             <tr>
               <td width="33%" style="padding:16px;background-color:#F0FDF4;border-radius:6px;text-align:center;">
@@ -126,7 +145,8 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
           <h2 style="margin:0 0 12px;font-size:16px;color:#111827;">Risk flags</h2>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
             ${riskRowsHtml}
-          </table>
+          </table>`
+          }
 
           <!-- CTA -->
           <table role="presentation" cellpadding="0" cellspacing="0">
@@ -156,24 +176,31 @@ export function renderManagerDigest(data: ManagerDigestData): RenderedEmail {
 </body>
 </html>`;
 
-  const text = [
+  const textLines: string[] = [
     `Weekly Digest — ${data.orgName} — ${data.periodLabel}`,
     ``,
     `Hi ${data.managerName},`,
     ``,
-    `COMPLETION SUMMARY`,
-    `  Completion rate:  ${data.completionPct}%`,
-    `  Completions:      ${data.completedLearners}`,
-    `  Total learners:   ${data.totalLearners}`,
-    ``,
-    `RISK FLAGS`,
-    riskRowsText,
-    ``,
-    `View the full report:`,
-    reportsUrl,
-    ``,
-    `-- ${academyName}`,
-  ].join('\n');
+  ];
+
+  if (data.narrative) {
+    // Narrative already contains paragraphs + appendix.
+    textLines.push(data.narrative.text);
+  } else {
+    textLines.push(
+      `COMPLETION SUMMARY`,
+      `  Completion rate:  ${data.completionPct}%`,
+      `  Completions:      ${data.completedLearners}`,
+      `  Total learners:   ${data.totalLearners}`,
+      ``,
+      `RISK FLAGS`,
+      riskRowsText,
+    );
+  }
+
+  textLines.push(``, `View the full report:`, reportsUrl, ``, `-- ${academyName}`);
+
+  const text = textLines.join('\n');
 
   return { subject, html, text };
 }

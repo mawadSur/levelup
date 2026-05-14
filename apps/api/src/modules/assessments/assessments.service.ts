@@ -1,4 +1,11 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  Optional,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import type { SessionPayload } from '@levelup/auth-client';
 import { AssessmentType, AiLevel } from '@levelup/db';
@@ -8,6 +15,7 @@ import { scoreAssessment } from './scoring';
 import { StartAssessmentDto } from './dto/start-assessment.dto';
 import { SubmitAssessmentDto } from './dto/submit-assessment.dto';
 import { track } from '@levelup/analytics';
+import { StudyPlanService } from '../study-plan/study-plan.service';
 
 /** Fields returned per item on /start — correctIndex is intentionally excluded. */
 interface PublicAssessmentItem {
@@ -20,7 +28,15 @@ interface PublicAssessmentItem {
 
 @Injectable()
 export class AssessmentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(AssessmentsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    // StudyPlanService is optional so this module can still boot in tests
+    // that don't wire it. When present, a passing baseline triggers an
+    // automatic 4-week plan generation (idempotent if one already exists).
+    @Optional() @Inject(StudyPlanService) private readonly studyPlan?: StudyPlanService,
+  ) {}
 
   // ---------------------------------------------------------------------------
   // POST /assessments/start
@@ -147,6 +163,18 @@ export class AssessmentsService {
         // 8. Auto-update aiLevel on first BASELINE only.
         if (type === AssessmentType.BASELINE) {
           await this.maybeUpdateAiLevel(sessionUser, result.recommendedLevel, assessment.id);
+
+          // 9. Auto-generate the 4-week StudyPlan if one isn't already on
+          // file. Fire-and-forget — a generation failure must never break
+          // assessment submission. The maybeUpdateAiLevel call above ran
+          // first so the plan is seeded against the recommended level.
+          if (this.studyPlan) {
+            void this.studyPlan
+              .generateFourWeekPlan(sessionUser, { force: false })
+              .catch((err: unknown) =>
+                this.logger.warn(`study plan auto-generate failed: ${String(err)}`),
+              );
+          }
         }
       } catch (err: unknown) {
         // Concurrent submit raced past findFirst — the unique index caught the

@@ -21,6 +21,7 @@ import {
   AlertTriangle,
   Plug,
   ShieldCheck,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import {
   Avatar,
@@ -98,6 +99,7 @@ const NAV_GROUPS: ReadonlyArray<NavGroup> = [
     items: [
       { href: '/admin/integrations', label: 'Integrations', icon: Plug },
       { href: '/admin/dlq', label: 'DLQ', icon: Activity },
+      { href: '/admin/settings', label: 'Settings', icon: SettingsIcon },
     ],
   },
 ];

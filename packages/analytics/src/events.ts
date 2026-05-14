@@ -70,4 +70,17 @@ export const track = {
 
   authSignedIn: (props: BaseEventProps & Record<string, unknown>) =>
     captureEvent('auth_signed_in', props),
+
+  coachNudgeGenerated: (
+    props: BaseEventProps & { nudgeId: string; kind: string; templateProvided: boolean },
+  ) => captureEvent('coach_nudge.generated', props),
+
+  coachNudgeShown: (props: BaseEventProps & { nudgeId: string; kind: string }) =>
+    captureEvent('coach_nudge.shown', props),
+
+  coachNudgeDismissed: (props: BaseEventProps & { nudgeId: string; kind: string }) =>
+    captureEvent('coach_nudge.dismissed', props),
+
+  coachNudgeActedOn: (props: BaseEventProps & { nudgeId: string; kind: string }) =>
+    captureEvent('coach_nudge.acted_on', props),
 };

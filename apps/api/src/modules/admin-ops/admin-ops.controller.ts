@@ -6,8 +6,10 @@
  */
 
 import {
+  Body,
   Controller,
   Get,
+  Patch,
   Post,
   Delete,
   Param,
@@ -88,5 +90,45 @@ export class AdminOpsController {
     @Query(new ZodValidationPipe(auditListParamsSchema)) params: AuditListParams,
   ) {
     return this.adminOpsService.listAudit(user, params);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// AdminOrgController — /admin/org/*
+// ---------------------------------------------------------------------------
+//
+// Carved into its own controller (rather than overloading AdminOpsController)
+// so the URL surface stays scoped: `/admin/org/<resource>` for org-level
+// settings, `/admin/ops/<resource>` for ops surfaces (DLQ, audit).
+
+import { z } from 'zod';
+
+const managerDigestSettingsSchema = z.object({
+  enabled: z.boolean(),
+  cadence: z.enum(['weekly', 'biweekly']),
+});
+
+type ManagerDigestSettingsDto = z.infer<typeof managerDigestSettingsSchema>;
+
+@Controller('admin/org')
+@UseGuards(AuthGuard, RoleGuard)
+@Roles('ADMIN')
+export class AdminOrgController {
+  constructor(private readonly adminOpsService: AdminOpsService) {}
+
+  @Get('manager-digest-settings')
+  getManagerDigestSettings(
+    @CurrentUser() user: SessionPayload,
+  ): Promise<{ enabled: boolean; cadence: 'weekly' | 'biweekly' }> {
+    return this.adminOpsService.getManagerDigestSettings(user.organizationId);
+  }
+
+  @Patch('manager-digest-settings')
+  @HttpCode(HttpStatus.OK)
+  updateManagerDigestSettings(
+    @CurrentUser() user: SessionPayload,
+    @Body(new ZodValidationPipe(managerDigestSettingsSchema)) body: ManagerDigestSettingsDto,
+  ): Promise<{ enabled: boolean; cadence: 'weekly' | 'biweekly' }> {
+    return this.adminOpsService.updateManagerDigestSettings(user, body);
   }
 }

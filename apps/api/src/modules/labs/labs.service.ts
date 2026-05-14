@@ -10,10 +10,12 @@ import { Prisma } from '@levelup/db';
 import { type Lab, type LabAttempt } from '@levelup/db';
 import { chatComplete, isStubMode } from '@levelup/llm';
 import {
+  labCriterionResultSchema,
   labRubricSchema,
   labSeededContextSchema,
   labSpecSchema,
   labUpdateSpecSchema,
+  type LabAttemptHistoryItem,
   type LabAttemptResponse,
   type LabAttemptSummary,
   type LabCriterionResult,
@@ -24,10 +26,12 @@ import {
   type LabSummary,
   type LabTranscript,
   type LabUpdateSpec,
+  type StuckLearner,
 } from '@levelup/types';
 import type { SessionPayload } from '@levelup/auth-client';
 import { PrismaService } from '../prisma';
 import { GameService } from '../game/game.service';
+import { IncidentsService } from '../incidents/incidents.service';
 import { gradeAttempt } from './grader';
 
 const LAB_MODEL = 'gpt-4o-mini';
@@ -45,6 +49,11 @@ function parseSeededContext(raw: Prisma.JsonValue): Record<string, unknown> {
   const parsed = labSeededContextSchema.safeParse(raw);
   if (!parsed.success) return {};
   return parsed.data;
+}
+
+function parseCriteria(raw: Prisma.JsonValue): LabCriterionResult[] {
+  const parsed = labCriterionResultSchema.array().safeParse(raw);
+  return parsed.success ? parsed.data : [];
 }
 
 function toSummary(lab: Lab): LabSummary {
@@ -73,6 +82,7 @@ export class LabsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gameService: GameService,
+    private readonly incidentsService: IncidentsService,
   ) {}
 
   // ---------------------------------------------------------------------------
@@ -272,6 +282,19 @@ export class LabsService {
         // XP/quest plumbing must never break the attempt result.
         this.logger.error('Lab XP award failed', err);
       }
+
+      // Incident auto-resolution — any OPEN/ACKNOWLEDGED/SUGGESTED incident
+      // assigned to this lab + actor is marked REMEDIATED. Fire-and-forget;
+      // failures must never break the attempt response.
+      void this.incidentsService
+        .tryAutoResolveFromLabAttempt({
+          organizationId: user.organizationId,
+          userId: user.userId,
+          labId: lab.id,
+        })
+        .catch((err: unknown) =>
+          this.logger.error('IncidentsService.tryAutoResolveFromLabAttempt failed', err),
+        );
     }
 
     return {
@@ -313,6 +336,134 @@ export class LabsService {
       passed: r.passed,
       createdAt: r.createdAt.toISOString(),
     }));
+  }
+
+  async getMyLabAttemptHistory(
+    userId: string,
+    organizationId: string,
+    slug: string,
+  ): Promise<LabAttemptHistoryItem[]> {
+    const lab = await this.prisma.lab.findFirst({
+      where: {
+        slug,
+        isPublished: true,
+        OR: [{ organizationId }, { organizationId: null }],
+      },
+      select: { id: true },
+    });
+    if (!lab) throw new NotFoundException('Lab not found');
+
+    const rows = await this.prisma.labAttempt.findMany({
+      where: { userId, labId: lab.id },
+      orderBy: { createdAt: 'asc' },
+      take: 20,
+      select: {
+        id: true,
+        score: true,
+        passed: true,
+        criteria: true,
+        tokensUsed: true,
+        createdAt: true,
+      },
+    });
+
+    return rows.map((r) => ({
+      id: r.id,
+      score: r.score,
+      passed: r.passed,
+      criteria: parseCriteria(r.criteria),
+      tokensUsed: r.tokensUsed,
+      createdAt: r.createdAt.toISOString(),
+    }));
+  }
+
+  async getStuckLearners(slug: string, organizationId: string): Promise<StuckLearner[]> {
+    const lab = await this.prisma.lab.findFirst({
+      where: {
+        slug,
+        isPublished: true,
+        OR: [{ organizationId }, { organizationId: null }],
+      },
+      select: { id: true },
+    });
+    if (!lab) throw new NotFoundException('Lab not found');
+
+    const attempts = await this.prisma.labAttempt.findMany({
+      where: { labId: lab.id, organizationId },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        userId: true,
+        score: true,
+        passed: true,
+        criteria: true,
+        createdAt: true,
+        user: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    const byUser = new Map<
+      string,
+      {
+        userId: string;
+        name: string;
+        email: string;
+        attempts: Array<{
+          score: number;
+          passed: boolean;
+          criteria: LabCriterionResult[];
+          createdAt: Date;
+        }>;
+      }
+    >();
+
+    for (const a of attempts) {
+      const entry = byUser.get(a.userId) ?? {
+        userId: a.userId,
+        name: a.user.name,
+        email: a.user.email,
+        attempts: [],
+      };
+      entry.attempts.push({
+        score: a.score,
+        passed: a.passed,
+        criteria: parseCriteria(a.criteria),
+        createdAt: a.createdAt,
+      });
+      byUser.set(a.userId, entry);
+    }
+
+    const stuck: StuckLearner[] = [];
+    for (const entry of byUser.values()) {
+      if (entry.attempts.length < 3) continue;
+      if (entry.attempts.some((a) => a.passed)) continue;
+
+      const latest = entry.attempts[0];
+      if (!latest) continue;
+      const failCounts = new Map<string, number>();
+      for (const att of entry.attempts) {
+        for (const c of att.criteria) {
+          if (!c.pass) failCounts.set(c.id, (failCounts.get(c.id) ?? 0) + 1);
+        }
+      }
+      const weakestCriteria = Array.from(failCounts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([id]) => id);
+
+      stuck.push({
+        userId: entry.userId,
+        name: entry.name,
+        email: entry.email,
+        attemptCount: entry.attempts.length,
+        latestScore: latest.score,
+        latestAt: latest.createdAt.toISOString(),
+        weakestCriteria,
+      });
+    }
+
+    stuck.sort((a, b) => b.attemptCount - a.attemptCount);
+    return stuck;
   }
 
   // ---------------------------------------------------------------------------

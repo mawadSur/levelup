@@ -42,7 +42,8 @@ export interface SendEmailInput {
     | 'welcome'
     | 'manager-digest'
     | 'account-deletion-confirmation'
-    | 'risk-alert-email';
+    | 'risk-alert-email'
+    | 'incident-opened';
   data: Record<string, unknown>;
 }
 export interface SendEmailOutput {
@@ -152,6 +153,46 @@ export interface GovernanceReportOutput {
   byteLength: number;
 }
 
+export interface GenerateCoachNudgesInput {
+  /** ISO timestamp injected by the cron scheduler — useful for logging/idempotency. */
+  triggeredAt?: string;
+}
+export interface GenerateCoachNudgesOutput {
+  /** Users considered (had any AiCoachSession in the active window). */
+  usersScanned: number;
+  /** Fresh nudges written across all scanned users. */
+  nudgesCreated: number;
+}
+
+export interface AggregateUserSkillsInput {
+  /** ISO timestamp injected by the cron scheduler — useful for logging / idempotency. */
+  triggeredAt?: string;
+  /** Optional org scope — when omitted the job iterates every active organisation. */
+  organizationId?: string;
+  /** Optional user scope — when set, only that user's UserSkill rows are recomputed. */
+  userId?: string;
+}
+export interface AggregateUserSkillsOutput {
+  usersScanned: number;
+  rowsWritten: number;
+  skillsTouched: number;
+}
+
+export interface ComputeIndustryBenchmarksInput {
+  /** ISO timestamp injected by the cron scheduler — useful for logging/idempotency. */
+  triggeredAt?: string;
+}
+export interface ComputeIndustryBenchmarksOutput {
+  /** Total industries inspected this run (before threshold filtering). */
+  industriesInspected: number;
+  /** Industries that passed the privacy floor and produced snapshots. */
+  industriesPublished: number;
+  /** Industries skipped because sample-size threshold was not met. */
+  industriesSuppressed: number;
+  /** Total IndustryBenchmarkSnapshot rows upserted across all metrics. */
+  snapshotsWritten: number;
+}
+
 // ---------------------------------------------------------------------------
 // Discriminated union map  name → { input, output }
 // ---------------------------------------------------------------------------
@@ -178,6 +219,18 @@ export interface JobMap {
   'generate-lesson-image': {
     input: GenerateLessonImageInput;
     output: GenerateLessonImageOutput;
+  };
+  'compute-industry-benchmarks': {
+    input: ComputeIndustryBenchmarksInput;
+    output: ComputeIndustryBenchmarksOutput;
+  };
+  'generate-coach-nudges': {
+    input: GenerateCoachNudgesInput;
+    output: GenerateCoachNudgesOutput;
+  };
+  'aggregate-user-skills': {
+    input: AggregateUserSkillsInput;
+    output: AggregateUserSkillsOutput;
   };
 }
 

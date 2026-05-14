@@ -142,4 +142,34 @@ export const JOBS: Record<JobName, JobRegistration> = {
       backoff: { type: 'exponential', delay: 3000 },
     },
   },
+
+  'compute-industry-benchmarks': {
+    queue: 'compute-industry-benchmarks',
+    defaultOpts: {
+      // Single attempt — this is a weekly aggregate. If it fails, the next
+      // Monday run will catch up. Re-running mid-week could double-publish
+      // snapshots for the same period, polluting the trend.
+      attempts: 1,
+    },
+  },
+
+  'generate-coach-nudges': {
+    queue: 'generate-coach-nudges',
+    defaultOpts: {
+      // Single attempt — this is a daily scan with built-in 24h idempotency
+      // (we skip same-kind nudges generated for the same user within 24h).
+      // Re-running on the same day would still be safe but is wasted work.
+      attempts: 1,
+    },
+  },
+
+  'aggregate-user-skills': {
+    queue: 'aggregate-user-skills',
+    defaultOpts: {
+      // Daily aggregation. Idempotent upserts mean a duplicate run is safe;
+      // a single attempt avoids piling on the DB if a transient failure
+      // happens — the next scheduled invocation will recompute.
+      attempts: 1,
+    },
+  },
 } as const;

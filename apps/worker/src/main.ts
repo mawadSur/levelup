@@ -36,6 +36,9 @@ import { handleGovernanceReport } from './jobs/governance-report.js';
 import { handleTrialExpiryCheck } from './jobs/trial-expiry-check.js';
 import { handleGenerateSceneAsset } from './scenario/generate-scene-asset.js';
 import { handleGenerateLessonImage } from './lesson-image/generate-lesson-image.js';
+import { aggregateUserSkillsHandler } from './skills/aggregate-user-skills.js';
+import { handleGenerateCoachNudges } from './nudges/generate-coach-nudges.js';
+import { computeIndustryBenchmarksHandler } from './benchmarks/compute.js';
 import { attachDlqListener } from './jobs/dlq.js';
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -174,6 +177,30 @@ function boot(): void {
     'generate-lesson-image',
     createWorker('generate-lesson-image', handleGenerateLessonImage, { concurrency: 2 }),
     2,
+  );
+
+  // aggregate-user-skills — daily roll-up of UserSkill mastery from
+  // XpEvent + LabAttempt + AiCoachSession. Concurrency 1: one global run.
+  registerWorker(
+    'aggregate-user-skills',
+    createWorker('aggregate-user-skills', aggregateUserSkillsHandler, { concurrency: 1 }),
+    1,
+  );
+
+  // generate-coach-nudges — daily personalised nudge generator.
+  registerWorker(
+    'generate-coach-nudges',
+    createWorker('generate-coach-nudges', handleGenerateCoachNudges, { concurrency: 1 }),
+    1,
+  );
+
+  // compute-industry-benchmarks — weekly cross-tenant quantile aggregator.
+  registerWorker(
+    'compute-industry-benchmarks',
+    createWorker('compute-industry-benchmarks', computeIndustryBenchmarksHandler, {
+      concurrency: 1,
+    }),
+    1,
   );
 }
 
@@ -342,6 +369,60 @@ void (async () => {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     logger.error('trial-expiry-check: failed to register recurring schedule', {
+      error: message,
+    });
+  }
+})();
+
+// aggregate-user-skills — daily at 04:00 UTC
+void (async () => {
+  try {
+    const q = new Queue('aggregate-user-skills', { connection: getConnection() });
+    await q.add(
+      'aggregate-user-skills',
+      { triggeredAt: new Date().toISOString() },
+      { repeat: { pattern: '0 4 * * *' }, jobId: 'repeat:aggregate-user-skills:daily' },
+    );
+    logger.info('aggregate-user-skills: recurring schedule registered (daily 04:00 UTC)');
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error('aggregate-user-skills: failed to register recurring schedule', {
+      error: message,
+    });
+  }
+})();
+
+// generate-coach-nudges — daily at 06:00 UTC
+void (async () => {
+  try {
+    const q = new Queue('generate-coach-nudges', { connection: getConnection() });
+    await q.add(
+      'generate-coach-nudges',
+      { triggeredAt: new Date().toISOString() },
+      { repeat: { pattern: '0 6 * * *' }, jobId: 'repeat:generate-coach-nudges:daily' },
+    );
+    logger.info('generate-coach-nudges: recurring schedule registered (daily 06:00 UTC)');
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error('generate-coach-nudges: failed to register recurring schedule', {
+      error: message,
+    });
+  }
+})();
+
+// compute-industry-benchmarks — weekly Mondays at 02:00 UTC
+void (async () => {
+  try {
+    const q = new Queue('compute-industry-benchmarks', { connection: getConnection() });
+    await q.add(
+      'compute-industry-benchmarks',
+      { triggeredAt: new Date().toISOString() },
+      { repeat: { pattern: '0 2 * * 1' }, jobId: 'repeat:compute-industry-benchmarks:weekly' },
+    );
+    logger.info('compute-industry-benchmarks: recurring schedule registered (Mon 02:00 UTC)');
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error('compute-industry-benchmarks: failed to register recurring schedule', {
       error: message,
     });
   }

@@ -18,7 +18,10 @@ export * from './insights';
 export * from './anomaly';
 export * from './integrations';
 export * from './labs';
+export * from './nudges';
 export * from './scenarios';
+export * from './skills';
+export * from './study-plan';
 export {
   parseScenario,
   parseScenarioBody,

@@ -29,6 +29,10 @@ import {
   renderRiskAlertEmail,
   type RiskAlertEmailData,
 } from '../email/templates/risk-alert-email.js';
+import {
+  renderIncidentOpened,
+  type IncidentOpenedData,
+} from '../email/templates/incident-opened.js';
 
 // ---------------------------------------------------------------------------
 // Template dispatch
@@ -66,6 +70,9 @@ function renderTemplate(
 
     case 'risk-alert-email':
       return renderRiskAlertEmail({ ...(data as unknown as RiskAlertEmailData) });
+
+    case 'incident-opened':
+      return renderIncidentOpened({ ...(data as unknown as IncidentOpenedData) });
   }
 }
 

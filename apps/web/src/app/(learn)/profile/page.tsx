@@ -14,12 +14,14 @@ import {
 import { ssrGet } from '@/lib/api/server-fetch';
 import type { Certificate } from '@/lib/api/certificates';
 import type { MyAssessment } from '@/lib/api/assessments';
+import type { UserSkillRow } from '@/lib/api/skills';
 import { getSessionUser } from '@/lib/auth-client';
 import { ProfileHeader } from '@/components/learn/profile/profile-header';
 import { EditProfileForm } from '@/components/learn/profile/edit-profile-form';
 import { LeaderboardOptOutCard } from '@/components/learn/profile/leaderboard-opt-out-card';
 import { BaselineCard } from '@/components/learn/profile/baseline-card';
 import { CertificatesList } from '@/components/learn/profile/certificates-list';
+import { SkillPostureCard } from '@/components/learn/profile/skill-posture-card';
 import { BadgeWall } from '@/components/learn/achievements/badge-wall';
 
 export const metadata: Metadata = {
@@ -46,21 +48,26 @@ export default async function ProfilePage() {
   // same shape as a separate auth.me() call would, so we lean on it as the
   // canonical user fetch and skip the duplicate request. The other three
   // calls go through `ssrGet` so they forward the user's Supabase bearer.
-  const [sessionResult, certsResult, assessmentsResult, badgesResult] = await Promise.allSettled([
-    getSessionUser(),
-    ssrGet<Certificate[]>('/certificates/me'),
-    ssrGet<MyAssessment[]>('/assessments/me'),
-    // TODO: Replace with a dedicated /users/me/badges endpoint once the
-    // backend exposes it. For now we attempt the call defensively; if it
-    // 404s or errors the badge wall still renders (all locked).
-    ssrGet<BackendBadge[]>('/users/me/badges'),
-  ]);
+  const [sessionResult, certsResult, assessmentsResult, badgesResult, skillsResult] =
+    await Promise.allSettled([
+      getSessionUser(),
+      ssrGet<Certificate[]>('/certificates/me'),
+      ssrGet<MyAssessment[]>('/assessments/me'),
+      // TODO: Replace with a dedicated /users/me/badges endpoint once the
+      // backend exposes it. For now we attempt the call defensively; if it
+      // 404s or errors the badge wall still renders (all locked).
+      ssrGet<BackendBadge[]>('/users/me/badges'),
+      ssrGet<UserSkillRow[]>('/skills/me'),
+    ]);
 
   const session = sessionResult.status === 'fulfilled' ? sessionResult.value : null;
   const me = session; // getSessionUser already returns the merged shape we need
   const certs = certsResult.status === 'fulfilled' ? certsResult.value : [];
   const myAssessments = assessmentsResult.status === 'fulfilled' ? assessmentsResult.value : [];
   const assessmentsLoadFailed = assessmentsResult.status === 'rejected';
+  const mySkills: UserSkillRow[] =
+    skillsResult.status === 'fulfilled' ? (skillsResult.value ?? []) : [];
+  const skillsLoadFailed = skillsResult.status === 'rejected';
 
   // Badge data — falls back to empty array on any error (endpoint may not exist yet)
   const rawBadges: BackendBadge[] =
@@ -117,6 +124,9 @@ export default async function ProfilePage() {
 
           {/* Baseline assessment */}
           <BaselineCard assessments={myAssessments} loadFailed={assessmentsLoadFailed} />
+
+          {/* Skill posture */}
+          <SkillPostureCard rows={mySkills} loadFailed={skillsLoadFailed} />
 
           {/* Certificates */}
           <CertificatesList certificates={certs} />

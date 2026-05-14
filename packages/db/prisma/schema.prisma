@@ -136,6 +136,8 @@ model Organization {
   policyText           String?          @db.Text
   paymentFailed        Boolean          @default(false)
   paymentFailedAt      DateTime?
+  // EXPANSION #4 — opt out of cross-tenant benchmarking aggregates.
+  benchmarkOptOut      Boolean          @default(false)
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 
@@ -157,6 +159,8 @@ model Organization {
   integrations           OrganizationIntegration[]
   anomalyAlerts          AnomalyAlert[]
   labs                   Lab[]
+  incidents              Incident[]
+  coachNudges            CoachNudge[]
   labAttempts            LabAttempt[]
 
   @@map("organizations")
@@ -224,6 +228,10 @@ model User {
   anomalyAlerts          AnomalyAlert[]
   acknowledgedAnomalies  AnomalyAlert[]            @relation("AnomalyAcknowledgedBy")
   labAttempts            LabAttempt[]
+  userSkills             UserSkill[]
+  coachNudges            CoachNudge[]
+  incidents              Incident[]                @relation("IncidentActor")
+  studyPlans             StudyPlan[]
 
   @@unique([organizationId, email])
   @@index([organizationId])
@@ -328,6 +336,7 @@ model Lesson {
   contentEmbedding LessonEmbedding?
   sceneAssets      LessonSceneAsset[]
   imageAssets      LessonImageAsset[]
+  skills           LessonSkill[]
 
   @@unique([learningPathId, slug])
   @@index([learningPathId])
@@ -936,6 +945,8 @@ model Lab {
   learningPath LearningPath? @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
   attempts     LabAttempt[]
   lesson       Lesson?
+  skills       LabSkill[]
+  remediationIncidents Incident[] @relation("IncidentRemediationLab")
 
   @@index([organizationId])
   @@index([learningPathId])
@@ -1006,4 +1017,230 @@ model LessonImageAsset {
 
   @@unique([lessonId, slot])
   @@map("lesson_image_assets")
+}
+
+// =============================================================================
+// EXPANSION #1 — Skill graph + mastery model
+// =============================================================================
+
+enum SkillTier {
+  BEGINNER
+  PRACTITIONER
+  POWER_USER
+  CHAMPION
+}
+
+/// Skill — atomic capability the curriculum teaches.
+/// Mostly global content (organizationId = null) but tenants can author
+/// org-specific skills (e.g. "Kapitus GLBA compliance").
+model Skill {
+  id              String     @id @default(cuid())
+  organizationId  String?
+  slug            String     @unique
+  name            String
+  description     String?    @db.Text
+  tier            SkillTier
+  /// Slugs of prerequisite skills. Stored as JSON for cheap admin edits.
+  prerequisites   Json       @default("[]")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  userSkills      UserSkill[]
+  lessons         LessonSkill[]
+  labs            LabSkill[]
+
+  @@index([organizationId])
+  @@index([tier])
+  @@map("skills")
+}
+
+/// LessonSkill — many-to-many between Lesson and Skill.
+/// A lesson can teach multiple skills; a skill can be taught by multiple lessons.
+model LessonSkill {
+  lessonId  String
+  skillId   String
+  /// 0..1 weight — how much this lesson contributes to the skill (default 1).
+  weight    Float    @default(1.0)
+  createdAt DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([lessonId, skillId])
+  @@index([skillId])
+  @@map("lesson_skills")
+}
+
+/// LabSkill — many-to-many between Lab and Skill.
+/// Lab pass is a stronger "practice" signal than lesson completion.
+model LabSkill {
+  labId     String
+  skillId   String
+  weight    Float    @default(1.0)
+  createdAt DateTime @default(now())
+
+  lab   Lab   @relation(fields: [labId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([labId, skillId])
+  @@index([skillId])
+  @@map("lab_skills")
+}
+
+/// UserSkill — per-user mastery across 3 dimensions:
+///   exposure: read lessons that teach this skill (0..1)
+///   practice: passed labs that teach this skill (0..1)
+///   transfer: used the skill in real coach work without triggering sensitive
+///             classifier (0..1) — the gold-standard signal
+/// Updated by a daily aggregator from XpEvent + LabAttempt + AiCoachSession.
+model UserSkill {
+  userId    String
+  skillId   String
+  exposure  Float    @default(0)
+  practice  Float    @default(0)
+  transfer  Float    @default(0)
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([userId, skillId])
+  @@index([skillId])
+  @@map("user_skills")
+}
+
+// =============================================================================
+// EXPANSION #2 — Proactive coach
+// =============================================================================
+
+enum CoachNudgeKind {
+  REPEATED_SENSITIVE_PASTE
+  PROMPT_PATTERN_STUCK
+  UNTOUCHED_SKILL_AFTER_LESSON
+  STREAK_AT_RISK
+}
+
+/// CoachNudge — system-initiated suggestion to a learner.
+/// Generated daily by `generate-coach-nudges` BullMQ cron.
+model CoachNudge {
+  id                String         @id @default(cuid())
+  userId            String
+  organizationId    String
+  kind              CoachNudgeKind
+  body              String         @db.Text
+  suggestedTemplate String?        @db.Text
+  generatedAt       DateTime       @default(now())
+  dismissedAt       DateTime?
+  actedOnAt         DateTime?
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, generatedAt(sort: Desc)])
+  @@index([organizationId, kind, generatedAt(sort: Desc)])
+  @@map("coach_nudges")
+}
+
+// =============================================================================
+// EXPANSION #3 — Incident workflow loop
+// =============================================================================
+
+enum IncidentKind {
+  SENSITIVE_DATA_LEAK
+  POLICY_VIOLATION
+  AD_RULE_VIOLATION
+  AI_HALLUCINATION_REPORTED
+  OTHER
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  OPEN
+  ACKNOWLEDGED
+  REMEDIATED
+  DISMISSED
+  SUGGESTED
+}
+
+/// Incident — auto-generated from classifySensitive triggers above threshold,
+/// or manually reported. Closes the compliance loop: detection → assignment →
+/// remediation → resolution.
+model Incident {
+  id                       String           @id @default(cuid())
+  organizationId           String
+  userId                   String           // actor who triggered
+  kind                     IncidentKind
+  severity                 IncidentSeverity
+  status                   IncidentStatus   @default(OPEN)
+  triggeredBy              String           // 'coach' | 'slack' | 'lab' | 'manual'
+  signal                   Json             // free-form diagnostic payload
+  assignedRemediationLabId String?
+  slaDueAt                 DateTime?
+  openedAt                 DateTime         @default(now())
+  resolvedAt               DateTime?
+
+  organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user                User         @relation("IncidentActor", fields: [userId], references: [id], onDelete: Cascade)
+  assignedRemediationLab Lab?      @relation("IncidentRemediationLab", fields: [assignedRemediationLabId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, openedAt(sort: Desc)])
+  @@index([organizationId, status, severity])
+  @@index([userId, openedAt(sort: Desc)])
+  @@map("incidents")
+}
+
+// =============================================================================
+// EXPANSION #4 — Cross-tenant benchmarking (privacy-preserved aggregate)
+// =============================================================================
+
+/// IndustryBenchmarkSnapshot — privacy-preserving quantile snapshot per
+/// industry per metric. Recomputed weekly. Hard floor: sampleSize >= 10 orgs
+/// AND >= 100 users in the slice before any value is exposed.
+model IndustryBenchmarkSnapshot {
+  id          String   @id @default(cuid())
+  industry    String   // matches Organization.industry
+  period      DateTime // ISO week start
+  metric      String   // 'lesson_completion_rate' | 'lab_pass_rate' | ...
+  sampleSize  Int      // number of orgs contributing
+  userSample  Int      // number of users contributing
+  p25         Float
+  p50         Float
+  p75         Float
+  p90         Float
+  createdAt   DateTime @default(now())
+
+  @@unique([industry, period, metric])
+  @@index([industry, metric, period(sort: Desc)])
+  @@map("industry_benchmark_snapshots")
+}
+
+// =============================================================================
+// EXPANSION #5 — Skill-based onboarding (StudyPlan)
+// =============================================================================
+
+/// StudyPlan — generated after baseline assessment. One row per week the
+/// learner is enrolled. lessonIds / labIds are JSON arrays of target items.
+/// Marked complete when all targets are done by `targetCompletionDate`.
+model StudyPlan {
+  id                    String   @id @default(cuid())
+  userId                String
+  weekOf                DateTime // start of the ISO week
+  lessonIds             Json     // string[]
+  labIds                Json     // string[]
+  targetCompletionDate  DateTime
+  completedAt           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekOf])
+  @@index([userId, weekOf(sort: Desc)])
+  @@map("study_plans")
 }

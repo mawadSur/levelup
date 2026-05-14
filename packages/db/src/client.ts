@@ -19,6 +19,11 @@ export {
   IntegrationStatus,
   AnomalySeverity,
   AnomalyKind,
+  CoachNudgeKind,
+  IncidentKind,
+  IncidentSeverity,
+  IncidentStatus,
+  SkillTier,
 } from '@prisma/client';
 
 // `QuestStatus` exists in the SQL schema (created via the gamification
@@ -70,4 +75,11 @@ export type {
   Lab,
   LabAttempt,
   LessonSceneAsset,
+  CoachNudge,
+  Incident,
+  Skill,
+  LessonSkill,
+  LabSkill,
+  UserSkill,
+  StudyPlan,
 } from '@prisma/client';

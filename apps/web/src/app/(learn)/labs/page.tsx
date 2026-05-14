@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Card, CardContent, MonoLabel } from '@levelup/ui';
 import { ssrGet } from '@/lib/api/server-fetch';
 import { ApiError } from '@/lib/api/errors';
-import type { LabSummary } from '@/lib/api/labs';
+import type { LabAttemptSummary, LabSummary } from '@/lib/api/labs';
+import { LabAttemptSparkline } from '@/components/learn/lab-attempt-sparkline';
 
 export const metadata: Metadata = {
   title: 'Hands-On Labs',
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
 export default async function LabsIndexPage() {
   let labs: LabSummary[] | null = null;
   let loadError: { status: number; message: string } | null = null;
+  let attemptsBySlug: Map<
+    string,
+    Array<{ score: number; passed: boolean; createdAt: string }>
+  > = new Map();
 
   try {
     labs = await ssrGet<LabSummary[]>('/labs');
@@ -23,6 +28,15 @@ export default async function LabsIndexPage() {
         status: 0,
         message: err instanceof Error ? err.message : 'Unknown error',
       };
+    }
+  }
+
+  if (labs) {
+    try {
+      const all = await ssrGet<LabAttemptSummary[]>('/labs/me/attempts');
+      attemptsBySlug = groupAttemptsBySlug(all);
+    } catch {
+      attemptsBySlug = new Map();
     }
   }
 
@@ -66,7 +80,7 @@ export default async function LabsIndexPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {labs.map((lab) => (
-            <LabTile key={lab.id} lab={lab} />
+            <LabTile key={lab.id} lab={lab} attempts={attemptsBySlug.get(lab.slug) ?? []} />
           ))}
         </div>
       )}
@@ -74,7 +88,13 @@ export default async function LabsIndexPage() {
   );
 }
 
-function LabTile({ lab }: { lab: LabSummary }) {
+function LabTile({
+  lab,
+  attempts,
+}: {
+  lab: LabSummary;
+  attempts: Array<{ score: number; passed: boolean; createdAt: string }>;
+}) {
   return (
     <Link
       href={`/labs/${encodeURIComponent(lab.slug)}`}
@@ -88,9 +108,27 @@ function LabTile({ lab }: { lab: LabSummary }) {
       </div>
       <h3 className="mt-4 font-serif text-h3 italic text-paper-100">{lab.title}</h3>
       <p className="mt-2 text-body-sm text-paper-300">{lab.brief}</p>
-      <p className="mt-4 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
-        START LAB →
-      </p>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-signal">
+          {attempts.length === 0 ? 'START LAB →' : 'CONTINUE →'}
+        </p>
+        {attempts.length > 0 && <LabAttemptSparkline attempts={attempts} width={80} height={20} />}
+      </div>
     </Link>
   );
+}
+
+function groupAttemptsBySlug(
+  rows: LabAttemptSummary[],
+): Map<string, Array<{ score: number; passed: boolean; createdAt: string }>> {
+  const map = new Map<string, Array<{ score: number; passed: boolean; createdAt: string }>>();
+  const sorted = [...rows].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
+  for (const r of sorted) {
+    const list = map.get(r.labSlug) ?? [];
+    list.push({ score: r.score, passed: r.passed, createdAt: r.createdAt });
+    map.set(r.labSlug, list);
+  }
+  return map;
 }

@@ -5,6 +5,12 @@ import { PathEditor } from '@/components/admin/learning/path-editor';
 import type { PathEditorLesson } from '@/components/admin/learning/path-editor';
 import type { BulkQuiz, BulkQuizQuestion } from '@/lib/api/paths';
 import type { AdminQuizQuestion } from '@/lib/api/quizzes';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { LabSummary, StuckLearner } from '@/lib/api/labs';
+import {
+  StuckLearnersTable,
+  type StuckLearnerRow,
+} from '@/components/admin/learning/stuck-learners-table';
 
 export const metadata: Metadata = {
   title: 'Edit path — Admin',
@@ -75,9 +81,39 @@ export default async function PathEditPage({ params }: PageProps) {
     lessons: editorLessons,
   };
 
+  let stuckRows: StuckLearnerRow[] = [];
+  try {
+    const labs = await ssrGet<LabSummary[]>('/labs');
+    const pathLabs = labs.filter((l) => l.learningPathId === pathId);
+    const perLab = await Promise.all(
+      pathLabs.map(async (lab) => {
+        try {
+          const rows = await ssrGet<StuckLearner[]>(
+            `/admin/labs/${encodeURIComponent(lab.slug)}/stuck-learners`,
+          );
+          return rows.map<StuckLearnerRow>((r) => ({
+            ...r,
+            labSlug: lab.slug,
+            labTitle: lab.title,
+          }));
+        } catch {
+          return [] as StuckLearnerRow[];
+        }
+      }),
+    );
+    stuckRows = perLab.flat().sort((a, b) => b.attemptCount - a.attemptCount);
+  } catch {
+    stuckRows = [];
+  }
+
   return (
-    <div className="h-[calc(100vh-4rem)] overflow-hidden">
-      <PathEditor pathId={pathId} initialPath={initialPath} />
-    </div>
+    <>
+      <div className="h-[calc(100vh-4rem)] overflow-hidden">
+        <PathEditor pathId={pathId} initialPath={initialPath} />
+      </div>
+      <div className="mx-auto max-w-content px-6 py-10">
+        <StuckLearnersTable rows={stuckRows} />
+      </div>
+    </>
   );
 }

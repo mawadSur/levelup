@@ -12,6 +12,7 @@
     "test": "echo 'test placeholder'"
   },
   "dependencies": {
+    "@levelup/analytics": "workspace:*",
     "@levelup/db": "workspace:*",
     "@levelup/llm": "workspace:*",
     "@levelup/queue": "workspace:*",

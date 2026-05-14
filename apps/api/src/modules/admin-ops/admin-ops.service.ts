@@ -267,6 +267,89 @@ export class AdminOpsService {
   }
 
   // --------------------------------------------------------------------------
+  // Manager digest preferences
+  // --------------------------------------------------------------------------
+  //
+  // Stored on the existing FeatureFlag table (no schema change needed):
+  //   - key="manager_digest:enabled" → `enabled` column
+  //   - key="manager_digest:cadence" → metadata.cadence in { "weekly", "biweekly" }
+
+  private static readonly ENABLED_KEY = 'manager_digest:enabled';
+  private static readonly CADENCE_KEY = 'manager_digest:cadence';
+
+  async getManagerDigestSettings(
+    organizationId: string,
+  ): Promise<{ enabled: boolean; cadence: 'weekly' | 'biweekly' }> {
+    const [enabledFlag, cadenceFlag] = await Promise.all([
+      this.prisma.featureFlag.findUnique({
+        where: {
+          organizationId_key: { organizationId, key: AdminOpsService.ENABLED_KEY },
+        },
+      }),
+      this.prisma.featureFlag.findUnique({
+        where: {
+          organizationId_key: { organizationId, key: AdminOpsService.CADENCE_KEY },
+        },
+      }),
+    ]);
+
+    const enabled = enabledFlag === null ? true : enabledFlag.enabled;
+    let cadence: 'weekly' | 'biweekly' = 'weekly';
+    if (cadenceFlag?.metadata && typeof cadenceFlag.metadata === 'object') {
+      const m = cadenceFlag.metadata as Record<string, unknown>;
+      if (m['cadence'] === 'biweekly') cadence = 'biweekly';
+    }
+    return { enabled, cadence };
+  }
+
+  async updateManagerDigestSettings(
+    actor: SessionPayload,
+    body: { enabled: boolean; cadence: 'weekly' | 'biweekly' },
+  ): Promise<{ enabled: boolean; cadence: 'weekly' | 'biweekly' }> {
+    const organizationId = actor.organizationId;
+
+    await this.prisma.$transaction([
+      this.prisma.featureFlag.upsert({
+        where: {
+          organizationId_key: { organizationId, key: AdminOpsService.ENABLED_KEY },
+        },
+        create: {
+          organizationId,
+          key: AdminOpsService.ENABLED_KEY,
+          enabled: body.enabled,
+        },
+        update: { enabled: body.enabled },
+      }),
+      this.prisma.featureFlag.upsert({
+        where: {
+          organizationId_key: { organizationId, key: AdminOpsService.CADENCE_KEY },
+        },
+        create: {
+          organizationId,
+          key: AdminOpsService.CADENCE_KEY,
+          enabled: true,
+          metadata: { cadence: body.cadence } as Prisma.InputJsonValue,
+        },
+        update: {
+          enabled: true,
+          metadata: { cadence: body.cadence } as Prisma.InputJsonValue,
+        },
+      }),
+    ]);
+
+    await this.writeAudit({
+      organizationId,
+      actorId: actor.userId,
+      action: 'manager_digest.settings_updated',
+      targetType: 'Organization',
+      targetId: organizationId,
+      metadata: { enabled: body.enabled, cadence: body.cadence },
+    });
+
+    return body;
+  }
+
+  // --------------------------------------------------------------------------
   // Private helper: write audit log
   // --------------------------------------------------------------------------
 

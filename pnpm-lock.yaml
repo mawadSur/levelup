@@ -265,6 +265,9 @@ importers:
 
   apps/worker:
     dependencies:
+      '@levelup/analytics':
+        specifier: workspace:*
+        version: link:../../packages/analytics
       '@levelup/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -458,6 +461,9 @@ importers:
 
   packages/integrations-slack:
     dependencies:
+      '@levelup/llm':
+        specifier: workspace:*
+        version: link:../llm
       '@slack/web-api':
         specifier: ^7.7.0
         version: 7.15.2

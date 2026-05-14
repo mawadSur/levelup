@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 import { Card, CardContent, MonoLabel } from '@levelup/ui';
 import { ssrGet } from '@/lib/api/server-fetch';
 import { ApiError } from '@/lib/api/errors';
-import type { LabDetail } from '@/lib/api/labs';
+import type { LabAttemptHistoryItem, LabDetail } from '@/lib/api/labs';
 import { LabRunner } from './lab-runner';
+import { LabAttemptSparkline } from '@/components/learn/lab-attempt-sparkline';
+import { LabPastAttemptsCard } from '@/components/learn/lab-past-attempts-card';
 
 interface LabPageProps {
   params: Promise<{ slug: string }>;
@@ -21,6 +23,8 @@ export default async function LabDetailPage({ params }: LabPageProps) {
   let lab: LabDetail | null = null;
   let loadError: { status: number; message: string } | null = null;
 
+  let attempts: LabAttemptHistoryItem[] = [];
+
   try {
     lab = await ssrGet<LabDetail>(`/labs/${encodeURIComponent(slug)}`);
   } catch (err) {
@@ -32,6 +36,16 @@ export default async function LabDetailPage({ params }: LabPageProps) {
         status: 0,
         message: err instanceof Error ? err.message : 'Unknown error',
       };
+    }
+  }
+
+  if (lab) {
+    try {
+      attempts = await ssrGet<LabAttemptHistoryItem[]>(
+        `/labs/${encodeURIComponent(slug)}/me/attempts`,
+      );
+    } catch {
+      attempts = [];
     }
   }
 
@@ -70,10 +84,21 @@ export default async function LabDetailPage({ params }: LabPageProps) {
           · {lab.estimatedMinutes} MIN
         </p>
         <h1 className="font-serif text-display-md italic text-paper-100">{lab.title}</h1>
+        {attempts.length > 0 && attempts[attempts.length - 1] && (
+          <div className="flex items-center gap-3">
+            <LabAttemptSparkline attempts={attempts} />
+            <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+              {attempts.length} ATTEMPT{attempts.length === 1 ? '' : 'S'} · LATEST{' '}
+              {Math.round((attempts[attempts.length - 1]?.score ?? 0) * 100)}%
+            </span>
+          </div>
+        )}
         <p className="max-w-reading text-body-lg text-paper-300">{lab.brief}</p>
       </header>
 
       <LabRunner lab={lab} />
+
+      <LabPastAttemptsCard attempts={attempts} />
     </div>
   );
 }

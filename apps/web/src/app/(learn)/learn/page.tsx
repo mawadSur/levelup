@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent, Badge, Button, MissionNumber, NumberedSection } from '@levelup/ui';
-import { paths, progress, assessments, auth, game } from '@/lib/api';
+import { paths, progress, assessments, auth, game, nudges } from '@/lib/api';
 import type { MyPathProgress } from '@/lib/api/progress';
+import type { CoachNudge } from '@/lib/api/nudges';
 import { DailyQuestPanel } from '@/components/learn/quests/daily-quest-panel';
 import { StreakCallout } from '@/components/learn/quests/streak-callout';
 import { HeroNextStep } from '@/components/learn/hero-next-step';
 import { NewsStream } from '@/components/learn/news-stream';
+import { CoachNudgeStrip } from '@/components/learn/coach-nudge-strip';
 import { fetchDailyNews } from '@/lib/news/fetch-news';
-import type { DailyQuestItem } from '@levelup/types';
+import type { DailyQuestItem, CurrentWeekResponse } from '@levelup/types';
 import type { CurriculumMap } from '@/lib/api/paths';
+import { ssrGet } from '@/lib/api/server-fetch';
+import { StudyPlanStrip } from '@/components/learn/study-plan-strip';
 
 export const metadata: Metadata = {
   title: 'Learn',
@@ -25,6 +29,7 @@ export default async function LearnPage() {
     questsData,
     curriculumData,
     newsItems,
+    nudgeItems,
   ] = await Promise.all([
     progress.getMyProgress().catch(() => [] as MyPathProgress[]),
     auth.me().catch(() => null),
@@ -36,7 +41,15 @@ export default async function LearnPage() {
     game.getTodayQuests().catch(() => ({ quests: [] as DailyQuestItem[] })),
     paths.getCurriculumMap().catch(() => null as CurriculumMap | null),
     fetchDailyNews(),
+    nudges.listMyActive().catch(() => [] as CoachNudge[]),
   ]);
+
+  // Current-week StudyPlan — fetched server-side via ssrGet because the
+  // public api client doesn't carry the SSR auth header. Falls open on any
+  // failure so the page still renders without the strip.
+  const studyPlanCurrent = await ssrGet<CurrentWeekResponse>('/study-plan/me/current-week').catch(
+    () => ({ plan: null }) as CurrentWeekResponse,
+  );
 
   const myPathProgress = progressData;
   const me = meData;
@@ -123,6 +136,10 @@ export default async function LearnPage() {
         </div>
       </header>
 
+      {/* "Your Week" StudyPlan checklist — top-of-page above Continue Learning.
+          Renders nothing when the user has no current-week plan. */}
+      {studyPlanCurrent.plan ? <StudyPlanStrip initialCurrent={studyPlanCurrent.plan} /> : null}
+
       {/* Continue learning hero card */}
       {continueTarget && (
         <NumberedSection numeral={nextStep()} eyebrow="CONTINUE LEARNING">
@@ -161,6 +178,14 @@ export default async function LearnPage() {
               </Button>
             </CardContent>
           </Card>
+        </NumberedSection>
+      )}
+
+      {/* Coach Suggestions — proactive nudges generated daily by the worker.
+          Hidden entirely when there are no active suggestions. */}
+      {nudgeItems.length > 0 && (
+        <NumberedSection numeral={nextStep()} eyebrow="COACH SUGGESTIONS" className="space-y-4">
+          <CoachNudgeStrip initial={nudgeItems} />
         </NumberedSection>
       )}
 

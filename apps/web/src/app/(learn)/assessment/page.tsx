@@ -6,6 +6,7 @@ import { ApiError } from '@/lib/api';
 import { ssrGet } from '@/lib/api/server-fetch';
 import type { MyAssessment } from '@/lib/api/assessments';
 import { LevelBadge } from '@/components/assessment/level-badge';
+import { SkipAssessmentLink } from '@/components/assessment/skip-link';
 
 export const metadata: Metadata = {
   title: 'Baseline assessment',
@@ -73,6 +74,7 @@ export default async function AssessmentLandingPage() {
                 <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
+            <SkipAssessmentLink />
           </CardContent>
         </Card>
       </div>

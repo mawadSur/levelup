@@ -17,6 +17,9 @@ import type {
   TrialExpiryCheckInput,
   GenerateSceneAssetInput,
   GenerateLessonImageInput,
+  ComputeIndustryBenchmarksInput,
+  GenerateCoachNudgesInput,
+  AggregateUserSkillsInput,
 } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -247,6 +250,59 @@ export function enqueueGenerateLessonImage(
   return getQueue('generate-lesson-image').add('generate-lesson-image', input, {
     ...JOBS['generate-lesson-image'].defaultOpts,
     jobId: `lesson-image:${input.promptHash}`,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `compute-industry-benchmarks` job.
+ *
+ * Weekly cross-tenant aggregation: collects opted-in orgs per industry,
+ * computes per-metric quantiles (p25/p50/p75/p90), and upserts snapshots.
+ * Honours a hard privacy floor (>= 10 orgs AND >= 100 active users per
+ * industry slice) before any value is exposed.
+ */
+export function enqueueComputeIndustryBenchmarks(
+  input?: ComputeIndustryBenchmarksInput,
+  overrides?: JobsOptions,
+): Promise<Job<ComputeIndustryBenchmarksInput, JobMap['compute-industry-benchmarks']['output']>> {
+  return getQueue('compute-industry-benchmarks').add('compute-industry-benchmarks', input ?? {}, {
+    ...JOBS['compute-industry-benchmarks'].defaultOpts,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue a `generate-coach-nudges` job.
+ *
+ * Daily scan: walks each user with coach activity in the last 14 days and
+ * emits up to N proactive nudge cards. Idempotent — the handler skips
+ * generating the same kind for the same user within 24 hours.
+ */
+export function enqueueGenerateCoachNudges(
+  input?: GenerateCoachNudgesInput,
+  overrides?: JobsOptions,
+): Promise<Job<GenerateCoachNudgesInput, JobMap['generate-coach-nudges']['output']>> {
+  return getQueue('generate-coach-nudges').add('generate-coach-nudges', input ?? {}, {
+    ...JOBS['generate-coach-nudges'].defaultOpts,
+    ...overrides,
+  });
+}
+
+/**
+ * Enqueue an `aggregate-user-skills` job.
+ *
+ * Daily aggregator: recomputes UserSkill mastery (exposure / practice / transfer)
+ * for every user from completed lessons, passed lab attempts, and recent coach
+ * sessions. Idempotent upserts mean callers may safely fire ad-hoc runs (e.g.
+ * after seeding new content) on top of the scheduled cron.
+ */
+export function enqueueAggregateUserSkills(
+  input?: AggregateUserSkillsInput,
+  overrides?: JobsOptions,
+): Promise<Job<AggregateUserSkillsInput, JobMap['aggregate-user-skills']['output']>> {
+  return getQueue('aggregate-user-skills').add('aggregate-user-skills', input ?? {}, {
+    ...JOBS['aggregate-user-skills'].defaultOpts,
     ...overrides,
   });
 }

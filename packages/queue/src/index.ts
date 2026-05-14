@@ -28,6 +28,9 @@ export {
   enqueueTrialExpiryCheck,
   enqueueGenerateSceneAsset,
   enqueueGenerateLessonImage,
+  enqueueComputeIndustryBenchmarks,
+  enqueueGenerateCoachNudges,
+  enqueueAggregateUserSkills,
 } from './queues.js';
 
 // Worker factory
@@ -69,4 +72,10 @@ export type {
   GenerateSceneAssetOutput,
   GenerateLessonImageInput,
   GenerateLessonImageOutput,
+  ComputeIndustryBenchmarksInput,
+  ComputeIndustryBenchmarksOutput,
+  GenerateCoachNudgesInput,
+  GenerateCoachNudgesOutput,
+  AggregateUserSkillsInput,
+  AggregateUserSkillsOutput,
 } from './types.js';

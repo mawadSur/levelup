@@ -104,6 +104,27 @@ export const labAttemptSummarySchema = z.object({
 });
 export type LabAttemptSummary = z.infer<typeof labAttemptSummarySchema>;
 
+export const labAttemptHistoryItemSchema = z.object({
+  id: z.string(),
+  score: z.number().min(0).max(1),
+  passed: z.boolean(),
+  criteria: z.array(labCriterionResultSchema),
+  tokensUsed: z.number().int().min(0),
+  createdAt: z.string(),
+});
+export type LabAttemptHistoryItem = z.infer<typeof labAttemptHistoryItemSchema>;
+
+export const stuckLearnerSchema = z.object({
+  userId: z.string(),
+  name: z.string(),
+  email: z.string(),
+  attemptCount: z.number().int().min(0),
+  latestScore: z.number().min(0).max(1),
+  latestAt: z.string(),
+  weakestCriteria: z.array(z.string()),
+});
+export type StuckLearner = z.infer<typeof stuckLearnerSchema>;
+
 // ---------------------------------------------------------------------------
 // Admin-side spec — what an admin POSTs to create a lab. Mirrors the JSON
 // content files under packages/db/content/labs/<slug>.lab.json so we have

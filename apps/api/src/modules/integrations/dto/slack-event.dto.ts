@@ -8,9 +8,9 @@ import { z } from 'zod';
  *   2. `type: 'event_callback'`  — every other event, with the actual event
  *      payload nested under `event`.
  *
- * We deliberately keep the inner `event` typing loose (z.record(z.unknown()))
- * because we currently only branch on `event.type === 'app_uninstalled'` and
- * the rest of the payload varies per event type.
+ * We deliberately keep the inner `event` typing loose (`.passthrough()`)
+ * because event shapes vary per type. The DLP scanner reads `text`,
+ * `channel`, `user`, `subtype`, `bot_id`, `channel_type`, `ts` when present.
  */
 export const slackEventEnvelopeSchema = z.discriminatedUnion('type', [
   z.object({
@@ -23,6 +23,14 @@ export const slackEventEnvelopeSchema = z.discriminatedUnion('type', [
     event: z
       .object({
         type: z.string(),
+        subtype: z.string().optional(),
+        channel: z.string().optional(),
+        channel_type: z.string().optional(),
+        user: z.string().optional(),
+        bot_id: z.string().optional(),
+        text: z.string().optional(),
+        ts: z.string().optional(),
+        thread_ts: z.string().optional(),
       })
       .passthrough(),
   }),

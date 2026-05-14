@@ -1,15 +1,33 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { runCoach } from '@levelup/llm';
-import { IntegrationProvider, IntegrationStatus, type OrganizationIntegration } from '@levelup/db';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  Optional,
+} from '@nestjs/common';
+import { createHash } from 'node:crypto';
+import { runCoach, type SensitiveResult } from '@levelup/llm';
+import {
+  IntegrationProvider,
+  IntegrationStatus,
+  Prisma,
+  type OrganizationIntegration,
+} from '@levelup/db';
 import {
   buildCoachResponseBlocks,
   createSlackClient,
   encrypt,
   exchangeCode,
+  handleSlackMessageEvent,
   type KnownBlock,
+  type SlackConversation,
+  type SlackEventAction,
+  type SlackMessageEvent,
 } from '@levelup/integrations-slack';
 import { PrismaService } from '../prisma';
 import { IntegrationsService } from './integrations.service';
+import { IncidentsService } from '../incidents/incidents.service';
 import { SlashCommandPayload } from './dto';
 
 /**
@@ -30,6 +48,12 @@ export const SLACK_DEFAULT_SCOPES = [
   'users:read',
   'users:read.email',
   'team:read',
+  // DLP inline scanner — required to receive `message.channels` / `message.im`
+  // events and to list channels the bot can see in the admin UI.
+  'channels:read',
+  'channels:history',
+  'groups:history',
+  'im:history',
 ];
 
 interface CachedLookup {
@@ -50,6 +74,11 @@ export class SlackService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly integrations: IntegrationsService,
+    // IncidentsService is owned by a separate module that may not yet be
+    // wired into AppModule at this point in the build. `@Optional()` lets
+    // the slack module boot regardless; when the incidents module is
+    // imported we automatically forward HIGH-severity DLP hits.
+    @Optional() @Inject(IncidentsService) private readonly incidents?: IncidentsService,
   ) {}
 
   // ---------------------------------------------------------------------
@@ -443,5 +472,343 @@ export class SlackService {
       throw new BadRequestException(`Slack integration not configured: missing ${key} env var`);
     }
     return v;
+  }
+
+  // ---------------------------------------------------------------------
+  // Inline DLP scanner (Slack Events API → message.channels / message.im)
+  // ---------------------------------------------------------------------
+
+  /**
+   * Read the monitored-channel list out of the integration's metadata blob.
+   * Returns an empty set when nothing is configured (the safe default — we
+   * never scan a channel until an admin opts it in).
+   */
+  private readMonitoredChannels(integration: OrganizationIntegration): Set<string> {
+    const meta = integration.metadata as Prisma.JsonValue | null;
+    if (!meta || typeof meta !== 'object' || Array.isArray(meta)) return new Set();
+    const list = (meta as Record<string, unknown>)['monitoredChannels'];
+    if (!Array.isArray(list)) return new Set();
+    return new Set(list.filter((c): c is string => typeof c === 'string'));
+  }
+
+  /**
+   * Process a single `message.*` event from the Slack Events API.
+   *
+   * Latency contract
+   * ----------------
+   * The HTTP controller acknowledges Slack within ~10ms and schedules this
+   * method via `setImmediate`. The scanner itself targets <200ms end-to-end
+   * for the ephemeral reply (the warning has to arrive while the sender is
+   * still looking at the thread). Hard caps:
+   *   - regex stage in `classifySensitive` is O(text length × patterns),
+   *     well under 5ms for realistic message sizes;
+   *   - LLM stage already has a 1s AbortController timeout in
+   *     `@levelup/llm/sensitive.ts`;
+   *   - `chat.postEphemeral` round-trip is ~50–150ms p50.
+   *
+   * Side effects: writes one `slack.sensitive_data_warned` audit row per
+   * flagged message; on HIGH/CRITICAL severity, also forwards to
+   * `IncidentsService.maybeOpenIncident` when that service is wired.
+   */
+  async processIncomingMessageEvent(args: {
+    teamId: string;
+    event: SlackMessageEvent;
+  }): Promise<SlackEventAction> {
+    const integration = await this.integrations.findByTeamId(
+      IntegrationProvider.SLACK,
+      args.teamId,
+    );
+    if (!integration) {
+      return { action: 'ignored', reason: 'no_integration' };
+    }
+
+    const monitored = this.readMonitoredChannels(integration);
+    // Short-circuit before reading tokens when nothing is opted in. This is
+    // the common case and keeps the warm path off the DB-decrypt hot loop.
+    if (monitored.size === 0) {
+      return { action: 'ignored', reason: 'no_channels_monitored' };
+    }
+
+    const { botToken } = this.integrations.getDecryptedTokens(integration);
+    if (!botToken) {
+      this.logger.warn(`processIncomingMessageEvent: missing bot token for team ${args.teamId}`);
+      return { action: 'ignored', reason: 'missing_bot_token' };
+    }
+
+    const client = createSlackClient(botToken);
+    const result = await handleSlackMessageEvent({
+      event: args.event,
+      monitoredChannels: monitored,
+      botUserId: integration.botUserId ?? null,
+      client,
+    });
+
+    if (result.action === 'warned') {
+      await this.recordSlackWarning(integration, args.event, result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Write the audit row for a flagged message and (HIGH/CRITICAL only)
+   * forward to the incidents pipeline.
+   *
+   * Privacy invariant: NEVER persist the raw message text. We hash it with
+   * SHA-256 and store only the digest — enough to dedupe / cross-reference
+   * a Slack message ts without leaking content.
+   */
+  private async recordSlackWarning(
+    integration: OrganizationIntegration,
+    event: SlackMessageEvent,
+    action: Extract<SlackEventAction, { action: 'warned' }>,
+  ): Promise<void> {
+    const messageHash = createHash('sha256')
+      .update(event.text ?? '')
+      .digest('hex');
+
+    try {
+      await this.prisma.auditLog.create({
+        data: {
+          organizationId: integration.organizationId,
+          actorId: null, // Slack user_id ≠ LevelUp user_id; we keep it in metadata.
+          action: 'slack.sensitive_data_warned',
+          targetType: 'OrganizationIntegration',
+          targetId: integration.id,
+          metadata: {
+            provider: 'SLACK',
+            channel: event.channel ?? null,
+            channelType: event.channel_type ?? null,
+            slackUserId: event.user ?? null,
+            ts: event.ts ?? null,
+            messageHash,
+            severity: action.scan.severity,
+            categories: action.scan.categories,
+            ephemeralPosted: action.ephemeralPosted,
+            ephemeralError: action.ephemeralError ?? null,
+          } as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err) {
+      this.logger.warn(
+        `slack.sensitive_data_warned audit failed: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+
+    // HIGH or CRITICAL → escalate to the incidents pipeline if available.
+    if (action.scan.severity === 'HIGH' || action.scan.severity === 'CRITICAL') {
+      if (this.incidents) {
+        const slackUser = event.user;
+        const member = slackUser
+          ? await this.lookupLevelUpUserBySlackId(integration, slackUser)
+          : null;
+        if (member) {
+          // The Slack scanner returns a coarser type than the LLM
+          // `SensitiveResult`; rebuild a minimal shape so the severity-rules
+          // pipeline gets the categories it expects.
+          const signal: SensitiveResult = {
+            triggered: true,
+            categories: action.scan.categories.filter(
+              (c): c is SensitiveResult['categories'][number] =>
+                c === 'pii' ||
+                c === 'phi' ||
+                c === 'payment' ||
+                c === 'credentials' ||
+                c === 'customer_data',
+            ),
+          };
+          if (action.scan.primaryReason) {
+            signal.reason = action.scan.primaryReason;
+          }
+          await this.incidents.maybeOpenIncident({
+            organizationId: integration.organizationId,
+            userId: member.id,
+            signal,
+            // We never persist raw Slack text; pass an empty input snippet so
+            // the incident's `signal.inputSnippet` records "redacted by policy".
+            userInput: '[slack message — content redacted by DLP policy]',
+            triggeredBy: 'slack',
+          });
+        }
+      } else {
+        // TODO(integrations): IncidentsService isn't wired here yet — agent
+        // #3 owns wiring it into AppModule. Once that's done, the @Optional()
+        // injection above starts forwarding HIGH/CRITICAL Slack hits.
+        this.logger.warn(
+          'IncidentsService not injected — HIGH-severity Slack DLP hit was warned but not opened as an incident',
+        );
+      }
+    }
+  }
+
+  /**
+   * Resolve a Slack user_id → LevelUp user via email lookup. Returns null
+   * when the Slack user has no LevelUp account or email isn't visible.
+   */
+  private async lookupLevelUpUserBySlackId(
+    integration: OrganizationIntegration,
+    slackUserId: string,
+  ): Promise<{ id: string } | null> {
+    const { botToken } = this.integrations.getDecryptedTokens(integration);
+    if (!botToken) return null;
+    const email = await this.lookupSlackUserEmail(botToken, slackUserId);
+    if (!email) return null;
+    return this.prisma.user.findFirst({
+      where: {
+        organizationId: integration.organizationId,
+        email: email.toLowerCase(),
+        deactivatedAt: null,
+      },
+      select: { id: true },
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // Monitored-channels admin endpoints
+  // ---------------------------------------------------------------------
+
+  /**
+   * List public + private channels the bot can see in the workspace.
+   * Used by the admin UI to populate the opt-in checkbox list. Includes
+   * a `monitored` flag so the UI can pre-check the boxes.
+   */
+  async listAvailableChannels(
+    organizationId: string,
+  ): Promise<
+    Array<{ id: string; name: string; isPrivate: boolean; isMember: boolean; monitored: boolean }>
+  > {
+    const integration = await this.integrations.getOrThrow(
+      organizationId,
+      IntegrationProvider.SLACK,
+    );
+    const monitored = this.readMonitoredChannels(integration);
+
+    const { botToken } = this.integrations.getDecryptedTokens(integration);
+    if (!botToken) {
+      throw new BadRequestException('Slack integration is missing a bot token; please reinstall.');
+    }
+    const client = createSlackClient(botToken);
+
+    const collected: SlackConversation[] = [];
+    let cursor: string | undefined;
+    // Defensive cap — Slack workspaces with thousands of channels would
+    // exhaust the request budget; the UI surfaces 1000 max.
+    for (let page = 0; page < 10; page++) {
+      const resp = await client.conversations.list({
+        types: 'public_channel,private_channel',
+        limit: 200,
+        exclude_archived: true,
+        ...(cursor ? { cursor } : {}),
+      });
+      if (!resp.ok) {
+        this.logger.warn(`Slack conversations.list error: ${resp.error ?? 'unknown'}`);
+        break;
+      }
+      for (const c of resp.channels ?? []) collected.push(c);
+      cursor = resp.response_metadata?.next_cursor;
+      if (!cursor) break;
+    }
+
+    return collected.map((c) => ({
+      id: c.id,
+      name: c.name ?? c.id,
+      isPrivate: Boolean(c.is_private),
+      isMember: Boolean(c.is_member),
+      monitored: monitored.has(c.id),
+    }));
+  }
+
+  async setMonitoredChannels(
+    organizationId: string,
+    actorId: string,
+    channelIds: string[],
+  ): Promise<{ monitoredChannels: string[] }> {
+    const integration = await this.integrations.getOrThrow(
+      organizationId,
+      IntegrationProvider.SLACK,
+    );
+
+    // Replace, don't merge — admin sends the full desired list.
+    const next = Array.from(new Set(channelIds));
+    const previous = Array.from(this.readMonitoredChannels(integration));
+    const meta = (integration.metadata as Record<string, unknown> | null) ?? {};
+    const nextMeta: Record<string, unknown> = { ...meta, monitoredChannels: next };
+
+    await this.prisma.organizationIntegration.update({
+      where: { id: integration.id },
+      data: { metadata: nextMeta as Prisma.InputJsonValue },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        organizationId,
+        actorId,
+        action: 'slack.monitored_channels_updated',
+        targetType: 'OrganizationIntegration',
+        targetId: integration.id,
+        metadata: {
+          provider: 'SLACK',
+          previousCount: previous.length,
+          nextCount: next.length,
+          added: next.filter((c) => !previous.includes(c)),
+          removed: previous.filter((c) => !next.includes(c)),
+        } as Prisma.InputJsonValue,
+      },
+    });
+
+    return { monitoredChannels: next };
+  }
+
+  async getMonitoredChannels(organizationId: string): Promise<{
+    monitoredChannels: string[];
+    consentVersion: string | null;
+  }> {
+    const integration = await this.integrations.findActive(
+      organizationId,
+      IntegrationProvider.SLACK,
+    );
+    if (!integration) {
+      return { monitoredChannels: [], consentVersion: null };
+    }
+    const meta = (integration.metadata as Record<string, unknown> | null) ?? {};
+    const consent =
+      typeof meta['consentVersion'] === 'string' ? (meta['consentVersion'] as string) : null;
+    return {
+      monitoredChannels: Array.from(this.readMonitoredChannels(integration)),
+      consentVersion: consent,
+    };
+  }
+
+  async recordConsent(
+    organizationId: string,
+    actorId: string,
+    consentVersion: string,
+  ): Promise<{ consentVersion: string }> {
+    const integration = await this.integrations.getOrThrow(
+      organizationId,
+      IntegrationProvider.SLACK,
+    );
+    const meta = (integration.metadata as Record<string, unknown> | null) ?? {};
+    const nextMeta: Record<string, unknown> = {
+      ...meta,
+      consentVersion,
+      consentedAt: new Date().toISOString(),
+      consentedBy: actorId,
+    };
+    await this.prisma.organizationIntegration.update({
+      where: { id: integration.id },
+      data: { metadata: nextMeta as Prisma.InputJsonValue },
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        organizationId,
+        actorId,
+        action: 'slack.scanner_consent_accepted',
+        targetType: 'OrganizationIntegration',
+        targetId: integration.id,
+        metadata: { provider: 'SLACK', consentVersion } as Prisma.InputJsonValue,
+      },
+    });
+    return { consentVersion };
   }
 }

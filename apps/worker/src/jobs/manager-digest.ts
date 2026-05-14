@@ -26,6 +26,12 @@ import {
   type ManagerDigestPayload,
 } from '@levelup/integrations-slack';
 import { logger } from '../logger.js';
+import { composeNarrative } from '../manager-digest/narrative-composer.js';
+import {
+  collectStats,
+  readDigestPreference,
+  shouldRunThisWeek,
+} from '../manager-digest/stats-collector.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -218,6 +224,21 @@ export async function managerDigestHandler(
     for (const manager of batch) {
       try {
         // -------------------------------------------------------------------
+        // Per-org cadence + opt-out check.
+        // Skip the manager entirely if the org has disabled digests or the
+        // biweekly cadence isn't due this week. Audit nothing — silent skip.
+        // -------------------------------------------------------------------
+        const pref = await readDigestPreference(manager.organizationId);
+        if (!shouldRunThisWeek(pref, periodStart)) {
+          log.info('manager-digest-cron: skipping manager (opt-out or biweekly off-week)', {
+            managerId: manager.id,
+            enabled: pref.enabled,
+            cadence: pref.cadence,
+          });
+          continue;
+        }
+
+        // -------------------------------------------------------------------
         // Resolve the team scope
         // -------------------------------------------------------------------
         const teamQuery =
@@ -284,7 +305,31 @@ export async function managerDigestHandler(
         ]);
 
         // -------------------------------------------------------------------
-        // Enqueue send-email
+        // Compose the weekly narrative (prose). The composer is stub-safe —
+        // when OPENAI_API_KEY is a PLACEHOLDER_ value it generates
+        // deterministic prose locally. Any failure also degrades to the
+        // deterministic fallback.
+        // -------------------------------------------------------------------
+        const prevPeriodEnd = new Date(periodStart.getTime() - 1);
+        const prevPeriodStart = new Date(prevPeriodEnd.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const stats = await collectStats({
+          organizationId: manager.organizationId,
+          managerName: manager.name,
+          managerId: manager.id,
+          orgName: manager.organization.name,
+          periodLabel,
+          weekOf: periodStart.toISOString().slice(0, 10),
+          periodStart,
+          periodEnd,
+          prevPeriodStart,
+          prevPeriodEnd,
+          teamUserIds,
+        });
+        const narrative = await composeNarrative(stats);
+
+        // -------------------------------------------------------------------
+        // Enqueue send-email — narrative replaces the body; the existing
+        // template appends the "Detailed numbers below" block automatically.
         // -------------------------------------------------------------------
         await enqueueEmail({
           to: manager.email,
@@ -298,6 +343,11 @@ export async function managerDigestHandler(
             riskFlags,
             periodLabel,
             organizationId: manager.organizationId,
+            narrative: {
+              subject: narrative.subject,
+              html: narrative.html,
+              text: narrative.body,
+            },
           },
         });
 
@@ -346,12 +396,27 @@ export async function managerDigestHandler(
                   completedLearners,
                   riskFlags,
                 };
-                const blocks = buildDigestBlocks(digestPayload);
+                // Prepend a narrative section block to the existing structured
+                // digest blocks. The narrative is the lead; the numbers grid
+                // serves as the "Detailed numbers" appendix.
+                const baseBlocks = buildDigestBlocks(digestPayload);
+                const narrativeText =
+                  narrative.body.length > 2900
+                    ? `${narrative.body.slice(0, 2899)}…`
+                    : narrative.body;
+                const blocks = [
+                  {
+                    type: 'section' as const,
+                    text: { type: 'mrkdwn' as const, text: narrativeText },
+                  },
+                  { type: 'divider' as const },
+                  ...baseBlocks,
+                ];
 
                 await client.chat.postMessage({
                   channel: openResp.channel.id,
                   blocks,
-                  text: `Weekly LevelUp digest for ${manager.organization.name} — ${periodLabel}`,
+                  text: narrative.subject,
                 });
 
                 await prisma.auditLog.create({

@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiDelete } from './client';
+import { apiGet, apiPost, apiDelete, apiPatch } from './client';
 import type {
   DlqRow,
   DlqRetryResponse,
@@ -41,6 +41,28 @@ export async function listAudit(params?: Partial<AuditListParams>): Promise<Audi
 
 export async function listAuditActions(): Promise<string[]> {
   return apiGet<string[]>('/admin/ops/audit/actions');
+}
+
+// ---------------------------------------------------------------------------
+// Manager-digest settings (org-level)
+// ---------------------------------------------------------------------------
+
+export interface ManagerDigestSettings {
+  enabled: boolean;
+  cadence: 'weekly' | 'biweekly';
+}
+
+export async function getManagerDigestSettings(): Promise<ManagerDigestSettings> {
+  return apiGet<ManagerDigestSettings>('/admin/org/manager-digest-settings');
+}
+
+export async function updateManagerDigestSettings(
+  input: ManagerDigestSettings,
+): Promise<ManagerDigestSettings> {
+  return apiPatch<ManagerDigestSettings, ManagerDigestSettings>(
+    '/admin/org/manager-digest-settings',
+    input,
+  );
 }
 
 /**

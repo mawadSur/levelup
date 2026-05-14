@@ -36,3 +36,8 @@ export * as insights from './insights';
 export * as anomaly from './anomaly';
 export * as integrations from './integrations';
 export * as governance from './governance';
+export * as benchmarks from './benchmarks';
+export * as nudges from './nudges';
+export * as skills from './skills';
+export * as studyPlan from './study-plan';
+export * as incidents from './incidents';

@@ -24,6 +24,10 @@ export type EventName =
   | 'coach_invoked'
   | 'coach_sensitive_data_detected'
   | 'coach_prompt_fixed'
+  | 'coach_nudge.generated'
+  | 'coach_nudge.shown'
+  | 'coach_nudge.dismissed'
+  | 'coach_nudge.acted_on'
   | 'prompt_saved'
   | 'prompt_cloned'
   | 'prompt_shared'
@@ -60,26 +64,34 @@ export type EventProps<E extends EventName> = E extends 'lesson_completed'
             tokensUsed: number;
             modelUsed: string;
           }
-        : E extends 'prompt_saved'
+        : E extends 'coach_nudge.generated'
           ? BaseEventProps & {
-              promptId: string;
-              category: string;
-              isShared: boolean;
-              departmentId: string | null;
+              nudgeId: string;
+              kind: string;
+              templateProvided: boolean;
             }
-          : E extends 'prompt_cloned'
-            ? BaseEventProps & {
-                originalPromptId: string;
-                cloningUserId: string;
-              }
-            : E extends 'checkout_started'
-              ? BaseEventProps & { plan: 'STARTER' | 'GROWTH' | 'ENTERPRISE' }
-              : E extends 'assessment_submitted'
+          : E extends 'coach_nudge.shown' | 'coach_nudge.dismissed' | 'coach_nudge.acted_on'
+            ? BaseEventProps & { nudgeId: string; kind: string }
+            : E extends 'prompt_saved'
+              ? BaseEventProps & {
+                  promptId: string;
+                  category: string;
+                  isShared: boolean;
+                  departmentId: string | null;
+                }
+              : E extends 'prompt_cloned'
                 ? BaseEventProps & {
-                    assessmentId: string;
-                    type: string;
-                    score: number;
-                    total: number;
-                    recommendedLevel: string;
+                    originalPromptId: string;
+                    cloningUserId: string;
                   }
-                : BaseEventProps & Record<string, unknown>;
+                : E extends 'checkout_started'
+                  ? BaseEventProps & { plan: 'STARTER' | 'GROWTH' | 'ENTERPRISE' }
+                  : E extends 'assessment_submitted'
+                    ? BaseEventProps & {
+                        assessmentId: string;
+                        type: string;
+                        score: number;
+                        total: number;
+                        recommendedLevel: string;
+                      }
+                    : BaseEventProps & Record<string, unknown>;

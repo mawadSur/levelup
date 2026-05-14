@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { PrismaClient, Role, AiLevel, Plan } from '@prisma/client';
 import { seedScenarios } from './seed-scenarios';
 import { seedLessonImages } from './seed-lesson-images';
+import { seedSkills } from './seed-skills';
 
 const prisma = new PrismaClient();
 
@@ -3229,6 +3230,7 @@ async function main() {
 
   const scenariosResult = await seedScenarios(prisma, org.id);
   const lessonImagesResult = await seedLessonImages(prisma);
+  const skillsResult = await seedSkills(prisma, org.id);
 
   // ── Global assessment-item bank ───────────────────────────────────────────
   // Items are global (organizationId = null) so every tenant samples from the
@@ -3316,6 +3318,7 @@ async function main() {
     labs: { upserted: labsUpserted, labLessons: labLessonsUpserted },
     scenarios: scenariosResult,
     lessonImages: lessonImagesResult,
+    skills: skillsResult,
     reconciledUsers,
   });
 }

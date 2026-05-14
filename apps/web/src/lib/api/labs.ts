@@ -1,5 +1,6 @@
 import { apiGet, apiPost } from './client';
 import type {
+  LabAttemptHistoryItem,
   LabAttemptRequest,
   LabAttemptResponse,
   LabAttemptSummary,
@@ -7,9 +8,11 @@ import type {
   LabRunRequest,
   LabRunResponse,
   LabSummary,
+  StuckLearner,
 } from '@levelup/types';
 
 export type {
+  LabAttemptHistoryItem,
   LabAttemptRequest,
   LabAttemptResponse,
   LabAttemptSummary,
@@ -20,6 +23,7 @@ export type {
   LabSummary,
   LabTranscript,
   LabTranscriptTurn,
+  StuckLearner,
 } from '@levelup/types';
 
 export function listLabs(): Promise<LabSummary[]> {
@@ -48,4 +52,12 @@ export function listMyLabAttempts(slug?: string): Promise<LabAttemptSummary[]> {
   return apiGet<LabAttemptSummary[]>('/labs/me/attempts', {
     params: slug ? { slug } : {},
   });
+}
+
+export function listMyAttempts(slug: string): Promise<LabAttemptHistoryItem[]> {
+  return apiGet<LabAttemptHistoryItem[]>(`/labs/${encodeURIComponent(slug)}/me/attempts`);
+}
+
+export function listStuckLearners(slug: string): Promise<StuckLearner[]> {
+  return apiGet<StuckLearner[]>(`/admin/labs/${encodeURIComponent(slug)}/stuck-learners`);
 }

@@ -32,6 +32,11 @@ import { AnomalyModule } from './modules/anomaly';
 import { IntegrationsModule } from './modules/integrations';
 import { GovernanceModule } from './modules/governance';
 import { LabsModule } from './modules/labs';
+import { IncidentsModule } from './modules/incidents';
+import { SkillsModule } from './modules/skills';
+import { NudgesModule } from './modules/nudges';
+import { BenchmarksModule } from './modules/benchmarks';
+import { StudyPlanModule } from './modules/study-plan';
 
 @Module({
   imports: [
@@ -57,6 +62,11 @@ import { LabsModule } from './modules/labs';
     CertificatesModule,
     GameModule,
     LabsModule,
+    IncidentsModule,
+    SkillsModule,
+    NudgesModule,
+    BenchmarksModule,
+    StudyPlanModule,
     OnboardingModule,
     PrivacyModule,
     SearchModule,

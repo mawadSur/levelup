@@ -2,18 +2,25 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Skeleton } from '@levelup/ui';
 import { reports } from '@/lib/api';
+import { ssrGet } from '@/lib/api/server-fetch';
+import type { TeamSkillHeatmap } from '@/lib/api/skills';
 import { ReportsPageClient } from './reports-page-client';
 
 export const metadata: Metadata = {
   title: 'Reports — Admin',
 };
 
+const EMPTY_TEAM_HEATMAP: TeamSkillHeatmap = { users: [], skills: [], cells: [] };
+
 export default async function AdminReportsPage() {
-  const [completionReport, heatmapCells, riskFlags] = await Promise.all([
+  const [completionReport, heatmapCells, riskFlags, skillTeamResult] = await Promise.all([
     reports.getCompletionReport(),
     reports.getDeptHeatmap(),
     reports.getRiskFlags(),
+    ssrGet<TeamSkillHeatmap>('/admin/skills/team').catch(() => null),
   ]);
+
+  const skillTeam = skillTeamResult ?? EMPTY_TEAM_HEATMAP;
 
   return (
     <Suspense fallback={<ReportsPageSkeleton />}>
@@ -21,6 +28,7 @@ export default async function AdminReportsPage() {
         completionReport={completionReport}
         heatmapCells={heatmapCells}
         riskFlags={riskFlags}
+        skillTeam={skillTeam}
       />
     </Suspense>
   );

@@ -8,7 +8,17 @@
 
 export { encrypt, decrypt, _resetEncryptionForTests } from './encryption';
 
-export { createSlackClient, type WebClient } from './client';
+export { createSlackClient, type WebClient, type SlackConversation } from './client';
+
+export { scanIncomingMessage, type SlackScanResult, type SlackScanSeverity } from './scanner';
+
+export {
+  handleSlackMessageEvent,
+  buildWarningText,
+  type SlackMessageEvent,
+  type SlackEventAction,
+  type HandleMessageOptions,
+} from './events-handler';
 
 export {
   getInstallUrl,

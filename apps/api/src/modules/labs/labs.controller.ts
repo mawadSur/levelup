@@ -17,11 +17,13 @@ import {
   type LabUpdateSpec,
 } from './dto/lab-request.dto';
 import {
+  LabAttemptHistoryItem,
   LabAttemptResponse,
   LabAttemptSummary,
   LabDetail,
   LabRunResponse,
   LabSummary,
+  StuckLearner,
 } from '@levelup/types';
 
 @ApiTags('labs')
@@ -44,6 +46,14 @@ export class LabsController {
     @Query('slug') slug?: string,
   ): Promise<LabAttemptSummary[]> {
     return this.labsService.getMyAttempts(user.userId, slug);
+  }
+
+  @Get('labs/:slug/me/attempts')
+  myAttemptHistory(
+    @CurrentUser() user: SessionPayload,
+    @Param('slug') slug: string,
+  ): Promise<LabAttemptHistoryItem[]> {
+    return this.labsService.getMyLabAttemptHistory(user.userId, user.organizationId, slug);
   }
 
   @Get('labs/:slug')
@@ -84,6 +94,15 @@ export class LabsController {
   // Admin CRUD — gated by RoleGuard (registered globally). @Roles('ADMIN')
   // restricts to admins; MANAGERs cannot author labs.
   // ---------------------------------------------------------------------------
+
+  @Get('admin/labs/:slug/stuck-learners')
+  @Roles('MANAGER')
+  stuckLearners(
+    @CurrentUser() user: SessionPayload,
+    @Param('slug') slug: string,
+  ): Promise<StuckLearner[]> {
+    return this.labsService.getStuckLearners(slug, user.organizationId);
+  }
 
   @Post('admin/labs')
   @Roles('ADMIN')
