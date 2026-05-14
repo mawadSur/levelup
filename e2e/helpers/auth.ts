@@ -47,12 +47,25 @@ export async function signInViaDevBypass(context: BrowserContext, email: string)
 
   // Inject the stub cookie into the browser context so every page opened from
   // this context has the auth cookie on first navigation.
+  //
+  // We register the cookie twice — once scoped to the web origin (so SSR can
+  // read it via next/headers cookies()) and once scoped to the API origin (so
+  // direct browser→API calls send it too). Using `url` is more reliable than
+  // `domain: 'localhost'`, which behaves inconsistently across Playwright
+  // versions for bare-host localhost cookies.
   await context.addCookies([
     {
       name: STUB_COOKIE_NAME,
       value: accessToken,
-      domain: 'localhost',
-      path: '/',
+      url: WEB_BASE,
+      httpOnly: false,
+      secure: false,
+      sameSite: 'Lax',
+    },
+    {
+      name: STUB_COOKIE_NAME,
+      value: accessToken,
+      url: API_BASE,
       httpOnly: false,
       secure: false,
       sameSite: 'Lax',
