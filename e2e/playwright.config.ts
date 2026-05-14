@@ -36,10 +36,10 @@ const STUB_ENV = {
 
 export default defineConfig({
   testDir: './specs',
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : 1,
+  workers: process.env.CI ? 2 : 4,
   reporter: [['list'], ['html', { open: 'never' }]],
   globalSetup: './global-setup.ts',
   use: {
