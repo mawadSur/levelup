@@ -39,7 +39,28 @@ const API_PREFIX = `${API_BASE}/api`;
 // should set the Authorization header themselves before calling.
 
 async function getBearerHeader(): Promise<string | null> {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') {
+    // Server-side: read the access token from request cookies. The dynamic
+    // import keeps `next/headers` out of the browser bundle. Server pages
+    // that call apiFetch directly (instead of ssrFetch) still get auth.
+    try {
+      const { cookies } = await import('next/headers');
+      const store = await cookies();
+      const stub = store.get('sb-stub-auth-token')?.value;
+      if (typeof stub === 'string' && stub.length > 0) return `Bearer ${stub}`;
+      const supabaseCookie = store
+        .getAll()
+        .find((c) => c.name.startsWith('sb-') && c.name.endsWith('-auth-token'));
+      if (supabaseCookie?.value) {
+        const token = extractAccessTokenFromSupabaseCookie(supabaseCookie.value);
+        if (token !== null) return `Bearer ${token}`;
+      }
+    } catch {
+      // next/headers throws when called outside a request scope (e.g. during
+      // build static generation) — fall through to no-auth.
+    }
+    return null;
+  }
 
   // Stub-mode dev-bypass stashes the access token in localStorage.
   try {
@@ -60,6 +81,28 @@ async function getBearerHeader(): Promise<string | null> {
     if (typeof token === 'string' && token.length > 0) return `Bearer ${token}`;
   } catch {
     // Ignore — request will go out unauthenticated and the API will 401.
+  }
+  return null;
+}
+
+function extractAccessTokenFromSupabaseCookie(raw: string): string | null {
+  let value = raw;
+  if (value.startsWith('base64-')) {
+    try {
+      value = Buffer.from(value.slice('base64-'.length), 'base64').toString('utf8');
+    } catch {
+      return null;
+    }
+  }
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (Array.isArray(parsed) && typeof parsed[0] === 'string') return parsed[0];
+    if (typeof parsed === 'object' && parsed !== null && 'access_token' in parsed) {
+      const at = (parsed as Record<string, unknown>)['access_token'];
+      if (typeof at === 'string') return at;
+    }
+  } catch {
+    if (value.split('.').length === 3) return value;
   }
   return null;
 }
