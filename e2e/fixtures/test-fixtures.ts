@@ -2,18 +2,21 @@
  * Playwright test fixtures for LevelUp AI Academy e2e suite.
  *
  * Extends the base `test` object with:
- *   - adminPage     — a Page already signed in as admin@demo.test
- *   - employeePage  — a Page already signed in as eve@demo.test
- *   - adminCookie   — raw LEVELUP_SESSION cookie value for the admin session
- *   - employeeCookie — raw LEVELUP_SESSION cookie value for the employee session
+ *   - adminPage      — a Page already authenticated as admin@demo.test
+ *   - employeePage   — a Page already authenticated as eve@demo.test
+ *   - adminCookie    — raw sb-stub-auth-token value for the admin session
+ *   - employeeCookie — raw sb-stub-auth-token value for the employee session
  *
- * All fixtures use the seeded demo users, so no per-test org/user creation is
- * required. The DB must be seeded (`pnpm db:seed`) before running tests.
+ * Authentication is done by injecting `sb-stub-auth-token` directly into the
+ * browser context via the API dev-bypass endpoint — no UI sign-in flow needed.
+ * The DB must be seeded (`pnpm db:seed`) before running tests.
  */
 
 import { test as baseTest, expect } from '@playwright/test';
 import type { Page, BrowserContext } from '@playwright/test';
 import { signInViaDevBypass, getSessionCookie, SEEDED_USERS } from '../helpers/auth';
+
+const WEB_BASE = process.env.E2E_WEB_URL ?? 'http://localhost:3000';
 
 // ---------------------------------------------------------------------------
 // Fixture type definitions
@@ -24,9 +27,9 @@ interface LevelUpFixtures {
   adminPage: Page;
   /** Page signed in as the demo employee (eve@demo.test). */
   employeePage: Page;
-  /** Raw LEVELUP_SESSION cookie for the admin session. */
+  /** Raw sb-stub-auth-token cookie for the admin session. */
   adminCookie: string;
-  /** Raw LEVELUP_SESSION cookie for the employee session. */
+  /** Raw sb-stub-auth-token cookie for the employee session. */
   employeeCookie: string;
   /** Browser context used for the admin session (for cookie extraction). */
   adminContext: BrowserContext;
@@ -52,26 +55,29 @@ export const test = baseTest.extend<LevelUpFixtures>({
   },
 
   adminPage: async ({ adminContext }, use) => {
+    // Seed the auth cookie into the context, then open the target page.
+    await signInViaDevBypass(adminContext, SEEDED_USERS.admin);
     const page = await adminContext.newPage();
-    await signInViaDevBypass(page, SEEDED_USERS.admin);
+    await page.goto(`${WEB_BASE}/admin`, { waitUntil: 'networkidle' });
     await use(page);
     await page.close();
   },
 
   employeePage: async ({ employeeContext }, use) => {
+    await signInViaDevBypass(employeeContext, SEEDED_USERS.employee);
     const page = await employeeContext.newPage();
-    await signInViaDevBypass(page, SEEDED_USERS.employee);
+    await page.goto(`${WEB_BASE}/learn`, { waitUntil: 'networkidle' });
     await use(page);
     await page.close();
   },
 
   adminCookie: async ({ adminContext, adminPage: _ }, use) => {
-    // adminPage fixture already signed in — extract cookie from the context.
+    // adminPage fixture already authenticated — extract cookie from the context.
     const cookie = await getSessionCookie(adminContext);
     if (!cookie) {
       throw new Error(
-        '[fixture] adminCookie: LEVELUP_SESSION not found after sign-in. ' +
-          'Is stub mode active? (WORKOS_API_KEY should start with PLACEHOLDER_)',
+        '[fixture] adminCookie: sb-stub-auth-token not found after sign-in. ' +
+          'Is stub mode active? (SUPABASE_URL/SUPABASE_ANON_KEY should be PLACEHOLDER_ or missing)',
       );
     }
     await use(cookie);
@@ -80,7 +86,7 @@ export const test = baseTest.extend<LevelUpFixtures>({
   employeeCookie: async ({ employeeContext, employeePage: _ }, use) => {
     const cookie = await getSessionCookie(employeeContext);
     if (!cookie) {
-      throw new Error('[fixture] employeeCookie: LEVELUP_SESSION not found after sign-in.');
+      throw new Error('[fixture] employeeCookie: sb-stub-auth-token not found after sign-in.');
     }
     await use(cookie);
   },

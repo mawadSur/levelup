@@ -1,20 +1,21 @@
 /**
  * Auth helpers for LevelUp AI Academy e2e tests.
  *
- * In stub mode (WORKOS_API_KEY=PLACEHOLDER_*), the API exposes a
- * GET /api/auth/dev-bypass?email=&state= endpoint that:
- *   1. Looks up the user by email (must already exist in the DB).
- *   2. Builds a fake session JWT and sets the LEVELUP_SESSION cookie.
- *   3. Redirects to /admin (ADMIN) or /learn (EMPLOYEE/MANAGER).
+ * In stub mode (no Supabase configured) the API exposes:
+ *   GET /api/auth/dev-bypass?email=...
+ * which returns { accessToken, redirectTo } JSON.
  *
- * These helpers navigate a Playwright Page through that redirect chain
- * programmatically so every spec can sign in with a single call.
+ * We inject `sb-stub-auth-token` cookie directly into the browser context so
+ * both the web SSR layer and the API guard can authenticate the request without
+ * going through the sign-in page.
  */
 
 import type { BrowserContext, Page } from '@playwright/test';
 
 const API_BASE = process.env.E2E_API_URL ?? 'http://localhost:4000';
 const WEB_BASE = process.env.E2E_WEB_URL ?? 'http://localhost:3000';
+
+export const STUB_COOKIE_NAME = 'sb-stub-auth-token';
 
 // ---------------------------------------------------------------------------
 // Seeded test users (from packages/db/prisma/seed.ts)
@@ -29,35 +30,48 @@ export const SEEDED_USERS = {
 // ---------------------------------------------------------------------------
 // signInViaDevBypass
 //
-// Navigates to the dev-bypass URL and waits for the final redirect to resolve.
-// The cookie is set by the API response and persisted in the browser context.
-// Returns the page, which will be at /admin (admin) or /learn (others).
+// Fetches a stub access token from the API and injects it into the browser
+// context as `sb-stub-auth-token`. The SSR layer reads this cookie to
+// authenticate server-rendered pages without needing a Supabase session.
+//
+// Accepts a BrowserContext; returns the first page in that context (creating
+// one if needed). The page is NOT yet navigated — callers control where to go.
 // ---------------------------------------------------------------------------
-export async function signInViaDevBypass(page: Page, email: string): Promise<Page> {
-  // Build the dev-bypass URL exactly as the sign-in form does:
-  //   GET /api/auth/sign-in?provider=authkit  → returns { url: "...dev-bypass?..." }
-  //   The form injects ?email= before following the URL.
-  //
-  // For tests we can hit dev-bypass directly; the API redirects to
-  // /admin or /learn after setting the cookie.
-  const devBypassUrl = `${API_BASE}/api/auth/dev-bypass` + `?email=${encodeURIComponent(email)}`;
+export async function signInViaDevBypass(context: BrowserContext, email: string): Promise<Page> {
+  const devBypassUrl = `${API_BASE}/api/auth/dev-bypass?email=${encodeURIComponent(email)}`;
+  const res = await fetch(devBypassUrl);
+  if (!res.ok) {
+    throw new Error(`dev-bypass failed for ${email}: ${res.status} ${res.statusText}`);
+  }
+  const { accessToken } = (await res.json()) as { accessToken: string; redirectTo: string };
 
-  // Navigate and wait for the final Next.js page to stabilise.
-  await page.goto(devBypassUrl, { waitUntil: 'networkidle' });
+  // Inject the stub cookie into the browser context so every page opened from
+  // this context has the auth cookie on first navigation.
+  await context.addCookies([
+    {
+      name: STUB_COOKIE_NAME,
+      value: accessToken,
+      domain: 'localhost',
+      path: '/',
+      httpOnly: false,
+      secure: false,
+      sameSite: 'Lax',
+    },
+  ]);
 
-  return page;
+  const pages = context.pages();
+  return pages.length > 0 ? (pages[0] as Page) : await context.newPage();
 }
 
 // ---------------------------------------------------------------------------
 // getSessionCookie
 //
-// Extracts the raw value of the LEVELUP_SESSION cookie from the browser
-// context after a successful sign-in. Useful for direct API calls in
-// afterEach cleanup hooks.
+// Returns the raw value of the sb-stub-auth-token cookie from the browser
+// context after a successful sign-in.
 // ---------------------------------------------------------------------------
 export async function getSessionCookie(context: BrowserContext): Promise<string | null> {
-  const cookies = await context.cookies();
-  const sessionCookie = cookies.find((c) => c.name === 'LEVELUP_SESSION');
+  const allCookies = await context.cookies();
+  const sessionCookie = allCookies.find((c) => c.name === STUB_COOKIE_NAME);
   return sessionCookie?.value ?? null;
 }
 
@@ -66,19 +80,18 @@ export async function getSessionCookie(context: BrowserContext): Promise<string 
 //
 // Convenience wrappers over the seeded demo users.
 // ---------------------------------------------------------------------------
-export async function signInAsAdmin(page: Page): Promise<Page> {
-  return signInViaDevBypass(page, SEEDED_USERS.admin);
+export async function signInAsAdmin(context: BrowserContext): Promise<Page> {
+  return signInViaDevBypass(context, SEEDED_USERS.admin);
 }
 
-export async function signInAsEmployee(page: Page): Promise<Page> {
-  return signInViaDevBypass(page, SEEDED_USERS.employee);
+export async function signInAsEmployee(context: BrowserContext): Promise<Page> {
+  return signInViaDevBypass(context, SEEDED_USERS.employee);
 }
 
 // ---------------------------------------------------------------------------
 // expectSignedIn
 //
-// Asserts that the current page URL indicates a successful login:
-// either /admin (for admins) or /learn (for employees/managers).
+// Asserts that the current page URL indicates a successful login.
 // ---------------------------------------------------------------------------
 export async function expectSignedIn(page: Page): Promise<void> {
   await page.waitForURL(
@@ -93,9 +106,7 @@ export async function expectSignedIn(page: Page): Promise<void> {
 // ---------------------------------------------------------------------------
 // navigateToWebPage
 //
-// After signing in via the API-level dev-bypass URL the browser has the
-// LEVELUP_SESSION cookie. Use this helper to navigate to any web page and
-// assert it loads (status 200 range).
+// Navigate to any web page from within a context that already has auth cookies.
 // ---------------------------------------------------------------------------
 export async function navigateToWebPage(page: Page, path: string): Promise<void> {
   await page.goto(`${WEB_BASE}${path}`, { waitUntil: 'networkidle' });

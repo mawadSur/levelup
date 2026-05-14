@@ -460,12 +460,12 @@ test.describe('Prompt library', () => {
     // The seeded employee fixture is role EMPLOYEE. Managers are allowed to
     // share prompts to the org. We sign in fresh as the manager here.
     const ctx = await browser.newContext();
-    const page = await ctx.newPage();
     let managerCookie = '';
     try {
-      await signInViaDevBypass(page, SEEDED_USERS.manager);
+      await signInViaDevBypass(ctx, SEEDED_USERS.manager);
       const cookies = await ctx.cookies();
-      managerCookie = cookies.find((c) => c.name === 'LEVELUP_SESSION')?.value ?? '';
+      managerCookie = cookies.find((c) => c.name === 'sb-stub-auth-token')?.value ?? '';
+      const page = await ctx.newPage();
 
       await page.goto('/prompts');
 
@@ -610,9 +610,8 @@ test.afterAll(async ({ browser }) => {
   for (const email of [SEEDED_USERS.manager, SEEDED_USERS.employee] as const) {
     const ctx = await browser.newContext();
     try {
-      const page = await ctx.newPage();
-      await signInViaDevBypass(page, email);
-      const cookie = (await ctx.cookies()).find((c) => c.name === 'LEVELUP_SESSION')?.value;
+      await signInViaDevBypass(ctx, email);
+      const cookie = (await ctx.cookies()).find((c) => c.name === 'sb-stub-auth-token')?.value;
       if (cookie) await deleteE2EPrompts(cookie);
     } catch {
       // ignore — cleanup is best-effort.

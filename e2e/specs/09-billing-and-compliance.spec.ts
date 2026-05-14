@@ -180,7 +180,7 @@ test.describe('Certificates: auto-issue + verification', () => {
     const ready = await pollFor<boolean>(
       async () => {
         const res = await fetch(`${API_BASE}/api/certificates/${cert!.id}/file`, {
-          headers: { Cookie: `LEVELUP_SESSION=${employeeCookie}` },
+          headers: { Cookie: `sb-stub-auth-token=${employeeCookie}` },
         });
         if (res.status === 200) {
           const ct = res.headers.get('content-type') ?? '';
@@ -313,7 +313,7 @@ test.describe('GDPR — data export', () => {
 
     // Hit the download endpoint and verify content-type.
     const res = await fetch(`${API_BASE}/api/privacy/exports/${ready!.id}/download`, {
-      headers: { Cookie: `LEVELUP_SESSION=${employeeCookie}` },
+      headers: { Cookie: `sb-stub-auth-token=${employeeCookie}` },
     });
     expect(res.status).toBe(200);
     const ct = res.headers.get('content-type') ?? '';

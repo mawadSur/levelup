@@ -151,6 +151,7 @@ export function KapitusSignInForm({ redirect, initialEmail }: KapitusSignInFormP
         throw new Error('Dev-bypass request failed');
       }
       const data = (await res.json()) as { accessToken: string; redirectTo: string };
+      document.cookie = `sb-stub-auth-token=${data.accessToken}; path=/; max-age=28800; samesite=lax`;
       window.localStorage.setItem('levelup_dev_access_token', data.accessToken);
       router.push(redirect ?? data.redirectTo);
       router.refresh();

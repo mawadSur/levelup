@@ -2,11 +2,14 @@
  * Low-level helper to call /api endpoints during test setup and teardown.
  *
  * All functions that need an authenticated session accept a `sessionCookie`
- * string (the value of the LEVELUP_SESSION cookie) so that tests can perform
- * privileged operations without a browser.
+ * string (the value of the sb-stub-auth-token cookie) so that tests can
+ * perform privileged operations without a browser.
  */
 
 const API_BASE = process.env.E2E_API_URL ?? 'http://localhost:4000';
+
+// Cookie name must match the one set by handleStubSignIn and read by auth.guard.
+const SESSION_COOKIE_NAME = 'sb-stub-auth-token';
 
 // ---------------------------------------------------------------------------
 // Generic fetch helper
@@ -27,7 +30,7 @@ export async function apiCall<T = unknown>(
     'Content-Type': 'application/json',
   };
   if (sessionCookie) {
-    headers['Cookie'] = `LEVELUP_SESSION=${sessionCookie}`;
+    headers['Cookie'] = `${SESSION_COOKIE_NAME}=${sessionCookie}`;
   }
 
   const res = await fetch(`${API_BASE}/api${path}`, {

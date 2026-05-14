@@ -16,14 +16,32 @@ export function isSupabaseConfigured(): boolean {
   );
 }
 
+/** Minimal stub that callers can use when Supabase is not configured. */
+const supabaseStub = {
+  auth: {
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+  },
+} as const;
+
+type SupabaseStub = typeof supabaseStub;
+type SupabaseServerClient = Awaited<ReturnType<typeof createServerClient>>;
+
 /**
  * Returns a Supabase client bound to the current request's cookie jar. The
  * server side reads/writes session cookies through the Next.js `cookies()`
  * helper; @supabase/ssr handles refresh-token rotation on its own.
  *
+ * In stub mode (PLACEHOLDER_ URLs) returns a no-op stub so callers don't
+ * throw on invalid Supabase URLs.
+ *
  * Use from server components and route handlers.
  */
-export async function getSupabaseServerClient() {
+export async function getSupabaseServerClient(): Promise<SupabaseServerClient | SupabaseStub> {
+  if (!isSupabaseConfigured()) {
+    return supabaseStub;
+  }
+
   const cookieStore = await cookies();
 
   return createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

@@ -1,5 +1,8 @@
 import 'server-only';
-import { getSupabaseServerClient } from './supabase/server';
+import { cookies } from 'next/headers';
+import { getSupabaseServerClient, isSupabaseConfigured } from './supabase/server';
+
+const STUB_COOKIE = 'sb-stub-auth-token';
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
@@ -63,14 +66,28 @@ interface MeResponse {
  * Supabase SSR cookie store and forwards it as a Bearer header — the API
  * does not share Supabase's cookie domain, so we cannot rely on cookies
  * propagating directly.
+ *
+ * In stub mode (no Supabase configured) reads the `sb-stub-auth-token` cookie
+ * set by the client-side handleStubSignIn flow, so SSR can authenticate.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
-  const supabase = await getSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  let accessToken: string | undefined;
 
-  const accessToken = session?.access_token;
+  if (!isSupabaseConfigured()) {
+    const cookieStore = await cookies();
+    const stubToken = cookieStore.get(STUB_COOKIE)?.value;
+    if (typeof stubToken !== 'string' || stubToken.length === 0) {
+      return null;
+    }
+    accessToken = stubToken;
+  } else {
+    const supabase = await getSupabaseServerClient();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    accessToken = session?.access_token;
+  }
+
   if (typeof accessToken !== 'string' || accessToken.length === 0) {
     return null;
   }

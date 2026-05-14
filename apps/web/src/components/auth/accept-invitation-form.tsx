@@ -86,6 +86,7 @@ export function AcceptInvitationForm({
       const res = await fetch(url.toString());
       if (!res.ok) throw new Error('Dev-bypass failed');
       const data = (await res.json()) as { accessToken: string };
+      document.cookie = `sb-stub-auth-token=${data.accessToken}; path=/; max-age=28800; samesite=lax`;
       window.localStorage.setItem('levelup_dev_access_token', data.accessToken);
       return null;
     }

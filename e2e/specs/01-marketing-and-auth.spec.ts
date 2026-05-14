@@ -108,13 +108,31 @@ test.describe('/auth/me API endpoint', () => {
 // ---------------------------------------------------------------------------
 
 test.describe('Dev-bypass auth helper', () => {
-  test('signInViaDevBypass navigates to /admin for admin user', async ({ page }) => {
-    await signInViaDevBypass(page, SEEDED_USERS.admin);
-    expect(page.url()).toContain('/admin');
+  test('signInViaDevBypass seeds cookie and /admin loads for admin user', async ({ browser }) => {
+    const ctx = await browser.newContext();
+    try {
+      await signInViaDevBypass(ctx, SEEDED_USERS.admin);
+      const page = await ctx.newPage();
+      await page.goto('/admin', { waitUntil: 'networkidle' });
+      expect(page.url()).toContain('/admin');
+      await page.close();
+    } finally {
+      await ctx.close();
+    }
   });
 
-  test('signInViaDevBypass navigates to /learn for employee user', async ({ page }) => {
-    await signInViaDevBypass(page, SEEDED_USERS.employee);
-    expect(page.url()).toContain('/learn');
+  test('signInViaDevBypass seeds cookie and /learn loads for employee user', async ({
+    browser,
+  }) => {
+    const ctx = await browser.newContext();
+    try {
+      await signInViaDevBypass(ctx, SEEDED_USERS.employee);
+      const page = await ctx.newPage();
+      await page.goto('/learn', { waitUntil: 'networkidle' });
+      expect(page.url()).toContain('/learn');
+      await page.close();
+    } finally {
+      await ctx.close();
+    }
   });
 });

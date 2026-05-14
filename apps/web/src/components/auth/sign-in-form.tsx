@@ -113,6 +113,9 @@ export function SignInForm({ redirect }: SignInFormProps) {
         throw new Error('Dev-bypass request failed');
       }
       const data = (await res.json()) as { accessToken: string; redirectTo: string };
+      // Set an httpOnly-accessible cookie so SSR can read the stub token.
+      document.cookie = `sb-stub-auth-token=${data.accessToken}; path=/; max-age=28800; samesite=lax`;
+      // Keep localStorage for backwards compat with client-side API calls.
       window.localStorage.setItem('levelup_dev_access_token', data.accessToken);
       router.push(redirect ?? data.redirectTo);
       router.refresh();
