@@ -1,10 +1,10 @@
 /**
  * Global setup for LevelUp AI Academy e2e suite.
  *
- * Polls the API and web health endpoints for up to 60 seconds each before
- * running any tests. The webServer config in playwright.config.ts already
- * handles starting the processes; this setup is an extra safety net that
- * throws a clear, human-readable error when either service is down.
+ * Polls the API health endpoint and a web page route for up to 60 seconds each
+ * before running any tests. The web app intentionally has no /api/health route
+ * locally — that path is owned by the Vercel rewrite in production and proxies
+ * to the API. We probe /sign-in (always public, always SSR-able) instead.
  */
 
 const MAX_WAIT_MS = 60_000;
@@ -37,6 +37,6 @@ async function waitForUrl(url: string, label: string): Promise<void> {
 export default async function globalSetup(): Promise<void> {
   await Promise.all([
     waitForUrl('http://localhost:4000/api/health', 'API (NestJS)'),
-    waitForUrl('http://localhost:3000/api/health', 'Web (Next.js)'),
+    waitForUrl('http://localhost:3000/sign-in', 'Web (Next.js)'),
   ]);
 }

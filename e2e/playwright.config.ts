@@ -41,7 +41,7 @@ export default defineConfig({
     },
     {
       command: 'pnpm --filter @levelup/web dev',
-      url: 'http://localhost:3000/api/health',
+      url: 'http://localhost:3000/sign-in',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
       stdout: 'pipe',
