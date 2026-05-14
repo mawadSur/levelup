@@ -55,17 +55,17 @@ export const test = baseTest.extend<LevelUpFixtures>({
   },
 
   adminPage: async ({ adminContext }, use) => {
-    // Seed the auth cookie into the context, then open the target page.
-    await signInViaDevBypass(adminContext, SEEDED_USERS.admin);
-    const page = await adminContext.newPage();
+    // signInViaDevBypass navigates to the dev-stub-cookie route which sets
+    // sb-stub-auth-token via Set-Cookie. The page returned by the helper
+    // already has the cookie; we navigate it to /admin.
+    const page = await signInViaDevBypass(adminContext, SEEDED_USERS.admin);
     await page.goto(`${WEB_BASE}/admin`, { waitUntil: 'networkidle' });
     await use(page);
     await page.close();
   },
 
   employeePage: async ({ employeeContext }, use) => {
-    await signInViaDevBypass(employeeContext, SEEDED_USERS.employee);
-    const page = await employeeContext.newPage();
+    const page = await signInViaDevBypass(employeeContext, SEEDED_USERS.employee);
     await page.goto(`${WEB_BASE}/learn`, { waitUntil: 'networkidle' });
     await use(page);
     await page.close();

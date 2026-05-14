@@ -45,35 +45,19 @@ export async function signInViaDevBypass(context: BrowserContext, email: string)
   }
   const { accessToken } = (await res.json()) as { accessToken: string; redirectTo: string };
 
-  // Inject the stub cookie into the browser context so every page opened from
-  // this context has the auth cookie on first navigation.
-  //
-  // We register the cookie twice — once scoped to the web origin (so SSR can
-  // read it via next/headers cookies()) and once scoped to the API origin (so
-  // direct browser→API calls send it too). Using `url` is more reliable than
-  // `domain: 'localhost'`, which behaves inconsistently across Playwright
-  // versions for bare-host localhost cookies.
-  await context.addCookies([
-    {
-      name: STUB_COOKIE_NAME,
-      value: accessToken,
-      url: WEB_BASE,
-      httpOnly: false,
-      secure: false,
-      sameSite: 'Lax',
-    },
-    {
-      name: STUB_COOKIE_NAME,
-      value: accessToken,
-      url: API_BASE,
-      httpOnly: false,
-      secure: false,
-      sameSite: 'Lax',
-    },
-  ]);
-
-  const pages = context.pages();
-  return pages.length > 0 ? (pages[0] as Page) : await context.newPage();
+  // Set the cookie via a server-issued Set-Cookie response. Playwright's
+  // addCookies() store doesn't reliably translate into outgoing Cookie
+  // headers for localhost across versions, so we go through a tiny web
+  // helper at /api/auth/dev-stub-cookie which writes the cookie via
+  // NextResponse.cookies.set and 302s to /. The browser receives the
+  // Set-Cookie header on a real navigation, scopes it correctly, and
+  // sends it on every subsequent request to localhost:3000.
+  const page = await context.newPage();
+  await page.goto(
+    `${WEB_BASE}/api/auth/dev-stub-cookie?token=${encodeURIComponent(accessToken)}&redirect=/`,
+    { waitUntil: 'load' },
+  );
+  return page;
 }
 
 // ---------------------------------------------------------------------------
