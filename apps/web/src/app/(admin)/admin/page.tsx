@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Users, TrendingUp, Mail, AlertTriangle, FlaskConical } from 'lucide-react';
+import { Users, FlaskConical } from 'lucide-react';
 import { Card, CardContent, MonoLabel, NumberedSection } from '@levelup/ui';
 import { getSessionUser, isDemoOrg } from '@/lib/auth-client';
 import { organizations, reports, invitations } from '@/lib/api';
@@ -114,14 +114,14 @@ export default async function AdminDashboardPage() {
                 title="Active users"
                 value={stats?.totalUsers ?? '—'}
                 sublabel={stats ? `${stats.activeUsers} active in last 30 d` : 'Stats unavailable'}
-                icon={Users}
+                iconName="users"
               />
               <StatCard
                 title="Completion"
                 value={stats ? stats.completionRate : '—'}
                 format="percent"
                 sublabel="Across assigned paths"
-                icon={TrendingUp}
+                iconName="trending-up"
               />
               <StatCard
                 title="Pending enrollments"
@@ -129,7 +129,7 @@ export default async function AdminDashboardPage() {
                 sublabel={
                   pendingInvites.length > 0 ? 'Re-send or revoke from People' : 'All caught up'
                 }
-                icon={Mail}
+                iconName="mail"
                 cta={
                   pendingInvites.length > 0 ? (
                     <Link
@@ -145,7 +145,7 @@ export default async function AdminDashboardPage() {
                 title="Risk flags"
                 value={stats?.riskFlags ?? '—'}
                 sublabel="Learners needing attention"
-                icon={AlertTriangle}
+                iconName="alert-triangle"
                 cta={
                   <Link
                     href="/admin/reports"

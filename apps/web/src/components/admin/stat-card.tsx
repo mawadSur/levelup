@@ -1,14 +1,28 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { Users, TrendingUp, Mail, AlertTriangle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent, MissionNumber, MonoLabel } from '@levelup/ui';
 import { cn } from '@/lib/utils';
-import type { LucideIcon } from 'lucide-react';
+
+/** Safe string names that map to lucide icons — serializable across the RSC boundary. */
+export type StatIconName = 'users' | 'trending-up' | 'mail' | 'alert-triangle';
+
+const ICON_MAP: Record<StatIconName, LucideIcon> = {
+  users: Users,
+  'trending-up': TrendingUp,
+  mail: Mail,
+  'alert-triangle': AlertTriangle,
+};
 
 interface StatCardProps {
   title: string;
   value: string | number;
   sublabel?: string;
+  /** Pass a serializable icon name instead of a LucideIcon function. */
+  iconName?: StatIconName;
+  /** @deprecated Use iconName instead. Kept for back-compat with client-only callers. */
   icon?: LucideIcon;
   /** @deprecated kept for back-compat; ignored in Mission Brief styling. */
   iconClassName?: string;
@@ -29,12 +43,14 @@ export function StatCard({
   title,
   value,
   sublabel,
-  icon: Icon,
+  iconName,
+  icon: IconProp,
   trend,
   cta,
   className,
   format = 'integer',
 }: StatCardProps) {
+  const Icon = iconName ? ICON_MAP[iconName] : IconProp;
   const numericValue = typeof value === 'number' ? value : Number.NaN;
   const isNumeric = Number.isFinite(numericValue);
 
