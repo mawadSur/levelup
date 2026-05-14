@@ -45,6 +45,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : 2,
+  // Next.js dev compiles routes on first request and SSR fans out across
+  // multiple API calls. Default 30s isn't enough for cold-compile + render.
+  timeout: 90_000,
   reporter: [['list'], ['html', { open: 'never' }]],
   globalSetup: './global-setup.ts',
   use: {
