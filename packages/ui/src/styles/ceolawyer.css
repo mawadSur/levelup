@@ -80,6 +80,21 @@
   outline-offset: 2px;
 }
 
+/* Override Chrome/Safari autofill — defaults to slate-blue background + low-contrast
+ * text. Paint our own paper background and ink color so autofilled fields match the
+ * rest of the form. The 9999s transition trick prevents the yellow flash on focus. */
+.ceolawyer input:-webkit-autofill,
+.ceolawyer input:-webkit-autofill:hover,
+.ceolawyer input:-webkit-autofill:focus,
+.ceolawyer input:-webkit-autofill:active,
+.ceolawyer textarea:-webkit-autofill,
+.ceolawyer select:-webkit-autofill {
+  -webkit-text-fill-color: rgb(var(--cl-ink));
+  -webkit-box-shadow: 0 0 0 1000px rgb(var(--cl-paper)) inset;
+  caret-color: rgb(var(--cl-ink));
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 /* Typography utilities */
 .ceolawyer .cl-display {
   font-size: clamp(2.75rem, 5vw, 4rem);
