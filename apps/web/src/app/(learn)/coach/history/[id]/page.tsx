@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { ArrowLeft, Sparkles, User } from 'lucide-react';
+import { LEVELUP_SESSION } from '@levelup/auth-client';
 import { Card, CardContent } from '@levelup/ui';
 import type { ConversationDetail } from '@/lib/api/coach';
 import { DeleteSessionButton } from '@/components/coach/delete-session-button';
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
-const SESSION_COOKIE = 'LEVELUP_SESSION';
+const SESSION_COOKIE = LEVELUP_SESSION;
 
 async function fetchConversation(id: string): Promise<ConversationDetail | null> {
   const cookieStore = await cookies();

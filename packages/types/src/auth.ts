@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Role } from '@levelup/db';
+import { AiLevel, Role } from '@levelup/db';
 
 export const emailSchema = z.string().email().max(254);
 
@@ -55,3 +55,32 @@ export const sessionUserSchema = z.object({
   departmentId: z.string().cuid().nullable(),
 });
 export type SessionUser = z.infer<typeof sessionUserSchema>;
+
+/**
+ * Full payload returned by `GET /auth/me`.
+ *
+ * Extends `sessionUserSchema` with the fields the API has surfaced for a
+ * while but that were previously parsed defensively on the web client:
+ *   - `aiLevel`         — drives `/learn` recommendations.
+ *   - `organizationName` — header chrome.
+ *   - `leaderboardOptOut` — settings toggle state.
+ *
+ * `aiLevel` is the strongly-typed `AiLevel` enum on the server. To stay
+ * tolerant of older API builds that defaulted to `'BEGINNER'` as a raw string
+ * (and any future levels added before clients rebuild), we accept any string
+ * and let the consumer narrow when needed.
+ */
+export const meResponseSchema = sessionUserSchema.extend({
+  aiLevel: z.string(),
+  organizationName: z.string(),
+  leaderboardOptOut: z.boolean(),
+});
+export type MeResponse = z.infer<typeof meResponseSchema>;
+
+/** Strongly-typed alias used by callers that want the enum form of aiLevel. */
+export const meResponseStrictSchema = sessionUserSchema.extend({
+  aiLevel: z.nativeEnum(AiLevel),
+  organizationName: z.string(),
+  leaderboardOptOut: z.boolean(),
+});
+export type MeResponseStrict = z.infer<typeof meResponseStrictSchema>;

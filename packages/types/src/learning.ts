@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AiLevel, AssessmentType, LessonStatus, Role } from '@levelup/db';
+import { AiLevel, AssessmentType, LessonKind, LessonStatus, Role } from '@levelup/db';
 
 export const assignLearningPathSchema = z.object({
   learningPathId: z.string().cuid(),
@@ -110,3 +110,82 @@ export type TeamProgressEntry = z.infer<typeof teamProgressEntrySchema>;
 
 export const teamProgressSchema = z.array(teamProgressEntrySchema);
 export type TeamProgress = z.infer<typeof teamProgressSchema>;
+
+// ---------------------------------------------------------------------------
+// Lesson — serialised shape returned by GET /lessons/:id and embedded by
+// GET /paths/:pathId/lessons (list view).
+//
+// `quizId` is surfaced directly so the lesson page can navigate to the quiz
+// via `/quizzes/:id` instead of probing a non-existent by-lesson route.
+// ---------------------------------------------------------------------------
+
+export const lessonImageAssetSchema = z.object({
+  slot: z.number().int().min(0),
+  blobUrl: z.string(),
+});
+export type LessonImageAsset = z.infer<typeof lessonImageAssetSchema>;
+
+export const lessonLabSummarySchema = z.object({
+  id: z.string().cuid(),
+  slug: z.string(),
+  title: z.string(),
+  brief: z.string(),
+  estimatedMinutes: z.number().int().min(0),
+  modelKey: z.string(),
+});
+export type LessonLabSummary = z.infer<typeof lessonLabSummarySchema>;
+
+/** Compact lesson shape returned in list endpoints (no body, no assets). */
+export const lessonListItemSchema = z.object({
+  id: z.string().cuid(),
+  learningPathId: z.string().cuid(),
+  title: z.string(),
+  slug: z.string(),
+  estimatedMinutes: z.number().int().min(0),
+  orderIndex: z.number().int().min(0),
+  videoUrl: z.string().nullable(),
+  /** Id of the (at most one) primary quiz for this lesson, or null. */
+  quizId: z.string().cuid().nullable(),
+});
+export type LessonListItem = z.infer<typeof lessonListItemSchema>;
+
+/** Full lesson shape returned by GET /lessons/:id. */
+export const lessonSchema = z.object({
+  id: z.string().cuid(),
+  learningPathId: z.string().cuid(),
+  title: z.string(),
+  slug: z.string(),
+  body: z.string().nullable().optional(),
+  videoUrl: z.string().nullable(),
+  estimatedMinutes: z.number().int().min(0),
+  orderIndex: z.number().int().min(0),
+  kind: z.nativeEnum(LessonKind),
+  /** Id of the primary quiz for this lesson, or null when none exists. */
+  quizId: z.string().cuid().nullable(),
+  sceneAssets: z.record(z.string()).optional(),
+  imageAssets: z.array(lessonImageAssetSchema).optional(),
+  lab: lessonLabSummarySchema.nullable().optional(),
+});
+export type Lesson = z.infer<typeof lessonSchema>;
+
+// ---------------------------------------------------------------------------
+// GET /progress/me — per-assigned-path aggregate. The flat lesson list has
+// moved to GET /progress/lessons (consumed by the lesson detail UI); this
+// shape is what the `/learn` hub renders.
+// ---------------------------------------------------------------------------
+export const myPathProgressSchema = z.object({
+  pathId: z.string().cuid(),
+  pathSlug: z.string(),
+  pathTitle: z.string(),
+  lessonsTotal: z.number().int().min(0),
+  lessonsCompleted: z.number().int().min(0),
+  /** 0–100 integer. */
+  percentComplete: z.number().int().min(0).max(100),
+  lastActivityAt: z.string(),
+  currentLessonId: z.string().cuid().nullable(),
+  assignedAt: z.string(),
+});
+export type MyPathProgress = z.infer<typeof myPathProgressSchema>;
+
+export const myProgressResponseSchema = z.array(myPathProgressSchema);
+export type MyProgressResponse = z.infer<typeof myProgressResponseSchema>;

@@ -17,8 +17,8 @@ export { isStubMode, authConfig } from './config.js';
 // Types
 export type { SupabaseProfile, SessionPayload, AuthConfig, SupabaseJwtClaims } from './types.js';
 
-// CR.0: Legacy cookie-name constant. With Supabase Auth managing its own
-// `sb-<ref>-auth-token` cookies via `@supabase/ssr` this is no longer used by
-// the framework code, but a few peripheral consumers still reference it. Kept
-// for one release of compat — delete in the next major.
-export const LEVELUP_SESSION = 'LEVELUP_SESSION';
+// CR.0: Legacy cookie-name constant + helpers. Single source of truth so
+// producers (api) and consumers (web, coach SSR) never drift apart on case.
+// Kept for one release of compat — delete in the next major once the last
+// peripheral consumers move off the legacy cookie.
+export { LEVELUP_SESSION, serializeCookie, clearCookie, parseCookieHeader } from './session.js';

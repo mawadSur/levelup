@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import { LEVELUP_SESSION } from '@levelup/auth-client';
 import { CoachChat } from '@/components/coach/coach-chat';
 import { ConversationList } from '@/components/coach/conversation-list';
 import type { ConversationDetail, ConversationSummary } from '@/lib/api/coach';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
-const SESSION_COOKIE = 'LEVELUP_SESSION';
+const SESSION_COOKIE = LEVELUP_SESSION;
 
 interface ServerSessionUser {
   userId?: string;

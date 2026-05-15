@@ -87,11 +87,13 @@ async function readSupabaseAccessTokenFromCookies(): Promise<string | undefined>
 }
 
 /**
- * CR.0 — kept exported for one release of compat. The legacy JWE cookie name
- * is no longer used; Supabase Auth manages its own `sb-<ref>-auth-token`
- * cookies via `@supabase/ssr`. Delete in the next major.
+ * CR.0 — kept exported for one release of compat. The legacy cookie name is no
+ * longer used by the framework code; Supabase Auth manages its own
+ * `sb-<ref>-auth-token` cookies via `@supabase/ssr`. Re-exported from
+ * `@levelup/auth-client` (the single source of truth) so producers and
+ * consumers can never drift on case again. Delete in the next major.
  */
-export const LEVELUP_SESSION = 'LEVELUP_SESSION';
+export { LEVELUP_SESSION } from '@levelup/auth-client';
 
 export interface SessionUser {
   /** Compat alias for `id` so older call sites keep working. */

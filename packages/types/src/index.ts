@@ -1,4 +1,12 @@
-export { Role, AiLevel, Plan, LessonStatus, AssessmentType, InvitationStatus } from '@levelup/db';
+export {
+  Role,
+  AiLevel,
+  Plan,
+  LessonStatus,
+  LessonKind,
+  AssessmentType,
+  InvitationStatus,
+} from '@levelup/db';
 
 export * from './auth';
 export * from './learning';

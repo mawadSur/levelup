@@ -181,7 +181,7 @@ export class OrganizationsService {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [totalUsers, activeUserCount, byRoleRaw, byDepartmentRaw, completionRaw] =
+    const [totalUsers, activeUserCount, byRoleRaw, byDepartmentRaw, completionRaw, orgUsers] =
       await Promise.all([
         this.prisma.user.count({
           where: { organizationId: user.organizationId },
@@ -211,6 +211,10 @@ export class OrganizationsService {
           },
           _count: { _all: true },
         }),
+        this.prisma.user.findMany({
+          where: { organizationId: user.organizationId },
+          select: { id: true, role: true, departmentId: true },
+        }),
       ]);
 
     const completedCount = await this.prisma.userProgress.count({
@@ -220,15 +224,74 @@ export class OrganizationsService {
       },
     });
 
-    // byRole: a flat Record<Role, number>. Roles with zero members are
-    // included so the UI can render zeros without an undefined fallback.
-    const byRole: Record<'ADMIN' | 'MANAGER' | 'EMPLOYEE', number> = {
-      ADMIN: 0,
-      MANAGER: 0,
-      EMPLOYEE: 0,
+    // -----------------------------------------------------------------------
+    // Per-group completion rate
+    //
+    // Strategy: one extra groupBy on UserProgress, joined with the in-memory
+    // userId → (role, departmentId) map we already fetched. Cheaper than a
+    // pair of groupBy-with-relation-filter queries and keeps the role/dept
+    // axes consistent with the user counts above.
+    //
+    // The completion rate is defined as
+    //     completed UserProgress rows / total UserProgress rows
+    // restricted to users in the group. This mirrors the org-wide
+    // `completionRate` already returned at the top level so the UI doesn't
+    // have to reconcile two different formulas.
+    // -----------------------------------------------------------------------
+    const userRoleById = new Map(orgUsers.map((u) => [u.id, u.role]));
+    const userDeptById = new Map(orgUsers.map((u) => [u.id, u.departmentId]));
+
+    const progressByUser = await this.prisma.userProgress.groupBy({
+      by: ['userId', 'status'],
+      where: { user: { organizationId: user.organizationId } },
+      _count: { _all: true },
+    });
+
+    type GroupTotals = { total: number; completed: number };
+    const roleTotals = new Map<'ADMIN' | 'MANAGER' | 'EMPLOYEE', GroupTotals>([
+      ['ADMIN', { total: 0, completed: 0 }],
+      ['MANAGER', { total: 0, completed: 0 }],
+      ['EMPLOYEE', { total: 0, completed: 0 }],
+    ]);
+    const deptTotals = new Map<string, GroupTotals>();
+
+    for (const row of progressByUser) {
+      const role = userRoleById.get(row.userId);
+      const deptId = userDeptById.get(row.userId);
+      const isCompleted = row.status === 'COMPLETED';
+      const n = row._count._all;
+
+      if (role) {
+        const t = roleTotals.get(role)!;
+        t.total += n;
+        if (isCompleted) t.completed += n;
+      }
+      if (deptId) {
+        const existing = deptTotals.get(deptId) ?? { total: 0, completed: 0 };
+        existing.total += n;
+        if (isCompleted) existing.completed += n;
+        deptTotals.set(deptId, existing);
+      }
+    }
+
+    // byRole: per-role { count, completionRate } so the admin dashboard can
+    // surface "Employees: 42 (68% complete)" without falling back to the
+    // CompletionReport endpoint. Roles with zero members still appear with
+    // zeros so the UI doesn't need a missing-key fallback.
+    const byRole: Record<
+      'ADMIN' | 'MANAGER' | 'EMPLOYEE',
+      { count: number; completionRate: number }
+    > = {
+      ADMIN: { count: 0, completionRate: 0 },
+      MANAGER: { count: 0, completionRate: 0 },
+      EMPLOYEE: { count: 0, completionRate: 0 },
     };
     for (const row of byRoleRaw) {
-      byRole[row.role] = row._count._all;
+      const t = roleTotals.get(row.role)!;
+      byRole[row.role] = {
+        count: row._count._all,
+        completionRate: t.total > 0 ? t.completed / t.total : 0,
+      };
     }
 
     // Fetch department names for the byDepartment array.
@@ -243,14 +306,27 @@ export class OrganizationsService {
 
     const deptNameMap = new Map(departments.map((d) => [d.id, d.name]));
 
-    // byDepartment: Array<{ name, count }> sorted desc by count for stable
-    // dashboard rendering. Departments with zero members are omitted.
-    const byDepartment: Array<{ name: string; count: number }> = byDepartmentRaw
+    // byDepartment: { departmentId, name, count, completionRate } sorted
+    // desc by count. The shape mirrors the CompletionReport's
+    // `byDepartment` so the admin dashboard's `DeptBarList` can swap data
+    // sources without changing its row mapping. Departments with zero
+    // members are omitted (the user.groupBy filtered them out upstream).
+    const byDepartment: Array<{
+      departmentId: string;
+      name: string;
+      count: number;
+      completionRate: number;
+    }> = byDepartmentRaw
       .filter((row): row is typeof row & { departmentId: string } => row.departmentId !== null)
-      .map((row) => ({
-        name: deptNameMap.get(row.departmentId) ?? row.departmentId,
-        count: row._count._all,
-      }))
+      .map((row) => {
+        const totals = deptTotals.get(row.departmentId) ?? { total: 0, completed: 0 };
+        return {
+          departmentId: row.departmentId,
+          name: deptNameMap.get(row.departmentId) ?? row.departmentId,
+          count: row._count._all,
+          completionRate: totals.total > 0 ? totals.completed / totals.total : 0,
+        };
+      })
       .sort((a, b) => b.count - a.count);
 
     const totalProgress = completionRaw._count._all;

@@ -17,7 +17,13 @@ import { ApiError } from '../errors';
 
 // ---- constants --------------------------------------------------------------
 
-const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:4000';
+// Mirror the SSR/browser branching in apps/web/src/lib/api/client.ts: when
+// NEXT_PUBLIC_API_URL is unset, the browser uses a relative '/api' prefix
+// and only SSR falls back to 'http://localhost:4000'. vitest's jsdom env
+// defines `window`, so the browser branch fires.
+const API_BASE =
+  process.env['NEXT_PUBLIC_API_URL'] ??
+  (typeof window === 'undefined' ? 'http://localhost:4000' : '');
 const API_PREFIX = `${API_BASE}/api`;
 
 // ---- helpers ----------------------------------------------------------------

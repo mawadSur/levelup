@@ -14,13 +14,32 @@ export interface Organization {
   createdAt: string;
 }
 
+/**
+ * Per-role and per-department entries on the OrgStats payload carry both the
+ * member count AND a 0..1 completion rate so the admin dashboard renders
+ * without falling back to the heavier CompletionReport endpoint.
+ */
+export interface OrgStatsRoleEntry {
+  count: number;
+  /** 0..1 ratio. Multiply by 100 for percent display. */
+  completionRate: number;
+}
+
+export interface OrgStatsDepartmentEntry {
+  departmentId: string;
+  name: string;
+  count: number;
+  /** 0..1 ratio. Multiply by 100 for percent display. */
+  completionRate: number;
+}
+
 export interface OrgStats {
   totalUsers: number;
   activeUsers: number;
   /** 0..1 ratio. Multiply by 100 for percentage display. */
   completionRate: number;
-  byRole: Record<'ADMIN' | 'MANAGER' | 'EMPLOYEE', number>;
-  byDepartment: Array<{ name: string; count: number }>;
+  byRole: Record<'ADMIN' | 'MANAGER' | 'EMPLOYEE', OrgStatsRoleEntry>;
+  byDepartment: OrgStatsDepartmentEntry[];
   riskFlags: number;
 }
 

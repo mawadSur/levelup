@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { ArrowLeft, MessageSquare } from 'lucide-react';
+import { LEVELUP_SESSION } from '@levelup/auth-client';
 import { Button, Card, CardContent } from '@levelup/ui';
 import type { ConversationSummary } from '@/lib/api/coach';
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
-const SESSION_COOKIE = 'LEVELUP_SESSION';
+const SESSION_COOKIE = LEVELUP_SESSION;
 
 async function fetchConversations(): Promise<ConversationSummary[]> {
   const cookieStore = await cookies();

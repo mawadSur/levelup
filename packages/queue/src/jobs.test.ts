@@ -37,6 +37,9 @@ describe('JOBS catalog', () => {
     'trial-expiry-check',
     'generate-scene-asset',
     'generate-lesson-image',
+    'compute-industry-benchmarks',
+    'generate-coach-nudges',
+    'aggregate-user-skills',
   ];
 
   it('has exactly the expected number of entries', () => {

@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import type { SessionPayload } from '@levelup/auth-client';
+import { LEVELUP_SESSION, type SessionPayload } from '@levelup/auth-client';
 import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 import { AuthService } from '../auth.service';
 
@@ -63,11 +63,11 @@ export class AuthGuard implements CanActivate {
         if (accessToken !== null) return accessToken;
       }
 
-      if (typeof cookies['LEVELUP_SESSION'] === 'string') {
+      if (typeof cookies[LEVELUP_SESSION] === 'string') {
         if (!AuthGuard.cookieDeprecationWarned) {
           AuthGuard.cookieDeprecationWarned = true;
           this.logger.warn(
-            'Deprecated LEVELUP_SESSION cookie received — clients must migrate to Supabase Auth.',
+            `Deprecated ${LEVELUP_SESSION} cookie received — clients must migrate to Supabase Auth.`,
           );
         }
       }

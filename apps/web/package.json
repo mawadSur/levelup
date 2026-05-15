@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@levelup/auth-client": "workspace:*",
     "@levelup/types": "workspace:*",
     "@levelup/ui": "workspace:*",
     "@supabase/ssr": "^0.10.3",

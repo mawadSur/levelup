@@ -82,7 +82,7 @@ export class AuthController {
   @Public()
   @Post('accept-invitation')
   @HttpCode(HttpStatus.OK)
-  @AuthRateLimit('accept-invitation', 10)
+  @AuthRateLimit('accept-invitation', 5)
   @ApiOperation({ summary: 'Accept an invitation, creating/updating the User row' })
   async acceptInvitation(
     @Body(new ZodValidationPipe(acceptInvitationSchema)) body: AcceptInvitationInput,
