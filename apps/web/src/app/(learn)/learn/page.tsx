@@ -13,6 +13,7 @@ import { fetchDailyNews } from '@/lib/news/fetch-news';
 import type { DailyQuestItem, CurrentWeekResponse } from '@levelup/types';
 import type { CurriculumMap } from '@/lib/api/paths';
 import { ssrGet } from '@/lib/api/server-fetch';
+import { getSessionUser } from '@/lib/auth-client';
 import { StudyPlanStrip } from '@/components/learn/study-plan-strip';
 
 export const metadata: Metadata = {
@@ -103,7 +104,16 @@ export default async function LearnPage() {
   const pathsWithProgress = allPaths as PathWithProgress[];
   const assignedPaths = pathsWithProgress.filter((p) => p.isAssigned !== false);
 
-  const firstName = resolveFirstName(me?.name, me?.email);
+  // Prefer `me` (full auth.me() shape with aiLevel etc), but fall back to
+  // getSessionUser — the same helper the (learn) layout uses to gate access,
+  // which has independent error handling. If auth.me() throws (e.g. the
+  // schema in @levelup/types is stricter than the API payload), we still
+  // greet the user by name.
+  const sessionUser = me === null ? await getSessionUser() : null;
+  const firstName = resolveFirstName(
+    me?.name ?? sessionUser?.name,
+    me?.email ?? sessionUser?.email,
+  );
 
   // The one path to resume — prefer in-progress over not-started.
   const continueTarget =
