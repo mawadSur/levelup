@@ -191,7 +191,7 @@ export function MarkdownView({ content, className, imageAssets }: MarkdownViewPr
                   </span>
                 );
               }
-               
+
               return (
                 <img
                   src={resolved}
