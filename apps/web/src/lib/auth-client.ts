@@ -7,6 +7,85 @@ const STUB_COOKIE = 'sb-stub-auth-token';
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
+const SUPABASE_URL_FOR_REF = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? '';
+
+function getSupabaseProjectRef(): string | null {
+  if (SUPABASE_URL_FOR_REF === '' || SUPABASE_URL_FOR_REF.startsWith('PLACEHOLDER_')) {
+    return null;
+  }
+  try {
+    const host = new URL(SUPABASE_URL_FOR_REF).host;
+    const ref = host.split('.')[0];
+    return typeof ref === 'string' && ref !== '' ? ref : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Decode an `sb-<ref>-auth-token` cookie value to extract the access token.
+ *
+ * @supabase/ssr v0.10+ stores the session as `base64-<base64-json>` where the
+ * JSON has `{ access_token, refresh_token, expires_at, ... }`. Large sessions
+ * are split across `sb-…-auth-token.0`, `.1`, …; the caller is responsible
+ * for joining the chunks before passing here.
+ *
+ * Returns `undefined` if the value can't be decoded into a JWT-shaped string.
+ */
+function extractAccessTokenFromCookieValue(raw: string): string | undefined {
+  if (raw === '') return undefined;
+  let payload = raw;
+  if (payload.startsWith('base64-')) {
+    try {
+      payload = Buffer.from(payload.slice('base64-'.length), 'base64').toString('utf8');
+    } catch {
+      return undefined;
+    }
+  }
+  // Some legacy formats store the JWT directly. JWTs always start with eyJ.
+  if (payload.startsWith('eyJ') && !payload.startsWith('{')) {
+    return payload;
+  }
+  try {
+    const parsed: unknown = JSON.parse(payload);
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'access_token' in parsed &&
+      typeof (parsed as { access_token: unknown }).access_token === 'string'
+    ) {
+      return (parsed as { access_token: string }).access_token;
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+async function readSupabaseAccessTokenFromCookies(): Promise<string | undefined> {
+  const projectRef = getSupabaseProjectRef();
+  if (projectRef === null) return undefined;
+
+  const cookieStore = await cookies();
+  const base = `sb-${projectRef}-auth-token`;
+  const main = cookieStore.get(base)?.value;
+  if (typeof main === 'string' && main !== '') {
+    const tok = extractAccessTokenFromCookieValue(main);
+    if (typeof tok === 'string' && tok !== '') return tok;
+  }
+  // Chunked-cookie fallback for sessions large enough to overflow one cookie.
+  const chunks: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const v = cookieStore.get(`${base}.${i}`)?.value;
+    if (typeof v !== 'string' || v === '') break;
+    chunks.push(v);
+  }
+  if (chunks.length > 0) {
+    return extractAccessTokenFromCookieValue(chunks.join(''));
+  }
+  return undefined;
+}
+
 /**
  * CR.0 — kept exported for one release of compat. The legacy JWE cookie name
  * is no longer used; Supabase Auth manages its own `sb-<ref>-auth-token`
@@ -92,11 +171,23 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       return null;
     }
   } else {
-    const supabase = await getSupabaseServerClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    accessToken = session?.access_token;
+    // Read the access token directly from the `sb-<ref>-auth-token` cookie.
+    // We used to go through `supabase.auth.getSession()` here, but that path
+    // races with @supabase/ssr's token-rotation `setAll` write inside server
+    // components (which Next.js makes a no-op cookie store). On the second
+    // render after sign-in the SDK returned a null session even with a valid
+    // cookie present, and the (learn)/(admin) layout would bounce back to
+    // /sign-in. Decoding the cookie ourselves avoids that read/write cycle.
+    accessToken = await readSupabaseAccessTokenFromCookies();
+
+    // Fallback: if the cookie format ever changes, let the SDK try.
+    if (typeof accessToken !== 'string' || accessToken === '') {
+      const supabase = await getSupabaseServerClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      accessToken = session?.access_token;
+    }
   }
 
   if (typeof accessToken !== 'string' || accessToken.length === 0) {

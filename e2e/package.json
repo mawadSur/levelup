@@ -5,6 +5,8 @@
   "scripts": {
     "test": "echo 'e2e: skipped (requires running infra). Run pnpm test:e2e to execute.' && exit 0",
     "test:e2e": "playwright test",
+    "test:e2e:deployed": "playwright test --config=playwright.deployed.config.ts",
+    "test:e2e:local-realauth": "playwright test --config=playwright.local-realauth.config.ts",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "install": "playwright install chromium"

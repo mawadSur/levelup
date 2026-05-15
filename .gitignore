@@ -16,7 +16,9 @@ build/
 supabase/.temp
 coverage/
 test-results/
+test-results-*/
 playwright-report/
+playwright-report-*/
 
 # Claude Code per-developer files (contain personal API tokens, MCP configs)
 .claude/settings.local.json
