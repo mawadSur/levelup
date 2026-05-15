@@ -78,6 +78,19 @@ jobs:
         run: pnpm typecheck
 
       - name: Build
+        # `next build` runs with NODE_ENV=production. The auth-client safety
+        # guard throws when SUPABASE_URL / SUPABASE_ANON_KEY are unset or
+        # PLACEHOLDER_-prefixed in production (see packages/auth-client/src/config.ts).
+        # Vercel sets real values in prod; CI just needs non-empty, non-PLACEHOLDER
+        # strings so the guard passes. These are never used for real Supabase calls
+        # because the build only resolves config at module-load — actual network
+        # calls happen at runtime, which CI never reaches.
+        env:
+          SUPABASE_URL: https://fake.supabase.co
+          SUPABASE_ANON_KEY: fake-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: fake-service-role-key
+          NEXT_PUBLIC_SUPABASE_URL: https://fake.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: fake-anon-key
         run: pnpm build
 
       - name: Test
