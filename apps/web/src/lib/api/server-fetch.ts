@@ -5,6 +5,86 @@ import { apiFetch } from './client';
 
 const STUB_COOKIE = 'sb-stub-auth-token';
 
+const SUPABASE_URL_FOR_REF = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? '';
+
+function getSupabaseProjectRef(): string | null {
+  if (SUPABASE_URL_FOR_REF === '' || SUPABASE_URL_FOR_REF.startsWith('PLACEHOLDER_')) {
+    return null;
+  }
+  try {
+    const host = new URL(SUPABASE_URL_FOR_REF).host;
+    const ref = host.split('.')[0];
+    return typeof ref === 'string' && ref !== '' ? ref : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Decode the access token out of an `sb-<ref>-auth-token` cookie value, the
+ * same way `lib/auth-client.ts` does. Kept in lock-step because both files
+ * read the same cookie set.
+ */
+function extractAccessTokenFromCookieValue(raw: string): string | undefined {
+  if (raw === '') return undefined;
+  let payload = raw;
+  if (payload.startsWith('base64-')) {
+    try {
+      payload = Buffer.from(payload.slice('base64-'.length), 'base64').toString('utf8');
+    } catch {
+      return undefined;
+    }
+  }
+  if (payload.startsWith('eyJ') && !payload.startsWith('{')) {
+    return payload;
+  }
+  try {
+    const parsed: unknown = JSON.parse(payload);
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'access_token' in parsed &&
+      typeof (parsed as { access_token: unknown }).access_token === 'string'
+    ) {
+      return (parsed as { access_token: string }).access_token;
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+async function readSupabaseAccessTokenFromCookies(): Promise<string | undefined> {
+  const projectRef = getSupabaseProjectRef();
+  if (projectRef === null) return undefined;
+  const cookieStore = await cookies();
+  const base = `sb-${projectRef}-auth-token`;
+  const main = cookieStore.get(base)?.value;
+  if (typeof main === 'string' && main !== '') {
+    const tok = extractAccessTokenFromCookieValue(main);
+    if (typeof tok === 'string' && tok !== '') return tok;
+  }
+  const chunks: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const v = cookieStore.get(`${base}.${i}`)?.value;
+    if (typeof v !== 'string' || v === '') break;
+    chunks.push(v);
+  }
+  if (chunks.length > 0) {
+    return extractAccessTokenFromCookieValue(chunks.join(''));
+  }
+  return undefined;
+}
+
+async function readCookieHeaderForApi(): Promise<string> {
+  const cookieStore = await cookies();
+  return cookieStore
+    .getAll()
+    .filter(({ name }) => name.startsWith('sb-') || name === STUB_COOKIE)
+    .map(({ name, value }) => `${name}=${value}`)
+    .join('; ');
+}
+
 /**
  * Server-only fetch helper for server components and route handlers.
  *
@@ -44,15 +124,32 @@ async function serverAuthHeader(): Promise<Record<string, string>> {
       return {};
     }
   }
+  // Real Supabase: mirror what auth-client.ts does. Decode the cookie ourselves
+  // (avoids the @supabase/ssr server-component cookie-rotation race) AND
+  // forward the original Cookie header, so the API can fall back to its own
+  // cookie reassembly if our extracted token is stale.
   try {
-    const supabase = await getSupabaseServerClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const token = session?.access_token;
-    return typeof token === 'string' && token.length > 0
-      ? { Authorization: `Bearer ${token}` }
-      : {};
+    const headers: Record<string, string> = {};
+    const token = await readSupabaseAccessTokenFromCookies();
+    if (typeof token === 'string' && token.length > 0) {
+      headers.Authorization = `Bearer ${token}`;
+    } else {
+      // Fallback: ask the SDK. Almost never runs after the cookie-decode fix
+      // ships, but kept as a safety net for future cookie-format changes.
+      const supabase = await getSupabaseServerClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const sdkToken = session?.access_token;
+      if (typeof sdkToken === 'string' && sdkToken.length > 0) {
+        headers.Authorization = `Bearer ${sdkToken}`;
+      }
+    }
+    const cookieHeader = await readCookieHeaderForApi();
+    if (cookieHeader !== '') {
+      headers.cookie = cookieHeader;
+    }
+    return headers;
   } catch {
     return {};
   }

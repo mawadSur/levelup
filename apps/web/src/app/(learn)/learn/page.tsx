@@ -19,6 +19,32 @@ export const metadata: Metadata = {
   title: 'Learn',
 };
 
+/**
+ * Pick a personal-feeling first name for the hero greeting. Prefers the first
+ * token of `name`. Falls back to a capitalized email local-part so users with
+ * incomplete profiles (Supabase signup without firstName, magic-link users)
+ * still see their own name rather than a generic "learner".
+ */
+function resolveFirstName(name: string | undefined, email: string | undefined): string {
+  if (typeof name === 'string') {
+    const trimmed = name.trim();
+    if (trimmed !== '' && !trimmed.includes('@')) {
+      const firstToken = trimmed.split(/\s+/)[0];
+      if (firstToken !== undefined && firstToken !== '') return firstToken;
+    }
+  }
+  if (typeof email === 'string' && email.includes('@')) {
+    const localPart = email.split('@')[0] ?? '';
+    // Email local-parts often use `.` or `_` to separate name parts (e.g.
+    // `mawad.al-saadi@…` → "Mawad"). Take the first segment and title-case it.
+    const segment = localPart.split(/[._-]/)[0] ?? localPart;
+    if (segment.length > 0) {
+      return segment.charAt(0).toUpperCase() + segment.slice(1);
+    }
+  }
+  return 'there';
+}
+
 export default async function LearnPage() {
   const [
     progressData,
@@ -77,7 +103,7 @@ export default async function LearnPage() {
   const pathsWithProgress = allPaths as PathWithProgress[];
   const assignedPaths = pathsWithProgress.filter((p) => p.isAssigned !== false);
 
-  const firstName = me?.name?.split(' ')[0] ?? 'learner';
+  const firstName = resolveFirstName(me?.name, me?.email);
 
   // The one path to resume — prefer in-progress over not-started.
   const continueTarget =
