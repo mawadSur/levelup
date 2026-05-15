@@ -46,7 +46,12 @@ export const sessionUserSchema = z.object({
   email: emailSchema,
   name: z.string(),
   role: z.nativeEnum(Role),
-  organizationId: z.string().cuid(),
+  // White-label tenant orgs are seeded with stable slugs ('demo-org',
+  // 'kapitus', 'ceolawyer') rather than CUIDs so cross-environment data
+  // (seeds, fixtures, runbooks) can reference them. Require a non-empty
+  // string here instead of a CUID; the API still treats the field as the
+  // authoritative tenant identifier, just without the format constraint.
+  organizationId: z.string().min(1),
   departmentId: z.string().cuid().nullable(),
 });
 export type SessionUser = z.infer<typeof sessionUserSchema>;
