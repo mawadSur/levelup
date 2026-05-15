@@ -28,10 +28,14 @@ interface DemoUser {
   landing: string;
 }
 
+// Use `ed` (PRACTITIONER) rather than `eve` (BEGINNER) for the EMPLOYEE case —
+// (learn)/layout.tsx forces BEGINNER employees with no assessment + no plan to
+// /assessment, which is correct product behavior but masks the auth-stability
+// signal we want here.
 const DEMO_USERS: DemoUser[] = [
   { email: 'admin@demo.test', role: 'ADMIN', landing: '/admin' },
   { email: 'manager@demo.test', role: 'MANAGER', landing: '/admin' },
-  { email: 'eve@demo.test', role: 'EMPLOYEE', landing: '/learn' },
+  { email: 'ed@demo.test', role: 'EMPLOYEE', landing: '/learn' },
 ];
 
 async function fillSignInForm(page: Page, email: string, password: string): Promise<void> {

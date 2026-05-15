@@ -190,15 +190,38 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     }
   }
 
-  if (typeof accessToken !== 'string' || accessToken.length === 0) {
+  // ---------------------------------------------------------------------------
+  // Call /api/auth/me. We send BOTH a Bearer header (when we have a token) AND
+  // forward the original Cookie header, because in concurrent-request flows
+  // (router.push + router.refresh after sign-in) @supabase/ssr's middleware
+  // can rotate the access_token between the in-flight request's cookie and
+  // what we read here. The API guard accepts either credential — Authorization
+  // header first, then `sb-<ref>-auth-token` cookie (auth.guard.ts:51-66) — so
+  // forwarding the cookie gives us a fresh path even when our extracted token
+  // is the stale pre-rotation value.
+  // ---------------------------------------------------------------------------
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .filter(({ name }) => name.startsWith('sb-') || name === STUB_COOKIE)
+    .map(({ name, value }) => `${name}=${value}`)
+    .join('; ');
+
+  if ((typeof accessToken !== 'string' || accessToken.length === 0) && cookieHeader === '') {
     return null;
   }
 
   try {
+    const headers: Record<string, string> = {};
+    if (typeof accessToken === 'string' && accessToken.length > 0) {
+      headers.Authorization = `Bearer ${accessToken}`;
+    }
+    if (cookieHeader !== '') {
+      headers.cookie = cookieHeader;
+    }
     const response = await fetch(`${API_URL}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers,
       cache: 'no-store',
     });
 
