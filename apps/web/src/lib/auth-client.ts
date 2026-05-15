@@ -209,8 +209,6 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     .join('; ');
 
   if ((typeof accessToken !== 'string' || accessToken.length === 0) && cookieHeader === '') {
-     
-    console.warn('[auth] getSessionUser: no token and no sb cookie → returning null');
     return null;
   }
 
@@ -228,19 +226,10 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     });
 
     if (!response.ok) {
-       
-      console.warn(
-        `[auth] getSessionUser: /api/auth/me returned ${response.status} ` +
-          `(tokenLen=${accessToken?.length ?? 0}, hasCookie=${cookieHeader !== ''}, apiUrl=${API_URL})`,
-      );
       return null;
     }
 
     const me = (await response.json()) as MeResponse;
-     
-    console.log(
-      `[auth] getSessionUser: OK email=${me.email} role=${me.role} (tokenLen=${accessToken?.length ?? 0})`,
-    );
     return {
       id: me.id,
       userId: me.id,
@@ -254,11 +243,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       orgName: me.organizationName,
       leaderboardOptOut: me.leaderboardOptOut ?? false,
     };
-  } catch (e) {
-     
-    console.warn(
-      `[auth] getSessionUser: fetch threw (apiUrl=${API_URL}, err=${e instanceof Error ? e.message : String(e)})`,
-    );
+  } catch {
     return null;
   }
 }
