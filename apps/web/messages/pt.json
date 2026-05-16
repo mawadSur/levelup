@@ -1,3 +1,23 @@
 {
-  "nav": {}
+  "nav": {
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "signUp": "Criar conta",
+    "learn": "Aprender",
+    "profile": "Perfil",
+    "admin": "Administração",
+    "coach": "Assistente",
+    "curriculum": "Currículo",
+    "team": "Equipe",
+    "policy": "Política",
+    "reports": "Relatórios"
+  },
+  "dropdown": {
+    "adminConsole": "Painel de administração",
+    "language": "Idioma"
+  },
+  "auth": {
+    "signInTitle": "Bem-vindo de volta",
+    "signInSubtitle": "Entre com o e-mail associado à sua conta de trabalho."
+  }
 }

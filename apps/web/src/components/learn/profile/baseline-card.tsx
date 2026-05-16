@@ -51,7 +51,7 @@ export function BaselineCard({ assessments, loadFailed = false }: BaselineCardPr
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Baseline assessment</CardTitle>
+        <CardTitle as="h2">Baseline assessment</CardTitle>
         <CardDescription>
           Your AI proficiency level, used to personalise your learning path.
         </CardDescription>

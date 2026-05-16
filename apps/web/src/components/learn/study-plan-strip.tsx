@@ -62,6 +62,8 @@ export function StudyPlanStrip({ initialCurrent, initialUpcoming = null }: Study
         <button
           type="button"
           onClick={() => setExpanded((s) => !s)}
+          aria-expanded={expanded}
+          aria-label={expanded ? 'Hide 4-week plan' : 'View 4-week plan'}
           className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-300 hover:text-paper-100"
         >
           {expanded ? 'HIDE' : 'VIEW 4-WEEK PLAN'}

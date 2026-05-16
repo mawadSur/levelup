@@ -29,7 +29,7 @@ export function SkillPostureCard({ rows, loadFailed = false }: SkillPostureCardP
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Skill posture</CardTitle>
+        <CardTitle as="h2">Skill posture</CardTitle>
         <CardDescription>
           How much you have seen, practiced, and applied each skill on the job.
         </CardDescription>

@@ -1,3 +1,23 @@
 {
-  "nav": {}
+  "nav": {
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "signUp": "Créer un compte",
+    "learn": "Apprendre",
+    "profile": "Profil",
+    "admin": "Administration",
+    "coach": "Assistant",
+    "curriculum": "Programme",
+    "team": "Équipe",
+    "policy": "Politique",
+    "reports": "Rapports"
+  },
+  "dropdown": {
+    "adminConsole": "Console d'administration",
+    "language": "Langue"
+  },
+  "auth": {
+    "signInTitle": "Bon retour",
+    "signInSubtitle": "Connectez-vous avec l'adresse e-mail liée à votre compte professionnel."
+  }
 }

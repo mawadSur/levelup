@@ -28,7 +28,7 @@ import {
   SignOutResponse,
 } from './dto/sign-in.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { isStubMode } from '@levelup/auth-client';
+import { isStubMode, serializeCookie } from '@levelup/auth-client';
 import type { SessionPayload } from '@levelup/auth-client';
 import { AuthRateLimit, AuthRateLimitGuard } from './guards/auth-rate-limit.guard';
 
@@ -75,8 +75,25 @@ export class AuthController {
   @ApiOperation({ summary: 'Password sign-in (rate-limited per IP)' })
   async signIn(
     @Body(new ZodValidationPipe(signInRequestSchema)) body: SignInRequest,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<SignInResponse> {
     const result = await this.authService.signInWithPassword(body.email, body.password);
+
+    // Additive hardening (lane H): alongside returning the access/refresh
+    // tokens in the response body — which the web client still hands to
+    // `supabase.auth.setSession(...)` to populate the SDK cookies — also
+    // set the API-layer `levelup_session` cookie directly via
+    // `Set-Cookie`. That gives the API a server-set, HttpOnly cookie
+    // that's resistant to the Supabase SDK race conditions some users
+    // hit when the page navigates before the SDK has finished writing
+    // its own cookies. The response body shape is unchanged.
+    //
+    // `serializeCookie` already applies the right defaults (HttpOnly,
+    // SameSite=Lax, Path=/, Secure in production, COOKIE_DOMAIN). We
+    // pass an explicit `maxAge` of 8 hours to match the LevelUp session
+    // TTL contract.
+    res.setHeader('Set-Cookie', serializeCookie(result.accessToken, { maxAge: 60 * 60 * 8 }));
+
     return {
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,

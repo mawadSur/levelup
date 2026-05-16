@@ -40,7 +40,8 @@ export type EventName =
   | 'subscription_changed'
   | 'integration_installed'
   | 'integration_revoked'
-  | 'feature_flag_toggled';
+  | 'feature_flag_toggled'
+  | 'pricing_variant_exposed';
 
 export interface BaseEventProps {
   organizationId: string;
@@ -94,4 +95,10 @@ export type EventProps<E extends EventName> = E extends 'lesson_completed'
                         total: number;
                         recommendedLevel: string;
                       }
-                    : BaseEventProps & Record<string, unknown>;
+                    : E extends 'pricing_variant_exposed'
+                      ? BaseEventProps & {
+                          flagKey: string;
+                          variant: 'A' | 'B';
+                          anonId: string;
+                        }
+                      : BaseEventProps & Record<string, unknown>;

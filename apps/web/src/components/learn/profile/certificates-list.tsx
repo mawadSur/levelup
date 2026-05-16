@@ -25,7 +25,7 @@ export function CertificatesList({ certificates }: CertificatesListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Certificates</CardTitle>
+        <CardTitle as="h2">Certificates</CardTitle>
         <CardDescription>Credentials earned by completing learning paths.</CardDescription>
       </CardHeader>
       <CardContent>

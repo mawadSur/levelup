@@ -41,7 +41,7 @@ export function EditProfileForm({ initialName }: EditProfileFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit profile</CardTitle>
+        <CardTitle as="h2">Edit profile</CardTitle>
         <CardDescription>Update your display name.</CardDescription>
       </CardHeader>
       <CardContent>

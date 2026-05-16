@@ -2,6 +2,22 @@
   "nav": {
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "learn": "Learn"
+    "signUp": "Sign up",
+    "learn": "Learn",
+    "profile": "Profile",
+    "admin": "Admin",
+    "coach": "Coach",
+    "curriculum": "Curriculum",
+    "team": "Team",
+    "policy": "Policy",
+    "reports": "Reports"
+  },
+  "dropdown": {
+    "adminConsole": "Admin console",
+    "language": "Language"
+  },
+  "auth": {
+    "signInTitle": "Welcome back",
+    "signInSubtitle": "Sign in with the email tied to your work account."
   }
 }

@@ -168,10 +168,26 @@ To provision a project:
    - `apps/api` and `apps/worker` (Render → both services have placeholders pre-wired in `render.yaml`): `SENTRY_DSN=<respective dsn>`, optional `SENTRY_ENVIRONMENT`, optional `SENTRY_TRACES_SAMPLE_RATE`.
 5. Verify in Sentry → Issues that errors arrive after the next deploy.
 
-Follow-ups not in the skeleton (tracked as TODOs in the Sentry config files):
+PII scrubbing is now wired in each `Sentry.init` via `beforeSend` (email, IP, auth headers, request bodies on `/api/auth/*` + `/api/users/*`, plus recursive scrubbing of `password` / `token` / `secret` / `apiKey` keys in `event.extra` / `event.contexts`).
 
-- Source-map upload from `apps/web` (`sentry-cli sourcemaps upload` in the build step).
-- `beforeSend` PII scrub (email, IP, auth headers, request bodies on `/api/auth/*` + `/api/users/*`).
+#### Source-map upload (apps/web only)
+
+`apps/web` now has a `postbuild` script that runs `sentry-cli sourcemaps inject` + `sentry-cli sourcemaps upload` against `./.next` **only when `SENTRY_AUTH_TOKEN` is set**. Without that env var the script logs `skipping sentry sourcemap upload` and exits 0 — CI and local builds stay green.
+
+To enable on Vercel production:
+
+1. Sentry → Settings → Auth Tokens → "Create New Token". Scopes: `project:releases`, `org:read`, `project:read`.
+2. In Vercel → Project (`levelup-web`) → Settings → Environment Variables, add **Production** vars:
+   - `SENTRY_AUTH_TOKEN=<token from step 1>` (mark as Sensitive)
+   - `SENTRY_ORG=<slug from sentry.io/organizations/<slug>/>`
+   - `SENTRY_PROJECT=levelup-web`
+3. Redeploy. The Vercel build will inject + upload source maps on `postbuild`; the next error in Sentry should show unminified frames.
+
+Source-map upload is only relevant for `apps/web` (Vercel). Render does not need these vars; `apps/api` / `apps/worker` ship as plain TS-compiled JS where stack frames already point at readable source.
+
+#### Alert rules
+
+Alert rules cannot be defined in code without a Sentry integration — see `docs/runbooks/sentry-alerts.md` for the four alerts to configure manually in the Sentry UI.
 
 ### Redis — Upstash
 
@@ -210,6 +226,9 @@ Follow-ups not in the skeleton (tracked as TODOs in the Sentry config files):
 | `SENTRY_DSN` (+ `NEXT_PUBLIC_SENTRY_DSN` on web)             | unset / PLACEHOLDER (no-op)          | staging DSN                         | production DSN                       |
 | `SENTRY_ENVIRONMENT`                                         | unset (falls back to `NODE_ENV`)     | `staging`                           | `production`                         |
 | `SENTRY_TRACES_SAMPLE_RATE`                                  | unset (default `0.1`)                | `0.1`                               | `0.1`                                |
+| `SENTRY_AUTH_TOKEN` (web only, Vercel)                       | unset                                | optional                            | set (enables source-map upload)      |
+| `SENTRY_ORG` (web only, Vercel)                              | unset                                | optional                            | Sentry org slug                      |
+| `SENTRY_PROJECT` (web only, Vercel)                          | unset                                | optional                            | `levelup-web`                        |
 
 Stub mode is allowed in local + staging. In production, every `PLACEHOLDER_*` value will throw at boot — the relevant package's `config.ts` enforces this.
 

@@ -47,7 +47,7 @@ export function LeaderboardOptOutCard({ initialOptOut }: LeaderboardOptOutCardPr
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Leaderboard visibility</CardTitle>
+        <CardTitle as="h2">Leaderboard visibility</CardTitle>
         <CardDescription>
           Show me on the leaderboard. When off, your name won&apos;t appear in your
           organization&apos;s rankings — you can still view the leaderboard yourself.

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
+import { useTransition, type SyntheticEvent } from 'react';
 import type { Locale } from '@/lib/i18n';
 
 interface LocaleOption {
@@ -51,8 +51,30 @@ export function LocaleSwitcher({ supported, current }: LocaleSwitcherProps) {
     });
   }
 
+  // Radix's DropdownMenuContent listens for pointerdown / focusout outside its
+  // own subtree and closes the menu. The native <select>'s OS-level popup
+  // steals focus on macOS/iOS, which Radix interprets as "user clicked
+  // outside" and dismisses the parent menu before the user can pick a locale.
+  //
+  // Swallowing pointerdown/mousedown/keydown at the wrapper level prevents
+  // those events from bubbling up to Radix's outside-click detector. The
+  // native select still receives the events because they bubble from the
+  // <select> element itself — we only stop them after they've been handled
+  // by the select. Combined with the parent DropdownMenuContent's own
+  // `onCloseAutoFocus={(e) => e.preventDefault()}` (added in learner-shell),
+  // the menu stays open across locale changes on every platform.
+  function swallow(e: SyntheticEvent) {
+    e.stopPropagation();
+  }
+
   return (
-    <div className="px-3 py-2">
+    <div
+      className="px-3 py-2"
+      onPointerDown={swallow}
+      onMouseDown={swallow}
+      onKeyDown={swallow}
+      onFocusCapture={swallow}
+    >
       <label
         htmlFor="locale-switcher"
         className="block font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500"

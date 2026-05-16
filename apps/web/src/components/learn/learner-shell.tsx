@@ -199,7 +199,19 @@ export function LearnerShell({ children, user, navLabels, locale }: LearnerShell
                           </Avatar>
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-56"
+                        // Prevent Radix from yanking focus back into the
+                        // trigger after the native <select> popup closes —
+                        // that focus-flip is what causes the parent menu to
+                        // dismiss on macOS/iOS when the LocaleSwitcher is
+                        // used. See locale-switcher.tsx for the matching
+                        // pointer-event guard.
+                        onCloseAutoFocus={(e) => {
+                          if (locale) e.preventDefault();
+                        }}
+                      >
                         <div className="px-3 py-2">
                           <MonoLabel>SIGNED IN AS</MonoLabel>
                           <p className="mt-1 truncate text-body-sm font-medium text-paper-100">

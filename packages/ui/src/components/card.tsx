@@ -27,9 +27,20 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardHeader.displayName = 'CardHeader';
 
-const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3
+/**
+ * `CardTitle` defaults to `<h3>` so existing callsites stay unchanged. Pass
+ * `as="h2"` (or another heading level) when the page's outline requires it —
+ * this lets us fix `heading-order` axe violations without sweeping every
+ * caller. The element type is restricted to heading levels so callers can't
+ * accidentally render a non-heading element.
+ */
+type CardTitleHeading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  as?: CardTitleHeading;
+}
+const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ className, as: Tag = 'h3', ...props }, ref) => (
+    <Tag
       ref={ref}
       className={cn('font-sans text-h2 font-medium text-paper-100', className)}
       {...props}

@@ -159,6 +159,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@levelup/analytics':
+        specifier: workspace:*
+        version: link:../../packages/analytics
       '@levelup/auth-client':
         specifier: workspace:*
         version: link:../../packages/auth-client
@@ -226,6 +229,9 @@ importers:
       '@levelup/config-tsconfig':
         specifier: workspace:*
         version: link:../../packages/config-tsconfig
+      '@sentry/cli':
+        specifier: ^2.39.1
+        version: 2.39.1
       '@testing-library/jest-dom':
         specifier: ^6.5.0
         version: 6.9.1

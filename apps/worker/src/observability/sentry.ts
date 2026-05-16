@@ -9,10 +9,10 @@
  *     telemetry config.
  *   - DOES NOT upload source maps (follow-up).
  *
- * TODO (next step) — PII scrubbing: add `beforeSend` to strip
- *   - `event.user.email`, `event.user.ip_address`
- *   - any job payload field containing email / phone (Resend send-email
- *     handler in particular).
+ * PII scrubbing: see `beforeSend` below — strips user email/ip, drops
+ * request bodies on /api/auth/* and /api/users/*, removes
+ * authorization/cookie headers, and recursively scrubs any
+ * password/token/secret/apiKey keys in `event.extra` / `event.contexts`.
  *
  * IMPORTANT: this module must be imported before
  * `./observability/start.js` so Sentry's auto-instrumentation patches
@@ -24,6 +24,55 @@ import * as Sentry from '@sentry/node';
 const dsn = process.env.SENTRY_DSN ?? '';
 const isEnabled = dsn !== '' && !dsn.startsWith('PLACEHOLDER_');
 
+const SENSITIVE_URL_PATTERNS = [/^\/api\/auth\//, /^\/api\/users\//];
+const SENSITIVE_KEY_RE = /^(password|token|secret|apiKey)$/i;
+
+function scrubKeysDeep(node: unknown, seen: WeakSet<object> = new WeakSet()): void {
+  if (node === null || typeof node !== 'object') return;
+  if (seen.has(node as object)) return;
+  seen.add(node as object);
+  if (Array.isArray(node)) {
+    for (const child of node) scrubKeysDeep(child, seen);
+    return;
+  }
+  for (const key of Object.keys(node as Record<string, unknown>)) {
+    if (SENSITIVE_KEY_RE.test(key)) {
+      (node as Record<string, unknown>)[key] = '[scrubbed]';
+      continue;
+    }
+    scrubKeysDeep((node as Record<string, unknown>)[key], seen);
+  }
+}
+
+function scrubEvent(event: Sentry.ErrorEvent): Sentry.ErrorEvent {
+  if (event.user) {
+    if (event.user.email !== undefined) event.user.email = '[scrubbed]';
+    if (event.user.ip_address !== undefined) event.user.ip_address = '[scrubbed]';
+  }
+  if (event.request) {
+    const url = typeof event.request.url === 'string' ? event.request.url : '';
+    try {
+      const path = url.startsWith('http') ? new URL(url).pathname : url;
+      if (SENSITIVE_URL_PATTERNS.some((re) => re.test(path))) {
+        delete event.request.data;
+      }
+    } catch {
+      delete event.request.data;
+    }
+    if (event.request.headers && typeof event.request.headers === 'object') {
+      const headers = event.request.headers as Record<string, unknown>;
+      for (const k of Object.keys(headers)) {
+        if (k.toLowerCase() === 'authorization' || k.toLowerCase() === 'cookie') {
+          delete headers[k];
+        }
+      }
+    }
+  }
+  if (event.extra) scrubKeysDeep(event.extra);
+  if (event.contexts) scrubKeysDeep(event.contexts);
+  return event;
+}
+
 // IMPORTANT: side-effecting init at MODULE EVALUATION time so Sentry attaches
 // to Node core before the OTel start module is evaluated. See the API
 // equivalent (apps/api/src/observability/sentry.ts) for the full rationale.
@@ -32,6 +81,9 @@ if (isEnabled) {
     dsn,
     environment: process.env.SENTRY_ENVIRONMENT ?? process.env.NODE_ENV ?? 'development',
     tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE ?? '0.1'),
+    beforeSend(event) {
+      return scrubEvent(event);
+    },
   });
 }
 

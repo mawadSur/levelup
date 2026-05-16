@@ -2,6 +2,22 @@
   "nav": {
     "signIn": "Iniciar sesión",
     "signOut": "Cerrar sesión",
-    "learn": "Aprender"
+    "signUp": "Crear cuenta",
+    "learn": "Aprender",
+    "profile": "Perfil",
+    "admin": "Administración",
+    "coach": "Asistente",
+    "curriculum": "Programa",
+    "team": "Equipo",
+    "policy": "Política",
+    "reports": "Informes"
+  },
+  "dropdown": {
+    "adminConsole": "Panel de administración",
+    "language": "Idioma"
+  },
+  "auth": {
+    "signInTitle": "Bienvenido de nuevo",
+    "signInSubtitle": "Inicia sesión con el correo asociado a tu cuenta de trabajo."
   }
 }

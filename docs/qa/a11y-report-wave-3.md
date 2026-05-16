@@ -62,6 +62,65 @@ A route with `0` criticals stays as `0` here; routes that surface a critical
 finding will get a numbered list of `[rule-id]` + `selector` + the fix
 applied (or a Wave-4 ticket reference if it's not a 30-minute fix).
 
+### Lane H (Wave 3.1) — opportunistic serious/moderate fixes
+
+The Wave-3 spec stays critical-only (deliberately — see "DO NOT introduce a
+new serious scan in deployed E2E" decision). In parallel with that, lane H
+did a static review pass over the four target routes and shipped the
+following surgical serious/moderate fixes. Local scans were used as
+discovery only and the spec filter was NOT widened upstream.
+
+**Findings + fixes (per route):**
+
+- `/profile` — `heading-order` (serious): the page renders `<h1>Profile</h1>`
+  followed directly by ~5 `<CardTitle>` elements which the UI lib hard-codes
+  to `<h3>`. That's an h1→h3 skip on every card. Fix: added an `as` prop to
+  `@levelup/ui` `<CardTitle>` (defaults to `h3` — no callsite breakage) and
+  passed `as="h2"` on every profile card:
+  - `components/learn/profile/certificates-list.tsx`
+  - `components/learn/profile/baseline-card.tsx`
+  - `components/learn/profile/skill-posture-card.tsx`
+  - `components/learn/profile/leaderboard-opt-out-card.tsx`
+  - `components/learn/profile/edit-profile-form.tsx`
+  - inline cards in `app/(learn)/profile/page.tsx` (Achievements + Activity tabs)
+- `/coach` — `landmark-unique` + `region` (moderate): the conversation
+  sidebar rendered an unnamed `<aside>` and an unnamed inner `<nav>`. Added
+  `aria-label="Coach conversation history"` to the aside and
+  `aria-label="Recent conversations"` to the nav so SR users can distinguish
+  them from the main `<nav>` in the learner shell.
+- `/learn` — `button-name` / `aria-expanded` (moderate): the StudyPlanStrip
+  toggle was a bare `<button>` whose visible text flipped between "VIEW
+  4-WEEK PLAN" and "HIDE" with no `aria-expanded` and no full-sentence
+  accessible name. Added `aria-expanded={expanded}` and a paraphrased
+  `aria-label` so the announced state matches the visible state.
+- `/admin` — no surgical fix shipped this pass. The admin dashboard surface
+  uses `<NumberedSection>` + `<MonoLabel>` (non-heading) eyebrows with no
+  `<h2>` between the page `<h1>` and the descendant `<h3>`s — same family
+  of heading-order issue but the fix wants a structural decision (promote
+  `NumberedSection` to use a real `<h2>` with the eyebrow text, vs leave it
+  as a stylised label). That structural change is deferred to Wave 4 to
+  keep this lane's blast radius small.
+
+**Deferred to Wave 4:**
+
+- All `color-contrast` (serious) findings on `text-paper-300` / `text-paper-500`
+  tokens. These are foundational palette tokens used across the entire app;
+  touching them risks cascading visual regressions. They want a token-bump
+  designed alongside design review, not an emergency tweak in a hardening
+  lane.
+- `/admin` heading-order via `NumberedSection` (see above).
+- Carry-over Wave-2 SERIOUS findings on `/sign-in`, `/assessment/take`, the
+  admin error boundary, and the shared streak indicator's
+  `aria-prohibited-attr`.
+
+**Why we didn't widen the deployed spec's filter:**
+
+The `a11y-axe.spec.ts` filter stays at `impact === 'critical'`. Lifting it
+to `serious` here would have made the suite red on legitimate borderline
+contrast/heading cases that need design input — exactly the noisy CI
+failure mode the Wave 3 plan called out as harmful. Wave 4 will own the
+filter widening once the Wave 4 backlog (above) is cleared.
+
 ## Wave-2 carry-over to triage in Wave 4
 
 These are the previously-known SERIOUS / MODERATE findings from the

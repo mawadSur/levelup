@@ -74,7 +74,10 @@ export function ConversationList({
   const recent = conversations.slice(0, 20);
 
   return (
-    <aside className="flex h-full min-h-0 flex-col border-r border-ink-600 bg-ink-800">
+    <aside
+      aria-label="Coach conversation history"
+      className="flex h-full min-h-0 flex-col border-r border-ink-600 bg-ink-800"
+    >
       <div className="border-b border-ink-600 p-3">
         {onNewConversation ? (
           <Button className="w-full justify-start" variant="primary" onClick={onNewConversation}>
@@ -102,7 +105,7 @@ export function ConversationList({
         </Link>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-2 pb-3">
+      <nav aria-label="Recent conversations" className="flex-1 overflow-y-auto px-2 pb-3">
         {recent.length === 0 ? (
           <p className="px-2 py-4 font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
             NO CONVERSATIONS YET

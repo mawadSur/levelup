@@ -18,9 +18,14 @@ const instrumentSerif = Instrument_Serif({
   display: 'swap',
 });
 
+// CWV fix (Wave 4): Manrope was loading 7 weight files (200–800) but the
+// design system only uses 400/500/600/700. Trimming the weight list cuts the
+// preload size by ~57% and reduces LCP "Render Delay" caused by font-swap
+// reflow on text-heavy pages (Kapitus sign-in, /pricing). See
+// docs/qa/cwv-baseline-wave-4.md for the before/after numbers.
 const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-manrope',
   display: 'swap',
 });

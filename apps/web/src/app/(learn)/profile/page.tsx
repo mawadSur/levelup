@@ -137,7 +137,7 @@ export default async function ProfilePage() {
         <TabsContent value="achievements">
           <Card>
             <CardHeader>
-              <CardTitle>Achievements</CardTitle>
+              <CardTitle as="h2">Achievements</CardTitle>
               <CardDescription>Badges you&apos;ve earned on your learning journey.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -155,7 +155,7 @@ export default async function ProfilePage() {
         <TabsContent value="activity">
           <Card>
             <CardHeader>
-              <CardTitle>Activity</CardTitle>
+              <CardTitle as="h2">Activity</CardTitle>
               <CardDescription>Your recent lesson completions and quiz attempts.</CardDescription>
             </CardHeader>
             <CardContent>

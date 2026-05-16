@@ -83,4 +83,18 @@ export const track = {
 
   coachNudgeActedOn: (props: BaseEventProps & { nudgeId: string; kind: string }) =>
     captureEvent('coach_nudge.acted_on', props),
+
+  /**
+   * Pricing A/B test exposure (CR.27 scaffold). Fired server-side from
+   * `/pricing/page.tsx` when an anonymous visitor lands on the page.
+   * `organizationId` is set to the anon visitor's stable bucket id
+   * (lu-anon-id cookie) since no real org exists pre-signup.
+   */
+  pricingVariantExposed: (
+    props: BaseEventProps & {
+      flagKey: string;
+      variant: 'A' | 'B';
+      anonId: string;
+    },
+  ) => captureEvent('pricing_variant_exposed', props),
 };
