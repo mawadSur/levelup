@@ -56,7 +56,7 @@ export function MarkLessonReadButton({ lessonId, nextHref }: MarkLessonReadButto
       }
       // Visible in browser DevTools for forensics — never displayed to the user
       // as raw `error` (we render `display` instead).
-       
+
       console.error('[MarkLessonReadButton] completeLesson failed', err);
       setErrorMessage(display);
       setState('error');
