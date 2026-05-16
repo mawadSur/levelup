@@ -7,24 +7,11 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-  // ---------------------------------------------------------------------------
-  // i18n (CR.38) — declared here for documentation/intent. Next.js App Router
-  // (we are NOT on the Pages Router) does NOT use this `i18n` field for runtime
-  // routing; it is honoured only by the Pages Router. The actual locale
-  // resolution happens in `middleware.ts` (reads `levelup-locale` cookie →
-  // falls back to `Accept-Language`) and `src/lib/i18n.ts` (loads the message
-  // bundle on the server). Listing locales here gives a single source of truth
-  // that tooling and future migrations can read.
-  //
-  // `en` ships full messages, `es` ships a stub bundle, `fr`/`pt` are
-  // placeholders that fall back to English at runtime. Lesson content
-  // translation is a follow-up (see curriculum-rework-plan.md).
-  // ---------------------------------------------------------------------------
-  i18n: {
-    locales: ['en', 'es', 'fr', 'pt'],
-    defaultLocale: 'en',
-    localeDetection: false,
-  },
+  // i18n (CR.38) — locale list lives in `src/lib/i18n.ts` (SUPPORTED_LOCALES)
+  // and `middleware.ts`. The legacy `next.config` `i18n` field is a Pages-Router
+  // knob; setting it on App Router on Vercel was empirically observed to break
+  // the `/api/:path*` rewrite to the Render API (E2E went 6/6 → 0/6 after
+  // adding it). Keep the locale list out of this file.
   async headers() {
     return [
       {
