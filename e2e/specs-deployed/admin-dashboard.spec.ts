@@ -50,15 +50,17 @@ test.describe('Deployed admin dashboard smoke', () => {
 
     // ActivityFeed renders either:
     //   1. an <ol aria-label="Recent activity"> when events exist, or
-    //   2. an empty-state card whose copy starts with "No activity" or
-    //      "Activity feed is unavailable" — both are valid renderings.
-    const activityFeed = page
-      .locator(
-        'ol[aria-label="Recent activity"], text=/No activity yet|Activity feed is unavailable|No user selected/',
-      )
+    //   2. an empty-state card whose copy matches /No activity|Activity feed
+    //      is unavailable|No user selected/ — all are valid renderings.
+    // Playwright can't mix CSS + text engines in one locator string; build
+    // the two locators separately and use `.or()` to assert either matches.
+    const happyPath = page.locator('ol[aria-label="Recent activity"]').first();
+    const emptyState = page
+      .getByText(/No activity yet|Activity feed is unavailable|No user selected/)
       .first();
-    await expect(activityFeed, 'ActivityFeed must mount in one of its states').toBeVisible({
-      timeout: 15_000,
-    });
+    await expect(
+      happyPath.or(emptyState),
+      'ActivityFeed must mount in one of its states',
+    ).toBeVisible({ timeout: 15_000 });
   });
 });
