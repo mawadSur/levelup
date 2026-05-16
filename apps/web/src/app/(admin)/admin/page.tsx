@@ -8,6 +8,7 @@ import { StatCard } from '@/components/admin/stat-card';
 import { DeptBarList } from '@/components/admin/dept-bar-list';
 import { QuickActions } from '@/components/admin/quick-actions';
 import { DemoControlsCard } from '@/components/admin/demo/demo-controls-card';
+import { ActivityFeed } from '@/components/learn/profile/activity-feed';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -205,14 +206,13 @@ export default async function AdminDashboardPage() {
           <NumberedSection numeral="04" eyebrow="ACTIVITY STREAM" className="space-y-6">
             <Card>
               <CardContent className="space-y-3 p-6">
-                <MonoLabel>RECENT EVENTS</MonoLabel>
-                <p className="text-body-sm text-paper-300">
-                  Live feed of invitation accepts, lesson completions, and certificate issuances
-                  will appear here.
-                </p>
-                <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
-                  STATUS · COMING ONLINE
-                </p>
+                <div className="flex items-center justify-between">
+                  <MonoLabel>YOUR RECENT EVENTS</MonoLabel>
+                  <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                    LAST 20
+                  </span>
+                </div>
+                <ActivityFeed userId={user?.userId ?? user?.id ?? ''} limit={20} />
               </CardContent>
             </Card>
           </NumberedSection>

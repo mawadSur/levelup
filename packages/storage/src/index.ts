@@ -1,5 +1,12 @@
-export { storageConfig, isStubMode } from './config';
+export { storageConfig, isStubMode, isR2Configured } from './config';
 export type { StorageConfig } from './config';
+
+export {
+  getR2Client,
+  uploadObject as r2UploadObject,
+  getSignedDownloadUrl as r2GetSignedDownloadUrl,
+} from './r2-client';
+export type { R2UploadOptions } from './r2-client';
 
 export { uploadCertificatePdf, getCertificateSignedUrl } from './certificates';
 export type { CertificateUploadResult } from './certificates';

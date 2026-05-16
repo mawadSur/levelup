@@ -1,9 +1,9 @@
-import { acceptInvitationSchema } from '@levelup/types';
-import type { AcceptInvitationInput } from '@levelup/types';
+import { acceptInvitationSchema, signInRequestSchema } from '@levelup/types';
+import type { AcceptInvitationInput, SignInRequest, SignInResponse } from '@levelup/types';
 // Re-export the zod schemas that back this module's body validation.
 // Controllers use: @Body(new ZodValidationPipe(acceptInvitationSchema))
-export { acceptInvitationSchema };
-export type { AcceptInvitationInput };
+export { acceptInvitationSchema, signInRequestSchema };
+export type { AcceptInvitationInput, SignInRequest, SignInResponse };
 
 // ---- Typed response interfaces ----
 

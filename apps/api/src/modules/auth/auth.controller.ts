@@ -17,12 +17,14 @@ import { Request, Response } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AuthService } from './auth.service';
-import { acceptInvitationSchema } from './dto/sign-in.dto';
+import { acceptInvitationSchema, signInRequestSchema } from './dto/sign-in.dto';
 import {
   AcceptInvitationInput,
   AcceptInvitationResponse,
   DevBypassResponse,
   MeResponse,
+  SignInRequest,
+  SignInResponse,
   SignOutResponse,
 } from './dto/sign-in.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -55,6 +57,32 @@ export class AuthController {
     }
     const { accessToken, redirectTo } = await this.authService.handleDevBypass(email);
     return { accessToken, redirectTo };
+  }
+
+  /**
+   * Password sign-in proxy. The web client used to call
+   * `supabase.auth.signInWithPassword` from the browser, which left no place
+   * for our rate-limit substrate to gate brute-force attempts. This route
+   * sits behind `AuthRateLimitGuard` (10 attempts/min/IP, Redis-backed) and
+   * forwards to Supabase under the anon key. OAuth and magic-link flows stay
+   * client-side — they have negligible brute-force risk and Supabase already
+   * rate-limits them on the other side.
+   */
+  @Public()
+  @Post('sign-in')
+  @HttpCode(HttpStatus.OK)
+  @AuthRateLimit('sign-in', 10)
+  @ApiOperation({ summary: 'Password sign-in (rate-limited per IP)' })
+  async signIn(
+    @Body(new ZodValidationPipe(signInRequestSchema)) body: SignInRequest,
+  ): Promise<SignInResponse> {
+    const result = await this.authService.signInWithPassword(body.email, body.password);
+    return {
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      user: result.user,
+      redirectTo: result.redirectTo,
+    };
   }
 
   @Post('sign-out')

@@ -113,6 +113,37 @@ so no RLS policies are required.
    certificates controller detects stub mode and streams from disk on
    `GET /api/certificates/:id/file` so the demo flow keeps working.
 
+### File storage — Cloudflare R2 (preferred for cert PDFs)
+
+Certificate PDFs can be persisted to a Cloudflare R2 bucket instead of
+Supabase Storage. When R2 is configured, `@levelup/storage` uses it
+automatically for new uploads and signs all download URLs with the S3
+v4 presigner. R2 is preferred for production because it has no egress fees
+and is fronted by Cloudflare's CDN out of the box. Setup:
+
+1. Create an R2 bucket in the Cloudflare dashboard (e.g., `levelup-certs`).
+2. Account → R2 → Manage R2 API Tokens → Create API token with
+   "Object Read & Write" permission scoped to that bucket.
+3. Set the env vars (API + worker; same values on both services):
+   - `R2_ACCOUNT_ID=<from Cloudflare dashboard URL>`
+   - `R2_ACCESS_KEY_ID=<from token creation>`
+   - `R2_SECRET_ACCESS_KEY=<from token creation>`
+   - `R2_BUCKET=levelup-certs`
+   - `R2_PUBLIC_BASE_URL=` _(optional — only used if you front R2 with a
+     custom domain; the signed URL flow does not need this)_
+4. Object key shape is identical to the Supabase path:
+   `<orgId>/<certId>.pdf`. Existing Supabase rows can stay where they are
+   and the controller will sign whichever backend the new env-var matrix
+   points at (`getCertificateSignedUrl` reads `storagePath` and routes
+   based on `isR2Configured()`).
+5. Backend priority: R2 (if configured) → Supabase Storage → local fs stub.
+   Leaving any of the four required `R2_*` env vars unset or starting with
+   `PLACEHOLDER_` keeps the prior path active, so existing deployments
+   keep working unchanged.
+6. Signed URL TTL: 15 min default for R2 (matches the typical
+   email-click roundtrip), capped at 7d. The Supabase path still mints
+   7-day URLs for backward compatibility.
+
 ### Redis — Upstash
 
 1. Create a Global database (low latency from your API region).

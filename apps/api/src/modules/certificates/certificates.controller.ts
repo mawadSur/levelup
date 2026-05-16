@@ -26,7 +26,11 @@ import {
 import { Response } from 'express';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { getCertificateSignedUrl, isStubMode as isStorageStubMode } from '@levelup/storage';
+import {
+  getCertificateSignedUrl,
+  isStubMode as isStorageStubMode,
+  isR2Configured as isR2StorageConfigured,
+} from '@levelup/storage';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -145,8 +149,11 @@ export class CertificatesController {
       select: { storagePath: true },
     });
 
-    // Real-mode redirect path: storagePath set + Supabase configured.
-    if (cert?.storagePath && !isStorageStubMode()) {
+    // Real-mode redirect path: storagePath set + a cloud backend (R2 or
+    // Supabase) is configured. R2 takes priority over Supabase inside the
+    // storage package; the controller only needs to know we're not in
+    // the local-fs stub.
+    if (cert?.storagePath && (isR2StorageConfigured() || !isStorageStubMode())) {
       const signedUrl = await getCertificateSignedUrl(cert.storagePath);
       res.redirect(HttpStatus.FOUND, signedUrl);
       return;

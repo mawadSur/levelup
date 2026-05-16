@@ -23,6 +23,7 @@ import { BaselineCard } from '@/components/learn/profile/baseline-card';
 import { CertificatesList } from '@/components/learn/profile/certificates-list';
 import { SkillPostureCard } from '@/components/learn/profile/skill-posture-card';
 import { BadgeWall } from '@/components/learn/achievements/badge-wall';
+import { ActivityFeed } from '@/components/learn/profile/activity-feed';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -158,12 +159,7 @@ export default async function ProfilePage() {
               <CardDescription>Your recent lesson completions and quiz attempts.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-lg border border-dashed border-ink-600 p-6 text-center">
-                <p className="text-sm text-paper-300">
-                  Detailed activity log is coming soon. Your progress is tracked and will appear
-                  here.
-                </p>
-              </div>
+              <ActivityFeed userId={sessionId} limit={20} />
             </CardContent>
           </Card>
         </TabsContent>

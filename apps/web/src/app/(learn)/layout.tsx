@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth-client';
 import { LearnerShell } from '@/components/learn/learner-shell';
 import { ssrGet } from '@/lib/api/server-fetch';
+import { getTranslations } from '@/lib/i18n';
 import type { MyAssessment } from '@/lib/api/assessments';
 import type { CurrentWeekResponse } from '@levelup/types';
 
@@ -73,5 +74,16 @@ export default async function LearnGroupLayout({ children }: { children: React.R
     organizationId: user.organizationId,
   };
 
-  return <LearnerShell user={navUser}>{children}</LearnerShell>;
+  // i18n (CR.38) — resolve nav labels server-side so the shell stays a
+  // client component without pulling in the message bundles client-side.
+  const t = await getTranslations('nav');
+  const navLabels = {
+    signOut: t('signOut'),
+  };
+
+  return (
+    <LearnerShell user={navUser} navLabels={navLabels}>
+      {children}
+    </LearnerShell>
+  );
 }

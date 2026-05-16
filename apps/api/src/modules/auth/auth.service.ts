@@ -6,6 +6,7 @@ import {
   claimsToProfile,
   devBypass,
   isStubMode,
+  getAnonClient,
   type SupabaseProfile,
   type SessionPayload,
 } from '@levelup/auth-client';
@@ -29,6 +30,13 @@ export interface AcceptInvitationResult {
   redirect: string;
   /** Email of the user; the client uses this to drive the Supabase sign-in. */
   email: string;
+}
+
+export interface SignInResult {
+  accessToken: string;
+  refreshToken: string;
+  user: { id: string; email: string };
+  redirectTo: string;
 }
 
 @Injectable()
@@ -103,6 +111,74 @@ export class AuthService {
 
     const redirectTo = user.role === Role.EMPLOYEE ? '/learn' : '/admin';
     return { accessToken, redirectTo, user, organization };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Password sign-in (proxied through API so we can rate-limit per IP)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Validate `{ email, password }` against Supabase Auth and return the access
+   * + refresh tokens. The sole reason this lives on the API instead of the
+   * browser is so it sits behind `AuthRateLimitGuard` and the Redis sliding-
+   * window backed `checkRateLimit`. Without the proxy a brute-force attacker
+   * could hammer Supabase directly with no per-IP gating from our side.
+   *
+   * In stub mode the call short-circuits to the dev-bypass mint path — the
+   * dev e2e suite never has a real Supabase to talk to, and the deployed
+   * preview environments rely on the same dev-bypass behavior.
+   */
+  async signInWithPassword(email: string, password: string): Promise<SignInResult> {
+    if (isStubMode()) {
+      const dev = await this.handleDevBypass(email);
+      return {
+        accessToken: dev.accessToken,
+        // Stub mode has no refresh-token concept; emit the same string twice
+        // rather than empty so downstream clients that expect a non-empty
+        // value don't choke. The token is short-lived and re-mintable.
+        refreshToken: dev.accessToken,
+        user: { id: dev.user.id, email: dev.user.email },
+        redirectTo: dev.redirectTo,
+      };
+    }
+
+    const supabase = getAnonClient();
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error !== null || data.session === null || data.user === null) {
+      // Surface Supabase's message verbatim — it's already user-friendly
+      // ("Invalid login credentials", "Email not confirmed", etc.) and the
+      // rate-limit guard above already absorbs brute-force enumeration risk.
+      throw new UnauthorizedException(error?.message ?? 'Invalid credentials');
+    }
+
+    // Reuse the canonical upsert path so a fresh sign-in attaches the local
+    // User row (and, when missing, bootstraps the personal org) before the
+    // first authenticated request lands.
+    const claims = await verifyAccessToken(data.session.access_token);
+    let redirectTo = '/learn';
+    let localUserId = data.user.id;
+    let localEmail = data.user.email ?? email.toLowerCase();
+    if (claims !== null) {
+      const profile = claimsToProfile(claims);
+      if (profile.email !== '') {
+        const { user } = await this.upsertUserFromProfile(profile);
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
+        redirectTo = user.role === Role.EMPLOYEE ? '/learn' : '/admin';
+        localUserId = user.id;
+        localEmail = user.email;
+      }
+    }
+
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
+      user: { id: localUserId, email: localEmail },
+      redirectTo,
+    };
   }
 
   // ---------------------------------------------------------------------------

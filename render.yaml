@@ -4,6 +4,15 @@ services:
     runtime: node
     rootDir: .
     plan: standard
+    # ---------------------------------------------------------------------------
+    # Single-region (CR.28). The API + worker run in oregon (us-west-2) because
+    # Postgres (Supabase pooler) and Redis (Upstash) both live there — keeping
+    # the round-trip on the same backbone shaves ~70ms off the median request.
+    # A regional outage here takes the entire product down. The "go multi-region"
+    # checklist (RTO 1h / RPO 5min, read replicas via Neon, Cloudflare LB,
+    # promotion runbook) lives at docs/runbooks/multi-region.md — read that
+    # before changing the region or adding a second one.
+    # ---------------------------------------------------------------------------
     region: oregon
     branch: main
     autoDeploy: true
@@ -46,6 +55,19 @@ services:
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: SUPABASE_JWT_SECRET
+        sync: false
+
+      # Cloudflare R2 (CR.26) — preferred backend for cert PDFs. Leave any
+      # of the four required vars unset to fall back to Supabase Storage.
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_PUBLIC_BASE_URL
         sync: false
 
       # OpenAI (coach + embeddings + voice)
@@ -94,6 +116,9 @@ services:
     runtime: node
     rootDir: .
     plan: starter
+    # Worker stays in oregon for the same reasons as the API (DB + Redis
+    # locality). On multi-region failover, only one region's worker should be
+    # active at a time — see docs/runbooks/multi-region.md §4.5.
     region: oregon
     branch: main
     autoDeploy: true
@@ -117,6 +142,18 @@ services:
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
+      # Cloudflare R2 (CR.26) — worker uploads cert PDFs here when configured.
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_PUBLIC_BASE_URL
         sync: false
 
       - key: OPENAI_API_KEY

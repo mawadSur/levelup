@@ -45,9 +45,16 @@ interface NavUser {
   organizationId?: string;
 }
 
+interface NavLabels {
+  /** Localised "Sign out" label. Falls back to English when omitted. */
+  signOut?: string;
+}
+
 interface LearnerShellProps {
   children: React.ReactNode;
   user: NavUser;
+  /** Server-resolved i18n labels (CR.38). Optional — defaults to English. */
+  navLabels?: NavLabels;
 }
 
 type NavLink = { href: string; label: string };
@@ -73,11 +80,12 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-export function LearnerShell({ children, user }: LearnerShellProps) {
+export function LearnerShell({ children, user, navLabels }: LearnerShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname() ?? '';
   const isManager = user.role === 'MANAGER' || user.role === 'ADMIN';
+  const signOutLabel = navLabels?.signOut ?? 'Sign out';
 
   const analyticsUser =
     user.userId && user.organizationId
@@ -208,7 +216,7 @@ export function LearnerShell({ children, user }: LearnerShellProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link href="/sign-out" className="text-danger focus:text-danger">
-                            Sign out
+                            {signOutLabel}
                           </Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>

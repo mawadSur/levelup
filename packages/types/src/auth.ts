@@ -9,6 +9,35 @@ export const signInSchema = z.object({
 });
 export type SignInInput = z.infer<typeof signInSchema>;
 
+/**
+ * Request body for `POST /auth/sign-in` — the server-side rate-limited proxy
+ * in front of Supabase Auth's `signInWithPassword`. Keeping the proxy thin
+ * means we can apply the per-IP rate-limit Redis bucket without re-implementing
+ * password verification.
+ */
+export const signInRequestSchema = z.object({
+  email: emailSchema,
+  password: z.string().min(1).max(256),
+});
+export type SignInRequest = z.infer<typeof signInRequestSchema>;
+
+/**
+ * Response body for `POST /auth/sign-in` on the success path. The web client
+ * stashes `accessToken` in localStorage and lets the Supabase JS client pick
+ * it up; `refreshToken` is forwarded for completeness. The `user` block is
+ * the minimal identifier set the client needs to redirect post-login.
+ */
+export const signInResponseSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  user: z.object({
+    id: z.string(),
+    email: emailSchema,
+  }),
+  redirectTo: z.string().optional(),
+});
+export type SignInResponse = z.infer<typeof signInResponseSchema>;
+
 export const acceptInvitationSchema = z.object({
   token: z.string().min(16),
   name: z.string().min(1).max(120),

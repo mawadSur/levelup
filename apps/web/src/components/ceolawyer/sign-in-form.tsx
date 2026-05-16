@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiPost } from '@/lib/api';
+import type { SignInResponse } from '@levelup/types';
 import { getSupabaseBrowserClient, isSupabaseConfiguredOnClient } from '@/lib/supabase/client';
 
 const API_BASE =
@@ -82,16 +84,29 @@ export function CeoLawyerSignInForm({ redirect, initialEmail }: CeoLawyerSignInF
 
     setLoading(true);
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (signInError) {
-        setError(signInError.message);
-        return;
+      // Route password sign-in through the API proxy so the per-IP Redis
+      // rate-limit (AuthRateLimitGuard, 10/min) gates brute-force attempts.
+      // OAuth + magic-link stay on the Supabase SDK below — they don't
+      // benefit from our rate limiter (Supabase already gates them) and
+      // need to do their own redirect handshake.
+      const result = await apiPost<{ email: string; password: string }, SignInResponse>(
+        '/auth/sign-in',
+        { email, password },
+      );
+      // Hand the freshly issued session to the Supabase browser client so
+      // subsequent SDK calls (and the API client's bearer-injection path)
+      // pick it up without a round-trip.
+      try {
+        const supabase = getSupabaseBrowserClient();
+        await supabase.auth.setSession({
+          access_token: result.accessToken,
+          refresh_token: result.refreshToken,
+        });
+      } catch {
+        // Stub mode or misconfigured client — fall through; the API token
+        // is still stored below and the request pipeline will use it.
       }
-      router.push(redirect ?? '/learn');
+      router.push(redirect ?? result.redirectTo ?? '/learn');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

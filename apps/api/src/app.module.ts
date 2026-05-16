@@ -3,40 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppLogger } from './common/logger/app-logger.service';
 import { zodValidate } from './config/env.config';
-import { HealthModule } from './health/health.module';
 import { PrismaModule } from './modules/prisma';
-import { AuthModule } from './modules/auth';
-import { OrganizationsModule } from './modules/organizations';
-import { UsersModule } from './modules/users';
-import { LearningModule } from './modules/learning';
-import { AssessmentsModule } from './modules/assessments';
-import { CoachModule } from './modules/coach';
-import { PromptsModule } from './modules/prompts';
-import { PoliciesModule } from './modules/policies';
-import { BillingModule } from './modules/billing';
-import { WebhooksModule } from './modules/webhooks';
-import { ReportingModule } from './modules/reporting';
-import { CertificatesModule } from './modules/certificates';
-import { GameModule } from './modules/game';
-import { OnboardingModule } from './modules/onboarding';
-import { PrivacyModule } from './modules/privacy';
-import { SearchModule } from './modules/search';
-import { FlagsModule } from './modules/flags';
-import { AdminOpsModule } from './modules/admin-ops';
-import { PathBuilderModule } from './modules/path-builder';
-import { RiskAlertsModule } from './modules/risk-alerts';
-import { DemoModule } from './modules/demo';
-import { AnalyticsModule } from './modules/analytics';
-import { InsightsModule } from './modules/insights';
-import { AnomalyModule } from './modules/anomaly';
-import { IntegrationsModule } from './modules/integrations';
-import { GovernanceModule } from './modules/governance';
-import { LabsModule } from './modules/labs';
-import { IncidentsModule } from './modules/incidents';
-import { SkillsModule } from './modules/skills';
-import { NudgesModule } from './modules/nudges';
-import { BenchmarksModule } from './modules/benchmarks';
-import { StudyPlanModule } from './modules/study-plan';
+import { ALL_MODULES } from './modules';
 
 @Module({
   imports: [
@@ -45,40 +13,13 @@ import { StudyPlanModule } from './modules/study-plan';
       validate: zodValidate,
       cache: true,
     }),
+    // Foundational module — kept here (not in ALL_MODULES) to document its
+    // role as bedrock. Every feature module that needs the DB depends on
+    // PrismaService transitively via Nest's DI graph.
     PrismaModule,
-    AuthModule,
-    HealthModule,
-    OrganizationsModule,
-    UsersModule,
-    LearningModule,
-    AssessmentsModule,
-    RiskAlertsModule,
-    CoachModule,
-    PromptsModule,
-    PoliciesModule,
-    BillingModule,
-    WebhooksModule,
-    ReportingModule,
-    CertificatesModule,
-    GameModule,
-    LabsModule,
-    IncidentsModule,
-    SkillsModule,
-    NudgesModule,
-    BenchmarksModule,
-    StudyPlanModule,
-    OnboardingModule,
-    PrivacyModule,
-    SearchModule,
-    FlagsModule,
-    AdminOpsModule,
-    PathBuilderModule,
-    DemoModule,
-    AnalyticsModule,
-    InsightsModule,
-    AnomalyModule,
-    IntegrationsModule,
-    GovernanceModule,
+    // Every feature module lives in `apps/api/src/modules/index.ts`. To add
+    // a new module, edit that registry — no changes here are required.
+    ...ALL_MODULES,
   ],
   controllers: [AppController],
   providers: [AppLogger],
