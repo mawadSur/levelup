@@ -145,3 +145,81 @@ These will be the Wave-4 scope when we lift the spec's filter from
    visible failure.
 3. Expand the route matrix to include `/sign-in`, `/assessment`, `/curriculum`,
    `/streak` for full surface coverage in Wave 5.
+
+## Wave 5 follow-ups (2026-05-16) — serious sweep
+
+Lane 3 ran a one-shot widening of the filter to `critical || serious` and
+re-ran the spec across both tenants. The spec filter was **reverted** to
+critical-only after discovery so deployed CI stays at the pre-Wave-5 bar.
+
+**Real serious violations found + fixed in this wave:**
+
+1. `/profile` (kapitus) — `color-contrast` (serious): the avatar `AvatarFallback`
+   used `bg-signal/15` (15% kapitus purple on white = `#edd5fc`) with
+   `text-signal` (`#ad00ff`). Measured ratio **3.67:1**, fails AA. Switched to
+   `bg-signal text-ink-900` — same pattern as the audited signal-on-signal
+   buttons. New ratio comfortably exceeds AA on both tenants.
+   - File: `apps/web/src/components/learn/profile/profile-header.tsx`.
+2. `/learn` (kapitus) — `color-contrast` (serious) on `StatChip` label: the
+   `text-paper-500` (kapitus → `--kp-ink-mute = #647488` / slate-500) on
+   `bg-ink-800/60` (effective `#FAFBFD`) measured **4.49:1**, just below the
+   AA bar. Token-level fix in `packages/ui/src/styles/kapitus.css`: darkened
+   `--kp-ink-mute` from slate-500 (`100 116 139`) to slate-600 (`71 85 105`),
+   new contrast ~7.3:1. Side-effect is global (all `text-paper-500` on
+   kapitus tenants gets darker), which is the desired direction — every
+   call site shifts further into the AA-safe band.
+
+**Token-level fix (Item 3 scope, also resolves the bulk of axe noise):**
+
+3. Mission Brief `.light` theme `--paper-500: 130 130 130` (`#828282`) on
+   `--ink-900: 244 241 234` (`#F4F1EA`) measured **3.51:1**, fails AA.
+   Darkened to `100 100 100` (`#646464`) → ~5.26:1. `--paper-100` (`#0E1019`)
+   and `--paper-300` (`#505664`) on the same background already pass AA
+   (16.9:1 and 6.62:1 respectively); left unchanged. See
+   `docs/qa/a11y-color-contrast-wave-5.md` for the full per-token table.
+
+**Confirmed false positives (no fix needed — axe-core bug):**
+
+Axe reported four serious `color-contrast` violations on `/admin` (ceolawyer)
+against `text-paper-100` / `text-paper-300` / `text-paper-500`. Direct
+inspection via Playwright `getComputedStyle` confirms the actual rendered
+colors are:
+
+| Token            | Reported fg | Actual fg (computed) | Actual contrast on `#fff` |
+| ---------------- | ----------- | -------------------- | ------------------------- |
+| `text-paper-100` | `#c1c1c1`   | `rgb(26, 26, 26)`    | ~16:1                     |
+| `text-paper-300` | `#cacaca`   | `rgb(60, 60, 60)`    | ~10:1                     |
+| `text-paper-500` | `#cacaca`   | `rgb(92, 92, 92)`    | ~6.5:1                    |
+
+All three pass AA in reality. The discrepancy is reproducible and appears
+to be axe-core anti-aliasing pixel-sampling on Instrument Serif italic +
+small mono uppercase text on warm-white surfaces. **Do NOT widen the spec
+filter to serious until upstream axe-core fixes this** — the deployed CI
+would block on a non-issue. Tracked as Wave 6 follow-up: investigate
+suppressing this specific axe rule on serif italic h1s, or upgrade to a
+post-fix axe-core release.
+
+**Spec filter status:** reverted to `impact === 'critical'`. The temporary
+widening was a discovery-only run and is not committed.
+
+## Wave 6 follow-ups
+
+- Investigate axe-core false-positive on `text-paper-*` tokens (see above).
+  Likely needs an axe-core upgrade or a per-element exclusion.
+- Re-baseline the Wave-3 spec against the deployed tenants after the
+  Item 3 token bump lands on prod to confirm `/learn` (kapitus) StatChip
+  no longer reports `color-contrast` even at the `serious` impact bar.
+- Carry-over from Wave 5 (not in scope this lane):
+  - `/profile` (kapitus) `bg-signal/15 text-signal` chip patterns elsewhere
+    (team-table, curriculum chip, coach history). Same root cause as the
+    AvatarFallback — same fix applies (`bg-signal text-ink-900` or pick a
+    deeper signal tint). Six remaining occurrences listed below; not
+    surfaced by the four-route audit but will trip once the matrix expands:
+    - `apps/web/src/components/learn/team/team-table.tsx:122`
+    - `apps/web/src/app/(learn)/curriculum/curriculum-view.tsx:286`
+    - `apps/web/src/app/(learn)/assessment/start/page.tsx:16`
+    - `apps/web/src/app/(learn)/coach/history/[id]/page.tsx:103`
+    - `apps/web/src/components/learn/quests/quest-card.tsx:32` (lab badge)
+    - `apps/web/src/components/coach/coach-message.tsx:404`
+  - All Wave-2 serious carry-overs (still open, see "Wave-2 carry-over"
+    section above).

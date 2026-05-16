@@ -84,8 +84,9 @@ export class LessonsService {
         orderIndex: true,
         videoUrl: true,
         // quizzes: at most one per lesson in current data model. We expose
-        // the first id so the lesson page can navigate without a separate
-        // GET /quizzes?lessonId= probe.
+        // the first id so admin callers (path editor) can navigate without a
+        // second request. Learner pages fetch the full quiz body via
+        // GET /lessons/:lessonId/quiz instead.
         quizzes: { select: { id: true }, take: 1 },
       },
     });
@@ -95,6 +96,48 @@ export class LessonsService {
       quizId: quizzes[0]?.id ?? null,
     }));
   }
+
+  /**
+   * Returns the single quiz attached to `lessonId` in the learner-facing
+   * shape (`text` instead of the DB `prompt` column, `correctIndex` stripped,
+   * `passingScore` echoed for the runner header) or 404 when none exists.
+   *
+   * The pass threshold is currently hard-coded to 70 in
+   * `QuizzesService.submitAttempt` (`score >= 70`). We mirror that constant
+   * here so the runner header ("PASS @ 70%") stays truthful — if the
+   * threshold ever becomes per-quiz or a column on `Quiz`, change both spots.
+   */
+  async getLessonQuiz(lessonId: string, user: SessionPayload) {
+    // Same org-scoping pattern as getLesson — global paths (organizationId
+    // null) and the caller's org are both visible.
+    await this.assertLessonAccess(lessonId, user);
+
+    const quiz = await this.prisma.quiz.findFirst({
+      where: { lessonId },
+      include: { questions: { orderBy: { orderIndex: 'asc' } } },
+    });
+
+    if (!quiz) throw new NotFoundException('No quiz for this lesson');
+
+    return {
+      id: quiz.id,
+      lessonId: quiz.lessonId,
+      title: quiz.title,
+      passingScore: LessonsService.QUIZ_PASS_THRESHOLD,
+      questions: quiz.questions.map((q) => ({
+        id: q.id,
+        text: q.prompt,
+        choices: q.choices,
+        explanation: q.explanation,
+        orderIndex: q.orderIndex,
+        // correctIndex deliberately omitted — revealed only by
+        // `QuizzesService.submitAttempt` per the SEV-17 reveal gate.
+      })),
+    };
+  }
+
+  /** Mirrors the threshold in QuizzesService.submitAttempt (`score >= 70`). */
+  private static readonly QUIZ_PASS_THRESHOLD = 70;
 
   async getLesson(lessonId: string, user: SessionPayload) {
     const lesson = await this.assertLessonAccess(lessonId, user);

@@ -88,3 +88,66 @@ To validate after deploy: re-run `npx lighthouse@12 https://ailevel.app/learn --
 - `next/font/google` preload behavior (auto by default — leaving as-is).
 - No new dependencies installed (lighthouse run via `npx --yes` cache only).
 - Authenticated route measurements (require Wave-5 work to harness an authed Playwright session).
+
+## Post-deploy measurement (Wave 5 lane-1)
+
+- Tool: `npx lighthouse@12 --only-categories=performance --quiet --chrome-flags="--headless=new --no-sandbox"` (v12.8.2)
+- Date: 2026-05-16
+- Deploy commit: `41e0f35` (font-weight trim shipped)
+- Tenant + routes: identical to baseline (`ailevel.app/learn`, `/admin`, `/pricing`)
+- LCP element on `/learn` and `/admin` was still `<p class="kp-body">` inside the Kapitus sign-in panel; on `/pricing` still `<h1 class="kp-display">`. Apples-to-apples vs the baseline.
+- Network panel confirmed the Manrope set shrank from 7 weights to **5 woff2 files** post-deploy (4 weights + the variable-axis preload sidecar emitted by `next/font/google`).
+
+### Results
+
+| Route                  | Baseline LCP | Projected LCP | **Measured LCP** | Δ vs baseline | Δ vs projection |
+| ---------------------- | ------------ | ------------- | ---------------- | ------------- | --------------- |
+| `/learn` → sign-in     | 4218 ms      | ~2900 ms      | **4013 ms**      | −205 ms       | **+1113 ms**    |
+| `/admin` → sign-in     | 3892 ms      | ~2700 ms      | **3929 ms**      | +37 ms        | **+1229 ms**    |
+| `/pricing` → marketing | 3479 ms      | ~2500 ms      | **3366 ms**      | −113 ms       | **+866 ms**     |
+
+| Route      | Baseline CLS / TBT | **Measured CLS / TBT** |
+| ---------- | ------------------ | ---------------------- |
+| `/learn`   | 0.00 / 80 ms       | 0.00 / 262 ms          |
+| `/admin`   | 0.00 / 154 ms      | 0.00 / 18 ms           |
+| `/pricing` | 0.00 / 120 ms      | 0.00 / 159 ms          |
+
+CLS stayed at 0.00 across the board (Good). TBT moved within the Good band (< 300 ms) on every route — `/learn` worsened by 182 ms but is still well below the 200 ms INP "good" threshold for which TBT is the lab proxy; `/admin` improved sharply.
+
+### Verdict — projection missed by > 500 ms on every route
+
+The font-weight trim landed (network panel shows 5 woff2 files instead of 7) but the LCP win was 200 ms on `/learn`, **+37 ms (i.e. flat / slight regression)** on `/admin`, and 113 ms on `/pricing` — far short of the projected 1300 / 1200 / 1000 ms gains. Every route is **> 500 ms off projection**, so flagging per the lane-1 brief.
+
+Diagnostic on `/learn` (representative):
+
+- TTFB: 33 ms (vastly better than baseline 654 ms — likely a CDN warm-cache effect, separate from the font change).
+- FCP: 1245 ms (unchanged vs baseline).
+- LCP − FCP gap: **2768 ms** — still dominated by the font-swap window. Dropping three woff2 weights only shaved ~13% of the render-delay budget because the remaining four are still competing on the same connection and the body weight (400) is _still_ not explicitly preloaded.
+
+### Why the projection was off
+
+The Wave-4 projection assumed a linear relationship between woff2 file count and LCP improvement (43% byte reduction → ~1200 ms gain). That model was wrong:
+
+1. **Critical-path width, not byte count, dominates.** With 4 remaining files still preloaded simultaneously over a single H/2 connection, the slowest-arriving weight still sets the swap deadline — and that file is roughly the same size as before the trim.
+2. **The marketing Wave-2 baseline that anchored the projection used a different font (Inter-only) and a different LCP element (h1 instead of body paragraph).** Body paragraphs are more swap-sensitive because they have more glyph coverage requirements.
+3. **CDN/TTFB variance.** Baseline TTFB was 654 ms; measured TTFB is 33 ms. Even accounting for that 620 ms TTFB win on its own, LCP only improved by 205 ms — implying font-render delay actually _grew_ slightly under the lighter font load.
+
+### Recommended Wave-5 follow-up
+
+Lane U already called this out as the next-most-impactful lever and we now have measured data to back it:
+
+```html
+<link
+  rel="preload"
+  as="font"
+  type="font/woff2"
+  href="/_next/static/media/<manrope-400>.woff2"
+  crossorigin
+/>
+```
+
+Preloading only the body weight (400) explicitly should close the FCP→LCP gap to < 1 s for the sign-in routes. Marketing `/pricing` may also benefit from preloading the display weight if `h1.kp-display` resolves to 700.
+
+### Cleanup
+
+`/tmp/tmp-lh-learn.json`, `/tmp/tmp-lh-admin.json`, `/tmp/tmp-lh-pricing.json` were removed after the numbers were extracted. Re-run with the command in the Method section if you need raw reports again.

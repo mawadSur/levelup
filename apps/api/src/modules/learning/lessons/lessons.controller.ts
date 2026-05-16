@@ -31,6 +31,22 @@ export class LessonsController {
     return this.lessonsService.getLesson(id, user);
   }
 
+  /**
+   * GET /lessons/:lessonId/quiz
+   *
+   * Returns the (at most one) quiz attached to a lesson in the learner-facing
+   * shape consumed by `<QuizRunner>` — `correctIndex` is stripped from every
+   * question. Responds 404 when the lesson has no quiz, which the consumer
+   * uses to fall through to the Mark-as-read CTA.
+   *
+   * Org-scoping mirrors `getLesson`: the lesson's path must be either owned
+   * by the caller's org or a global (organizationId === null) path.
+   */
+  @Get('lessons/:lessonId/quiz')
+  getLessonQuiz(@Param('lessonId') lessonId: string, @CurrentUser() user: SessionPayload) {
+    return this.lessonsService.getLessonQuiz(lessonId, user);
+  }
+
   /** POST /paths/:pathId/lessons */
   @Post('paths/:pathId/lessons')
   @Roles('MANAGER')

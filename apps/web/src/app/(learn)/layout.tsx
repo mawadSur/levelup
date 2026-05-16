@@ -76,9 +76,19 @@ export default async function LearnGroupLayout({ children }: { children: React.R
 
   // i18n (CR.38) — resolve nav labels server-side so the shell stays a
   // client component without pulling in the message bundles client-side.
-  const t = await getTranslations('nav');
+  // Lane U (Wave 4) added `nav.team / nav.policy / nav.reports / nav.signUp`
+  // and `dropdown.adminConsole / dropdown.language` to every locale bundle.
+  // We resolve them here so the shell never holds an English fallback.
+  const tNav = await getTranslations('nav');
+  const tDropdown = await getTranslations('dropdown');
   const navLabels = {
-    signOut: t('signOut'),
+    signOut: tNav('signOut'),
+    signUp: tNav('signUp'),
+    team: tNav('team'),
+    policy: tNav('policy'),
+    reports: tNav('reports'),
+    adminConsole: tDropdown('adminConsole'),
+    language: tDropdown('language'),
   };
 
   // Locale switcher (CR.39) — pass the active locale + supported list to the

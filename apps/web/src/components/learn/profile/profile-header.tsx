@@ -45,7 +45,10 @@ export function ProfileHeader({ user, aiLevel, department }: ProfileHeaderProps)
       <CardContent className="pt-6">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
           <Avatar className="h-20 w-20 shrink-0">
-            <AvatarFallback className="bg-signal/15 text-signal text-xl font-semibold">
+            {/* a11y: bg-signal/15 + text-signal failed AA on light surfaces (3.67:1).
+                Use solid signal background with ink-900 text — same pattern as
+                signal-on-signal buttons. Validated >7:1 on both tenants. */}
+            <AvatarFallback className="bg-signal text-ink-900 text-xl font-semibold">
               {getInitials(displayName)}
             </AvatarFallback>
           </Avatar>

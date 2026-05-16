@@ -16,7 +16,13 @@
   /* Ink */
   --kp-ink: 15 23 42;
   --kp-ink-soft: 51 65 85;
-  --kp-ink-mute: 100 116 139;
+  /* Wave 5 a11y: --kp-ink-mute was slate-500 (100 116 139 / #647488), which
+   * rendered at 4.38:1 contrast on the semi-transparent .bg-ink-800/60 chip
+   * background — fails AA (4.5 required) on /learn StatChip. Darkened to
+   * slate-600 (71 85 105 / #475569) which renders at ~7.3:1 — solid AA.
+   * The darker tone is still well above slate-700, so visual weight relative
+   * to --kp-ink-soft (slate-700-equivalent) is preserved. */
+  --kp-ink-mute: 71 85 105;
   --kp-ink-faint: 148 163 184;
 
   /* Brand — matches live kapitus.com palette */

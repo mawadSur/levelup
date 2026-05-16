@@ -50,6 +50,22 @@ interface NavUser {
 interface NavLabels {
   /** Localised "Sign out" label. Falls back to English when omitted. */
   signOut?: string;
+  /** Localised "Sign up" label. Currently unused in the shell — wired
+   * through so other learn-app shells (sign-in CTA on public marketing
+   * pages, etc.) can pick the same source. */
+  signUp?: string;
+  /** Localised "Team" — manager-only nav entry. */
+  team?: string;
+  /** Localised "Policy" — reserved for the future policy nav entry. */
+  policy?: string;
+  /** Localised "Reports" — reserved for the future reports nav entry. */
+  reports?: string;
+  /** Localised "Admin console" dropdown item. */
+  adminConsole?: string;
+  /** Localised "Language" label — kept here for parity with the message
+   * bundle. The actual `<LANGUAGE>` legend lives inside `LocaleSwitcher`
+   * which is frozen for this wave. */
+  language?: string;
 }
 
 interface LocaleProps {
@@ -80,7 +96,14 @@ const BASE_NAV_LINKS: NavLink[] = [
   { href: '/profile', label: 'Profile' },
 ];
 
-const MANAGER_NAV_LINKS: NavLink[] = [...BASE_NAV_LINKS, { href: '/team', label: 'Team' }];
+/**
+ * Manager-only nav links. The `/team` label is sourced from `navLabels.team`
+ * at render time (Wave 5 i18n wiring) and falls back to English when no
+ * translator is passed.
+ */
+function buildManagerNavLinks(teamLabel: string): NavLink[] {
+  return [...BASE_NAV_LINKS, { href: '/team', label: teamLabel }];
+}
 
 function getInitials(name: string): string {
   return name
@@ -97,6 +120,8 @@ export function LearnerShell({ children, user, navLabels, locale }: LearnerShell
   const pathname = usePathname() ?? '';
   const isManager = user.role === 'MANAGER' || user.role === 'ADMIN';
   const signOutLabel = navLabels?.signOut ?? 'Sign out';
+  const teamLabel = navLabels?.team ?? 'Team';
+  const adminConsoleLabel = navLabels?.adminConsole ?? 'Admin console';
 
   const analyticsUser =
     user.userId && user.organizationId
@@ -121,7 +146,7 @@ export function LearnerShell({ children, user, navLabels, locale }: LearnerShell
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const navLinks = isManager ? MANAGER_NAV_LINKS : BASE_NAV_LINKS;
+  const navLinks = isManager ? buildManagerNavLinks(teamLabel) : BASE_NAV_LINKS;
 
   return (
     <PostHogProvider user={analyticsUser}>
@@ -233,7 +258,7 @@ export function LearnerShell({ children, user, navLabels, locale }: LearnerShell
                         </DropdownMenuItem>
                         {isManager && (
                           <DropdownMenuItem asChild>
-                            <Link href="/admin">Admin console</Link>
+                            <Link href="/admin">{adminConsoleLabel}</Link>
                           </DropdownMenuItem>
                         )}
                         {locale && (

@@ -43,7 +43,11 @@
 
     --paper-100: 14 16 25;
     --paper-300: 80 86 100;
-    --paper-500: 130 130 130;
+    /* Wave 5 a11y: was 130 130 130 (#828282) → 3.51:1 on #F4F1EA, fails AA.
+     * Darkened to 100 100 100 (#646464) → 5.26:1, passes AA for body text.
+     * Other paper-* tokens remain unchanged: --paper-100 (#0E1019) and
+     * --paper-300 (#505664) already pass AA at 16.9:1 and 6.62:1 respectively. */
+    --paper-500: 100 100 100;
 
     --signal: 212 149 0;
     --signal-dim: 184 130 0;

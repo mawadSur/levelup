@@ -95,9 +95,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   const quizData = quizResult.status === 'fulfilled' ? quizResult.value : null;
 
-  // 6. Fetch quiz attempts if quiz exists
+  // 6. Fetch quiz attempts if quiz exists.
+  // API exposes GET /quizzes/:id/my-attempts (singular, suffix); the
+  // plural `/attempts/me` form 404s on prod. Aligned with the consumer in
+  // apps/web/src/lib/api/quizzes.ts listMyAttempts.
   const attemptsResult = quizData
-    ? await ssrGet<QuizAttempt[]>(`/quizzes/${quizData.id}/attempts/me`).catch(
+    ? await ssrGet<QuizAttempt[]>(`/quizzes/${quizData.id}/my-attempts`).catch(
         () => [] as QuizAttempt[],
       )
     : [];
@@ -333,37 +336,17 @@ function extractYouTubeEmbed(url: string | null): string | null {
 /**
  * Attempt to retrieve the quiz for a given lesson.
  *
- * API AMBIGUITY: The `lessons.getLesson` response shape (`Lesson`) does not
- * include a `quizId` field, and there is no `GET /quizzes?lessonId=` endpoint
- * in the current API contract. We resolve this with a best-effort cast: if the
- * runtime lesson object carries an undocumented `quizId` string, we fetch it.
- * Otherwise, we return null and the lesson renders without a quiz.
- *
- * Resolution needed: either add `quizId?: string` to the Lesson type, or add
- * a `GET /learning-paths/:pathId/lessons/:id/quiz` endpoint.
+ * Calls `GET /lessons/:lessonId/quiz`, which returns the learner-facing
+ * quiz shape (`text`, no `correctIndex`, `passingScore` echoed) or 404
+ * when the lesson has no quiz. A 404 is the documented "no quiz" signal
+ * and is swallowed — anything else is rethrown so we don't silently
+ * mask real errors.
  */
-type QuizLike = { id: string; lessonId: string; questions: unknown[]; passingScore: number };
-
-async function fetchQuizForLesson(lessonId: string) {
-  // API AMBIGUITY: The Lesson type does not expose a quizId field, and no
-  // dedicated "quiz by lessonId" endpoint exists in the contract. We probe
-  // GET /quizzes?lessonId=... and gracefully return null on any error.
-  // See report section "API contract ambiguities".
+async function fetchQuizForLesson(lessonId: string): Promise<Quiz | null> {
   try {
-    const result = await ssrGet<unknown>(`/quizzes?lessonId=${lessonId}`);
-    // Single-object response
-    if (result !== null && typeof result === 'object' && !Array.isArray(result) && 'id' in result) {
-      return result as Quiz;
-    }
-    // Array response
-    if (Array.isArray(result) && result.length > 0) {
-      const first = result[0] as QuizLike | undefined;
-      if (first?.id) {
-        return first as unknown as Quiz;
-      }
-    }
-  } catch {
-    // No quiz for this lesson — perfectly fine
+    return await ssrGet<Quiz>(`/lessons/${lessonId}/quiz`);
+  } catch (err) {
+    if (err instanceof ApiError && err.isNotFound) return null;
+    throw err;
   }
-  return null;
 }

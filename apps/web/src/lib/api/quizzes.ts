@@ -79,13 +79,20 @@ export async function getQuizWithAnswers(quizId: string): Promise<AdminQuizSumma
 
 export async function submitAttempt(input: SubmitQuizAttemptInput): Promise<QuizAttemptResult> {
   const parsed = submitQuizAttemptSchema.parse(input);
+  // API mounts the singular route: POST /quizzes/:id/attempt. The plural
+  // form ("/attempts") 404s on prod — that mismatch silently hid behind
+  // the previous /quizzes?lessonId= 404 that prevented the quiz UI from
+  // rendering at all. Now that Lane 1 lets the quiz render, this URL must
+  // match too or submission will 404 mid-flow.
   const json = await apiPost<SubmitQuizAttemptInput, unknown>(
-    `/quizzes/${parsed.quizId}/attempts`,
+    `/quizzes/${parsed.quizId}/attempt`,
     parsed,
   );
   return quizAttemptResultSchema.parse(json);
 }
 
 export async function listMyAttempts(quizId: string): Promise<QuizAttempt[]> {
-  return apiGet<QuizAttempt[]>(`/quizzes/${quizId}/attempts/me`);
+  // API mounts GET /quizzes/:id/my-attempts. Same plural-vs-singular
+  // history as submitAttempt above.
+  return apiGet<QuizAttempt[]>(`/quizzes/${quizId}/my-attempts`);
 }
