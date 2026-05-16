@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@levelup/auth-client": "workspace:*",
+    "@levelup/storage": "workspace:*",
     "@levelup/types": "workspace:*",
     "@levelup/ui": "workspace:*",
+    "@sentry/nextjs": "^8.40.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.3",
     "canvas-confetti": "^1.9.3",

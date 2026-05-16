@@ -9,6 +9,7 @@ This codebase tolerates `PLACEHOLDER_*` values for every external integration �
 3. **Supabase Auth (required for real auth):** create a project at supabase.com → Project Settings → API → copy URL + `anon` key + `service_role` key → set `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, plus the matching `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` for the web bundle. Optionally set `SUPABASE_JWT_SECRET` for legacy HS256 projects (modern projects validate via JWKS). Then in Authentication → URL Configuration add `http://localhost:3000` (and your production domain) to the Redirect URLs allowlist for magic links to work.
 4. **Stripe (required for billing):** create three products with monthly prices ($499 / $1,499 / $5,000) → set `STRIPE_*` vars + the three price IDs.
 5. **Resend (required for invitations / cert email):** API key → `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.
+6. **Sentry (optional — error tracking):** see "Sentry (error tracking)" below. Leaving `SENTRY_DSN` unset (or set to `PLACEHOLDER_…`) is fully supported — the SDK becomes a no-op in that case, so dev / CI / staging boots never crash on missing telemetry config.
 
 ## Stub mode behaviour
 
@@ -144,6 +145,34 @@ and is fronted by Cloudflare's CDN out of the box. Setup:
    email-click roundtrip), capped at 7d. The Supabase path still mints
    7-day URLs for backward compatibility.
 
+### Sentry (error tracking)
+
+Skeleton wiring is in place across all three runtime processes:
+
+- `apps/web` — Next.js Sentry SDK (`@sentry/nextjs`) via `sentry.client.config.ts` + `sentry.server.config.ts` + `sentry.edge.config.ts` + `instrumentation.ts`.
+- `apps/api` — Node SDK (`@sentry/node`) initialised in `apps/api/src/observability/sentry.ts`; wired from `main.ts` BEFORE the OTel `./observability/start` import so Sentry's auto-instrumentation sees an unpatched Node core.
+- `apps/worker` — same shape as the API at `apps/worker/src/observability/sentry.ts`.
+
+All three init paths short-circuit (no-op) when `SENTRY_DSN` is unset or starts with `PLACEHOLDER_` — there is no boot-time crash in dev / CI / staging without telemetry.
+
+To provision a project:
+
+1. Sign in to https://sentry.io, create an organisation (or reuse one).
+2. Create three projects from the dashboard ("+ New Project"):
+   - Platform: **Next.js** — name `levelup-web`.
+   - Platform: **Node.js** — name `levelup-api`.
+   - Platform: **Node.js** — name `levelup-worker`.
+3. Copy each project's DSN from Settings → Client Keys (DSN). They look like `https://<key>@<region>.ingest.sentry.io/<project-id>`.
+4. Paste them into your env matrix:
+   - `apps/web` (Vercel → Production env): `NEXT_PUBLIC_SENTRY_DSN=<web dsn>` plus `SENTRY_DSN=<web dsn>` for the server runtime. Optionally `SENTRY_ENVIRONMENT=production`. Default sample rate is `0.1`; override with `SENTRY_TRACES_SAMPLE_RATE`.
+   - `apps/api` and `apps/worker` (Render → both services have placeholders pre-wired in `render.yaml`): `SENTRY_DSN=<respective dsn>`, optional `SENTRY_ENVIRONMENT`, optional `SENTRY_TRACES_SAMPLE_RATE`.
+5. Verify in Sentry → Issues that errors arrive after the next deploy.
+
+Follow-ups not in the skeleton (tracked as TODOs in the Sentry config files):
+
+- Source-map upload from `apps/web` (`sentry-cli sourcemaps upload` in the build step).
+- `beforeSend` PII scrub (email, IP, auth headers, request bodies on `/api/auth/*` + `/api/users/*`).
+
 ### Redis — Upstash
 
 1. Create a Global database (low latency from your API region).
@@ -178,6 +207,9 @@ and is fronted by Cloudflare's CDN out of the box. Setup:
 | `COOKIE_DOMAIN`                                              | localhost                            | `.staging.levelup.example`          | `.levelup.example`                   |
 | `WEB_ORIGIN`                                                 | http://localhost:3000                | https://app.staging.levelup.example | https://app.levelup.example          |
 | `NEXT_PUBLIC_API_URL`                                        | http://localhost:4000                | https://api.staging.levelup.example | https://api.levelup.example          |
+| `SENTRY_DSN` (+ `NEXT_PUBLIC_SENTRY_DSN` on web)             | unset / PLACEHOLDER (no-op)          | staging DSN                         | production DSN                       |
+| `SENTRY_ENVIRONMENT`                                         | unset (falls back to `NODE_ENV`)     | `staging`                           | `production`                         |
+| `SENTRY_TRACES_SAMPLE_RATE`                                  | unset (default `0.1`)                | `0.1`                               | `0.1`                                |
 
 Stub mode is allowed in local + staging. In production, every `PLACEHOLDER_*` value will throw at boot — the relevant package's `config.ts` enforces this.
 

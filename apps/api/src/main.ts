@@ -1,3 +1,8 @@
+// Sentry must initialise BEFORE OTel so its auto-instrumentation sees an
+// unpatched Node core. In stub mode (no SENTRY_DSN, or PLACEHOLDER_) this is
+// a no-op so dev / test boots are unaffected.
+import { initSentry } from './observability/sentry';
+initSentry();
 // Must be the first import so OTel patches Node core before any framework loads.
 import './observability/start';
 import 'reflect-metadata';

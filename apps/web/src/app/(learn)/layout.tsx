@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth-client';
 import { LearnerShell } from '@/components/learn/learner-shell';
 import { ssrGet } from '@/lib/api/server-fetch';
-import { getTranslations } from '@/lib/i18n';
+import { getLocale, getTranslations, SUPPORTED_LOCALES } from '@/lib/i18n';
 import type { MyAssessment } from '@/lib/api/assessments';
 import type { CurrentWeekResponse } from '@levelup/types';
 
@@ -81,8 +81,16 @@ export default async function LearnGroupLayout({ children }: { children: React.R
     signOut: t('signOut'),
   };
 
+  // Locale switcher (CR.39) — pass the active locale + supported list to the
+  // shell so the in-menu `<select>` can navigate to `?locale=xx`.
+  const currentLocale = await getLocale();
+
   return (
-    <LearnerShell user={navUser} navLabels={navLabels}>
+    <LearnerShell
+      user={navUser}
+      navLabels={navLabels}
+      locale={{ current: currentLocale, supported: SUPPORTED_LOCALES }}
+    >
       {children}
     </LearnerShell>
   );

@@ -100,6 +100,15 @@ services:
       - key: SESSION_SECRET
         generateValue: true
 
+      # Sentry — skeleton. Unset / PLACEHOLDER_ → SDK is a no-op (safe for
+      # bootstraps without telemetry). See SETUP.md → "Sentry (error tracking)".
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        sync: false
+      - key: SENTRY_TRACES_SAMPLE_RATE
+        sync: false
+
       # CORS / cookie config
       # Comma-separated allow-list. main.ts splits on `,` and trims whitespace.
       # ceolawyer.ailevel.app is the second tenant (CEO Lawyer) served by a
@@ -168,3 +177,12 @@ services:
           type: web
           name: levelup-api
           envVarKey: CERT_SIGNING_SECRET
+
+      # Sentry — skeleton. Same semantics as the API service (no-op when
+      # unset or PLACEHOLDER_). See SETUP.md → "Sentry (error tracking)".
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_ENVIRONMENT
+        sync: false
+      - key: SENTRY_TRACES_SAMPLE_RATE
+        sync: false

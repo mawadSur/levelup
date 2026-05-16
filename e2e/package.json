@@ -12,6 +12,7 @@
     "install": "playwright install chromium"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.48.2",
     "@types/node": "^20.14.0",
     "@levelup/config-tsconfig": "workspace:*",

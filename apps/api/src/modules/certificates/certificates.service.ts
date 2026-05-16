@@ -52,10 +52,17 @@ export interface DownloadResult {
 export interface VerifyResult {
   valid: boolean;
   certificate?: {
+    /** Internal cert id — exposed so the public verify page can mint a
+     * download link without leaking the storagePath shape. */
+    id: string;
     holderName: string;
     pathTitle: string;
     issuedAt: Date;
     organizationName: string;
+    /** Storage object key for the PDF when one exists. `null` when the
+     * row predates the storage migration (older certs streamed by id from
+     * local fs only). */
+    storagePath: string | null;
   };
 }
 
@@ -206,7 +213,13 @@ export class CertificatesService {
   async verifyCertificate(signedHash: string): Promise<VerifyResult> {
     const cert = await this.prisma.certificate.findFirst({
       where: { signedHash },
-      include: {
+      select: {
+        id: true,
+        userId: true,
+        learningPathId: true,
+        issuedAt: true,
+        signedHash: true,
+        storagePath: true,
         user: { select: { name: true, organizationId: true } },
         learningPath: { select: { title: true } },
       },
@@ -245,10 +258,12 @@ export class CertificatesService {
     return {
       valid: true,
       certificate: {
+        id: cert.id,
         holderName: cert.user.name,
         pathTitle: cert.learningPath.title,
         issuedAt: cert.issuedAt,
         organizationName: org?.name ?? 'LevelUp AI Academy',
+        storagePath: cert.storagePath,
       },
     };
   }

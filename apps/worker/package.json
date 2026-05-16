@@ -14,6 +14,7 @@
   "dependencies": {
     "@levelup/analytics": "workspace:*",
     "@levelup/db": "workspace:*",
+    "@sentry/node": "^8.40.0",
     "@levelup/llm": "workspace:*",
     "@levelup/queue": "workspace:*",
     "@levelup/storage": "workspace:*",

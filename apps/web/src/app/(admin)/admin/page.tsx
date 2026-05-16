@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Users, FlaskConical } from 'lucide-react';
-import { Card, CardContent, MonoLabel, NumberedSection } from '@levelup/ui';
+import { Card, CardContent, MissionNumber, MonoLabel, NumberedSection } from '@levelup/ui';
 import { getSessionUser, isDemoOrg } from '@/lib/auth-client';
 import { organizations, reports, invitations } from '@/lib/api';
 import { StatCard } from '@/components/admin/stat-card';
@@ -42,12 +42,51 @@ export default async function AdminDashboardPage() {
 
   const firstName = user?.name?.split(' ').at(0) ?? 'operator';
 
-  const deptItems = (report?.byDepartment ?? []).map((d) => ({
-    name: d.name,
-    value: Math.round(d.completionRate * 100),
-    max: 100,
-    sublabel: `${d.memberCount} members`,
-  }));
+  // Prefer the new OrgStats shape (CR.40+) which carries per-dept count +
+  // completionRate; fall back to the completion-report's `byDepartment` if
+  // stats failed to load so the dashboard degrades gracefully.
+  const deptItems =
+    stats && stats.byDepartment.length > 0
+      ? stats.byDepartment.map((d) => ({
+          name: d.name,
+          value: Math.round(d.completionRate * 100),
+          max: 100,
+          sublabel: `${d.count} members`,
+        }))
+      : (report?.byDepartment ?? []).map((d) => ({
+          name: d.name,
+          value: Math.round(d.completionRate * 100),
+          max: 100,
+          sublabel: `${d.memberCount} members`,
+        }));
+
+  // Adoption-by-role and adoption-by-department tables use the new
+  // stats.byRole / stats.byDepartment shape directly. Only render the
+  // sections when the new shape is present — there is no completion-report
+  // equivalent for byRole, so a `stats === null` outage simply hides the
+  // section instead of showing stale data.
+  const roleAdoptionItems = stats
+    ? (
+        Object.entries(stats.byRole) as Array<
+          ['ADMIN' | 'MANAGER' | 'EMPLOYEE', { count: number; completionRate: number }]
+        >
+      )
+        .map(([role, entry]) => ({
+          role,
+          count: entry.count,
+          completionRate: entry.completionRate,
+        }))
+        .sort((a, b) => b.count - a.count)
+    : [];
+
+  const deptAdoptionItems = stats
+    ? stats.byDepartment.map((d) => ({
+        departmentId: d.departmentId,
+        name: d.name,
+        count: d.count,
+        completionRate: d.completionRate,
+      }))
+    : [];
 
   const activityItems =
     stats && stats.totalUsers > 0
@@ -199,20 +238,114 @@ export default async function AdminDashboardPage() {
             </div>
           </NumberedSection>
 
-          <NumberedSection numeral="03" eyebrow="QUICK ACTIONS" className="space-y-6">
+          <NumberedSection numeral="03" eyebrow="ADOPTION" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center justify-between">
+                    <MonoLabel>ADOPTION BY ROLE</MonoLabel>
+                    <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      COUNT · COMPLETION
+                    </span>
+                  </div>
+                  {roleAdoptionItems.length > 0 ? (
+                    <ul className="divide-y divide-ink-600">
+                      {roleAdoptionItems.map((item) => (
+                        <li
+                          key={item.role}
+                          className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                        >
+                          <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-100">
+                            {item.role}
+                          </span>
+                          <div className="flex shrink-0 items-center gap-4 font-mono text-mono-sm tabular-nums text-paper-300">
+                            <span className="text-paper-100">
+                              <MissionNumber value={item.count} format="integer" />
+                            </span>
+                            <span className="w-16 text-right">
+                              <MissionNumber value={item.completionRate} format="percent" />
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="py-6 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      {stats === null ? 'STATS UNAVAILABLE' : 'NO ROLE DATA'}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center justify-between">
+                    <MonoLabel>ADOPTION BY DEPARTMENT</MonoLabel>
+                    <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      COUNT · COMPLETION
+                    </span>
+                  </div>
+                  {deptAdoptionItems.length > 0 ? (
+                    <ul className="divide-y divide-ink-600">
+                      {deptAdoptionItems.map((item) => (
+                        <li key={item.departmentId} className="py-3 first:pt-0 last:pb-0">
+                          <div className="mb-1.5 flex items-center justify-between gap-3">
+                            <span className="truncate text-body-sm font-medium text-paper-100">
+                              {item.name}
+                            </span>
+                            <div className="flex shrink-0 items-center gap-4 font-mono text-mono-sm tabular-nums text-paper-300">
+                              <span className="text-paper-100">
+                                <MissionNumber value={item.count} format="integer" />
+                              </span>
+                              <span className="w-16 text-right">
+                                <MissionNumber value={item.completionRate} format="percent" />
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            className="h-1 w-full overflow-hidden rounded-data bg-ink-700"
+                            role="progressbar"
+                            aria-valuenow={Math.round(item.completionRate * 100)}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-label={`${item.name}: ${Math.round(
+                              item.completionRate * 100,
+                            )}% complete`}
+                          >
+                            <div
+                              className="h-full rounded-data bg-signal transition-[width] duration-500 ease-mission"
+                              style={{
+                                width: `${Math.round(item.completionRate * 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="py-6 text-center font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                      {stats === null ? 'STATS UNAVAILABLE' : 'NO DEPARTMENT DATA'}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </NumberedSection>
+
+          <NumberedSection numeral="04" eyebrow="QUICK ACTIONS" className="space-y-6">
             <QuickActions />
           </NumberedSection>
 
-          <NumberedSection numeral="04" eyebrow="ACTIVITY STREAM" className="space-y-6">
+          <NumberedSection numeral="05" eyebrow="ACTIVITY STREAM" className="space-y-6">
             <Card>
               <CardContent className="space-y-3 p-6">
                 <div className="flex items-center justify-between">
-                  <MonoLabel>YOUR RECENT EVENTS</MonoLabel>
+                  <MonoLabel>ORG-WIDE EVENTS</MonoLabel>
                   <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                     LAST 20
                   </span>
                 </div>
-                <ActivityFeed userId={user?.userId ?? user?.id ?? ''} limit={20} />
+                <ActivityFeed userId={user?.organizationId ?? ''} limit={20} orgScope={true} />
               </CardContent>
             </Card>
           </NumberedSection>

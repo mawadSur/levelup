@@ -24,6 +24,8 @@ import { GlobalSearchDialog } from './search/global-search-dialog';
 import { FlagsProvider } from '@/lib/flags/flags-context';
 import { PostHogProvider, usePostHog } from '@/lib/analytics/posthog-provider';
 import { brand, IS_KAPITUS, IS_CEOLAWYER } from '@/lib/client';
+import { LocaleSwitcher } from './locale-switcher';
+import type { Locale } from '@/lib/i18n';
 
 const SEAL = IS_KAPITUS ? 'K' : IS_CEOLAWYER ? 'CL' : 'LU';
 const WORDMARK = IS_KAPITUS || IS_CEOLAWYER ? brand.shortName : 'LevelUp';
@@ -50,11 +52,20 @@ interface NavLabels {
   signOut?: string;
 }
 
+interface LocaleProps {
+  /** Currently-active locale resolved server-side via `getLocale()`. */
+  current: Locale;
+  /** Supported locales — passed from server to keep `i18n.ts` server-only. */
+  supported: readonly Locale[];
+}
+
 interface LearnerShellProps {
   children: React.ReactNode;
   user: NavUser;
   /** Server-resolved i18n labels (CR.38). Optional — defaults to English. */
   navLabels?: NavLabels;
+  /** Locale data for the in-menu language switcher. Optional. */
+  locale?: LocaleProps;
 }
 
 type NavLink = { href: string; label: string };
@@ -80,7 +91,7 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-export function LearnerShell({ children, user, navLabels }: LearnerShellProps) {
+export function LearnerShell({ children, user, navLabels, locale }: LearnerShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname() ?? '';
@@ -212,6 +223,12 @@ export function LearnerShell({ children, user, navLabels }: LearnerShellProps) {
                           <DropdownMenuItem asChild>
                             <Link href="/admin">Admin console</Link>
                           </DropdownMenuItem>
+                        )}
+                        {locale && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <LocaleSwitcher supported={locale.supported} current={locale.current} />
+                          </>
                         )}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>

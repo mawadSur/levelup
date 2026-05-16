@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -45,5 +45,20 @@ export class OrganizationsController {
   @Roles('MANAGER')
   getOrgStats(@CurrentUser() user: SessionPayload) {
     return this.organizationsService.getOrgStats(user);
+  }
+
+  // GET /organizations/:id/activity?limit=20 — admin-only org-wide stream.
+  // The path id is validated against the caller's org inside the service so
+  // an ADMIN cannot peek into another tenant's events.
+  @Get(':id/activity')
+  @Roles('ADMIN')
+  getOrgActivity(
+    @CurrentUser() user: SessionPayload,
+    @Param('id') id: string,
+    @Query('limit') limit?: string,
+  ) {
+    const parsed = limit ? parseInt(limit, 10) : 20;
+    const clamped = Number.isFinite(parsed) ? parsed : 20;
+    return this.organizationsService.listOrgActivity(user, id, clamped);
   }
 }

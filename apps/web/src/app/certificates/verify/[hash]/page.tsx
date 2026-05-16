@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, Download, XCircle } from 'lucide-react';
 import { MonoLabel } from '@levelup/ui';
+import { getCertificateSignedUrl, isR2Configured } from '@levelup/storage';
 import { MarketingNav } from '@/components/navigation/marketing-nav';
 import { Footer } from '@/components/marketing/footer';
 import { env } from '@/lib/env';
@@ -12,6 +13,9 @@ interface CertificateData {
   pathTitle: string;
   issuedAt: string;
   organizationName: string;
+  /** Present once CR.26 migration has run on the row. */
+  id?: string;
+  storagePath?: string | null;
 }
 
 interface VerifyResponse {
@@ -20,9 +24,40 @@ interface VerifyResponse {
 }
 
 type VerifyResult =
-  | { status: 'valid'; certificate: CertificateData }
+  | {
+      status: 'valid';
+      certificate: CertificateData;
+      /** R2 signed URL when configured + storagePath present; otherwise null
+       * (the page falls back to the API's `/certificates/:id/file` streaming
+       * route when an id is present). */
+      downloadUrl: string | null;
+    }
   | { status: 'invalid' }
   | { status: 'unavailable' };
+
+/**
+ * Resolves a download URL for the certificate PDF. Prefers an R2 signed URL
+ * when configured; otherwise returns null so the caller can decide whether
+ * to fall back to the API's `/certificates/:id/file` streaming route.
+ *
+ * Failures here are non-fatal — the verify page should still render the
+ * "VERIFIED" card even if the signed-URL mint fails (a transient R2 hiccup
+ * shouldn't break public verification).
+ */
+async function resolveDownloadUrl(certificate: CertificateData): Promise<string | null> {
+  if (isR2Configured() && certificate.storagePath) {
+    try {
+      return await getCertificateSignedUrl(certificate.storagePath);
+    } catch {
+      return null;
+    }
+  }
+  // Local-FS / Supabase fallback: stream through the authenticated API.
+  // The public verify page can't call /file (auth-protected), so we leave
+  // the download URL null and skip the download CTA. Holders can still
+  // download from /profile while signed in.
+  return null;
+}
 
 async function fetchVerification(hash: string): Promise<VerifyResult> {
   try {
@@ -38,7 +73,8 @@ async function fetchVerification(hash: string): Promise<VerifyResult> {
     const data: VerifyResponse = (await res.json()) as VerifyResponse;
 
     if (data.valid && data.certificate) {
-      return { status: 'valid', certificate: data.certificate };
+      const downloadUrl = await resolveDownloadUrl(data.certificate);
+      return { status: 'valid', certificate: data.certificate, downloadUrl };
     }
 
     return { status: 'invalid' };
@@ -111,7 +147,13 @@ export default async function CertificateVerifyPage({ params }: PageProps) {
       >
         {result.status === 'unavailable' && <UnavailableCard />}
         {result.status === 'invalid' && <InvalidCard hash={hash} />}
-        {result.status === 'valid' && <ValidCard certificate={result.certificate} hash={hash} />}
+        {result.status === 'valid' && (
+          <ValidCard
+            certificate={result.certificate}
+            hash={hash}
+            downloadUrl={result.downloadUrl}
+          />
+        )}
       </main>
 
       <div className="relative z-20">
@@ -121,7 +163,15 @@ export default async function CertificateVerifyPage({ params }: PageProps) {
   );
 }
 
-function ValidCard({ certificate, hash }: { certificate: CertificateData; hash: string }) {
+function ValidCard({
+  certificate,
+  hash,
+  downloadUrl,
+}: {
+  certificate: CertificateData;
+  hash: string;
+  downloadUrl: string | null;
+}) {
   const issuedDate = new Date(certificate.issuedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -150,6 +200,20 @@ function ValidCard({ certificate, hash }: { certificate: CertificateData; hash: 
         <span aria-hidden="true">·</span>
         <span>{issuedDate}</span>
       </div>
+
+      {downloadUrl !== null && (
+        <div className="mb-8 flex items-center justify-center">
+          <a
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-sm border border-signal/60 bg-transparent px-4 py-2 font-mono text-mono-sm uppercase tracking-[0.05em] text-signal transition-colors hover:bg-signal hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.5} />
+            DOWNLOAD PDF
+          </a>
+        </div>
+      )}
 
       <div className="border-t border-ink-600 pt-6">
         <p className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">

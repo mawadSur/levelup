@@ -32,6 +32,19 @@ export type ActivityEvent = z.infer<typeof activityEventSchema>;
 
 export const userActivitySchema = z.array(activityEventSchema);
 
+/**
+ * Org-scoped activity event — extends ActivityEvent with the actor's
+ * user id + display name so the admin dashboard's stream can render
+ * "Jane completed lesson X" rather than the per-user "Completed lesson X".
+ */
+export const orgActivityEventSchema = activityEventSchema.extend({
+  userId: z.string(),
+  userName: z.string(),
+});
+export type OrgActivityEvent = z.infer<typeof orgActivityEventSchema>;
+
+export const orgActivitySchema = z.array(orgActivityEventSchema);
+
 // ---------------------------------------------------------------------------
 // Self-profile updates (PATCH /users/me)
 // ---------------------------------------------------------------------------

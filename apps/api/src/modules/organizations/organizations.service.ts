@@ -5,7 +5,7 @@ import { Plan } from '@levelup/db';
 import { enqueueEmail } from '@levelup/queue';
 import type { SessionPayload } from '@levelup/auth-client';
 import { UpdateOrgDto } from './dto/update-org.dto';
-import type { CreateOrganizationInput } from '@levelup/types';
+import type { CreateOrganizationInput, OrgActivityEvent } from '@levelup/types';
 // Trial duration drawn from PLAN_CONFIG so the billing package stays the
 // single source of truth.
 function trialDurationDays(): number {
@@ -347,5 +347,144 @@ export class OrganizationsService {
       completionRate,
       riskFlags,
     };
+  }
+
+  // --------------------------------------------------------------------------
+  // GET /organizations/:id/activity — org-wide activity stream (ADMIN only).
+  //
+  // Mirrors `UsersService.listUserActivity` but drops the per-user filter and
+  // joins User so the actor's name comes back inline. Reads from
+  // UserProgress / QuizAttempt / Certificate / Badge in parallel, sorts the
+  // union descending by occurredAt, and slices to `limit`.
+  //
+  // The :id path param is validated against the caller's org so an ADMIN
+  // can't peek into another tenant's stream — matches the same-org guard
+  // used elsewhere (see UsersService).
+  // --------------------------------------------------------------------------
+  async listOrgActivity(
+    sessionUser: SessionPayload,
+    organizationId: string,
+    limit: number,
+  ): Promise<OrgActivityEvent[]> {
+    if (organizationId !== sessionUser.organizationId) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    const TAKE = Math.min(Math.max(limit, 1), 50);
+
+    const [progressRows, quizRows, certRows, badgeRows] = await Promise.all([
+      this.prisma.userProgress.findMany({
+        where: { status: 'COMPLETED', user: { organizationId } },
+        select: {
+          id: true,
+          completedAt: true,
+          userId: true,
+          user: { select: { name: true } },
+          lesson: {
+            select: { title: true, learningPath: { select: { title: true } } },
+          },
+        },
+        orderBy: { completedAt: 'desc' },
+        take: TAKE,
+      }),
+      this.prisma.quizAttempt.findMany({
+        where: { user: { organizationId } },
+        select: {
+          id: true,
+          score: true,
+          passed: true,
+          completedAt: true,
+          userId: true,
+          user: { select: { name: true } },
+          quiz: { select: { title: true } },
+        },
+        orderBy: { completedAt: 'desc' },
+        take: TAKE,
+      }),
+      this.prisma.certificate.findMany({
+        where: { user: { organizationId } },
+        select: {
+          id: true,
+          issuedAt: true,
+          userId: true,
+          user: { select: { name: true } },
+          learningPath: { select: { title: true } },
+        },
+        orderBy: { issuedAt: 'desc' },
+        take: TAKE,
+      }),
+      this.prisma.badge.findMany({
+        where: { user: { organizationId } },
+        select: {
+          id: true,
+          slug: true,
+          label: true,
+          awardedAt: true,
+          rarity: true,
+          xpReward: true,
+          userId: true,
+          user: { select: { name: true } },
+        },
+        orderBy: { awardedAt: 'desc' },
+        take: TAKE,
+      }),
+    ]);
+
+    const events: OrgActivityEvent[] = [];
+
+    for (const p of progressRows) {
+      events.push({
+        id: p.id,
+        type: 'lesson_completed',
+        occurredAt: (p.completedAt ?? new Date(0)).toISOString(),
+        title: `Completed lesson: ${p.lesson.title}`,
+        userId: p.userId,
+        userName: p.user.name,
+        meta: {
+          lessonTitle: p.lesson.title,
+          pathTitle: p.lesson.learningPath.title,
+        },
+      });
+    }
+
+    for (const q of quizRows) {
+      events.push({
+        id: q.id,
+        type: 'quiz_attempted',
+        occurredAt: q.completedAt.toISOString(),
+        title: `${q.passed ? 'Passed' : 'Attempted'} quiz: ${q.quiz.title}`,
+        userId: q.userId,
+        userName: q.user.name,
+        meta: { quizTitle: q.quiz.title, score: q.score, passed: q.passed },
+      });
+    }
+
+    for (const c of certRows) {
+      events.push({
+        id: c.id,
+        type: 'certificate_earned',
+        occurredAt: c.issuedAt.toISOString(),
+        title: `Earned certificate: ${c.learningPath.title}`,
+        userId: c.userId,
+        userName: c.user.name,
+        meta: { pathTitle: c.learningPath.title },
+      });
+    }
+
+    for (const b of badgeRows) {
+      events.push({
+        id: b.id,
+        type: 'badge_earned',
+        occurredAt: b.awardedAt.toISOString(),
+        title: `Earned badge: ${b.label}`,
+        userId: b.userId,
+        userName: b.user.name,
+        meta: { slug: b.slug, rarity: b.rarity, xpReward: b.xpReward },
+      });
+    }
+
+    events.sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime());
+
+    return events.slice(0, TAKE);
   }
 }
