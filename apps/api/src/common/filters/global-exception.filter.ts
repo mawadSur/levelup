@@ -60,7 +60,27 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message = exception.message;
       this.logger.error(exception.message, exception.stack, 'GlobalExceptionFilter');
     } else {
-      this.logger.error(String(exception), undefined, 'GlobalExceptionFilter');
+      // Non-Error throw (e.g. `throw {...}` from a transient dep, a string,
+      // null, etc.). `String({...})` produces "[object Object]" which has
+      // zero forensic value; JSON.stringify gives us the actual payload when
+      // it's serialisable. We keep the user-facing `message` as the default
+      // "An unexpected error occurred" so unsanitised internals do not leak
+      // to the response, but we attach a `cause` extra so the failure shows
+      // up usefully in /admin/ops/recent-errors and Render stdout.
+      let detail: string;
+      if (exception === null || exception === undefined) {
+        detail = String(exception);
+      } else if (typeof exception === 'object') {
+        try {
+          detail = JSON.stringify(exception);
+        } catch {
+          detail = '[unserialisable thrown object]';
+        }
+      } else {
+        detail = String(exception);
+      }
+      this.logger.error(`Non-Error throw: ${detail}`, undefined, 'GlobalExceptionFilter');
+      extras['cause'] = detail.slice(0, 500);
     }
 
     const body: ErrorBody = {

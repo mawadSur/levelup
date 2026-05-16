@@ -18,6 +18,30 @@ const FIRST_LESSON_BADGE_SLUG = 'first-lesson';
 const PASS_THRESHOLD = 70;
 const MAX_TEAM_PROGRESS_USER_IDS = 200;
 
+/**
+ * Best-effort string representation of any thrown value for log lines.
+ *
+ * - Error instances: use `.message`.
+ * - Plain objects: JSON.stringify with a circular guard. Some transient deps
+ *   (older Prisma, BullMQ retry shims) occasionally throw plain objects;
+ *   `String({...})` would otherwise log `[object Object]` and discard the
+ *   actual payload, which is exactly what bit us when "An unexpected error
+ *   occurred" reached the user with no recoverable detail.
+ * - Anything else: `String(value)`.
+ */
+function stringifyError(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err === null || err === undefined) return String(err);
+  if (typeof err === 'object') {
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return '[unserialisable error object]';
+    }
+  }
+  return String(err);
+}
+
 @Injectable()
 export class ProgressService {
   private readonly logger = new Logger(ProgressService.name);
@@ -537,44 +561,92 @@ export class ProgressService {
       firstTime: !wasAlreadyCompleted,
     });
 
-    // Check if this is the user's first ever completed lesson → award badge
-    const badgeAwarded = await this.maybeAwardFirstLessonBadge(user);
+    // -----------------------------------------------------------------------
+    // Side-effects firewall.
+    //
+    // Once the UserProgress row is COMPLETED and the audit row is written,
+    // the user-visible contract of "Mark as read / Mark complete" is fully
+    // satisfied. The remaining work (badge, XP, quests, certificate, path-
+    // complete XP) is bonus accounting that must NEVER propagate a 500 to
+    // the click — a Prisma race in the gamification graph or a Redis blip
+    // during cert enqueue should not present as "An unexpected error
+    // occurred" to a learner whose progress was actually saved.
+    //
+    // Each side-effect block is wrapped in try/catch and the failure is
+    // logged with full context so it surfaces in /admin/ops/recent-errors
+    // for forensics. The catch unwraps the error's message and stack so the
+    // logger still gets a useful trace even for non-Error throw sites in
+    // transient deps (a `throw {...}` from ioredis or Prisma's wasm shim
+    // would otherwise show up as `{}` in the global filter).
+    // -----------------------------------------------------------------------
+
+    let badgeAwarded = false;
+    try {
+      badgeAwarded = await this.maybeAwardFirstLessonBadge(user);
+    } catch (err: unknown) {
+      this.logger.error(
+        `completeLesson(${lessonId}): maybeAwardFirstLessonBadge failed: ${stringifyError(err)}`,
+        err instanceof Error ? err.stack : undefined,
+      );
+    }
 
     // Award XP for the lesson completion. Idempotent — re-completing the
     // same lesson hits the @@unique([userId, kind, sourceId]) and returns 0.
     if (!wasAlreadyCompleted) {
-      await this.gameService.awardXp({
-        userId: user.userId,
-        organizationId: user.organizationId,
-        kind: 'LESSON_COMPLETED',
-        sourceType: 'Lesson',
-        sourceId: lessonId,
-      });
-      if (isFirstEverLesson) {
+      try {
         await this.gameService.awardXp({
           userId: user.userId,
           organizationId: user.organizationId,
-          kind: 'LESSON_FIRST_TIME',
+          kind: 'LESSON_COMPLETED',
           sourceType: 'Lesson',
-          // sourceId pinned to user — there is exactly one "first lesson"
-          // ever per user, so this is naturally idempotent.
-          sourceId: user.userId,
+          sourceId: lessonId,
         });
+        if (isFirstEverLesson) {
+          await this.gameService.awardXp({
+            userId: user.userId,
+            organizationId: user.organizationId,
+            kind: 'LESSON_FIRST_TIME',
+            sourceType: 'Lesson',
+            // sourceId pinned to user — there is exactly one "first lesson"
+            // ever per user, so this is naturally idempotent.
+            sourceId: user.userId,
+          });
+        }
+        await this.gameService.incrementQuestProgress(user.userId, 'lesson', 1);
+      } catch (err: unknown) {
+        this.logger.error(
+          `completeLesson(${lessonId}): XP/quest side-effects failed: ${stringifyError(err)}`,
+          err instanceof Error ? err.stack : undefined,
+        );
       }
-      await this.gameService.incrementQuestProgress(user.userId, 'lesson', 1);
     }
 
     // Check if all lessons in the path are now complete
-    const certificateCreated = await this.maybeCreateCertificate(lesson.learningPathId, user);
+    let certificateCreated = false;
+    try {
+      certificateCreated = await this.maybeCreateCertificate(lesson.learningPathId, user);
+    } catch (err: unknown) {
+      this.logger.error(
+        `completeLesson(${lessonId}): maybeCreateCertificate failed: ${stringifyError(err)}`,
+        err instanceof Error ? err.stack : undefined,
+      );
+    }
 
     if (certificateCreated) {
-      await this.gameService.awardXp({
-        userId: user.userId,
-        organizationId: user.organizationId,
-        kind: 'PATH_COMPLETED',
-        sourceType: 'LearningPath',
-        sourceId: lesson.learningPathId,
-      });
+      try {
+        await this.gameService.awardXp({
+          userId: user.userId,
+          organizationId: user.organizationId,
+          kind: 'PATH_COMPLETED',
+          sourceType: 'LearningPath',
+          sourceId: lesson.learningPathId,
+        });
+      } catch (err: unknown) {
+        this.logger.error(
+          `completeLesson(${lessonId}): PATH_COMPLETED XP award failed: ${stringifyError(err)}`,
+          err instanceof Error ? err.stack : undefined,
+        );
+      }
     }
 
     return {

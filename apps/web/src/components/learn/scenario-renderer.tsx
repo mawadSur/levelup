@@ -25,10 +25,22 @@ const CHARACTER_LABEL: Record<CharacterKey, string> = {
   narrator: 'Narrator',
 };
 
+// Bubble palette tuned for BOTH the dark Mission Brief surface and the light
+// tenant themes (kapitus, ceolawyer). The bubble background is a 15% tint of
+// the brand color, so the effective surface is pale on light themes (e.g.
+// orange-500/15 over white ≈ #FEEADC) and very dark on Mission Brief (e.g.
+// orange-500/15 over ink-900 ≈ #2C190F). A single pale text shade (text-*-200)
+// works ONLY on the dark surface — it's ~1.1:1 on the pale tinted surface,
+// effectively invisible. We pick a light shade as the default (Mission Brief
+// is the canonical theme) and override to a dark shade inside the tenant
+// scopes (.kapitus / .ceolawyer) so each surface keeps ≥4.4:1 contrast.
+//
+// Narrator already routes through the --paper-* token bridge, which the
+// tenant CSS remaps to dark slate on light surfaces — no override needed.
 const CHARACTER_STYLE: Record<CharacterKey, string> = {
-  sara: 'bg-indigo-500/15 text-indigo-200 border-indigo-500/30',
-  dev: 'bg-cyan-500/15 text-cyan-200 border-cyan-500/30',
-  pat: 'bg-orange-500/15 text-orange-200 border-orange-500/30',
+  sara: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300 [.kapitus_&]:text-indigo-700 [.ceolawyer_&]:text-indigo-700',
+  dev: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300 [.kapitus_&]:text-cyan-700 [.ceolawyer_&]:text-cyan-700',
+  pat: 'bg-orange-500/15 border-orange-500/30 text-orange-300 [.kapitus_&]:text-orange-700 [.ceolawyer_&]:text-orange-700',
   narrator: 'bg-paper-500/10 text-paper-300 border-paper-500/30',
 };
 
@@ -304,7 +316,13 @@ function DialogueBubble({ character, text }: DialogueBubbleProps) {
         )}
       >
         {!isNarrator && (
-          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em] opacity-80">
+          // No opacity-80 here: at 10px the label is "small text" under WCAG AA
+          // (needs ≥4.5:1). Knocking the foreground to 80% pushes orange/cyan
+          // on the kapitus/ceolawyer pale-tinted bubble down to ~3.3:1 — the
+          // "PAT" / "DEV" labels in the original screenshot were unreadable
+          // because of this. The label already reads as secondary because it's
+          // smaller, uppercased, and tracked — opacity wasn't carrying weight.
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em]">
             {CHARACTER_LABEL[character]}
           </div>
         )}

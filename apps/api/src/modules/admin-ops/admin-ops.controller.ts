@@ -27,11 +27,35 @@ import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AdminOpsService } from './admin-ops.service';
 import { dlqListParamsSchema, auditListParamsSchema } from '@levelup/types';
 import type { DlqListParams, AuditListParams } from '@levelup/types';
+import { getRecentErrors, type CapturedErrorEntry } from '../../common/logger/app-logger.service';
 @Controller('admin/ops')
 @UseGuards(AuthGuard, RoleGuard)
 @Roles('ADMIN')
 export class AdminOpsController {
   constructor(private readonly adminOpsService: AdminOpsService) {}
+
+  // -------------------------------------------------------------------------
+  // GET /admin/ops/recent-errors
+  //
+  // Debug-only: returns the last ~50 error log lines captured by AppLogger.
+  // Each entry includes timestamp, message, stack trace (if the thrown
+  // object was an Error), and the originating context (logger tag, e.g.
+  // "GlobalExceptionFilter"). The GlobalExceptionFilter parses the
+  // x-request-id off the incoming request, but the log entry itself does
+  // not preserve it — operators correlate by timestamp + message.
+  //
+  // Added during bug-1 investigation (lesson-complete 500s) so we can pull
+  // a recent failure's stack trace without dashboard access to Render
+  // logs. Kept admin-only by the @Roles('ADMIN') decorator at the class
+  // level. Safe to leave in place: the buffer is bounded at 50 entries
+  // and only captures messages that AppLogger.error was going to write
+  // to stdout anyway.
+  // -------------------------------------------------------------------------
+
+  @Get('recent-errors')
+  recentErrors(): { entries: CapturedErrorEntry[] } {
+    return { entries: getRecentErrors() };
+  }
 
   // -------------------------------------------------------------------------
   // GET /admin/ops/dlq

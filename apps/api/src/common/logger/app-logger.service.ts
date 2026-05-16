@@ -38,6 +38,46 @@ function buildEntry(level: string, message: unknown, context?: string, trace?: s
   return entry;
 }
 
+// ---------------------------------------------------------------------------
+// In-memory error ring buffer (debug-only)
+// ---------------------------------------------------------------------------
+//
+// Render captures stdout to its own log store but we don't have programmatic
+// access to it from this process. To unblock debugging "An unexpected error
+// occurred (request <id>)" tickets where the user can't share a full stack
+// trace, we keep the last N error log entries here and expose them via the
+// admin-gated GET /api/admin-ops/recent-errors endpoint.
+//
+// Memory cap: BUFFER_SIZE × ~2KB per entry = ~100KB max. Safe even on the
+// smallest Render plan. We push only entries already destined for stdout, so
+// this does NOT change what gets logged — it just retains a peek-able copy.
+
+export interface CapturedErrorEntry {
+  timestamp: string;
+  message: string;
+  context?: string;
+  trace?: string;
+}
+
+const BUFFER_SIZE = 50;
+const _errorBuffer: CapturedErrorEntry[] = [];
+
+function pushError(entry: CapturedErrorEntry): void {
+  _errorBuffer.push(entry);
+  if (_errorBuffer.length > BUFFER_SIZE) {
+    _errorBuffer.shift();
+  }
+}
+
+/**
+ * Snapshot of the in-memory error buffer. Newest-first ordering so the most
+ * recent failure is at index 0. Returns an array copy so callers cannot
+ * mutate the live buffer.
+ */
+export function getRecentErrors(): CapturedErrorEntry[] {
+  return [..._errorBuffer].reverse();
+}
+
 @Injectable()
 export class AppLogger implements LoggerService {
   log(message: unknown, context?: string): void {
@@ -47,7 +87,16 @@ export class AppLogger implements LoggerService {
 
   error(message: unknown, trace?: string, context?: string): void {
     if (!isEnabled('error')) return;
-    emit(buildEntry('error', message, context, trace));
+    const entry = buildEntry('error', message, context, trace);
+    emit(entry);
+    // Retain a copy for /api/admin-ops/recent-errors. Casting through the
+    // captured shape so this stays type-safe even if buildEntry adds keys.
+    pushError({
+      timestamp: entry.timestamp,
+      message: entry.message,
+      ...(typeof entry['context'] === 'string' ? { context: entry['context'] } : {}),
+      ...(typeof entry['trace'] === 'string' ? { trace: entry['trace'] } : {}),
+    });
   }
 
   warn(message: unknown, context?: string): void {
