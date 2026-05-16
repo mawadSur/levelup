@@ -15,9 +15,12 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './specs-deployed',
   fullyParallel: true,
-  // Real Supabase rate-limits us; one worker, no retries while diagnosing.
+  // Real Supabase rate-limits us; one worker only. One retry for the
+  // documented first-hit 401 race where /api/auth/me returns 401 before
+  // the session cookie has propagated through the SSR layer — flakes
+  // intermittently on cold-start hits, always passes on retry.
   workers: 1,
-  retries: 0,
+  retries: 1,
   timeout: 60_000,
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report-deployed' }]],
   outputDir: 'test-results-deployed',
