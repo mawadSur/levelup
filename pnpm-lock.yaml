@@ -372,6 +372,9 @@ importers:
       jose:
         specifier: ^5.9.6
         version: 5.10.0
+      ws:
+        specifier: ^8.18.0
+        version: 8.20.0
     devDependencies:
       '@levelup/config-eslint':
         specifier: workspace:*
@@ -382,6 +385,9 @@ importers:
       '@types/node':
         specifier: ^20.14.0
         version: 20.19.39
+      '@types/ws':
+        specifier: ^8.5.13
+        version: 8.18.1
       typescript:
         specifier: ^5.6.3
         version: 5.9.3

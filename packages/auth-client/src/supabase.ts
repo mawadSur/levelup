@@ -1,5 +1,18 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import WebSocket from 'ws';
 import { authConfig, isStubMode } from './config.js';
+
+// Supabase's RealtimeClient throws on Node < 22 because there's no native
+// WebSocket. We never use realtime server-side (auth proxy + admin-only paths),
+// but `signInWithPassword` etc. initialize the realtime channel as a side
+// effect, so we have to provide a transport. `ws` is the canonical polyfill.
+//
+// The cast to `any` is intentional — `ws`'s WebSocket type defines `onerror`
+// with `ErrorEvent` while the browser DOM type uses plain `Event`, which is
+// a structural-type mismatch TypeScript can't bridge. Runtime-compatible,
+// type-incompatible.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const realtimeOptions = { transport: WebSocket as any };
 
 let _serviceRole: SupabaseClient | null = null;
 let _anon: SupabaseClient | null = null;
@@ -25,6 +38,7 @@ export function getServiceRoleClient(): SupabaseClient {
         autoRefreshToken: false,
         persistSession: false,
       },
+      realtime: realtimeOptions,
     });
   }
   return _serviceRole;
@@ -47,6 +61,7 @@ export function getAnonClient(): SupabaseClient {
         autoRefreshToken: false,
         persistSession: false,
       },
+      realtime: realtimeOptions,
     });
   }
   return _anon;
