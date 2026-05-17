@@ -10,10 +10,20 @@
  * NOT here (source map upload, PII scrubbing).
  */
 export async function register(): Promise<void> {
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    await import('./sentry.server.config');
-  }
-  if (process.env.NEXT_RUNTIME === 'edge') {
-    await import('./sentry.edge.config');
+  // Sentry init failures must never break the app boot. Wrap the dynamic
+  // imports — if @sentry/nextjs throws on init (misconfigured DSN, network
+  // blip pulling JS chunks, missing peer dep on a specific runtime),
+  // we'd rather have an app that boots without error reporting than no
+  // app at all. Logs surface in Vercel's function logs.
+  try {
+    if (process.env.NEXT_RUNTIME === 'nodejs') {
+      await import('./sentry.server.config');
+    }
+    if (process.env.NEXT_RUNTIME === 'edge') {
+      await import('./sentry.edge.config');
+    }
+  } catch (err) {
+     
+    console.warn('[instrumentation] Sentry init skipped:', err);
   }
 }

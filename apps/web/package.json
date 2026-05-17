@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p ${WEB_PORT:-3000}",
     "build": "next build",
-    "postbuild": "[ -n \"$SENTRY_AUTH_TOKEN\" ] && sentry-cli sourcemaps inject ./.next && sentry-cli sourcemaps upload ./.next || echo \"skipping sentry sourcemap upload (SENTRY_AUTH_TOKEN unset)\"",
+    "postbuild": "node -e \"if (process.env.SENTRY_AUTH_TOKEN) { try { require('child_process').execSync('sentry-cli sourcemaps inject ./.next && sentry-cli sourcemaps upload ./.next', { stdio: 'inherit' }); } catch (e) { console.warn('[postbuild] sentry-cli failed (non-fatal):', e.message); } } else { console.log('skipping sentry sourcemap upload (SENTRY_AUTH_TOKEN unset)'); }\"",
     "start": "next start",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
