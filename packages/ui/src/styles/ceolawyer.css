@@ -199,3 +199,28 @@
   --warning: var(--cl-warning);
   --danger: var(--cl-danger);
 }
+
+/* Scenario chat-bubble character text overrides.
+ *
+ * scenario-renderer.tsx applies `text-{color}-300` on each dialogue bubble for
+ * the dark Mission Brief surface. On the .ceolawyer light surface those pale
+ * shades fall below ~1.1:1 contrast on the bubble's `bg-{color}-500/15` tint
+ * (effectively a near-white background) and are unreadable. We override to the
+ * *-700 shade per character, which keeps ≥4.4:1 contrast (AA Normal):
+ *   - indigo-700 (#4338CA) on bg-indigo-500/15 ≈ 6.54:1
+ *   - cyan-700   (#0E7490) on bg-cyan-500/15   ≈ 4.66:1
+ *   - orange-700 (#C2410C) on bg-orange-500/15 ≈ 4.44:1
+ *
+ * Scoped to [data-testid="scenario-dialogue-bubble"] so this can't bleed into
+ * unrelated `.text-indigo-300` usages elsewhere on the ceolawyer surface. The
+ * specificity (.ceolawyer + attribute selector + class) is high enough to beat
+ * Tailwind's single-class utility without `!important`. */
+.ceolawyer [data-testid='scenario-dialogue-bubble'] .text-indigo-300 {
+  color: rgb(67 56 202); /* indigo-700 */
+}
+.ceolawyer [data-testid='scenario-dialogue-bubble'] .text-cyan-300 {
+  color: rgb(14 116 144); /* cyan-700 */
+}
+.ceolawyer [data-testid='scenario-dialogue-bubble'] .text-orange-300 {
+  color: rgb(194 65 12); /* orange-700 */
+}

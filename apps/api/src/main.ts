@@ -63,8 +63,27 @@ async function bootstrap(): Promise<void> {
   });
   app.use(cookieParser());
 
+  // CORS allow-list. We compose from two sources:
+  //   1. WEB_ORIGIN env var (comma-separated) — the operator-controlled
+  //      override. Used for staging, preview, and any custom-domain tenants
+  //      that aren't compiled into the code.
+  //   2. PRODUCTION_ORIGINS constant — belt-and-suspenders for the two
+  //      production tenants we ship to today. If WEB_ORIGIN gets
+  //      misconfigured on Render (e.g. trimmed to a single origin during a
+  //      hurried env-var edit), the API still accepts traffic from the live
+  //      web surfaces and we don't silently take production down.
+  //
+  // Duplicate origins are deduped (Set semantics) so listing the same value
+  // in both sources is harmless. We DON'T introduce wildcard / credentialless
+  // CORS here — that's a separate decision and would require sweeping the
+  // auth cookie path first.
+  const PRODUCTION_ORIGINS = ['https://ailevel.app', 'https://ceolawyer.ailevel.app'];
   const webOriginEnv = process.env['WEB_ORIGIN'] ?? 'http://localhost:3000';
-  const origins = webOriginEnv.split(',').map((o) => o.trim());
+  const envOrigins = webOriginEnv
+    .split(',')
+    .map((o) => o.trim())
+    .filter((o) => o.length > 0);
+  const origins = Array.from(new Set([...envOrigins, ...PRODUCTION_ORIGINS]));
   app.enableCors({
     origin: origins,
     credentials: true,

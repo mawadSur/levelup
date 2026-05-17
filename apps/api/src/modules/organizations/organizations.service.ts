@@ -201,7 +201,6 @@ export class OrganizationsService {
           by: ['departmentId'],
           where: {
             organizationId: user.organizationId,
-            departmentId: { not: null },
           },
           _count: { _all: true },
         }),
@@ -238,8 +237,15 @@ export class OrganizationsService {
     // `completionRate` already returned at the top level so the UI doesn't
     // have to reconcile two different formulas.
     // -----------------------------------------------------------------------
+    // Sentinel used to bucket users whose `departmentId` is null. Keeping the
+    // map keyed by a real string (instead of `null | string`) avoids
+    // null-handling forks downstream and surfaces unassigned users as a
+    // synthetic "Unassigned" row in the response.
+    const UNASSIGNED_DEPT_KEY = '__unassigned__';
     const userRoleById = new Map(orgUsers.map((u) => [u.id, u.role]));
-    const userDeptById = new Map(orgUsers.map((u) => [u.id, u.departmentId]));
+    const userDeptById = new Map(
+      orgUsers.map((u) => [u.id, u.departmentId ?? UNASSIGNED_DEPT_KEY]),
+    );
 
     const progressByUser = await this.prisma.userProgress.groupBy({
       by: ['userId', 'status'],
@@ -309,20 +315,28 @@ export class OrganizationsService {
     // byDepartment: { departmentId, name, count, completionRate } sorted
     // desc by count. The shape mirrors the CompletionReport's
     // `byDepartment` so the admin dashboard's `DeptBarList` can swap data
-    // sources without changing its row mapping. Departments with zero
-    // members are omitted (the user.groupBy filtered them out upstream).
+    // sources without changing its row mapping.
+    //
+    // Users with `departmentId === null` are surfaced as a synthetic
+    // "Unassigned" row (id: '') so admins can see they exist instead of
+    // being silently dropped from the breakdown. The user.groupBy upstream
+    // still buckets them under `departmentId: null` so the count is
+    // accurate.
     const byDepartment: Array<{
       departmentId: string;
       name: string;
       count: number;
       completionRate: number;
     }> = byDepartmentRaw
-      .filter((row): row is typeof row & { departmentId: string } => row.departmentId !== null)
       .map((row) => {
-        const totals = deptTotals.get(row.departmentId) ?? { total: 0, completed: 0 };
+        const isUnassigned = row.departmentId === null;
+        const totalsKey = isUnassigned ? UNASSIGNED_DEPT_KEY : row.departmentId!;
+        const totals = deptTotals.get(totalsKey) ?? { total: 0, completed: 0 };
         return {
-          departmentId: row.departmentId,
-          name: deptNameMap.get(row.departmentId) ?? row.departmentId,
+          departmentId: isUnassigned ? '' : row.departmentId!,
+          name: isUnassigned
+            ? 'Unassigned'
+            : (deptNameMap.get(row.departmentId!) ?? row.departmentId!),
           count: row._count._all,
           completionRate: totals.total > 0 ? totals.completed / totals.total : 0,
         };

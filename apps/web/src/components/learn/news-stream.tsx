@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@levelup/ui';
 import type { NewsItem } from '@/lib/news/fetch-news';
+import { filterBriefingItems } from '@/lib/news/briefing-filter';
 
 interface NewsStreamProps {
   items: NewsItem[];
@@ -9,12 +10,18 @@ interface NewsStreamProps {
  * Daily AI briefing on /learn. Server-rendered list of curated stories.
  * Empty when the upstream feed is unreachable — the caller decides whether
  * to render the section at all.
+ *
+ * The fetch layer already applies content moderation, but we re-apply it
+ * here as a belt-and-suspenders gate: if a stale Next.js cache entry or a
+ * future ingest path ever bypasses the filter, the UI still refuses to
+ * render off-topic / denied / stale items.
  */
 export function NewsStream({ items }: NewsStreamProps) {
-  if (items.length === 0) return null;
+  const safeItems = filterBriefingItems(items);
+  if (safeItems.length === 0) return null;
   return (
     <ul className="space-y-3">
-      {items.map((item) => (
+      {safeItems.map((item) => (
         <li key={item.id}>
           <NewsCard item={item} />
         </li>

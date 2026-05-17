@@ -195,7 +195,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <article id="lesson-article" className="mx-auto min-w-0 max-w-reading">
             <LessonHeroFade className="mb-10 space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <MonoLabel>LESSON {String(currentLesson.order).padStart(2, '0')}</MonoLabel>
+                <MonoLabel>
+                  LESSON {String(currentLesson.orderIndex ?? 0).padStart(2, '0')}
+                </MonoLabel>
                 <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
                   ~{currentLesson.estimatedMinutes} MIN
                 </span>

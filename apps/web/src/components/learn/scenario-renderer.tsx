@@ -32,15 +32,22 @@ const CHARACTER_LABEL: Record<CharacterKey, string> = {
 // orange-500/15 over ink-900 ≈ #2C190F). A single pale text shade (text-*-200)
 // works ONLY on the dark surface — it's ~1.1:1 on the pale tinted surface,
 // effectively invisible. We pick a light shade as the default (Mission Brief
-// is the canonical theme) and override to a dark shade inside the tenant
-// scopes (.kapitus / .ceolawyer) so each surface keeps ≥4.4:1 contrast.
+// is the canonical theme) and the tenant stylesheets
+// (kapitus.css / ceolawyer.css) override these classes inside their scopes to
+// the *-700 variant so each surface keeps ≥4.4:1 contrast.
+//
+// We intentionally do NOT use Tailwind arbitrary variants like
+// `[.kapitus_&]:text-indigo-700` here. JIT support for that syntax depends on
+// the Tailwind toolchain version + content-glob resolution at build time, and
+// the Vercel sandbox has historically failed to compile it cleanly. Plain CSS
+// in the tenant stylesheets is portable across every build environment.
 //
 // Narrator already routes through the --paper-* token bridge, which the
 // tenant CSS remaps to dark slate on light surfaces — no override needed.
 const CHARACTER_STYLE: Record<CharacterKey, string> = {
-  sara: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300 [.kapitus_&]:text-indigo-700 [.ceolawyer_&]:text-indigo-700',
-  dev: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300 [.kapitus_&]:text-cyan-700 [.ceolawyer_&]:text-cyan-700',
-  pat: 'bg-orange-500/15 border-orange-500/30 text-orange-300 [.kapitus_&]:text-orange-700 [.ceolawyer_&]:text-orange-700',
+  sara: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300',
+  dev: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300',
+  pat: 'bg-orange-500/15 border-orange-500/30 text-orange-300',
   narrator: 'bg-paper-500/10 text-paper-300 border-paper-500/30',
 };
 

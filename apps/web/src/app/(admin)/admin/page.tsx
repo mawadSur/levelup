@@ -45,6 +45,11 @@ export default async function AdminDashboardPage() {
   // Prefer the new OrgStats shape (CR.40+) which carries per-dept count +
   // completionRate; fall back to the completion-report's `byDepartment` if
   // stats failed to load so the dashboard degrades gracefully.
+  //
+  // The two endpoints use different field names AND different scales:
+  //   - OrgStats.byDepartment: { name, count, completionRate: 0..1 }
+  //   - CompletionReport.byDepartment: { departmentName, assigned, completionRate: 0..100 }
+  // The mappers below normalize both into the BarItem shape DeptBarList expects.
   const deptItems =
     stats && stats.byDepartment.length > 0
       ? stats.byDepartment.map((d) => ({
@@ -54,10 +59,10 @@ export default async function AdminDashboardPage() {
           sublabel: `${d.count} members`,
         }))
       : (report?.byDepartment ?? []).map((d) => ({
-          name: d.name,
-          value: Math.round(d.completionRate * 100),
+          name: d.departmentName,
+          value: d.completionRate, // already 0..100 from the reporting service
           max: 100,
-          sublabel: `${d.memberCount} members`,
+          sublabel: `${d.assigned} members`,
         }));
 
   // Adoption-by-role and adoption-by-department tables use the new

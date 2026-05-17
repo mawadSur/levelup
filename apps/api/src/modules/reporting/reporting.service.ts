@@ -31,6 +31,15 @@ interface CacheEntry<T> {
 
 const CACHE_TTL_MS = 60_000; // 60 s
 
+/**
+ * Synthetic department row name used for users whose `departmentId` is null.
+ * Surfacing them as "Unassigned" keeps admins aware of the gap instead of
+ * silently dropping them from the byDepartment breakdown. The corresponding
+ * `departmentId` in the response is the empty string — UI consumers should
+ * key on `departmentName` for stable rendering.
+ */
+const UNASSIGNED_DEPT_NAME = 'Unassigned';
+
 // ---------------------------------------------------------------------------
 // Return types
 // ---------------------------------------------------------------------------
@@ -274,16 +283,16 @@ export class ReportingService {
       }
       overallAssigned++;
 
-      // Dept
-      const deptName = userDeptMap.get(userId);
-      if (deptName) {
-        if (!deptMap.has(deptName)) {
-          deptMap.set(deptName, { name: deptName, assigned: new Set(), completed: new Set() });
-        }
-        const dm = deptMap.get(deptName)!;
-        dm.assigned.add(userId);
-        if (allDone && lessonIds.length > 0) dm.completed.add(userId);
+      // Dept — users without a department are surfaced as an "Unassigned"
+      // synthetic row so admins can see they exist (and chase down the gap)
+      // instead of silently disappearing from the breakdown.
+      const deptName = userDeptMap.get(userId) ?? UNASSIGNED_DEPT_NAME;
+      if (!deptMap.has(deptName)) {
+        deptMap.set(deptName, { name: deptName, assigned: new Set(), completed: new Set() });
       }
+      const dm = deptMap.get(deptName)!;
+      dm.assigned.add(userId);
+      if (allDone && lessonIds.length > 0) dm.completed.add(userId);
 
       // User totals
       const prev = userTotals.get(userId) ?? { total: 0, completed: 0 };

@@ -6,9 +6,14 @@
  * by points/recency. Next.js fetch cache revalidates once an hour so the page
  * is fast and we don't hammer the upstream.
  *
+ * Ingested items pass through `filterBriefingItems` (recency + AI allow-list +
+ * topic deny-list) so politically charged / stale / off-topic stories never
+ * reach the rendered briefing. See `./briefing-filter.ts` for the rules.
+ *
  * Network failure or stub mode degrades gracefully: the function returns []
  * and the consuming UI renders nothing. No throws.
  */
+import { filterBriefingItems } from './briefing-filter';
 
 export interface NewsItem {
   id: string;
@@ -32,8 +37,13 @@ interface HnHit {
   _tags: string[];
 }
 
+// We fetch a larger window than we render (50 hits) so the moderation filter
+// in briefing-filter.ts has room to drop stale/off-topic/denied items and
+// still leave a healthy 8 to display. `search_by_date` biases toward recent
+// stories — combined with the 14-day recency cutoff this keeps the briefing
+// genuinely fresh instead of HN's all-time-points leaderboard.
 const HN_ENDPOINT =
-  'https://hn.algolia.com/api/v1/search?query=AI&tags=story&hitsPerPage=12&numericFilters=points>=20';
+  'https://hn.algolia.com/api/v1/search_by_date?query=AI&tags=story&hitsPerPage=50&numericFilters=points>=20';
 
 const REVALIDATE_SECONDS = 60 * 60;
 
@@ -47,9 +57,8 @@ export async function fetchDailyNews(): Promise<NewsItem[]> {
     const data = (await res.json()) as { hits?: HnHit[] };
     const hits = data.hits ?? [];
 
-    return hits
+    const mapped = hits
       .filter((h) => h.title && h.title.trim().length > 0)
-      .slice(0, 8)
       .map<NewsItem>((h) => ({
         id: h.objectID,
         title: h.title as string,
@@ -60,6 +69,11 @@ export async function fetchDailyNews(): Promise<NewsItem[]> {
         commentsUrl: `https://news.ycombinator.com/item?id=${h.objectID}`,
         publishedAt: h.created_at,
       }));
+
+    // Moderation: recency + AI allow-list + topic deny-list. See
+    // ./briefing-filter.ts for the rules. The UI also re-applies this
+    // belt-and-suspenders in case a cached payload predates a rule change.
+    return filterBriefingItems(mapped).slice(0, 8);
   } catch {
     return [];
   }

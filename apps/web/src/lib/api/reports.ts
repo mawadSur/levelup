@@ -4,17 +4,34 @@ import { reportFiltersSchema, type ReportFilters } from '@levelup/types';
 // ---------------------------------------------------------------------------
 // Response shapes
 // ---------------------------------------------------------------------------
+/**
+ * Department row returned by the completion-report endpoint.
+ *
+ * IMPORTANT — this shape matches the **actual** API response from
+ * `apps/api/src/modules/reporting/reporting.service.ts > DepartmentCompletionRow`.
+ *
+ * Notes for renderers:
+ *   - `completionRate` is already 0..100 (server runs
+ *     `Math.round((completed / assigned) * 100)`). Do NOT multiply by 100
+ *     again. This differs from `OrgStats.byDepartment` which uses a 0..1 ratio.
+ *   - `assigned` is the headcount we display as "N members".
+ *   - An unassigned-department synthetic row may be present with
+ *     `departmentId === ''` and `departmentName === 'Unassigned'`.
+ */
+export interface CompletionReportDepartmentRow {
+  departmentId: string;
+  departmentName: string;
+  assigned: number;
+  completed: number;
+  completionRate: number;
+}
+
 export interface CompletionReport {
   totalUsers: number;
   completedUsers: number;
   completionRate: number;
   averageScore: number;
-  byDepartment: {
-    departmentId: string;
-    name: string;
-    completionRate: number;
-    memberCount: number;
-  }[];
+  byDepartment: CompletionReportDepartmentRow[];
   byPath: {
     learningPathId: string;
     title: string;

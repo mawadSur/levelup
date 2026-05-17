@@ -61,7 +61,12 @@ export const orgStatsRoleEntrySchema = z.object({
 export type OrgStatsRoleEntry = z.infer<typeof orgStatsRoleEntrySchema>;
 
 export const orgStatsDepartmentEntrySchema = z.object({
-  departmentId: z.string().cuid(),
+  /**
+   * Real department id (CUID) for assigned-department rows, OR the empty
+   * string for the synthetic "Unassigned" row that buckets users with
+   * `departmentId === null`.
+   */
+  departmentId: z.string(),
   name: z.string(),
   count: z.number().int().min(0),
   completionRate: z.number().min(0).max(1),
