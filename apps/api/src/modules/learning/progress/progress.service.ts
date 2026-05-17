@@ -409,25 +409,65 @@ export class ProgressService {
       select: { id: true },
     });
 
-    if (!exists) {
+    if (exists) return;
+
+    // Self-enrollment fast-path: if the path belongs to the user's own org
+    // (or is global / organizationId=null), auto-create the assignment.
+    // The lesson page lets users view and take quizzes without an explicit
+    // assignment; blocking ONLY at completion produced the inconsistent UX
+    // observed in prod (user takes quiz, passes, gets 403 on submit). The
+    // CR.0b cross-org check is preserved below — that's the case we DO
+    // want to keep blocking.
+    const lp = await this.prisma.learningPath.findUnique({
+      where: { id: learningPathId },
+      select: { organizationId: true },
+    });
+    if (lp === null) {
+      throw new NotFoundException('Learning path not found');
+    }
+    const sameOrgOrGlobal = lp.organizationId === null || lp.organizationId === user.organizationId;
+
+    if (sameOrgOrGlobal) {
+      await this.prisma.learningPathAssignment.upsert({
+        where: { learningPathId_userId: { learningPathId, userId: user.userId } },
+        create: {
+          learningPathId,
+          userId: user.userId,
+          assignedById: user.userId,
+        },
+        update: {},
+      });
       await this.prisma.auditLog.create({
         data: {
           organizationId: user.organizationId,
           actorId: user.userId,
-          action: 'progress.assignment_denied',
-          targetType: 'Lesson',
-          targetId: lessonId,
-          metadata: { learningPathId, role: user.role },
+          action: 'progress.self_enrolled',
+          targetType: 'LearningPath',
+          targetId: learningPathId,
+          metadata: { lessonId, role: user.role },
         },
       });
-
-      throw new ForbiddenException({
-        error: {
-          code: 'NOT_ASSIGNED',
-          message: 'You must be assigned to this learning path before progressing.',
-        },
-      });
+      return;
     }
+
+    // Cross-org access attempt — block as before. Flatten the response body
+    // so the GlobalExceptionFilter surfaces our `code` + `message` instead
+    // of falling back to "An unexpected error occurred".
+    await this.prisma.auditLog.create({
+      data: {
+        organizationId: user.organizationId,
+        actorId: user.userId,
+        action: 'progress.assignment_denied',
+        targetType: 'Lesson',
+        targetId: lessonId,
+        metadata: { learningPathId, role: user.role },
+      },
+    });
+
+    throw new ForbiddenException({
+      code: 'NOT_ASSIGNED',
+      message: 'You must be assigned to this learning path before progressing.',
+    });
   }
 
   /** Mark a lesson IN_PROGRESS (idempotent, won't downgrade COMPLETED) */
