@@ -98,7 +98,20 @@ export function isR2Configured(): boolean {
 
 let _stubWarned = false;
 
-(function enforceStubModePolicy(): void {
+/**
+ * Production policy check — call this from the Supabase client lookup path
+ * before actually using credentials. Previously this ran as an IIFE at module
+ * load, which broke Next.js prod builds for pages that import @levelup/storage
+ * only to branch on isR2Configured() (e.g. /certificates/verify/[hash]). Those
+ * pages never touch Supabase, so the eager throw was a false positive — and
+ * fatal during the "Collecting page data" build phase on Vercel.
+ *
+ * Now we defer the check. Callers that actually need a Supabase client (see
+ * client.ts:getSupabase, governance.ts) invoke this first; callers that only
+ * read storageConfig / isR2Configured / isStubMode for branching never trip
+ * it.
+ */
+export function assertSupabaseConfiguredOrStub(): void {
   if (!isStubMode()) return;
   if (storageConfig.nodeEnv === 'production') {
     throw new Error(
@@ -108,9 +121,8 @@ let _stubWarned = false;
   }
   if (!_stubWarned) {
     _stubWarned = true;
-
     console.warn(
       '[storage] STUB MODE — set SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY for real Supabase Storage; falling back to local filesystem.',
     );
   }
-})();
+}

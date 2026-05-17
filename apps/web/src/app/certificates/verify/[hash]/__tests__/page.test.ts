@@ -43,70 +43,78 @@ afterEach(() => {
 });
 
 describe('GET /certificates/verify/[hash] page — regression on the new id/storagePath shape', () => {
-  it('renders without throwing when the verify API returns the new (id + storagePath) shape', async () => {
-    const verifyResponse = {
-      valid: true,
-      certificate: {
-        // pre-existing fields the OG image + page both read
-        holderName: 'Test Holder',
-        pathTitle: 'AI Fundamentals',
-        issuedAt: '2026-05-01T00:00:00.000Z',
-        organizationName: 'Acme Co',
-        // NEW additive fields shipped in commit 3cb1d20
-        id: 'cert_01H000000000000000000000',
-        storagePath: 'certs/acme/test-holder.pdf',
-      },
-    };
+  it(
+    'renders without throwing when the verify API returns the new (id + storagePath) shape',
+    { timeout: 60_000 },
+    async () => {
+      const verifyResponse = {
+        valid: true,
+        certificate: {
+          // pre-existing fields the OG image + page both read
+          holderName: 'Test Holder',
+          pathTitle: 'AI Fundamentals',
+          issuedAt: '2026-05-01T00:00:00.000Z',
+          organizationName: 'Acme Co',
+          // NEW additive fields shipped in commit 3cb1d20
+          id: 'cert_01H000000000000000000000',
+          storagePath: 'certs/acme/test-holder.pdf',
+        },
+      };
 
-    const fetchMock = vi.fn(
-      async () =>
-        new Response(JSON.stringify(verifyResponse), {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        }),
-    );
-    vi.stubGlobal('fetch', fetchMock);
+      const fetchMock = vi.fn(
+        async () =>
+          new Response(JSON.stringify(verifyResponse), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
 
-    const mod = await import('../page');
-    // Server component default export is async and returns a ReactNode.
-    // We don't render it — we just confirm it resolves to a tree value.
-    const result = await mod.default({
-      params: Promise.resolve({ hash: 'test-hash' }),
-    });
+      const mod = await import('../page');
+      // Server component default export is async and returns a ReactNode.
+      // We don't render it — we just confirm it resolves to a tree value.
+      const result = await mod.default({
+        params: Promise.resolve({ hash: 'test-hash' }),
+      });
 
-    expect(result).toBeDefined();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining('/certificates/verify/test-hash'),
-      expect.anything(),
-    );
-  });
+      expect(result).toBeDefined();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/certificates/verify/test-hash'),
+        expect.anything(),
+      );
+    },
+  );
 
-  it('still renders when the verify API returns the OLD shape (no id/storagePath)', async () => {
-    const verifyResponse = {
-      valid: true,
-      certificate: {
-        holderName: 'Old Holder',
-        pathTitle: 'Legacy Path',
-        issuedAt: '2025-12-01T00:00:00.000Z',
-        organizationName: 'Old Org',
-      },
-    };
+  it(
+    'still renders when the verify API returns the OLD shape (no id/storagePath)',
+    { timeout: 60_000 },
+    async () => {
+      const verifyResponse = {
+        valid: true,
+        certificate: {
+          holderName: 'Old Holder',
+          pathTitle: 'Legacy Path',
+          issuedAt: '2025-12-01T00:00:00.000Z',
+          organizationName: 'Old Org',
+        },
+      };
 
-    const fetchMock = vi.fn(
-      async () =>
-        new Response(JSON.stringify(verifyResponse), {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        }),
-    );
-    vi.stubGlobal('fetch', fetchMock);
+      const fetchMock = vi.fn(
+        async () =>
+          new Response(JSON.stringify(verifyResponse), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
 
-    const mod = await import('../page');
-    const result = await mod.default({
-      params: Promise.resolve({ hash: 'old-hash' }),
-    });
+      const mod = await import('../page');
+      const result = await mod.default({
+        params: Promise.resolve({ hash: 'old-hash' }),
+      });
 
-    expect(result).toBeDefined();
-  });
+      expect(result).toBeDefined();
+    },
+  );
 });

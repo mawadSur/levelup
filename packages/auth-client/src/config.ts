@@ -28,12 +28,14 @@ function buildConfig(): AuthConfig {
 
   const cookieDomain = readEnv('COOKIE_DOMAIN', 'localhost');
 
-  if (process.env['NODE_ENV'] === 'production' && stub) {
-    throw new Error(
-      '[auth-client] isStubMode() is true in a NODE_ENV=production environment. ' +
-        'Set real SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY before deploying.',
-    );
-  }
+  // Note: the previous prod-stub policy throw was here at module-load time.
+  // That broke Next.js prod builds on Vercel for any page whose module graph
+  // touched @levelup/auth-client even transitively — even pages that never
+  // call getServiceRoleClient() / getAnonClient(). The downstream Supabase
+  // client lookups already throw clear "called in stub mode" errors at first
+  // real use, so the eager check at config-load was both redundant and
+  // fatal during page-data collection. See assertSupabaseConfiguredOrStub()
+  // for the deferred version that callers can opt into.
 
   return {
     supabaseUrl,
@@ -45,3 +47,20 @@ function buildConfig(): AuthConfig {
 }
 
 export const authConfig: AuthConfig = buildConfig();
+
+/**
+ * Deferred prod-stub guard. Call from sites that actually need real Supabase
+ * credentials (the service-role / anon client constructors do this already
+ * via their own isStubMode() throws — this helper exists for callers that
+ * want the explicit "you're in production with placeholder env" message
+ * earlier than the SDK call). NEVER call from module-load — it would
+ * regress the Vercel build failure this defer was designed to fix.
+ */
+export function assertProdConfigured(): void {
+  if (process.env['NODE_ENV'] === 'production' && isStubMode()) {
+    throw new Error(
+      '[auth-client] isStubMode() is true in a NODE_ENV=production environment. ' +
+        'Set real SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY before deploying.',
+    );
+  }
+}
