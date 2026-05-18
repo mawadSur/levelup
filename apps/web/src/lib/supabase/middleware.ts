@@ -30,17 +30,19 @@ export interface UpdateSessionResult {
  * rather than as a cookie, so middleware can't infer the user there. Pages
  * that need auth still call /api/auth/me which validates the JWT explicitly.
  */
-export async function updateSession(request: NextRequest): Promise<UpdateSessionResult> {
-  // Forward request headers explicitly. Middleware mutates request.headers
-  // (e.g. x-pathname), but NextResponse.next({ request }) shorthand in
-  // Next.js 15 does not propagate those mutations to downstream server
-  // components. Without this, `headers().get('x-pathname')` in layouts
-  // returns null and any fallback-driven redirect logic misfires. This
-  // was the root cause of an infinite /assessment redirect loop for new
-  // EMPLOYEE signups: (learn)/layout.tsx fell back to '/learn', the gate
-  // didn't recognize /assessment, force-redirected to /assessment, repeat.
+export async function updateSession(
+  request: NextRequest,
+  // Optional headers override. The middleware clones request.headers (which
+  // is readonly), adds x-pathname, and passes the mutable copy here so it
+  // propagates to downstream server components. When omitted (legacy
+  // callers) we fall back to request.headers, which means x-pathname won't
+  // be visible to RSC — but at least cookie rotation continues to work.
+  forwardedHeaders?: Headers,
+): Promise<UpdateSessionResult> {
+  const headersToForward = forwardedHeaders ?? request.headers;
+
   let response = NextResponse.next({
-    request: { headers: request.headers },
+    request: { headers: headersToForward },
   });
 
   if (!isSupabaseConfigured()) {
@@ -57,7 +59,7 @@ export async function updateSession(request: NextRequest): Promise<UpdateSession
           request.cookies.set(name, value);
         }
         response = NextResponse.next({
-          request: { headers: request.headers },
+          request: { headers: headersToForward },
         });
         for (const { name, value, options } of cookiesToSet) {
           response.cookies.set({ name, value, ...options });

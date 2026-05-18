@@ -43,8 +43,15 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // Expose the current pathname to server components (e.g. (learn)/layout.tsx
   // uses it to preserve the deep-link target on the sign-in redirect).
-  request.headers.set('x-pathname', pathname);
-  const { response, user } = await updateSession(request);
+  // NextRequest.headers is effectively readonly — mutations via .set() are
+  // silently dropped. Clone into a mutable Headers, set the header there,
+  // then pass via NextResponse.next({ request: { headers: ... } }) so
+  // server components see it via `headers().get('x-pathname')`. Without
+  // this, (learn)/layout.tsx fell back to '/learn' and EMPLOYEE signups
+  // entered an infinite /assessment redirect loop.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
+  const { response, user } = await updateSession(request, requestHeaders);
   response.headers.set('x-pathname', pathname);
 
   // Locale persistence (CR.38). If the request carries `?locale=xx` with a
