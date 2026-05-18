@@ -31,7 +31,17 @@ export interface UpdateSessionResult {
  * that need auth still call /api/auth/me which validates the JWT explicitly.
  */
 export async function updateSession(request: NextRequest): Promise<UpdateSessionResult> {
-  let response = NextResponse.next({ request });
+  // Forward request headers explicitly. Middleware mutates request.headers
+  // (e.g. x-pathname), but NextResponse.next({ request }) shorthand in
+  // Next.js 15 does not propagate those mutations to downstream server
+  // components. Without this, `headers().get('x-pathname')` in layouts
+  // returns null and any fallback-driven redirect logic misfires. This
+  // was the root cause of an infinite /assessment redirect loop for new
+  // EMPLOYEE signups: (learn)/layout.tsx fell back to '/learn', the gate
+  // didn't recognize /assessment, force-redirected to /assessment, repeat.
+  let response = NextResponse.next({
+    request: { headers: request.headers },
+  });
 
   if (!isSupabaseConfigured()) {
     return { response, user: null };
@@ -46,7 +56,9 @@ export async function updateSession(request: NextRequest): Promise<UpdateSession
         for (const { name, value } of cookiesToSet) {
           request.cookies.set(name, value);
         }
-        response = NextResponse.next({ request });
+        response = NextResponse.next({
+          request: { headers: request.headers },
+        });
         for (const { name, value, options } of cookiesToSet) {
           response.cookies.set({ name, value, ...options });
         }

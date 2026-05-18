@@ -53,13 +53,20 @@ async function shouldForceAssessment(
 
 export default async function LearnGroupLayout({ children }: { children: React.ReactNode }) {
   const user = await getSessionUser();
-  const pathname = (await headers()).get('x-pathname') ?? '/learn';
+  // x-pathname is set by middleware. If it's null we're in an edge case
+  // (middleware skipped the matcher, or NextResponse didn't propagate
+  // mutated request headers, etc.). Previously this fell back to '/learn'
+  // — which triggered an infinite /assessment redirect loop for new
+  // EMPLOYEE signups: the gate didn't recognize /assessment, force-
+  // redirected to /assessment, repeat. Treat null as "unknown path" and
+  // skip the gate (open-fail) rather than risk a loop.
+  const pathname = (await headers()).get('x-pathname');
 
   if (!user) {
-    redirect(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
+    redirect(`/sign-in?redirect=${encodeURIComponent(pathname ?? '/learn')}`);
   }
 
-  if (!bypassesForcedAssessment(pathname)) {
+  if (pathname !== null && !bypassesForcedAssessment(pathname)) {
     const force = await shouldForceAssessment(user.role, user.aiLevel);
     if (force) {
       redirect('/assessment');
