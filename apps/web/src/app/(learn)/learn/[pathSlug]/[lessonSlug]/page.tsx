@@ -255,14 +255,16 @@ export default async function LessonPage({ params }: LessonPageProps) {
               )}
 
               {quizData && !isCompleted && !hasPassedQuiz && (
-                <div className="flex flex-wrap items-center gap-4">
-                  <Button asChild variant="primary">
-                    <a href="#quiz">Take the quick check</a>
-                  </Button>
-                  <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
-                    PASS THE QUIZ TO MARK COMPLETE
-                  </span>
-                </div>
+                // The QuizRunner card below renders its own "Take the quick
+                // check" CTA. Previously this block had a duplicate
+                // <a href="#quiz">Take the quick check</a> anchor button —
+                // visually identical to the QuizRunner's primary CTA but
+                // doing nothing visible because the target was already in
+                // viewport. Removed; the hint text alone is the right
+                // affordance here, with the actual CTA on the QuizRunner.
+                <span className="font-mono text-mono-sm uppercase tracking-[0.05em] text-paper-500">
+                  PASS THE QUIZ TO MARK COMPLETE ↓
+                </span>
               )}
 
               {!isScenario && isCompleted && !quizData && nextLessonHref && (
